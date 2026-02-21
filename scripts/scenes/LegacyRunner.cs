@@ -1154,6 +1154,7 @@ public partial class LegacyRunner : BaseScene
 
 		MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
+        SceneManager.Space.UpdateMap(CurrentAttempt.Map);
     }
 
 	public static void Play(Map map, double speed = 1, double startFrom = 0, Dictionary<string, bool> mods = null, string[] players = null, Replay[] replays = null)

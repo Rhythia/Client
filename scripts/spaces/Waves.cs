@@ -52,23 +52,27 @@ public partial class Waves : BaseSpace
 	{
 		base.UpdateMap(map);
 
-		skyMaterial.SetShaderParameter("image_b", skyMaterial.GetShaderParameter("image_a"));
-		skyMaterial.SetShaderParameter("image_a", Cover != null ? Cover : empty);
-		skyMaterial.SetShaderParameter("image_lerp", 0.0);
+		if (!Playing)
+        {
+            skyMaterial.SetShaderParameter("image_b", skyMaterial.GetShaderParameter("image_a"));
+            skyMaterial.SetShaderParameter("image_a", Cover != null ? Cover : empty);
+            skyMaterial.SetShaderParameter("image_lerp", 0.0);
 
-		Tween tween = CreateTween();
-		tween.TweenMethod(Callable.From((float alpha) => {
-			skyMaterial.SetShaderParameter("image_lerp", alpha);
-		}), 0.0, 1.0, 0.2);
+            Tween tween = CreateTween();
+            tween.TweenMethod(Callable.From((float alpha) => {
+                skyMaterial.SetShaderParameter("image_lerp", alpha);
+            }), 0.0, 1.0, 0.2);
+        }
 	}
 
     public override void UpdateState(bool playing)
     {
         base.UpdateState(playing);
 
-        if (playing)
+        if (Playing)
         {
             skyMaterial.SetShaderParameter("image_a", empty);
+            skyMaterial.SetShaderParameter("image_b", empty);
 		    skyMaterial.SetShaderParameter("image_lerp", 0.0);
         }
     }

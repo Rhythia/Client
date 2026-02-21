@@ -48,7 +48,7 @@ public partial class Squircles : BaseSpace
 
         Color color = defaultParticleColor;
 
-        if (Cover != null)
+        if (!Playing && Cover != null)
         {
             Image coverImage = Cover.GetImage();
 
