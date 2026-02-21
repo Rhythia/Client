@@ -22,7 +22,6 @@ sky_material = SubResource("ShaderMaterial_s7g12")
 [sub_resource type="Environment" id="Environment_su0lf"]
 background_mode = 2
 sky = SubResource("Sky_cqp65")
-glow_enabled = true
 glow_intensity = 0.5
 glow_strength = 2.0
 
