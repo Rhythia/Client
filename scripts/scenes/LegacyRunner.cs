@@ -512,6 +512,11 @@ public partial class LegacyRunner : BaseScene
 
 		for (int i = 0; i < activeMods.Count; i++)
 		{
+            if (activeMods[i] == "Spin")
+            {
+                continue;
+            }
+
 			Sprite3D icon = modifier_icon.Instantiate<Sprite3D>();
 
 			AddChild(icon);
