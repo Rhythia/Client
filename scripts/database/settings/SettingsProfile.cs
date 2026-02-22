@@ -258,15 +258,23 @@ public partial class SettingsProfile
 
     #region Other
 
-    [Order]
-    public SettingsItem<Variant> RhythiaImport { get; private set; }
+    // [Order]
+    /// <summary>
+    /// Import settings from previous (nightly) version
+    /// </summary>
+    // public SettingsItem<Variant> RhythiaImport { get; private set; }
 
+    [Order]
     /// <summary>
     /// Toggles recording for replays
     /// </summary>
-    [Order]
     public SettingsItem<bool> RecordReplays { get; private set; }
 
+    [Order]
+    /// <summary>
+    /// Restarts settings to the game's defaults
+    /// </summary>
+    public SettingsItem<Variant> ResetToDefaults { get; private set; }
     #endregion
 
     public SettingsProfile()
@@ -741,18 +749,18 @@ public partial class SettingsProfile
             }
         };
 
-        RhythiaImport = new(default)
-        {
-            Id = "RhythiaImport",
-            Title = "Import Nightly Settings",
-            Description = "Imports settings from the nightly client",
-            Section = SettingsSection.Other,
-            Buttons =
-            [
-                new() { Title = "Import", Description = "", OnPressed = () => { } }
-            ],
-            SaveToDisk = false,
-        };
+        // RhythiaImport = new(default)
+        // {
+        //     Id = "RhythiaImport",
+        //     Title = "Import Nightly Settings",
+        //     Description = "Imports settings from the nightly client",
+        //     Section = SettingsSection.Other,
+        //     Buttons =
+        //     [
+        //         new() { Title = "Import", Description = "", OnPressed = () => { } }
+        //     ],
+        //     SaveToDisk = false,
+        // };
 
         RecordReplays = new(true)
         {
@@ -760,6 +768,20 @@ public partial class SettingsProfile
             Title = "Record Replays",
             Description = "Toggles recording for replays",
             Section = SettingsSection.Other
+        };
+
+        ResetToDefaults = new(default)
+        {
+            Id = "ResetToDefaults",
+            Title = "Reset to Defaults",
+            Description = "Resets all settings to default values.",
+            Section = SettingsSection.Other,
+            Buttons = 
+            [
+                new() {Title = "Reset", Description = "WARNING: THIS RESETS YOUR CURRENT PROFILE!", OnPressed = () => {
+                    SettingsManager.ResetToDefaults();
+                }}
+            ],
         };
 
         #endregion
