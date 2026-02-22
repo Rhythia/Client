@@ -47,7 +47,6 @@
 [ext_resource type="Script" uid="uid://chb17y8gabhta" path="res://scripts/ui/menu/JukeboxPanel.cs" id="35_jvjdd"]
 [ext_resource type="Script" uid="uid://783e032bf2o3" path="res://scripts/ui/menu/extras/StatsPanel.cs" id="37_wadof"]
 [ext_resource type="Script" uid="uid://bss5l0q8yh47u" path="res://scripts/ui/menu/extras/CreditsPanel.cs" id="39_b4jiv"]
-[ext_resource type="PackedScene" uid="uid://rl7w0xl4w77l" path="res://prefabs/fps_counter.tscn" id="39_u43bj"]
 [ext_resource type="Texture2D" uid="uid://de86kol23e55h" path="res://textures/ui/github.png" id="41_akqfu"]
 [ext_resource type="Texture2D" uid="uid://c60rl8itmawe7" path="res://textures/ui/github_pressed.png" id="42_mb34c"]
 [ext_resource type="Texture2D" uid="uid://cfl8us0rpkpqs" path="res://textures/ui/github_hovered.png" id="43_sgh51"]
@@ -1996,10 +1995,3 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
-
-[node name="FPSCounter" parent="." unique_id=1596859626 instance=ExtResource("39_u43bj")]
-anchors_preset = 2
-offset_left = 0.0
-offset_top = -23.0
-offset_right = 1.0
-offset_bottom = 0.0

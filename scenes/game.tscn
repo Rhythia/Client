@@ -20,7 +20,6 @@
 [ext_resource type="Shader" uid="uid://bp2sv5ynsubi2" path="res://scripts/shaders/alpha_gradient.gdshader" id="14_3xchs"]
 [ext_resource type="Texture2D" uid="uid://c3x2cp3tx4vqt" path="res://user/skins/default/game/misses.png" id="14_bqf11"]
 [ext_resource type="Shader" uid="uid://bx4888tau78tk" path="res://scripts/shaders/combo_progress.gdshader" id="14_y51pe"]
-[ext_resource type="PackedScene" uid="uid://rl7w0xl4w77l" path="res://prefabs/fps_counter.tscn" id="22_pl11u"]
 [ext_resource type="Texture2D" uid="uid://lfj8i1bi6kfs" path="res://textures/ui/pause.png" id="23_7silw"]
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto-Bold.ttf" id="23_wf21h"]
 [ext_resource type="FontFile" uid="uid://rs2mb33nd3b1" path="res://fonts/Roboto-Italic.ttf" id="24_j6p10"]
@@ -329,11 +328,6 @@ grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 alignment = 2
-
-[node name="FPSCounter" parent="." unique_id=1955898342 instance=ExtResource("22_pl11u")]
-anchors_preset = 2
-offset_top = -27.0
-offset_right = 72.0
 
 [node name="Menu" type="Panel" parent="." unique_id=856970091]
 visible = false
