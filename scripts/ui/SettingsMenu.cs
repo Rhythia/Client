@@ -154,17 +154,11 @@ public partial class SettingsMenu : ColorRect
 
                 if (setting.Type == typeof(Variant))
                 {
-                    var item = setting as SettingsItem<Variant>;
-                    if (item?.Buttons != null)
-                    {
-                        foreach (var settingButton in item.Buttons)
-                        {
-                            Button button = buttonTemplate.Duplicate() as Button;
-                            setupButton(settingButton, button);
-                            panel.AddChild(button);
-                        }
-                    }
-}               
+                //     Button button = buttonTemplate.Duplicate() as Button;
+
+                //     setupButton(setting, button);
+                //     panel.AddChild(button);
+                }
 
                 container.AddChild(panel);
                 settingPanels[setting.Id] = panel;
@@ -380,11 +374,8 @@ public partial class SettingsMenu : ColorRect
         optionButton.Selected = index;
     }
 
-    private void setupButton(SettingsButton setting, Button button)
-    {
-    button.Text = setting.Title;
-    button.TooltipText = setting.Description;
-    button.Visible = true;
-    button.Pressed += () => { setting.OnPressed?.Invoke(); };
-    }
+    // private void setupButton(ISettingsItem setting, Button button)
+    // {
+
+    // }
 }
