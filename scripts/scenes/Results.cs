@@ -5,6 +5,21 @@ using System.IO;
 
 public partial class Results : BaseScene
 {
+	private static Image LoadImageFromBuffer(byte[] buffer)
+{
+    Image img = new Image();
+    foreach (var load in new Func<byte[], Error>[] {
+        img.LoadPngFromBuffer,
+        img.LoadJpgFromBuffer,
+        img.LoadWebpFromBuffer,
+        img.LoadBmpFromBuffer,
+    })
+    {
+        if (load(buffer) == Error.Ok)
+            return img;
+    }
+    return null;
+}
 	private SettingsProfile settings;
 
 	private static Panel footer;
@@ -54,12 +69,12 @@ public partial class Results : BaseScene
 
 		if (LegacyRunner.CurrentAttempt.Map.CoverBuffer != null)
 		{
-			Godot.FileAccess file = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/cache/cover.png", Godot.FileAccess.ModeFlags.Write);
-			file.StoreBuffer(LegacyRunner.CurrentAttempt.Map.CoverBuffer);
-			file.Close();
-
-			cover.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile($"{Constants.USER_FOLDER}/cache/cover.png"));
-			GetNode<TextureRect>("CoverBackground").Texture = cover.Texture;
+		    Image img = LoadImageFromBuffer(LegacyRunner.CurrentAttempt.Map.CoverBuffer);
+		    if (img != null)
+		    {
+		        cover.Texture = ImageTexture.CreateFromImage(img);
+		        GetNode<TextureRect>("CoverBackground").Texture = cover.Texture;
+		    }
 		}
 
 		if (LegacyRunner.CurrentAttempt.Map.AudioBuffer != null)
