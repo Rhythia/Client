@@ -258,6 +258,12 @@ public partial class SettingsProfile
 
     #region Other
 
+    [Order]
+    /// <summary>
+    /// Toggles the framerate counter in the corner
+    /// </summary>
+    public SettingsItem<bool> DisplayFPS {get; private set; }
+
     // [Order]
     /// <summary>
     /// Import settings from previous (nightly) version
@@ -761,6 +767,14 @@ public partial class SettingsProfile
         //     ],
         //     SaveToDisk = false,
         // };
+
+        DisplayFPS = new(true)
+        {
+            Id = "DisplayFPS",
+            Title = "Display FPS",
+            Description = "Toggles the framerate counter in the corner",
+            Section = SettingsSection.Other
+        };
 
         RecordReplays = new(true)
         {
