@@ -5,21 +5,6 @@ using System.IO;
 
 public partial class Results : BaseScene
 {
-	private static Image LoadImageFromBuffer(byte[] buffer)
-{
-    Image img = new Image();
-    foreach (var load in new Func<byte[], Error>[] {
-        img.LoadPngFromBuffer,
-        img.LoadJpgFromBuffer,
-        img.LoadWebpFromBuffer,
-        img.LoadBmpFromBuffer,
-    })
-    {
-        if (load(buffer) == Error.Ok)
-            return img;
-    }
-    return null;
-}
 	private SettingsProfile settings;
 
 	private static Panel footer;
@@ -69,7 +54,7 @@ public partial class Results : BaseScene
 
 		if (LegacyRunner.CurrentAttempt.Map.CoverBuffer != null)
 		{
-		    Image img = LoadImageFromBuffer(LegacyRunner.CurrentAttempt.Map.CoverBuffer);
+		    Image img = Util.Misc.LoadImageFromBuffer(LegacyRunner.CurrentAttempt.Map.CoverBuffer);
 		    if (img != null)
 		    {
 		        cover.Texture = ImageTexture.CreateFromImage(img);

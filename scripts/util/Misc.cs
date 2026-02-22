@@ -51,4 +51,20 @@ public class Misc
         reference.ReplaceBy(node);
         reference.QueueFree();
     }
+
+public static Image LoadImageFromBuffer(byte[] buffer)
+    {
+        Image img = new Image();
+        foreach (var load in new Func<byte[], Error>[] {
+            img.LoadPngFromBuffer,
+            img.LoadJpgFromBuffer,
+            img.LoadWebpFromBuffer,
+            img.LoadBmpFromBuffer,
+        })
+        {
+            if (load(buffer) == Error.Ok)
+                return img;
+        }
+        return null;
+    }
 }
