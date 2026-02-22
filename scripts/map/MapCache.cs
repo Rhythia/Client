@@ -60,7 +60,7 @@ public static class MapCache
         foreach (var map in maps)
         {
             string filePath = BackSlashToForwardSlash(map.FilePath);
-            
+
             if (filesHashSet.Contains(filePath))
             {
                 string checksum = GetMd5Checksum(filePath);
@@ -71,7 +71,7 @@ public static class MapCache
                     {
                         InsertIntoMapCacheFolder(map);
                     }
-                    
+
                     FilesSynced.Value += 1;
                     continue;
                 }
@@ -238,8 +238,6 @@ public static class MapCache
         }
     }
 
-
-
     public static void OrderAndSetMaps()
     {
         var maps = FetchAll();
@@ -256,12 +254,13 @@ public static class MapCache
                     byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
                     Image image = Util.Misc.LoadImageFromBuffer(coverBuffer);
 
-                    if (image != null){
+                    if (image != null)
+                    {
                         Callable.From(() => {
                             map.Cover = ImageTexture.CreateFromImage(image);
-                            }).CallDeferred();
+                        }).CallDeferred();
                     }
-                    
+
                 }
             }
         });

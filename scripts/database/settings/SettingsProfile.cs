@@ -774,13 +774,18 @@ public partial class SettingsProfile
         {
             Id = "ResetToDefaults",
             Title = "Reset to Defaults",
-            Description = "Resets all settings to default values.",
+            Description = "Resets all settings to default values",
             Section = SettingsSection.Other,
-            Buttons = 
+            Buttons =
             [
-                new() {Title = "Reset", Description = "WARNING: THIS RESETS YOUR CURRENT PROFILE!", OnPressed = () => {
-                    SettingsManager.ResetToDefaults();
-                }}
+                new()
+                {
+                    Title = "Reset",
+                    Description = "WARNING: THIS RESETS YOUR CURRENT PROFILE",
+                    OnPressed = () => {
+                        SettingsManager.ResetToDefaults();
+                    }
+                }
             ],
         };
 

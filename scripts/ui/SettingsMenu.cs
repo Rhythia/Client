@@ -164,7 +164,7 @@ public partial class SettingsMenu : ColorRect
                             panel.AddChild(button);
                         }
                     }
-}               
+}
 
                 container.AddChild(panel);
                 settingPanels[setting.Id] = panel;
@@ -382,9 +382,9 @@ public partial class SettingsMenu : ColorRect
 
     private void setupButton(SettingsButton setting, Button button)
     {
-    button.Text = setting.Title;
-    button.TooltipText = setting.Description;
-    button.Visible = true;
-    button.Pressed += () => { setting.OnPressed?.Invoke(); };
+        button.Text = setting.Title;
+        button.TooltipText = setting.Description;
+        button.Visible = true;
+        button.Pressed += () => { setting.OnPressed?.Invoke(); };
     }
 }
