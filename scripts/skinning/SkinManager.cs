@@ -143,13 +143,20 @@ public partial class SkinManager : Node
         if (File.Exists(colorsetPath))
 		{
 			string[] split = File.ReadAllText(colorsetPath).Split(",");
+
+			var ValidHexs = new List<string>();
+			foreach (var s in split)
+			{
+				if (!string.IsNullOrWhiteSpace(s)) ValidHexs.Add(s);
+			}
+
 			Color[] colors = new Color[split.Length];
 
-			for (int i = 0; i < split.Length; i++)
+			for (int i = 0; i < ValidHexs.Count; i++)
 			{
-				split[i] = split[i].TrimPrefix("#").Substr(0, 6);
-				split[i] = new Regex("[^a-fA-F0-9$]").Replace(split[i], "f");
-				colors[i] = Color.FromHtml(split[i]);
+				// split[i] = split[i].TrimPrefix("#").Substr(0, 6);
+				// split[i] = new Regex("[^a-fA-F0-9$]").Replace(split[i], "f");
+				colors[i] = Util.Misc.ParseColor(ValidHexs[i], Colors.White);
 			}
 
 			skin.NoteColors = colors;

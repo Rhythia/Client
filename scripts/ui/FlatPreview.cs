@@ -53,7 +53,7 @@ public partial class FlatPreview : Panel
 
         if (UseSoundManagerStreamPlayer)
         {
-            if (SoundManager.Map.Name != Map.Name)
+            if (SoundManager.Map == null || SoundManager.Map.Name != Map.Name)
             {
                 return;
             }

@@ -70,8 +70,8 @@ public partial class Results : BaseScene
 			}
 		}
 
-		SoundManager.Song.PitchScale = (float)LegacyRunner.CurrentAttempt.Speed;
-
+		// SoundManager.Song.PitchScale = (float)LegacyRunner.CurrentAttempt.Speed;
+		SoundManager.Song.PitchScale = 1.0f;
 		if (!LegacyRunner.CurrentAttempt.Map.Ephemeral)
 		{
 			// SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[LegacyRunner.CurrentAttempt.Map.ID];

@@ -92,34 +92,52 @@ public partial class MapManager : Node
         Update(map);
     }
 
+
     public static void Delete(Map map)
+    {
+    try
     {
         try
         {
-
-            try
-            {
-                File.Delete(map.FilePath);
-            }
-            catch
-            {
-                if (File.Exists(map.FilePath))
-                {
-
-                    Logger.Error("Unable to delete map");
-                }
-            }
-
-            MapCache.RemoveMap(map);
-            Maps.Remove(map);
-
-            MapDeleted?.Invoke(map);
+            File.Delete(map.FilePath);
         }
-        catch (Exception e)
+        catch
         {
-            Logger.Error(e.Message);
+            if (File.Exists(map.FilePath))
+            {
+                Logger.Error("Unable to delete map");
+                return;
+            }
         }
+
+        MapCache.RemoveMap(map);
+        // Maps.Remove(map);
+        Maps.RemoveAll(x => x.Id == map.Id);
+
+        SoundManager.UpdateJukeboxQueue();
+        if (SoundManager.Map?.Name == map.Name)
+        {
+            if (SoundManager.JukeboxQueue.Length == 0)
+            {
+                SoundManager.Song.Stop();
+                SoundManager.Map = null;
+                Callable.From(() => JukeboxPanel.Instance?.ClearMap()).CallDeferred();
+            }
+            else
+            {
+                SoundManager.JukeboxIndex = Math.Clamp(SoundManager.JukeboxIndex, 0, SoundManager.JukeboxQueue.Length - 1);
+                Callable.From(() => SoundManager.PlayJukebox(SoundManager.JukeboxIndex)).CallDeferred();
+            }
+        }
+
+        Callable.From(() => ToastNotification.Notify($"Deleted {map.PrettyTitle}!")).CallDeferred();
+        Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();
     }
+    catch (Exception e)
+    {
+        Logger.Error(e.Message);
+    }
+}
 
     public static string MapsFolder => $"{Constants.USER_FOLDER}/maps";
 }

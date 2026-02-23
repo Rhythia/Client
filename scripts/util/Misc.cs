@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Godot;
 using System.Collections.Generic;
-
+using System.Globalization;
 namespace Util;
 
 public class Misc
@@ -66,5 +66,35 @@ public static Image LoadImageFromBuffer(byte[] buffer)
                 return img;
         }
         return null;
+    }
+
+    public static Color ParseColor(string hex, Color defColor)
+    {
+        if (string.IsNullOrWhiteSpace(hex)) return defColor;
+
+        try
+        {
+            hex.Trim();
+            if (!hex.StartsWith('#')) hex = "#" + hex;
+            return Color.FromHtml(hex);
+        }
+        catch
+        {
+            Logger.Log($"Invalid color: {hex} (reset to default value)");
+            return defColor;
+        }
+    }
+    //maybe helper function for , > . conversion if that is decided
+    public static float PFloatInput(string input, float fb = 0f)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return fb;
+        string normal = input.Replace(',', '.');
+
+        if (float.TryParse(normal, NumberStyles.Any, CultureInfo.InvariantCulture, out float result))
+        {
+            return result;
+        }
+
+        return fb;
     }
 }
