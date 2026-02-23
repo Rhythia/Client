@@ -101,6 +101,16 @@ public partial class JukeboxPanel : Panel, ISkinnable
         pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
     }
 
+    public void ClearMap()
+    {
+        Map = null;
+
+        title.Text = "";
+
+        pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPlayImage;
+
+    }
+    
     public void UpdateSkin(SkinProfile skin = null)
     {
         skin ??= SkinManager.Instance.Skin;

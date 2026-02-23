@@ -123,6 +123,19 @@ public partial class MapList : Panel, ISkinnable
         MapManager.MapUpdated += map => {
             UpdateMaps();
         };
+        MapManager.MapDeleted += map => {
+            if (selectedMapID == map.Name)
+            {
+                selectedMapID = null;
+                if (MapManager.Maps.Count > 0)
+                Callable.From(() => Select(MapManager.Maps[0], false)).CallDeferred();
+            }
+
+            Callable.From(() => {
+            clear();
+            UpdateMaps();
+            }).CallDeferred();
+};
 
         Task.Run(() => UpdateMaps());
 

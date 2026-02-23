@@ -70,8 +70,8 @@ public partial class Results : BaseScene
 			}
 		}
 
+		// SoundManager.Song.PitchScale = (float)LegacyRunner.CurrentAttempt.Speed;
 		SoundManager.Song.PitchScale = (float)LegacyRunner.CurrentAttempt.Speed;
-
 		if (!LegacyRunner.CurrentAttempt.Map.Ephemeral)
 		{
 			// SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[LegacyRunner.CurrentAttempt.Map.ID];
@@ -168,6 +168,7 @@ public partial class Results : BaseScene
 
 	public void Stop()
 	{
+		SoundManager.Song.PitchScale = (float)Lobby.Speed;
 		SceneManager.Load("res://scenes/main_menu.tscn");
 	}
 }

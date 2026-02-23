@@ -609,7 +609,8 @@ public partial class LegacyRunner : BaseScene
 				SoundManager.Song.Play();
 			}
 
-			SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
+			double audioTime = CurrentAttempt.Progress + settings.LocalOffset.Value;
+			SoundManager.Song.Seek((float)audioTime / 1000);
 		};
 		replayViewerSeek.FocusEntered += () => {
 			replayViewerSeekHovered = true;
@@ -693,8 +694,17 @@ public partial class LegacyRunner : BaseScene
 
 		if (CurrentAttempt.Map.AudioBuffer != null)
 		{
-			SoundManager.Song.Stream = Util.Audio.LoadStream(CurrentAttempt.Map.AudioBuffer);
+			SoundManager.Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsCacheFolder}/{CurrentAttempt.Map.Name}/audio.{CurrentAttempt.Map.AudioExt}");
 			SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
+		}
+
+		if (CurrentAttempt.Map.Notes != null && CurrentAttempt.Map.Notes.Length > 0)
+		{
+			MapLength = CurrentAttempt.Map.Notes[^1].Millisecond;
+		}
+		// always end map 1s after last note 
+		else if (CurrentAttempt.Map.AudioBuffer != null)
+		{
 			MapLength = (float)SoundManager.Song.Stream.GetLength() * 1000;
 		}
 		else
@@ -702,7 +712,7 @@ public partial class LegacyRunner : BaseScene
 			MapLength = CurrentAttempt.Map.Length + 1000;
 		}
 
-		MapLength += Constants.HIT_WINDOW;
+		MapLength += Constants.HIT_WINDOW + 1000;
 
         // TODO: Fix videos
 
@@ -763,7 +773,8 @@ public partial class LegacyRunner : BaseScene
 	public override void _Process(double delta)
 	{
 		ulong now = Time.GetTicksUsec();
-		delta = (now - lastFrame) / 1000000;	// more reliable
+		// delta = (now - lastFrame) / 1000000;	// more reliable
+		delta = Math.Min((now - lastFrame) / 1000000, 0.05); //cap at 50ms?
 		lastFrame = now;
 		//frameCount++;
 		skipLabelAlpha = Mathf.Lerp(skipLabelAlpha, targetSkipLabelAlpha, Math.Min(1, (float)delta * 20));
@@ -875,32 +886,28 @@ public partial class LegacyRunner : BaseScene
 		CurrentAttempt.Skippable = false;
 
 		if (CurrentAttempt.Map.AudioBuffer != null)
-		{
-			if (CurrentAttempt.Progress >= MapLength - Constants.HIT_WINDOW)
-			{
-				if (SoundManager.Song.Playing)
 				{
-					SoundManager.Song.Stop();
+					double audioTime = CurrentAttempt.Progress + settings.LocalOffset.Value;
+					if (!SoundManager.Song.Playing && audioTime >= 0 && CurrentAttempt.Progress < MapLength)
+					{
+						SoundManager.Song.Play();
+						SoundManager.Song.Seek((float)audioTime / 1000);
+					}
 				}
-			}
-			else if (!SoundManager.Song.Playing && CurrentAttempt.Progress >= 0)
-			{
-				SoundManager.Song.Play();
-				SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
-			}
-		}
-
+		
 		if (CurrentAttempt.Map.VideoBuffer != null)
-		{
-			if (settings.VideoDim < 100 && !video.IsPlaying() && CurrentAttempt.Progress >= 0)
-			{
-				video.Play();
-
-				Tween videoInTween = videoQuad.CreateTween();
-				videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
-				videoInTween.Play();
-			}
-		}
+				{
+					double videoTime = CurrentAttempt.Progress + settings.LocalOffset.Value;
+					if (settings.VideoDim < 100 && !video.IsPlaying() && videoTime >= 0)
+					{
+						video.Play();
+						video.StreamPosition = (float)videoTime / 1000;
+		
+						Tween videoInTween = videoQuad.CreateTween();
+						videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
+						videoInTween.Play();
+					}
+				}		
 
 		int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + Constants.BREAK_TIME : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
 
@@ -1239,8 +1246,9 @@ public partial class LegacyRunner : BaseScene
 						SoundManager.Song.Play();
 					}
 
-					SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
-					video.StreamPosition = (float)CurrentAttempt.Progress / 1000;
+					double targetTime = CurrentAttempt.Progress + settings.LocalOffset.Value;
+					SoundManager.Song.Seek((float)targetTime / 1000);
+					video.StreamPosition = (float)targetTime / 1000;
 				}
 			}
 		}
