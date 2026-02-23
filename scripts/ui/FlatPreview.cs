@@ -86,7 +86,7 @@ public partial class FlatPreview : Panel
 
             if (Time >= note.Millisecond)
             {
-                Vector2I pos = new(Math.Clamp((int)Math.Floor(note.X + 1.5), 0, 2), Math.Clamp((int)Math.Floor(note.Y + 1.5), 0, 2));
+                Vector2I pos = new(Math.Clamp((int)Math.Floor(note.X + 1.5), 0, 2), Math.Clamp((int)Math.Floor(-note.Y + 1.5), 0, 2));
                 ColorRect tile = tiles[pos.X + 3 * pos.Y];
 
                 tile.Color = bright;

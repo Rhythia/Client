@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using Godot;
 
@@ -464,7 +463,8 @@ public partial class LegacyRunner : BaseScene
         menu = GetNode<Panel>("Menu");
         //fpsCounter = GetNode<Label>("FPSCounter");
 
-        SubViewport holder = GetNode("SubViewportContainer").GetNode<SubViewport>("SubViewport");
+        // SubViewport holder = GetNode("SubViewportContainer").GetNode<SubViewport>("SubViewport");
+        Node holder = this;
 
         Camera = holder.GetNode<Camera3D>("Camera3D");
         titleLabel = holder.GetNode<Label3D>("Title");
@@ -511,6 +511,11 @@ public partial class LegacyRunner : BaseScene
 
 		for (int i = 0; i < activeMods.Count; i++)
 		{
+            if (activeMods[i] == "Spin")
+            {
+                continue;
+            }
+
 			Sprite3D icon = modifier_icon.Instantiate<Sprite3D>();
 
 			AddChild(icon);
@@ -1076,7 +1081,19 @@ public partial class LegacyRunner : BaseScene
 	{
 		if (@event is InputEventMouseMotion eventMouseMotion && Playing && !CurrentAttempt.IsReplay)
 		{
-			UpdateCursor(eventMouseMotion.Relative);
+			if (!settings.AbsoluteInput)
+			{
+				UpdateCursor(eventMouseMotion.Relative);
+			}
+			else
+			{
+				// Take mouse position difference between center of the current window size
+				// This is to make the mouse position the same as relative if it was locked, or confined
+				Vector2 AbsolutePosition = eventMouseMotion.Position - (GetViewport().GetWindow().Size / 2);
+
+				// Multiply by 0.582f to make it 1:1 to absolute scale on nightly
+				UpdateCursor(AbsolutePosition * 0.582f);
+			}
 
 			CurrentAttempt.DistanceMM += eventMouseMotion.Relative.Length() / settings.Sensitivity / 57.5;
 		}
@@ -1091,8 +1108,10 @@ public partial class LegacyRunner : BaseScene
 					{
 						SettingsManager.HideMenu();
 					}
-
-					ShowMenu(!MenuShown);
+					else
+					{
+						ShowMenu(!MenuShown);
+					}
 
 					break;
 				case Key.Quoteleft:
@@ -1148,6 +1167,7 @@ public partial class LegacyRunner : BaseScene
 
 		MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
+        SceneManager.Space.UpdateMap(CurrentAttempt.Map);
     }
 
 	public static void Play(Map map, double speed = 1, double startFrom = 0, Dictionary<string, bool> mods = null, string[] players = null, Replay[] replays = null)
@@ -1342,6 +1362,14 @@ public partial class LegacyRunner : BaseScene
 		float sensitivity = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].Sensitivity : settings.Sensitivity);
 		sensitivity *= (float)settings.FoV.Value / 70f;
 
+		if (settings.AbsoluteInput)
+		{
+			// Reset everything to zero so it doesn't spin endlessly, or have infinite sensitivity
+			Camera.Rotation = Vector3.Zero;
+			CurrentAttempt.RawCursorPosition = Vector2.Zero;
+			CurrentAttempt.CursorPosition = Vector2.Zero;
+		}
+
 		if (!CurrentAttempt.Mods["Spin"])
 		{
 			if (settings.CursorDrift)
@@ -1350,7 +1378,7 @@ public partial class LegacyRunner : BaseScene
 			}
 			else
 			{
-				CurrentAttempt.RawCursorPosition += new Vector2(1, -1) * mouseDelta / 120 * sensitivity;
+				CurrentAttempt.RawCursorPosition += new Vector2(1, -1) * (mouseDelta * sensitivity / 120f);
 				CurrentAttempt.CursorPosition = CurrentAttempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 			}
 
@@ -1363,14 +1391,22 @@ public partial class LegacyRunner : BaseScene
 		else
 		{
 			Camera.Rotation += new Vector3(-mouseDelta.Y / 120 * sensitivity / (float)Math.PI, -mouseDelta.X / 120 * sensitivity / (float)Math.PI, 0);
+
 			Camera.Rotation = new Vector3((float)Math.Clamp(Camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)), Camera.Rotation.Y, Camera.Rotation.Z);
-			Camera.Position = new Vector3(CurrentAttempt.CursorPosition.X * 0.25f, CurrentAttempt.CursorPosition.Y * 0.25f, 3.5f) + Camera.Basis.Z / 4;
 
-			float wtf = 0.95f;
-			float hypotenuse = (wtf + Camera.Position.Z) / Camera.Basis.Z.Z;
-			float distance = (float)Math.Sqrt(Math.Pow(hypotenuse, 2) - Math.Pow(wtf + Camera.Position.Z, 2));
+			Vector3 Origin = new Vector3(0,0,3.5f);
+			Vector3 CursorLock = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
+			// The pivot is to mimic ROBLOX's orbital camera
+			Vector3 Pivot = Camera.Basis.Z / 4f;
 
-			CurrentAttempt.RawCursorPosition = new Vector2(Camera.Basis.Z.X, Camera.Basis.Z.Y).Normalized() * -distance;
+			Camera.Position = Origin + CursorLock * settings.CameraParallax + Pivot;
+
+			Vector3 LookVector = Camera.Basis.Z;
+			Vector2 CameraVec2 = new Vector2(Camera.Position.X, Camera.Position.Y);
+			Vector2 LookVec2 = new Vector2(LookVector.X, LookVector.Y);
+
+			CurrentAttempt.RawCursorPosition = CameraVec2 - LookVec2 * Mathf.Abs(Camera.Position.Z / LookVector.Z);
+
 			CurrentAttempt.CursorPosition = CurrentAttempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 			cursor.Position = new Vector3(CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y, 0);
 

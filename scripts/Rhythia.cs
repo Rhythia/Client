@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Godot;
@@ -15,7 +16,7 @@ public partial class Rhythia : Node
     public static Rhythia Instance;
     public static bool Quitting { get; private set; } = false;
 
-    public override void _Ready()
+    public override async void _Ready()
     {
         Instance = this;
 
@@ -74,25 +75,28 @@ public partial class Rhythia : Node
 
         Stats.GamesOpened++;
 
-        List<string> import = [];
+        
+        // marking sspms for importing can be done with an one liner, kept the following block of code in case we need to loop over every valid map file for some reason
 
-        foreach (string file in Directory.GetFiles($"{Constants.USER_FOLDER}/maps", $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
-        {
-            string ext = file.GetExtension();
+        // List<string> import = [];
+        // HashSet<string> validExtensions = new HashSet<string> { "phxm", "sspm", "txt" };
+        // var files = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f => validExtensions.Contains(f.GetExtension().ToLower()));
 
-            if (!MapParser.IsValidExt(ext))
-            {
-                File.Delete(file);
-            }
-            else if (ext != Constants.DEFAULT_MAP_EXT)
-            {
-                import.Add(file);
-            }
-        }
+        // foreach (string file in files)
+        // {
+        //     string ext = file.GetExtension();
 
-        MapParser.BulkImport([.. import]);
+        //     if (ext != Constants.DEFAULT_MAP_EXT)
+        //     {
+        //         import.Add(file);
+        //     }
+        // }
 
-        foreach (string file in import)
+        var nonPhxmMaps = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f => f.GetExtension().ToLower() == "sspm" || f.GetExtension().ToLower() == "txt");
+        await MapParser.BulkImport([.. nonPhxmMaps], notify: true);
+        
+        // delete after importing
+        foreach (string file in nonPhxmMaps)
         {
             File.Delete(file);
         }

@@ -154,11 +154,17 @@ public partial class SettingsMenu : ColorRect
 
                 if (setting.Type == typeof(Variant))
                 {
-                //     Button button = buttonTemplate.Duplicate() as Button;
-
-                //     setupButton(setting, button);
-                //     panel.AddChild(button);
-                }
+                    var item = setting as SettingsItem<Variant>;
+                    if (item?.Buttons != null)
+                    {
+                        foreach (var settingButton in item.Buttons)
+                        {
+                            Button button = buttonTemplate.Duplicate() as Button;
+                            setupButton(settingButton, button);
+                            panel.AddChild(button);
+                        }
+                    }
+}
 
                 container.AddChild(panel);
                 settingPanels[setting.Id] = panel;
@@ -173,7 +179,7 @@ public partial class SettingsMenu : ColorRect
 
         hideButton.Pressed += () => { ShowMenu(false); };
     }
-
+    // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventKey eventKey && eventKey.Pressed)
@@ -181,10 +187,10 @@ public partial class SettingsMenu : ColorRect
             switch (eventKey.Keycode)
             {
                 case Key.O:
-                    if (eventKey.CtrlPressed) { ShowMenu(!Shown); }
+                    if (eventKey.CtrlPressed) { ShowMenu(!Shown); GetViewport().SetInputAsHandled(); }
                     break;
                 case Key.Escape:
-                    if (Shown) { ShowMenu(false); }
+                    if (Shown) { ShowMenu(false); GetViewport().SetInputAsHandled(); }
                     break;
             }
 
@@ -374,8 +380,11 @@ public partial class SettingsMenu : ColorRect
         optionButton.Selected = index;
     }
 
-    // private void setupButton(ISettingsItem setting, Button button)
-    // {
-
-    // }
+    private void setupButton(SettingsButton setting, Button button)
+    {
+        button.Text = setting.Title;
+        button.TooltipText = setting.Description;
+        button.Visible = true;
+        button.Pressed += () => { setting.OnPressed?.Invoke(); };
+    }
 }

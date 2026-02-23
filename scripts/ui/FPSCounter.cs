@@ -7,6 +7,15 @@ public partial class FPSCounter : Label
 
     private double time = 0;
 
+    public override void _Ready()
+    {
+        var settings = SettingsManager.Instance.Settings;
+
+        Visible = settings.DisplayFPS.Value;
+
+        settings.DisplayFPS.Updated += value => { Visible = (bool)value; };
+    }
+
     public override void _Process(double delta)
     {
         Frames++;
@@ -15,7 +24,7 @@ public partial class FPSCounter : Label
 		if (time >= 1)
 		{
             Text = $"{Frames} FPS";
-			
+
             time--;
             Frames = 0;
         }

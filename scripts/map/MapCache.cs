@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Godot;
+using Util;
 
 public static class MapCache
 {
@@ -59,7 +60,7 @@ public static class MapCache
         foreach (var map in maps)
         {
             string filePath = BackSlashToForwardSlash(map.FilePath);
-            
+
             if (filesHashSet.Contains(filePath))
             {
                 string checksum = GetMd5Checksum(filePath);
@@ -70,7 +71,7 @@ public static class MapCache
                     {
                         InsertIntoMapCacheFolder(map);
                     }
-                    
+
                     FilesSynced.Value += 1;
                     continue;
                 }
@@ -237,8 +238,6 @@ public static class MapCache
         }
     }
 
-
-
     public static void OrderAndSetMaps()
     {
         var maps = FetchAll();
@@ -246,8 +245,6 @@ public static class MapCache
         //TODO: not make this terrible
         Task.Run(() =>
         {
-            byte[] pngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
-
             foreach (var map in maps)
             {
                 string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
@@ -255,19 +252,15 @@ public static class MapCache
                 if (map.Cover == Map.DefaultCover && File.Exists($"{path}/cover.png"))
                 {
                     byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
+                    Image image = Util.Misc.LoadImageFromBuffer(coverBuffer);
 
-                    Image image = new Image();
-
-                    if (coverBuffer.Take(8).SequenceEqual(pngSignature))
+                    if (image != null)
                     {
-                        image.LoadPngFromBuffer(coverBuffer);
-                    }
-                    else
-                    {
-                        image.LoadJpgFromBuffer(coverBuffer);
+                        Callable.From(() => {
+                            map.Cover = ImageTexture.CreateFromImage(image);
+                        }).CallDeferred();
                     }
 
-                    map.Cover = ImageTexture.CreateFromImage(image);
                 }
             }
         });

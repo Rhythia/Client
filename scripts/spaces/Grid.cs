@@ -20,11 +20,6 @@ public partial class Grid : BaseSpace
     {
         base._Process(delta);
 
-        if (Playing)
-        {
-            Camera.Transform = LegacyRunner.Camera.Transform;
-        }
-
         tileMaterial.AlbedoColor = NoteHitColor;
         tileMaterial.Uv1Offset += Vector3.Up * (float)delta * 3;
     }

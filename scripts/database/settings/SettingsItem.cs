@@ -5,7 +5,7 @@ using Godot;
 public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 {
     private bool _init = false;
-    
+
     public SettingsItem(T value)
     {
         Value = value;
@@ -47,11 +47,8 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 
             List?.SelectedValue = value;
 
-            if (_init)
-            {
-                UpdateAction?.Invoke(value);
-                Updated?.Invoke(Variant.From(Value));
-            }
+            UpdateAction?.Invoke(value, !_init);
+            Updated?.Invoke(Variant.From(Value));
 
             if (!_init && Id != "")
             {
@@ -67,7 +64,7 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
         Value = value.As<T>();
     }
 
-    public Action<T> UpdateAction { get; set; } = null;
+    public Action<T, bool> UpdateAction { get; set; } = null;
 
     public static implicit operator T(SettingsItem<T> item) => item.Value;
 

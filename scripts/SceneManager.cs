@@ -53,7 +53,7 @@ public partial class SceneManager : Node
         }
 
         Tween outTween = Instance.CreateTween().SetTrans(Tween.TransitionType.Quad);
-        
+
         if (Scene != null)
         {
             outTween.TweenProperty(Scene.Transition, "self_modulate", Color.FromHtml("ffffffff"), skipTransition ? 0 : 0.25);
@@ -61,13 +61,14 @@ public partial class SceneManager : Node
 
         outTween.TweenCallback(Callable.From(() => {
             removeScene(Scene);
+
+            activeScenePath = path;
+            Scene = newScene;
+
             addScene(newScene);
 
             newScene.Transition.SelfModulate = Color.FromHtml("ffffffff");
             Instance.CreateTween().SetTrans(Tween.TransitionType.Quad).TweenProperty(newScene.Transition, "self_modulate", Color.FromHtml("ffffff00"), skipTransition ? 0 : 0.25);
-
-            activeScenePath = path;
-            Scene = newScene;
         }));
     }
 
@@ -77,9 +78,9 @@ public partial class SceneManager : Node
 
         if (updateSpace)
         {
-            addSpace(scene.GetSpace());
+            addSpace(scene.GetSpace(), scene.AddSpaceAsChild);
         }
-        
+
         Instance.AddChild(scene);
         scene.Load();
     }
@@ -103,20 +104,30 @@ public partial class SceneManager : Node
         }
     }
 
-    private static void addSpace(BaseSpace space)
+    private static void addSpace(BaseSpace space, bool addToScene = false)
     {
         if (space == null || space.GetParent() == backgroundViewport) { return; }
 
-        backgroundViewport.AddChild(space);
+        if (addToScene)
+        {
+            Scene.AddChild(space);
+            Scene.MoveChild(space, 0);
+        }
+        else
+        {
+            backgroundViewport.AddChild(space);
+        }
+
+        backgroundContainer.Visible = !addToScene;
 
         Space = space;
     }
 
     private static void removeSpace()
     {
-        if (Space == null || Space.GetParent() != backgroundViewport) { return; }
+        if (Space == null) { return; }
 
-        backgroundViewport.RemoveChild(Space);
+        Space.GetParent().RemoveChild(Space);
 
         Space = null;
     }

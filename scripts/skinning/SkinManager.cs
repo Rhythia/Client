@@ -161,7 +161,7 @@ public partial class SkinManager : Node
 		skin.MenuSpace = loadSpace($"res://prefabs/spaces/{(settings.MenuSpace.Value == "skin" ? skin.Config.MenuSpace : settings.MenuSpace.Value)}.tscn");
 
         /////
-
+		if (!SettingsManager.HideNotifications)
         ToastNotification.Notify($"Loaded skin [{settings.Skin.Value}]");
 		Logger.Log($"Loaded skin {settings.Skin.Value}");
 

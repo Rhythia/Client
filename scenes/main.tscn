@@ -9,6 +9,7 @@
 [ext_resource type="Shader" uid="uid://rngh60dyh10b" path="res://scripts/shaders/outline.gdshader" id="7_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://3e1tjlr4m0wt" path="res://user/skins/default/game/cursor.png" id="8_85g3d"]
 [ext_resource type="Script" uid="uid://carutkgoqpr4e" path="res://scripts/ui/MenuCursor.cs" id="9_choun"]
+[ext_resource type="Script" uid="uid://bmq7ajx48l7ng" path="res://scripts/ui/FPSCounter.cs" id="10_choun"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8skyv"]
 bg_color = Color(0.0360807, 0.0300716, 0.0527505, 1)
@@ -126,7 +127,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="Background" unique_id=1658587495]
 own_world_3d = true
 handle_input_locally = false
-size = Vector2i(1152, 648)
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
 [node name="Settings" type="ColorRect" parent="." unique_id=1393582030]
@@ -489,3 +490,28 @@ mouse_filter = 2
 texture = ExtResource("8_85g3d")
 expand_mode = 1
 script = ExtResource("9_choun")
+
+[node name="FPSCounter" type="Label" parent="." unique_id=946490961]
+top_level = true
+z_index = 2
+z_as_relative = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_bottom = -4.0
+grow_vertical = 0
+text = "0 FPS"
+script = ExtResource("10_choun")
+
+[node name="ColorRect" type="ColorRect" parent="FPSCounter" unique_id=117183639]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.76862746)

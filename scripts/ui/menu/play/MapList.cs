@@ -114,7 +114,7 @@ public partial class MapList : Panel, ISkinnable
         MouseExited += () => { toggleSelectionCursor(false); };
         Resized += clear;
         SkinManager.Instance.Loaded += UpdateSkin;
-        MapParser.Instance.MapsImported += maps => {
+        MapParser.Instance.MapsImportFinished += maps => {
             MapCache.Load(false);
             UpdateMaps();
             Select(maps[0]);

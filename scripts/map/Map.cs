@@ -92,34 +92,21 @@ public partial class Map : RefCounted
             return [];
         }
     }
-
+    
     private Texture2D getCover()
     {
-        byte[] pngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
-
         string path = $"{MapUtil.MapsCacheFolder}/{Name}";
 
         if (cover == DefaultCover && File.Exists($"{path}/cover.png"))
-        {
-            byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
-
-            Image image = new Image();
-
-            if (coverBuffer.Take(8).SequenceEqual(pngSignature))
-            {
-                image.LoadPngFromBuffer(coverBuffer);
-            }
-            else
-            {
-                image.LoadJpgFromBuffer(coverBuffer);
-            }
-
+    {
+        byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
+        Image image = Util.Misc.LoadImageFromBuffer(coverBuffer);
+        if (image != null)
             cover = ImageTexture.CreateFromImage(image);
         }
 
-        return cover;
-    }
-
+    return cover;
+}
     public Map() { }
 
     public Map(string filePath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")

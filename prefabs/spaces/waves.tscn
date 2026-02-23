@@ -22,11 +22,10 @@ sky_material = SubResource("ShaderMaterial_s7g12")
 [sub_resource type="Environment" id="Environment_su0lf"]
 background_mode = 2
 sky = SubResource("Sky_cqp65")
-glow_enabled = true
 glow_intensity = 0.5
 glow_strength = 2.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_plddw"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_018g8"]
 render_priority = 0
 shader = ExtResource("4_56okg")
 shader_parameter/water_color = Color(0, 0, 0, 1)
@@ -36,7 +35,7 @@ shader_parameter/echo = 0.0
 shader_parameter/echo_color = Color(1, 0.2, 0.25, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_and4y"]
-material = SubResource("ShaderMaterial_plddw")
+material = SubResource("ShaderMaterial_018g8")
 size = Vector2(4000, 4000)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jaxqn"]
@@ -65,11 +64,12 @@ script = ExtResource("1_018g8")
 environment = SubResource("Environment_su0lf")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1115967308]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 0.9659259, -0.25881904, 0, 0.25881904, 0.9659259, 0, 0, 0)
 fov = 70.0
 
 [node name="Water" type="MeshInstance3D" parent="." unique_id=1454706985]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.01, 0)
+sorting_offset = -1000.0
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_and4y")
 

@@ -16,15 +16,15 @@ shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("2_cmhau")
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_v8td3"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_cmhau"]
 material = SubResource("StandardMaterial3D_v8td3")
 size = Vector2(0.5, 0.5)
 
-[sub_resource type="Gradient" id="Gradient_mwnsp"]
+[sub_resource type="Gradient" id="Gradient_2iqmx"]
 offsets = PackedFloat32Array(0, 0.2, 0.8, 1)
 colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="Curve" id="Curve_3wxpm"]
+[sub_resource type="Curve" id="Curve_kepi0"]
 _limits = [-1.0, 1.0, 0.0, 1.0]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -36,16 +36,17 @@ script = ExtResource("1_cmhau")
 environment = SubResource("Environment_n6lso")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1770879942]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1, 0)
 fov = 50.0
 size = 1.25
 
-[node name="ParticlesNear" type="CPUParticles3D" parent="." unique_id=677235271]
-transform = Transform3D(1, 0, 0, 0, 0.1, 0, 0, 0, 0.8, 0, 0, 0)
+[node name="ParticlesNear" type="CPUParticles3D" parent="." unique_id=1334373449]
+transform = Transform3D(20, 0, 0, 0, -4.371139e-09, -20, 0, 0.1, -8.742278e-07, 0, 0, -15)
+sorting_offset = -1000.0
 amount = 12
 lifetime = 20.0
 preprocess = 5.0
-mesh = SubResource("PlaneMesh_v8td3")
+local_coords = true
+mesh = SubResource("PlaneMesh_cmhau")
 emission_shape = 3
 emission_box_extents = Vector3(1, 1, 1)
 particle_flag_rotate_y = true
@@ -57,22 +58,25 @@ initial_velocity_min = 0.04
 initial_velocity_max = 0.06
 angular_velocity_min = -20.0
 angular_velocity_max = 20.0
+radial_accel_min = 0.01
 radial_accel_max = 0.01
 angle_min = -180.0
 angle_max = 180.0
 scale_amount_min = 0.6
 color = Color(0.27058825, 0.47058824, 1, 0.4509804)
-color_ramp = SubResource("Gradient_mwnsp")
+color_ramp = SubResource("Gradient_2iqmx")
 hue_variation_min = -0.04
 hue_variation_max = 0.04
-hue_variation_curve = SubResource("Curve_3wxpm")
+hue_variation_curve = SubResource("Curve_kepi0")
 
-[node name="ParticlesFar" type="CPUParticles3D" parent="." unique_id=1136469725]
-transform = Transform3D(1, 0, 0, 0, 0.1, 0, 0, 0, 0.8, 0, -1, 0)
+[node name="ParticlesFar" type="CPUParticles3D" parent="." unique_id=756519999]
+transform = Transform3D(20, 0, 0, 0, -4.371139e-09, -20, 0, 0.1, -8.742278e-07, 0, 0, -30)
+sorting_offset = -1000.0
 amount = 10
 lifetime = 20.0
 preprocess = 5.0
-mesh = SubResource("PlaneMesh_v8td3")
+local_coords = true
+mesh = SubResource("PlaneMesh_cmhau")
 emission_shape = 3
 emission_box_extents = Vector3(1, 1, 1)
 particle_flag_rotate_y = true
@@ -84,12 +88,13 @@ initial_velocity_min = 0.04
 initial_velocity_max = 0.06
 angular_velocity_min = -20.0
 angular_velocity_max = 20.0
-radial_accel_max = 0.02
+radial_accel_min = 0.01
+radial_accel_max = 0.01
 angle_min = -180.0
 angle_max = 180.0
 scale_amount_max = 1.4
 color = Color(0.27058825, 0.47058824, 1, 0.4509804)
-color_ramp = SubResource("Gradient_mwnsp")
+color_ramp = SubResource("Gradient_2iqmx")
 hue_variation_min = -0.04
 hue_variation_max = 0.04
-hue_variation_curve = SubResource("Curve_3wxpm")
+hue_variation_curve = SubResource("Curve_kepi0")
