@@ -694,7 +694,7 @@ public partial class LegacyRunner : BaseScene
 
 		if (CurrentAttempt.Map.AudioBuffer != null)
 		{
-			SoundManager.Song.Stream = Util.Audio.LoadStream(CurrentAttempt.Map.AudioBuffer);
+			SoundManager.Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsCacheFolder}/{CurrentAttempt.Map.Name}/audio.{CurrentAttempt.Map.AudioExt}");
 			SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
 		}
 
@@ -773,7 +773,8 @@ public partial class LegacyRunner : BaseScene
 	public override void _Process(double delta)
 	{
 		ulong now = Time.GetTicksUsec();
-		delta = (now - lastFrame) / 1000000;	// more reliable
+		// delta = (now - lastFrame) / 1000000;	// more reliable
+		delta = Math.Min((now - lastFrame) / 1000000, 0.05); //cap at 50ms?
 		lastFrame = now;
 		//frameCount++;
 		skipLabelAlpha = Mathf.Lerp(skipLabelAlpha, targetSkipLabelAlpha, Math.Min(1, (float)delta * 20));

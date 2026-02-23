@@ -68,7 +68,6 @@ public partial class FlatPreview : Panel
 
         if (Time < oldTime)
         {
-            Task.Run(() => {
                 for (int i = 0; i < Map.Notes.Length; i++)
                 {
                     if (Time < Map.Notes[i].Millisecond)
@@ -77,7 +76,6 @@ public partial class FlatPreview : Panel
                         break;
                     }
                 }
-            });
         }
 
         for (int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1)); i < Map.Notes.Length; i++)
