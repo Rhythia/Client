@@ -98,6 +98,14 @@ public partial class MainMenu : BaseScene
         }
     }
 
+    public override void _Process(double delta)
+    {
+        if (Rhythia.Quitting)
+        {
+            SoundManager.Song.VolumeDb = Mathf.Lerp(SoundManager.Song.VolumeDb, -80f, (float)delta * 2);
+        }
+    }
+
 	public void Transition(Panel menu, bool instant = false)
 	{
 		if (CurrentMenu == menu) { return; }

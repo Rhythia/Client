@@ -1131,7 +1131,9 @@ public partial class LegacyRunner : BaseScene
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseMotion eventMouseMotion && Playing && !CurrentAttempt.IsReplay)
+		if (CurrentAttempt.Stopped) return;
+
+		if (@event is InputEventMouseMotion eventMouseMotion && (Playing || PauseShown) && !CurrentAttempt.IsReplay)
 		{
 			if (!settings.AbsoluteInput)
 			{
@@ -1209,7 +1211,7 @@ public partial class LegacyRunner : BaseScene
 					{
 						if (Lobby.Players.Count > 1) break;
 						if (CurrentAttempt.Skippable) Skip();
-						else ShowPause(!PauseShown);
+						else if (settings.SpaceToPause) ShowPause(!PauseShown);
 					}
 					break;
 				case Key.F:
