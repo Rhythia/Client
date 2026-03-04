@@ -361,7 +361,7 @@ public partial class MapList : Panel, ISkinnable
 
         Focus(map);
 
-        SceneManager.Space.UpdateMap(map);
+        SceneManager.Space?.UpdateMap(map);
     }
 
     public void Focus(Map map)
