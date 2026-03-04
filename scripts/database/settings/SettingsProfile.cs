@@ -421,7 +421,7 @@ public partial class SettingsProfile
             }
         };
 
-        SpaceToPause = new(true)
+        SpaceToPause = new(false)
         {
             Id = "SpaceToPause",
             Title = "Space to Pause",

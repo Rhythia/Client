@@ -822,9 +822,16 @@ public partial class LegacyRunner : BaseScene
 					CurrentAttempt.DeathTime = Math.Max(0, CurrentAttempt.Progress);
 				}
 
-				Stop();
+				QueueStop();
 				return;
 			}
+		}
+
+		if (stopQueued)
+		{
+			stopQueued = false;
+			Stop();
+			return;
 		}
 
 		if (!Playing)
@@ -1068,13 +1075,6 @@ public partial class LegacyRunner : BaseScene
 		progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
 		skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
 
-		if (stopQueued)
-		{
-			stopQueued = false;
-			Stop();
-			return;
-		}
-
         cursor.RotationDegrees += Vector3.Back * settings.CursorRotation * (float)delta;
 
 		// trail stuff
@@ -1170,7 +1170,7 @@ public partial class LegacyRunner : BaseScene
 				return;
 			}
 
-			if (eventKey.Pressed)
+			if (eventKey.Pressed && !eventKey.Echo)
 			{
 			switch (eventKey.PhysicalKeycode)
 			{

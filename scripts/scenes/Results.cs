@@ -172,7 +172,13 @@ public partial class Results : BaseScene
 
 	public void Stop()
 	{
-		SoundManager.Song.Stop();
-		SceneManager.Load("res://scenes/main_menu.tscn");
+		Tween fadeTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+		fadeTween.TweenProperty(SoundManager.Song, "volume_db", -80, 0.3);
+		fadeTween.TweenCallback(Callable.From(() =>
+		{
+			SoundManager.Song.PitchScale = 1.0f;
+			SoundManager.UpdateVolume();
+			SceneManager.Load("res://scenes/main_menu.tscn");
+		}));
 	}
 }
