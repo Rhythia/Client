@@ -16,9 +16,13 @@ public partial class OptionPopup : Control
 
 	private readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/option_popup.tscn");
 
+    [Export]
     private Label headerLabel;
+    [Export]
     private RichTextLabel infoLabel;
+    [Export]
     private HBoxContainer buttonContainer;
+    [Export]
     private Button buttonTemplate;
 
 	public OptionPopup() { }
@@ -31,17 +35,12 @@ public partial class OptionPopup : Control
         Info = info;
         Name = $"OptionPopup{new Regex("[^a-zA-Z0-9_-]").Replace(Header, "")}";
 
-        SceneManager.Root.AddChild(this);
+        SceneManager.Root.CallDeferred("add_child", this);
     }
 
     public override void _Ready()
     {
         Node container = GetNode("Holder").GetNode("VBoxContainer");
-		
-        headerLabel = container.GetNode<Label>("Header");
-        infoLabel = container.GetNode<RichTextLabel>("Info");
-        buttonContainer = container.GetNode<HBoxContainer>("Buttons");
-        buttonTemplate = buttonContainer.GetNode<Button>("ButtonTemplate");
 
         headerLabel.Text = Header;
         infoLabel.Text = Info;
@@ -68,11 +67,6 @@ public partial class OptionPopup : Control
 
 	public void AddOption(string text, Callable callback, string tooltip = null)
 	{
-		if (!IsInsideTree())
-		{
-            throw new("Popup must be in scene tree before adding options");
-        }
-
         Button button = buttonTemplate.Duplicate() as Button;
 
         button.Text = text;
@@ -94,7 +88,7 @@ public partial class OptionPopup : Control
         MoveToFront();
 
         if (show) { Visible = true; }
-		
+
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad);
         tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.1);
         tween.TweenCallback(Callable.From(() => {

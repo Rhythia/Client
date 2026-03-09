@@ -27,7 +27,7 @@ expand_margin_bottom = 8.0
 [sub_resource type="LabelSettings" id="LabelSettings_pyqjf"]
 font_size = 20
 
-[node name="OptionPopup" type="Control" unique_id=1842619288]
+[node name="OptionPopup" type="Control" unique_id=1842619288 node_paths=PackedStringArray("headerLabel", "infoLabel", "buttonContainer", "buttonTemplate")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,6 +37,10 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_p8v60")
+headerLabel = NodePath("Holder/VBoxContainer/Header")
+infoLabel = NodePath("Holder/VBoxContainer/Info")
+buttonContainer = NodePath("Holder/VBoxContainer/Buttons")
+buttonTemplate = NodePath("Holder/VBoxContainer/Buttons/ButtonTemplate")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1710109709]
 layout_mode = 1

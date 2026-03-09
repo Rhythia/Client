@@ -4,6 +4,8 @@ using Godot.Collections;
 
 public partial class LinkPopupButton : Button
 {
+    public static string InfoTemplate = "[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{0}[/u][/i]\n\n[color=dddddd]Are you sure?";
+
 	[Export]
 	public string Link;
 
@@ -39,7 +41,7 @@ public partial class LinkPopupButton : Button
 	{
 		popup?.Show();
 	}
-	
+
 	public void UpdateLink(string link)
 	{
 		Link = link;
@@ -50,8 +52,8 @@ public partial class LinkPopupButton : Button
 			{
 				button.TooltipText = link;
 			}
-			
-			popup.UpdateInfo($"[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{Link}[/u][/i]\n\n[color=dddddd]Are you sure?");
+
+			popup.UpdateInfo(string.Format(InfoTemplate, link));
 		}
 	}
 }

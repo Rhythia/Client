@@ -1174,9 +1174,7 @@ public partial class LegacyRunner : BaseScene
 	{
         map = MapParser.Decode(map.FilePath);
 
-        Control focused = SceneManager.Root.GetViewport().GuiGetFocusOwner();
-
-        focused?.ReleaseFocus();
+        SceneManager.Root.GetViewport().GuiGetFocusOwner()?.ReleaseFocus();
 
 		if (Playing)
 		{
