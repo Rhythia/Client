@@ -279,12 +279,20 @@ public partial class SettingsMenu : ColorRect
 	{
 		void applyLineEdit()
         {
-            double value = (lineEdit.Text == "" ? lineEdit.PlaceholderText : lineEdit.Text).ToFloat();
+            if (!double.TryParse(lineEdit.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            {
+                value = double.Parse(lineEdit.PlaceholderText, System.Globalization.CultureInfo.InvariantCulture);
+            }
 
             if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
 
-        // lineEdit.PlaceholderText = ((SettingsItem<Variant>)setting).DefaultValue.ToString();
+        float placeholder = 0;
+
+        if (setting is SettingsItem<float>) { placeholder = (setting as SettingsItem<float>).DefaultValue; }
+        else if (setting is SettingsItem<int>) { placeholder = (setting as SettingsItem<int>).DefaultValue; }
+
+        lineEdit.PlaceholderText = placeholder.ToString("F2");
         slider.Step = setting.Slider.Step;
         slider.MinValue = setting.Slider.MinValue;
         slider.MaxValue = setting.Slider.MaxValue;
@@ -302,7 +310,7 @@ public partial class SettingsMenu : ColorRect
 
 	private void updateSlider(HSlider slider, LineEdit lineEdit, double value)
 	{
-        lineEdit.Text = value.ToString();
+        lineEdit.Text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
         if (lineEdit.IsInsideTree())
         {

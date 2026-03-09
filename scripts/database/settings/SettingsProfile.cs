@@ -141,7 +141,7 @@ public partial class SettingsProfile
     /// Degrees to rotate the cursor by every second
     /// </summary>
     [Order]
-    public SettingsItem<int> CursorRotation { get; private set; }
+    public SettingsItem<float> CursorRotation { get; private set; }
 
     /// <summary>
     /// Toggles a trial for your cursor
@@ -219,7 +219,6 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<int> FPS { get; private set; }
 
-
     #endregion
 
     #region Audio
@@ -275,11 +274,16 @@ public partial class SettingsProfile
     /// Restarts settings to the game's defaults
     /// </summary>
     public SettingsItem<Variant> ResetToDefaults { get; private set; }
+
     #endregion
+
+    #region Initializers
+
+
 
     public SettingsProfile()
     {
-        #region Initializers
+        #region Gameplay
 
         Sensitivity = new(0.5f)
         {
@@ -422,6 +426,10 @@ public partial class SettingsProfile
                 MaxValue = 120,
             }
         };
+
+        #endregion
+
+        #region Visual
 
         Skin = new("default")
         {
@@ -614,6 +622,10 @@ public partial class SettingsProfile
             }
         };
 
+        #endregion
+
+        #region Video
+
         VideoRenderScale = new(100)
         {
             Id = "VideoRenderScale",
@@ -688,6 +700,10 @@ public partial class SettingsProfile
             UpdateAction = value => Engine.MaxFps = UnlockFPS ? 0 : FPS
         };
 
+        #endregion
+
+        #region Audio
+
         AutoplayJukebox = new(true)
         {
             Id = "AutoplayJukebox",
@@ -749,6 +765,10 @@ public partial class SettingsProfile
             }
         };
 
+        #endregion
+
+        #region Other
+
         // RhythiaImport = new(default)
         // {
         //     Id = "RhythiaImport",
@@ -788,6 +808,8 @@ public partial class SettingsProfile
 
         updateApproachTime();
     }
+
+    #endregion
 
     /// <summary>
     /// Orders all the <see cref="SettingsItem{T}"/> that is present in the <see cref="SettingsProfile"/>

@@ -165,7 +165,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void applySpeed()
         {
-            double value = ((speedEdit.Text == "" || !speedEdit.Text.IsValidFloat()) ? speedEdit.PlaceholderText : speedEdit.Text).ToFloat();
+            if (!double.TryParse(speedEdit.Text, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            {
+                value = 100;
+            }
 
             value = Math.Clamp(value, 25, 1000) / 100;
 
@@ -209,6 +212,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             double value = 0;
             string[] split = input.Split(":");
+
             split.Reverse();
 
             if (split.Length > 1 && split[1].IsValidFloat())
@@ -216,10 +220,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
                 value += 60 * split[1].ToFloat();
             }
 
-            if (split[0].IsValidFloat())
+            if (double.TryParse(split[0], System.Globalization.CultureInfo.InvariantCulture, out double inputValue))
             {
-                float inputValue = split[0].ToFloat();
-
                 if (inputValue < 1)
                 {
                     inputValue *= Map.Length / 1000;
@@ -247,7 +249,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         startFromEdit.TextSubmitted += (_) => { applyStartFrom(); };
         startFromSlider.ValueChanged += value =>
         {
-            applyStartFrom((Math.Round(startFromSlider.Value * Map.Length) / 1000).ToString(), false);
+            applyStartFrom((Math.Round(value * Map.Length) / 1000).ToString("F2", new System.Globalization.CultureInfo("en-US")), false);
         };
         startFromSlider.DragEnded += changed =>
         {
