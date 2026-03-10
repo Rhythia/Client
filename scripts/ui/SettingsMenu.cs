@@ -384,14 +384,6 @@ public partial class SettingsMenu : ColorRect
         button.Text = setting.Title;
         button.TooltipText = setting.Description;
         button.Visible = true;
-        
-        ulong whenPress = 0; // need another way of doing this
-        
-        button.Pressed += () => {
-        ulong now = Time.GetTicksMsec();
-        if (now - whenPress < 2000) return;
-        whenPress = now;
-        setting.OnPressed?.Invoke();
-    };
+        button.Pressed += () => { setting.OnPressed?.Invoke(); };
     }
 }

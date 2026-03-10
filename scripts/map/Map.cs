@@ -98,11 +98,13 @@ public partial class Map : RefCounted
         string path = $"{MapUtil.MapsCacheFolder}/{Name}";
         
         if (cover == DefaultCover && File.Exists($"{path}/cover.png"))
-        {
-            Image image = Util.Misc.LoadImageFromBuffer(File.ReadAllBytes($"{path}/cover.png"));
-            if (image != null)
+    {
+        byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
+        Image image = Util.Misc.LoadImageFromBuffer(coverBuffer);
+        if (image != null)
             cover = ImageTexture.CreateFromImage(image);
         }
+
     return cover;
 }
     public Map() { }
