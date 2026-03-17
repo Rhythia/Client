@@ -57,6 +57,14 @@ public partial class LegacyRunner : BaseScene
 	private static bool replayViewerSeekHovered = false;
 	private static bool leftMouseButtonDown = false;
 
+	private static Panel pauseOverlay;
+	private static bool PauseShown = false;
+	private static Panel quitOverlay;
+	private static ColorRect quitProgressBar;
+	private static float quitHoldTime = 0;
+	private static bool rKeyHeld = false;
+	private static float quitHoldDuration = 1f;
+
 	private double lastFrame = Time.GetTicksUsec(); 	// delta arg unreliable..
 	//private double lastSecond = Time.GetTicksUsec();	// better framerate calculation
 	private List<Dictionary<string, object>> lastCursorPositions = [];	// trail
@@ -134,7 +142,7 @@ public partial class LegacyRunner : BaseScene
 			StartFrom = startFrom;
 			Players = players ?? [];
 			Progress = Speed * -1000 - settings.ApproachTime.Value * 1000 + StartFrom;
-            ComboMultiplierIncrement = Math.Max(2, (uint)Map.Notes.Length / 200);
+			ComboMultiplierIncrement = Math.Max(2, (uint)Map.Notes.Length / 200);
 			Mods = [];
 			HitsInfo = IsReplay ? Replays[0].Notes : new float[Map.Notes.Length];
 
@@ -158,7 +166,7 @@ public partial class LegacyRunner : BaseScene
 
 			if (!IsReplay && settings.RecordReplays && !Map.Ephemeral)
 			{
-                ReplayFile = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/replays/{ID}.phxr", Godot.FileAccess.ModeFlags.Write);
+				ReplayFile = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/replays/{ID}.phxr", Godot.FileAccess.ModeFlags.Write);
 				ReplayFile.StoreString("phxr");	// sig
 				ReplayFile.Store8(1);	// replay file version
 
@@ -220,8 +228,8 @@ public partial class LegacyRunner : BaseScene
 			{
 				if (entry.Value)
 				{
-                    bool hasMultiplier = Constants.MODS_MULTIPLIER_INCREMENT.TryGetValue(entry.Key, out double multiplier);
-                    ModsMultiplier += hasMultiplier ? multiplier : 0;
+					bool hasMultiplier = Constants.MODS_MULTIPLIER_INCREMENT.TryGetValue(entry.Key, out double multiplier);
+					ModsMultiplier += hasMultiplier ? multiplier : 0;
 				}
 			}
 		}
@@ -524,6 +532,14 @@ public partial class LegacyRunner : BaseScene
 			icon.Texture = Util.Misc.GetModIcon(activeMods[i]);
 		}
 
+		pauseOverlay = GetNode<Panel>("PauseOverlay");
+		quitOverlay = GetNode<Panel>("QuitOverlay");
+		quitProgressBar = quitOverlay.GetNode("Holder").GetNode("ProgressBackground").GetNode<ColorRect>("ProgressBar");
+
+		PauseShown = false;
+		quitHoldTime = 0;
+		rKeyHeld = false;
+
 		Panel menuButtonsHolder = menu.GetNode<Panel>("Holder");
 
 		menu.GetNode<Button>("Button").Pressed += HideMenu;
@@ -775,6 +791,49 @@ public partial class LegacyRunner : BaseScene
 		//	lastSecond += 1000000;
 		//}
 
+		if (rKeyHeld && !CurrentAttempt.IsReplay && !MenuShown)
+		{
+			quitHoldTime += (float)delta;
+			float progress = Math.Clamp(quitHoldTime / quitHoldDuration, 0, 1);
+			quitProgressBar.Size = new Vector2(300 * progress, 8);
+
+			if (!quitOverlay.Visible)
+			{
+				quitOverlay.Visible = true;
+				Tween showTween = quitOverlay.CreateTween();
+				showTween.TweenProperty(quitOverlay, "modulate", Color.Color8(255, 255, 255, 255), 0.15);
+				showTween.Play();
+			}
+
+			if (quitHoldTime >= quitHoldDuration)
+			{
+				rKeyHeld = false;
+
+				if (CurrentAttempt.Alive)
+				{
+					SoundManager.FailSound.Play();
+				}
+
+				CurrentAttempt.Alive = false;
+				CurrentAttempt.Qualifies = false;
+
+				if (CurrentAttempt.DeathTime == -1)
+				{
+					CurrentAttempt.DeathTime = Math.Max(0, CurrentAttempt.Progress);
+				}
+
+				QueueStop();
+				return;
+			}
+		}
+
+		if (stopQueued)
+		{
+			stopQueued = false;
+			Stop();
+			return;
+		}
+
 		if (!Playing)
 		{
 			return;
@@ -1016,13 +1075,6 @@ public partial class LegacyRunner : BaseScene
 		progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
 		skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
 
-		if (stopQueued)
-		{
-			stopQueued = false;
-			Stop();
-			return;
-		}
-
         cursor.RotationDegrees += Vector3.Back * settings.CursorRotation * (float)delta;
 
 		// trail stuff
@@ -1079,7 +1131,9 @@ public partial class LegacyRunner : BaseScene
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseMotion eventMouseMotion && Playing && !CurrentAttempt.IsReplay)
+		if (CurrentAttempt.Stopped) return;
+
+		if (@event is InputEventMouseMotion eventMouseMotion && (Playing || PauseShown) && !CurrentAttempt.IsReplay)
 		{
 			if (!settings.AbsoluteInput)
 			{
@@ -1097,14 +1151,37 @@ public partial class LegacyRunner : BaseScene
 
 			CurrentAttempt.DistanceMM += eventMouseMotion.Relative.Length() / settings.Sensitivity / 57.5;
 		}
-		else if (@event is InputEventKey eventKey && eventKey.Pressed)
+		else if (@event is InputEventKey eventKey)
 		{
+			if (eventKey.PhysicalKeycode == Key.R)
+			{
+				if (eventKey.Pressed && !eventKey.Echo)
+				{
+					rKeyHeld = true;
+					quitHoldTime = 0;
+				}
+				else if (!eventKey.Pressed)
+				{
+					rKeyHeld = false;
+					quitHoldTime = 0;
+					HideQuitOverlay();
+				}
+
+				return;
+			}
+
+			if (eventKey.Pressed && !eventKey.Echo)
+			{
 			switch (eventKey.PhysicalKeycode)
 			{
 				case Key.Escape:
 					CurrentAttempt.Qualifies = false;
 
-					if (SettingsManager.Shown)
+					if (PauseShown)
+					{
+						HidePause();
+					}
+					else if (SettingsManager.Shown)
 					{
 						SettingsManager.HideMenu();
 					}
@@ -1132,12 +1209,9 @@ public partial class LegacyRunner : BaseScene
 					}
 					else
 					{
-						if (Lobby.Players.Count > 1)
-						{
-							break;
-						}
-
-						Skip();
+						if (Lobby.Players.Count > 1) break;
+						if (CurrentAttempt.Skippable) Skip();
+						else if (settings.SpaceToPause) ShowPause(!PauseShown);
 					}
 					break;
 				case Key.F:
@@ -1146,6 +1220,7 @@ public partial class LegacyRunner : BaseScene
 				case Key.P:
 					settings.Pushback.Value = !settings.Pushback;
 					break;
+			}
 			}
 		}
 		else if (@event is InputEventMouseButton eventMouseButton)
@@ -1313,8 +1388,46 @@ public partial class LegacyRunner : BaseScene
 		}
 	}
 
+	public static void ShowPause(bool show = true)
+	{
+		if (CurrentAttempt.IsReplay || MenuShown) return;
+
+		PauseShown = show;
+		Playing = !PauseShown;
+		SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;
+
+		if (PauseShown)
+		{
+			CurrentAttempt.Qualifies = false;
+			pauseOverlay.Visible = true;
+		}
+
+		Tween tween = pauseOverlay.CreateTween();
+		tween.TweenProperty(pauseOverlay, "modulate", Color.Color8(255, 255, 255, (byte)(PauseShown ? 255 : 0)), 0.2).SetTrans(Tween.TransitionType.Quad);
+		tween.TweenCallback(Callable.From(() => { pauseOverlay.Visible = PauseShown; }));
+		tween.Play();
+	}
+
+	public static void HidePause()
+	{
+		ShowPause(false);
+	}
+
+	private static void HideQuitOverlay()
+	{
+		if (quitOverlay.Visible)
+		{
+			Tween tween = quitOverlay.CreateTween();
+			tween.TweenProperty(quitOverlay, "modulate", Color.Color8(255, 255, 255, 0), 0.15);
+			tween.TweenCallback(Callable.From(() => { quitOverlay.Visible = false; }));
+			tween.Play();
+		}
+	}
+
 	public static void ShowMenu(bool show = true)
 	{
+		if (PauseShown) HidePause();
+
 		MenuShown = show;
 		Playing = !MenuShown;
 		SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;	// not again
@@ -1422,4 +1535,5 @@ public partial class LegacyRunner : BaseScene
 		//playerScore.Position = new Vector2(playerScore.Position.X, score);
 		//scoreLabel.Text = score.ToString();
 	}
+
 }

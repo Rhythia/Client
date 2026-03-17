@@ -284,7 +284,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
     public override void _Process(double delta)
     {
-        outlineMaterial.SetShaderParameter("cursor_position", GetViewport().GetMousePosition());
+        outlineMaterial?.SetShaderParameter("cursor_position", GetViewport().GetMousePosition());
     }
 
     public override void _Input(InputEvent @event)
@@ -311,6 +311,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
 	public void Setup(Map map)
 	{
+        if (map == null) return;
+
         if (Name == map.Name)
         {
             return;
@@ -344,9 +346,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Info
 
-        mainLabel.Text = string.Format(mainLabelFormat, map.PrettyTitle, Constants.DIFFICULTY_COLORS[map.Difficulty].ToHtml(), map.DifficultyName, map.PrettyMappers);
+        int clampedDifficulty = Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1);
+        mainLabel.Text = string.Format(mainLabelFormat, map.PrettyTitle, Constants.DIFFICULTY_COLORS[clampedDifficulty].ToHtml(), map.DifficultyName, map.PrettyMappers);
         extraLabel.Text = string.Format(extraLabelFormat, Util.String.FormatTime(map.Length / 1000), map.Notes.Length, map.Name);
-        coverBackground.SelfModulate = Constants.DIFFICULTY_COLORS[map.Difficulty];
+        coverBackground.SelfModulate = Constants.DIFFICULTY_COLORS[clampedDifficulty];
         cover.Texture = map.Cover;
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
         favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;

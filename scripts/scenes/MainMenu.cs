@@ -87,6 +87,9 @@ public partial class MainMenu : BaseScene
 
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Adaptive);
 
+        // Apply any map selection that was deferred while menu was off-tree (e.g. import from another scene)
+        MapInfo.ApplyPendingSelection();
+
         MapInfo.InfoContainer?.Refresh();
 		SceneManager.Space?.UpdateState(false);
 
@@ -95,6 +98,20 @@ public partial class MainMenu : BaseScene
         if (map != null)
         {
             SceneManager.Space?.UpdateMap(map);
+        }
+
+        // Resume jukebox only if song has ended (not if it's still playing from results fade)
+        if (!SoundManager.Song.Playing && SoundManager.Map != null)
+        {
+            SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        if (Rhythia.Quitting)
+        {
+            SoundManager.Song.VolumeDb = Mathf.Lerp(SoundManager.Song.VolumeDb, -80f, (float)delta * 2);
         }
     }
 

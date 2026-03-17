@@ -132,7 +132,7 @@ public partial class Loading : BaseScene
             }
             else
             {
-                MapManager.MapsInitialized += _ => exit();
+                MapManager.MapsInitialized += _ => Callable.From(exit).CallDeferred();
             }
         }));
     }

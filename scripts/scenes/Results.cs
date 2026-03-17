@@ -128,6 +128,10 @@ public partial class Results : BaseScene
 				case Key.Quoteleft:
 					Replay();
 					break;
+				case Key.Space:
+					GetViewport().SetInputAsHandled();
+					Replay();
+					break;
 			}
 		}
 		else if (@event is InputEventMouseMotion eventMouseMotion)
@@ -168,6 +172,8 @@ public partial class Results : BaseScene
 
 	public void Stop()
 	{
+		SoundManager.Song.PitchScale = (float)Lobby.Speed;
+		SoundManager.UpdateVolume();
 		SceneManager.Load("res://scenes/main_menu.tscn");
 	}
 }

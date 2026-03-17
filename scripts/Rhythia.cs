@@ -188,8 +188,9 @@ public partial class Rhythia : Node
         }
 
         Discord.Client.Dispose();
-        
-        Instance.GetTree().Quit();
+
+        Tween quitTween = Instance.CreateTween();
+        quitTween.TweenCallback(Callable.From(() => { Instance.GetTree().Quit(); })).SetDelay(0.5);
     }
 
     public override void _Notification(int what)

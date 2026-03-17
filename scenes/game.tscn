@@ -227,6 +227,11 @@ font_color = Color(1, 1, 1, 0.768627)
 font = ExtResource("12_axsek")
 font_size = 50
 
+[sub_resource type="LabelSettings" id="LabelSettings_r7xjp"]
+font = ExtResource("12_axsek")
+font_size = 18
+font_color = Color(1, 1, 1, 0.8)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gc8yu"]
 shader = ExtResource("14_3xchs")
 
@@ -447,6 +452,107 @@ mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
 text = "GIVE UP"
+
+[node name="PauseOverlay" type="Panel" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_d5aou")
+
+[node name="Background" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.4)
+
+[node name="Label" type="Label" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -60.0
+offset_right = 300.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_pwlqp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubLabel" type="Label" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 20.0
+offset_right = 300.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press Space to Resume"
+label_settings = SubResource("LabelSettings_tjduq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="QuitOverlay" type="Panel" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0)
+z_index = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_d5aou")
+
+[node name="Holder" type="VBoxContainer" parent="QuitOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="QuitOverlay/Holder"]
+layout_mode = 2
+text = "Hold R to Quit"
+label_settings = SubResource("LabelSettings_r7xjp")
+horizontal_alignment = 1
+
+[node name="ProgressBackground" type="ColorRect" parent="QuitOverlay/Holder"]
+custom_minimum_size = Vector2(300, 8)
+layout_mode = 2
+color = Color(0.15, 0.15, 0.15, 0.6)
+
+[node name="ProgressBar" type="ColorRect" parent="QuitOverlay/Holder/ProgressBackground"]
+layout_mode = 0
+offset_right = 0.0
+offset_bottom = 8.0
+color = Color(1, 0.3, 0.3, 0.9)
 
 [node name="Transition" type="ColorRect" parent="." unique_id=784178581]
 self_modulate = Color(1, 1, 1, 0)

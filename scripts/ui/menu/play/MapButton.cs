@@ -120,7 +120,7 @@ public partial class MapButton : Control, ISkinnable
         Title.Text = map.PrettyTitle;
         Favorited.Visible = map.Favorite;
         Cover.Texture = map.Cover;
-        Favorited.SelfModulate = Constants.DIFFICULTY_COLORS[map.Difficulty];
+        Favorited.SelfModulate = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
 
         if (selected)
         {
