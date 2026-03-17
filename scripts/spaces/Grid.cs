@@ -1,26 +1,27 @@
-using Godot;
 using System;
+using Godot;
 
-namespace Spaces;
-
-public partial class Grid : BaseSpace
+namespace Spaces
 {
-    private StandardMaterial3D tileMaterial;
-    private WorldEnvironment environment;
-
-    public override void _Ready()
+    public partial class Grid : BaseSpace
     {
-        base._Ready();
+        private StandardMaterial3D tileMaterial;
+        private WorldEnvironment environment;
 
-        tileMaterial = (GetNode<MeshInstance3D>("Top").Mesh as PlaneMesh).Material as StandardMaterial3D;
-        environment = GetNode<WorldEnvironment>("WorldEnvironment");
-    }
+        public override void _Ready()
+        {
+            base._Ready();
 
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
+            tileMaterial = (GetNode<MeshInstance3D>("Top").Mesh as PlaneMesh).Material as StandardMaterial3D;
+            environment = GetNode<WorldEnvironment>("WorldEnvironment");
+        }
 
-        tileMaterial.AlbedoColor = NoteHitColor;
-        tileMaterial.Uv1Offset += Vector3.Up * (float)delta * 3;
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+
+            tileMaterial.AlbedoColor = NoteHitColor;
+            tileMaterial.Uv1Offset += Vector3.Up * (float)delta * 3;
+        }
     }
 }

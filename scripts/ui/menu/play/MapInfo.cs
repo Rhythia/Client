@@ -1,6 +1,6 @@
-using Godot;
 using System;
 using System.Collections.Generic;
+using Godot;
 
 public partial class MapInfo : AspectRatioContainer
 {
@@ -48,8 +48,8 @@ public partial class MapInfo : AspectRatioContainer
         }
     }
 
-	public void Select(Map map)
-	{
+    public void Select(Map map)
+    {
         if (map == null) return;
 
         // Defer selection if not in the scene tree (e.g. importing from another scene)
@@ -66,7 +66,8 @@ public partial class MapInfo : AspectRatioContainer
 
         var oldContainer = InfoContainer;
 
-        InfoContainer?.Transition(false).TweenCallback(Callable.From(() => {
+        InfoContainer?.Transition(false).TweenCallback(Callable.From(() =>
+        {
             holder.RemoveChild(oldContainer);
             infoContainerCache.Push(oldContainer);
         }));
@@ -74,9 +75,9 @@ public partial class MapInfo : AspectRatioContainer
         InfoContainer = infoContainerCache.Count > 0 ? infoContainerCache.Pop() : infoContainerTemplate.Instantiate<MapInfoContainer>();
 
         holder.AddChild(InfoContainer);
-		InfoContainer.Setup(map);
+        InfoContainer.Setup(map);
         InfoContainer.Transition(true);
-        
+
         QueueRedraw();
     }
 }

@@ -1,70 +1,71 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Godot;
-using System.Collections.Generic;
 
-namespace Util;
-
-public class Misc
+namespace Util
 {
-    public static GodotObject OBJParser = (GodotObject)GD.Load<GDScript>("res://scripts/util/OBJParser.gd").New();
-
-    public static ImageTexture GetModIcon(string mod)
+    public class Misc
     {
-        ImageTexture tex;
+        public static GodotObject OBJParser = (GodotObject)GD.Load<GDScript>("res://scripts/util/OBJParser.gd").New();
 
-        switch (mod)
+        public static ImageTexture GetModIcon(string mod)
         {
-            case "NoFail":
-                tex = SkinManager.Instance.Skin.ModNoFailImage;
-                break;
-            case "Ghost":
-                tex = SkinManager.Instance.Skin.ModGhostImage;
-                break;
-            default:
-                tex = new();
-                break;
-        }
+            ImageTexture tex;
 
-        return tex;
-    }
-
-    public static void CopyProperties(Node node, Node reference)
-    {
-        foreach (Godot.Collections.Dictionary property in reference.GetPropertyList())
-		{
-            string key = (string)property["name"];
-
-            if (key == "size" || key == "script")
+            switch (mod)
             {
-                continue;
+                case "NoFail":
+                    tex = SkinManager.Instance.Skin.ModNoFailImage;
+                    break;
+                case "Ghost":
+                    tex = SkinManager.Instance.Skin.ModGhostImage;
+                    break;
+                default:
+                    tex = new();
+                    break;
             }
-            
-            node.Set(key, reference.Get(key));
+
+            return tex;
         }
-    }
 
-    public static void CopyReference(Node node, Node reference)
-    {
-        Util.Misc.CopyProperties(node, reference);
-
-        reference.ReplaceBy(node);
-        reference.QueueFree();
-    }
-
-public static Image LoadImageFromBuffer(byte[] buffer)
-    {
-        Image img = new Image();
-        foreach (var load in new Func<byte[], Error>[] {
-            img.LoadPngFromBuffer,
-            img.LoadJpgFromBuffer,
-            img.LoadWebpFromBuffer,
-            img.LoadBmpFromBuffer,
-        })
+        public static void CopyProperties(Node node, Node reference)
         {
-            if (load(buffer) == Error.Ok)
-                return img;
+            foreach (Godot.Collections.Dictionary property in reference.GetPropertyList())
+            {
+                string key = (string)property["name"];
+
+                if (key == "size" || key == "script")
+                {
+                    continue;
+                }
+
+                node.Set(key, reference.Get(key));
+            }
         }
-        return null;
+
+        public static void CopyReference(Node node, Node reference)
+        {
+            Util.Misc.CopyProperties(node, reference);
+
+            reference.ReplaceBy(node);
+            reference.QueueFree();
+        }
+
+        public static Image LoadImageFromBuffer(byte[] buffer)
+        {
+            Image img = new Image();
+            foreach (var load in new Func<byte[], Error>[] {
+                img.LoadPngFromBuffer,
+                img.LoadJpgFromBuffer,
+                img.LoadWebpFromBuffer,
+                img.LoadBmpFromBuffer,
+            })
+            {
+                if (load(buffer) == Error.Ok)
+                    return img;
+            }
+            return null;
+        }
     }
 }

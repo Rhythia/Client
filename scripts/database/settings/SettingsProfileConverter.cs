@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using Godot;
 using Godot.Collections;
-using System.Reflection;
 
 public class SettingsProfileConverter
 {
@@ -16,7 +16,7 @@ public class SettingsProfileConverter
             ["_Version"] = version
         };
 
-        foreach(var property in typeof(SettingsProfile).GetProperties())
+        foreach (var property in typeof(SettingsProfile).GetProperties())
         {
             if (!property.CanRead)
             {
@@ -26,7 +26,7 @@ public class SettingsProfileConverter
             if (property.GetValue(profile) is ISettingsItem item && item.SaveToDisk)
             {
                 var value = item.GetVariant();
-                
+
                 switch (value.VariantType)
                 {
                     case Variant.Type.Float:
@@ -57,7 +57,7 @@ public class SettingsProfileConverter
                     item.SetVariant(data[property.Name]);
                 }
             }
-            
+
         }
         catch (Exception)
         {

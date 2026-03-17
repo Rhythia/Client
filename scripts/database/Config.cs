@@ -13,7 +13,7 @@ public class Config
     /// </summary>
     public string SettingsProfileID { get; set; }
 
-    private Config Default()
+    private Config init()
     {
         return new Config();
     }

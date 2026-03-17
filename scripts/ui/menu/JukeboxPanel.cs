@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 /// <summary>
 /// Jukebox UI controls. The jukebox songs are handled in <see cref="SoundManager"/>
@@ -19,7 +19,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
     private ShaderMaterial spectrumMaterial;
 
     public override void _Ready()
-	{
+    {
         Instance = this;
 
         title = GetNode<Label>("Title");
@@ -35,7 +35,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
         rewindButton.Pressed += rewind;
         selectButton.Pressed += select;
 
-        foreach (TextureButton button in new TextureButton[] {pauseButton, skipButton, rewindButton})
+        foreach (TextureButton button in new TextureButton[] { pauseButton, skipButton, rewindButton })
         {
             button.MouseEntered += () => { button.SelfModulate = Color.Color8(255, 255, 255); };
             button.MouseExited += () => { button.SelfModulate = Color.Color8(255, 255, 255, 190); };
@@ -43,7 +43,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
         selectButton.MouseEntered += () => { title.SelfModulate = Color.Color8(255, 255, 255); };
         selectButton.MouseExited += () => { title.SelfModulate = Color.Color8(255, 255, 255, 190); };
-        
+
         if (SettingsManager.Instance.Settings.AutoplayJukebox)
         {
             pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
@@ -68,7 +68,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
         {
             progress = SoundManager.Song.GetPlaybackPosition() / (float)SoundManager.Song.Stream.GetLength();
         }
-        
+
         spectrumMaterial.SetShaderParameter("progress", progress);
         spectrumMaterial.SetShaderParameter("margin", 1 - spectrum.Size.X / GetViewport().GetVisibleRect().Size.X);
     }
@@ -92,8 +92,8 @@ public partial class JukeboxPanel : Panel, ISkinnable
         }
     }
 
-	public void UpdateMap(Map map)
-	{
+    public void UpdateMap(Map map)
+    {
         Map = map;
 
         title.Text = map.PrettyTitle;

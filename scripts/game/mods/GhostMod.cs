@@ -1,5 +1,5 @@
-﻿using Godot;
-using System;
+﻿using System;
+using Godot;
 
 public class GhostMod : Mod, IObjectRenderModifier<Note>
 {

@@ -1,7 +1,7 @@
-using Godot;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using Godot;
 
 public partial class ScorePanel : Panel
 {
@@ -18,14 +18,14 @@ public partial class ScorePanel : Panel
     private TextureRect modifierTemplate;
 
     public override void _Ready()
-	{
+    {
         Button = GetNode<Button>("Button");
 
         playerLabel = GetNode<Label>("Player");
-		scoreLabel = GetNode<Label>("Score");
-		accuracyLabel = GetNode<Label>("Accuracy");
-		speedLabel = GetNode<Label>("Speed");
-		timeLabel = GetNode<Label>("Time");
+        scoreLabel = GetNode<Label>("Score");
+        accuracyLabel = GetNode<Label>("Accuracy");
+        speedLabel = GetNode<Label>("Speed");
+        timeLabel = GetNode<Label>("Time");
         modifiers = GetNode<HBoxContainer>("Modifiers");
         modifierTemplate = modifiers.GetNode<TextureRect>("ModifierTemplate");
 
@@ -33,7 +33,7 @@ public partial class ScorePanel : Panel
         Label buttonLabel = buttonHover.GetNode<Label>("Label");
 
         void tweenHover(bool show)
-		{
+        {
             string replayPath = $"{Constants.USER_FOLDER}/replays/{Score.AttemptID}.phxr";
 
             buttonLabel.Text = File.Exists(replayPath) ? "VIEW" : "REPLAY NOT FOUND";
@@ -46,8 +46,8 @@ public partial class ScorePanel : Panel
         Button.Pressed += Replay;
     }
 
-	public void Setup(Leaderboard.Score score)
-	{
+    public void Setup(Leaderboard.Score score)
+    {
         Score = score;
 
         playerLabel.Text = score.Player;

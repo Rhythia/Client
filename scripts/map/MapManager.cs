@@ -76,7 +76,7 @@ public partial class MapManager : Node
 
     public static void RemoveVideo(Map map)
     {
-        Godot.FileAccess file = Godot.FileAccess.Open(map.FilePath, Godot.FileAccess.ModeFlags.Read);
+        _ = Godot.FileAccess.Open(map.FilePath, Godot.FileAccess.ModeFlags.Read);
 
         map.VideoBuffer = null;
 

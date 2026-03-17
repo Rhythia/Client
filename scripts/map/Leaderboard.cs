@@ -18,10 +18,7 @@ public struct Leaderboard
     {
         MapID = mapID;
 
-        if (Path == null)
-        {
-            Path = $"{Constants.USER_FOLDER}/pbs/{MapID}";
-        }
+        Path ??= $"{Constants.USER_FOLDER}/pbs/{MapID}";
 
         byte[] bytes = [];
 

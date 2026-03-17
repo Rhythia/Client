@@ -1,12 +1,12 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 public partial class MainMenu : BaseScene
 {
-	public Panel CurrentMenu;
-	public Panel LastMenu;
+    public Panel CurrentMenu;
+    public Panel LastMenu;
 
     public Panel HomeMenu;
     public Panel PlayMenu;
@@ -19,7 +19,7 @@ public partial class MainMenu : BaseScene
     private Node topBarButtonsContainer;
 
     public override void _Ready()
-	{
+    {
         base._Ready();
 
         menuHolder = GetNode<Panel>("Menus");
@@ -42,47 +42,47 @@ public partial class MainMenu : BaseScene
         menuButtons.AddRange(topBarButtonsContainer.GetChildren());
 
         foreach (Button button in menuButtons)
-		{
-			Panel menu = (Panel)menuHolder.FindChild(button.Name, false);
+        {
+            Panel menu = (Panel)menuHolder.FindChild(button.Name, false);
 
-			if (menu != null)
-			{
-				button.Pressed += () => { Transition(menu); };
-			}
-		}
+            if (menu != null)
+            {
+                button.Pressed += () => { Transition(menu); };
+            }
+        }
     }
 
-	public override void _Input(InputEvent @event)
-	{
-		if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
-		{
-			switch (mouseButton.ButtonIndex)
-			{
-				case MouseButton.Xbutton1:
-					Transition(HomeMenu);
-					break;
-				case MouseButton.Xbutton2:
-					Transition(LastMenu);
-					break;
-			}
-		}
-	}
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
+        {
+            switch (mouseButton.ButtonIndex)
+            {
+                case MouseButton.Xbutton1:
+                    Transition(HomeMenu);
+                    break;
+                case MouseButton.Xbutton2:
+                    Transition(LastMenu);
+                    break;
+            }
+        }
+    }
 
-	public override void _UnhandledInput(InputEvent @event)
-	{
-		if (@event is InputEventKey key && key.Pressed)
-		{
-			switch (key.Keycode)
-			{
-				case Key.Escape:
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event is InputEventKey key && key.Pressed)
+        {
+            switch (key.Keycode)
+            {
+                case Key.Escape:
                     Transition(HomeMenu);
                     break;
             }
-		}
-	}
+        }
+    }
 
-	public override void Load()
-	{
+    public override void Load()
+    {
         base.Load();
 
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Adaptive);
@@ -91,7 +91,7 @@ public partial class MainMenu : BaseScene
         MapInfo.ApplyPendingSelection();
 
         MapInfo.InfoContainer?.Refresh();
-		SceneManager.Space?.UpdateState(false);
+        SceneManager.Space?.UpdateState(false);
 
         var map = MapManager.Selected.Value;
 
@@ -115,25 +115,25 @@ public partial class MainMenu : BaseScene
         }
     }
 
-	public void Transition(Panel menu, bool instant = false)
-	{
-		if (CurrentMenu == menu) { return; }
+    public void Transition(Panel menu, bool instant = false)
+    {
+        if (CurrentMenu == menu) { return; }
 
         LastMenu = CurrentMenu;
-		CurrentMenu = menu;
+        CurrentMenu = menu;
 
-		topBarButtonsContainer.GetNode<Button>(new(LastMenu.Name)).Disabled = false;
-		topBarButtonsContainer.GetNode<Button>(new(CurrentMenu.Name)).Disabled = true;
+        topBarButtonsContainer.GetNode<Button>(new(LastMenu.Name)).Disabled = false;
+        topBarButtonsContainer.GetNode<Button>(new(CurrentMenu.Name)).Disabled = true;
 
         double tweenTime = instant ? 0 : 0.15;
 
-		Tween outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
-		outTween.TweenProperty(LastMenu, "modulate", Color.Color8(255, 255, 255, 0), tweenTime);
-		outTween.TweenCallback(Callable.From(() => { LastMenu.Visible = false; }));
+        Tween outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+        outTween.TweenProperty(LastMenu, "modulate", Color.Color8(255, 255, 255, 0), tweenTime);
+        outTween.TweenCallback(Callable.From(() => { LastMenu.Visible = false; }));
 
-		CurrentMenu.Visible = true;
+        CurrentMenu.Visible = true;
 
-		Tween inTween = CreateTween().SetTrans(Tween.TransitionType.Quad);
-		inTween.TweenProperty(CurrentMenu, "modulate", Color.Color8(255, 255, 255), tweenTime);
-	}
+        Tween inTween = CreateTween().SetTrans(Tween.TransitionType.Quad);
+        inTween.TweenProperty(CurrentMenu, "modulate", Color.Color8(255, 255, 255), tweenTime);
+    }
 }

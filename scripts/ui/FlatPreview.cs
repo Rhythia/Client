@@ -1,6 +1,6 @@
-using Godot;
 using System;
 using System.Threading.Tasks;
+using Godot;
 
 public partial class FlatPreview : Panel
 {
@@ -70,7 +70,8 @@ public partial class FlatPreview : Panel
 
         if (Time < oldTime)
         {
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 for (int i = 0; i < Map.Notes.Length; i++)
                 {
                     if (Time < Map.Notes[i].Millisecond)
@@ -101,17 +102,17 @@ public partial class FlatPreview : Panel
         }
     }
 
-	public void Setup(Map map, bool useSoundManagerStreamPlayer = false)
-	{
+    public void Setup(Map map, bool useSoundManagerStreamPlayer = false)
+    {
         if (Map != null && Map.Name == map.Name) { return; }
-        
+
         Map = map;
         UseSoundManagerStreamPlayer = useSoundManagerStreamPlayer;
         lastPassedNote = 0;
     }
 
-	public void Seek(double seek)
-	{
+    public void Seek(double seek)
+    {
         Time = seek;
     }
 }

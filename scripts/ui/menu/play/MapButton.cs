@@ -1,17 +1,17 @@
-using Godot;
 using System;
 using System.IO;
+using Godot;
 
 public partial class MapButton : Control, ISkinnable
 {
-	/// <summary>
-	/// Parsed map reference
-	/// </summary>
+    /// <summary>
+    /// Parsed map reference
+    /// </summary>
     public Map Map;
 
-	/// <summary>
-	/// Index within the full map list
-	/// </summary>
+    /// <summary>
+    /// Index within the full map list
+    /// </summary>
     public int ListIndex = 0;
 
     /// <summary>
@@ -24,9 +24,9 @@ public partial class MapButton : Control, ISkinnable
 	/// </summary>
     public float HoveredSizeOffset = 10;
 
-	/// <summary>
-	/// Additional Y size when selected (configure in MapList properties)
-	/// </summary>
+    /// <summary>
+    /// Additional Y size when selected (configure in MapList properties)
+    /// </summary>
     public float SelectedSizeOffset = 20;
 
     /// <summary>
@@ -53,10 +53,10 @@ public partial class MapButton : Control, ISkinnable
     public Button Button;
     public ShaderMaterial OutlineShader;
 
-	private float targetOutlineFill = 0;
+    private float targetOutlineFill = 0;
 
-	public override void _Ready()
-	{
+    public override void _Ready()
+    {
         Holder = GetNode<Panel>("Holder");
         Button = Holder.GetNode<Button>("Button");
         Title = Holder.GetNode<Label>("Title");
@@ -64,14 +64,14 @@ public partial class MapButton : Control, ISkinnable
         Favorited = Holder.GetNode<TextureRect>("Favorited");
         Favorited.Texture = (Texture2D)Favorited.Texture.Duplicate();
 
-		Panel outline = Holder.GetNode<Panel>("Outline");
+        Panel outline = Holder.GetNode<Panel>("Outline");
 
         OutlineShader = (ShaderMaterial)outline.Material.Duplicate();
         outline.Material = OutlineShader;
 
-		Button.MouseEntered += () => { Hover(true); };
-		Button.MouseExited += () => { Hover(false); };
-		Button.Pressed += () => { EmitSignal(SignalName.Pressed); };
+        Button.MouseEntered += () => { Hover(true); };
+        Button.MouseExited += () => { Hover(false); };
+        Button.Pressed += () => { EmitSignal(SignalName.Pressed); };
 
         SkinManager.Instance.Loaded += UpdateSkin;
     }
@@ -89,8 +89,8 @@ public partial class MapButton : Control, ISkinnable
         OutlineShader.SetShaderParameter("light_position", LightPosition);
     }
 
-	public virtual void Hover(bool hover)
-	{
+    public virtual void Hover(bool hover)
+    {
         Hovered = hover;
         SizeOffset = computeSizeOffset();
 
@@ -99,21 +99,21 @@ public partial class MapButton : Control, ISkinnable
         CreateTween().SetTrans(Tween.TransitionType.Quad).TweenProperty(Holder, "self_modulate", Hovered ? Color.Color8(26, 6, 13, 224) : Color.Color8(0, 0, 0, 224), 0.15);
     }
 
-	public virtual void Select(bool select = true)
-	{
+    public virtual void Select(bool select = true)
+    {
         Selected = select;
         SizeOffset = computeSizeOffset();
 
         CreateTween().SetTrans(Tween.TransitionType.Quad).TweenProperty(Cover, "modulate", Color.Color8(255, 255, 255, (byte)(Selected ? 255 : 128)), 0.1);
     }
 
-	public void Deselect()
-	{
+    public void Deselect()
+    {
         Select(false);
     }
 
-	public virtual void UpdateInfo(Map map, bool selected = false)
-	{
+    public virtual void UpdateInfo(Map map, bool selected = false)
+    {
         Map = map;
         Name = map.Name;
 
@@ -129,17 +129,17 @@ public partial class MapButton : Control, ISkinnable
         }
     }
 
-	public void UpdateOutline(float targetFill, float fill = -1)
-	{
+    public void UpdateOutline(float targetFill, float fill = -1)
+    {
         targetOutlineFill = targetFill;
 
-		if (fill != -1)
-		{
+        if (fill != -1)
+        {
             OutlineFill = fill;
         }
     }
 
-	public virtual void UpdateSkin(SkinProfile skin = null)
+    public virtual void UpdateSkin(SkinProfile skin = null)
     {
         skin ??= SkinManager.Instance.Skin;
 
@@ -147,7 +147,7 @@ public partial class MapButton : Control, ISkinnable
     }
 
     private float computeSizeOffset()
-	{
-		return (Hovered ? HoveredSizeOffset : 0) + (Selected ? SelectedSizeOffset : 0);
-	}
+    {
+        return (Hovered ? HoveredSizeOffset : 0) + (Selected ? SelectedSizeOffset : 0);
+    }
 }

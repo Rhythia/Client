@@ -87,7 +87,7 @@ public partial class SettingsManager : Node
             ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin.Value}", 1);
         }
 
-        void addUserContentToSettingsList(SettingsItem<string> settingsItem, IEnumerable<string> options)
+        static void addUserContentToSettingsList(SettingsItem<string> settingsItem, IEnumerable<string> options)
         {
             foreach (string option in options)
             {
@@ -143,7 +143,7 @@ public partial class SettingsManager : Node
 
         SettingsProfile defaults = new SettingsProfile();
 
-        foreach(var property in typeof(SettingsProfile).GetProperties())
+        foreach (var property in typeof(SettingsProfile).GetProperties())
         {
             if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType)) continue;
 

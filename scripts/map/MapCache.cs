@@ -256,7 +256,8 @@ public static class MapCache
 
                     if (image != null)
                     {
-                        Callable.From(() => {
+                        Callable.From(() =>
+                        {
                             map.Cover = ImageTexture.CreateFromImage(image);
                         }).CallDeferred();
                     }

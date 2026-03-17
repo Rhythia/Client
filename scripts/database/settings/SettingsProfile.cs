@@ -1,7 +1,7 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 public partial class SettingsProfile
 {
@@ -267,7 +267,7 @@ public partial class SettingsProfile
     /// <summary>
     /// Toggles the framerate counter in the corner
     /// </summary>
-    public SettingsItem<bool> DisplayFPS {get; private set; }
+    public SettingsItem<bool> DisplayFPS { get; private set; }
 
     // [Order]
     /// <summary>
@@ -464,7 +464,7 @@ public partial class SettingsProfile
             ],
             List = new("default")
             {
-                Values = [ "default" ]
+                Values = ["default"]
             }
         };
 
@@ -477,7 +477,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+                Values = ["skin", "void", "grid", "squircles", "waves"]
             }
         };
 
@@ -490,7 +490,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+                Values = ["skin", "void", "grid", "squircles", "waves"]
             }
         };
 
@@ -511,7 +511,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "default" ]
+                Values = ["skin", "default"]
             }
         };
 
@@ -538,7 +538,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "squircle", "square" ]
+                Values = ["skin", "squircle", "square"]
             }
         };
 

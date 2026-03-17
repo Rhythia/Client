@@ -28,5 +28,5 @@ public interface ISettingsItem
 
     bool Visible { get; }
 
-    bool SaveToDisk { get; }   
+    bool SaveToDisk { get; }
 }

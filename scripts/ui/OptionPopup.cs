@@ -1,7 +1,7 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Godot;
 
 public partial class OptionPopup : Control
 {
@@ -14,7 +14,7 @@ public partial class OptionPopup : Control
     public bool Shown = false;
     public Dictionary<string, Button> Options = [];
 
-	private readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/option_popup.tscn");
+    private readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/option_popup.tscn");
 
     [Export]
     private Label headerLabel;
@@ -25,10 +25,10 @@ public partial class OptionPopup : Control
     [Export]
     private Button buttonTemplate;
 
-	public OptionPopup() { }
+    public OptionPopup() { }
 
-	public OptionPopup(string header, string info)
-	{
+    public OptionPopup(string header, string info)
+    {
         Util.Misc.CopyReference(this, template.Instantiate<OptionPopup>());
 
         Header = header;
@@ -54,25 +54,26 @@ public partial class OptionPopup : Control
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventKey eventKey && eventKey.Pressed && Shown)
-		{
+        {
             switch (eventKey.Keycode)
-			{
-				case Key.Escape:
+            {
+                case Key.Escape:
                     Hide();
                     GetViewport().SetInputAsHandled();
                     break;
             }
-		}
+        }
     }
 
-	public void AddOption(string text, Callable callback, string tooltip = null)
-	{
+    public void AddOption(string text, Callable callback, string tooltip = null)
+    {
         Button button = buttonTemplate.Duplicate() as Button;
 
         button.Text = text;
         button.TooltipText = tooltip;
         button.Visible = true;
-        button.Pressed += () => {
+        button.Pressed += () =>
+        {
             Hide();
             callback.Call();
         };
@@ -81,8 +82,8 @@ public partial class OptionPopup : Control
         Options[text] = button;
     }
 
-	public void Show(bool show = true)
-	{
+    public void Show(bool show = true)
+    {
         Shown = show;
 
         MoveToFront();
@@ -91,24 +92,25 @@ public partial class OptionPopup : Control
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad);
         tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.1);
-        tween.TweenCallback(Callable.From(() => {
+        tween.TweenCallback(Callable.From(() =>
+        {
             Visible = Shown;
         }));
     }
 
-	public void Hide()
-	{
+    public void Hide()
+    {
         Show(false);
     }
 
-	public void UpdateHeader(string header)
-	{
+    public void UpdateHeader(string header)
+    {
         Header = header;
         headerLabel.Text = header;
     }
 
-	public void UpdateInfo(string info)
-	{
+    public void UpdateInfo(string info)
+    {
         Info = info;
         infoLabel.Text = info;
     }
