@@ -13,8 +13,9 @@ public partial class SoundManager : Node, ISkinnable
     public static AudioStreamPlayer FailSound;
     public static AudioStreamPlayer Song;
 
-    [Signal]
-    public delegate void JukeboxPlayedEventHandler(Map map);
+    public Action<Map> JukeboxPlayed;
+
+    public event Action JukeboxEmpty;
 
     public static int[] JukeboxQueue = [];
     public static int JukeboxIndex = 0;
@@ -73,6 +74,27 @@ public partial class SoundManager : Node, ISkinnable
             if (Map == null || Map.Name != map.Name)
             {
                 PlayJukebox(map);
+            }
+        };
+
+        MapManager.MapDeleted += (map) =>
+        {
+            UpdateJukeboxQueue();
+
+            if (Map != map)
+            {
+                return;
+            }
+
+            if (JukeboxQueue.Length == 0)
+            {
+                Song.Stop();
+                Map = null;
+                JukeboxEmpty?.Invoke();
+            }
+            else
+            {
+                PlayJukebox(new Random().Next(0, JukeboxQueue.Length));
             }
         };
 
@@ -159,7 +181,7 @@ public partial class SoundManager : Node, ISkinnable
         Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsCacheFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play();
 
-        Instance.EmitSignal(SignalName.JukeboxPlayed, map);
+        Instance.JukeboxPlayed?.Invoke(map);
 
         if (setRichPresence)
         {

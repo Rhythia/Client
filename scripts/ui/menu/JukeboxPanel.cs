@@ -57,6 +57,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
         UpdateSkin();
 
         SoundManager.Instance.JukeboxPlayed += UpdateMap;
+        SoundManager.Instance.JukeboxEmpty += ClearMap;
         SkinManager.Instance.Loaded += UpdateSkin;
     }
 
@@ -90,6 +91,12 @@ public partial class JukeboxPanel : Panel, ISkinnable
                     break;
             }
         }
+    }
+
+    public void ClearMap()
+    {
+        title.Text = "";
+        Map = null;
     }
 
     public void UpdateMap(Map map)

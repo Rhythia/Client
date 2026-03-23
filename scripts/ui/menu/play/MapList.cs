@@ -126,6 +126,8 @@ public partial class MapList : Panel, ISkinnable
             UpdateMaps();
         };
 
+        MapManager.MapDeleted += _ => UpdateMaps();
+
         Task.Run(() => UpdateMaps());
 
         UpdateLayout(Layout);

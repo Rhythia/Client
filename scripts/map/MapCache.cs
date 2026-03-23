@@ -252,7 +252,12 @@ public static class MapCache
                 if (map.Cover == Map.DefaultCover && File.Exists($"{path}/cover.png"))
                 {
                     byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
-                    Image image = Util.Misc.LoadImageFromBuffer(coverBuffer);
+                    if (coverBuffer?.Length <= 0)
+                    {
+                        continue;
+                    }
+
+                    Image image = Misc.LoadImageFromBuffer(coverBuffer);
 
                     if (image != null)
                     {
