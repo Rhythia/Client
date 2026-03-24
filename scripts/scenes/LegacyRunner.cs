@@ -63,7 +63,7 @@ public partial class LegacyRunner : BaseScene
     private static ColorRect quitProgressBar;
     private static float quitHoldTime = 0;
     private static bool rKeyHeld = false;
-    private static float quitHoldDuration = 0.55f;
+    private static float quitHoldDuration = 1f;
 
     private double lastFrame = Time.GetTicksUsec();     // delta arg unreliable..
                                                         //private double lastSecond = Time.GetTicksUsec();	// better framerate calculation
@@ -177,7 +177,7 @@ public partial class LegacyRunner : BaseScene
                 ReplayFile.StoreDouble(settings.ApproachRate);
                 ReplayFile.StoreDouble(settings.ApproachDistance);
                 ReplayFile.StoreDouble(settings.FadeIn);
-                ReplayFile.Store8((byte)(settings.FadeOut > 0 ? 1 : 0));
+                ReplayFile.Store8((byte)(settings.FadeOut ? 1 : 0));
                 ReplayFile.Store8((byte)(settings.Pushback ? 1 : 0));
                 ReplayFile.StoreDouble(settings.CameraParallax);
                 ReplayFile.StoreDouble(settings.FoV.Value);
@@ -690,10 +690,7 @@ public partial class LegacyRunner : BaseScene
 
         try
         {
-           cursor.Transparency = settings.CursorOpacity.Value;
-            cursorMaterial.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
-            cursorMaterial.Transparency = settings.CursorOpacity.Value < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
-            cursor.Transparency = settings.CursorOpacity.Value;
+            (cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
             panelLeft.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
@@ -1086,6 +1083,305 @@ public partial class LegacyRunner : BaseScene
         healthTexture.Size = healthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
         progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
         skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
+
+    public override void _Process(double delta)
+    {
+        ulong now = Time.GetTicksUsec();
+        delta = (now - lastFrame) / 1000000;    // more reliable
+        lastFrame = now;
+        //frameCount++;
+        skipLabelAlpha = Mathf.Lerp(skipLabelAlpha, targetSkipLabelAlpha, Math.Min(1, (float)delta * 20));
+
+        //if (lastSecond + 1000000 <= now)
+        //{
+        //	fpsCounter.Text = $"{frameCount} FPS";
+        //	frameCount = 0;
+        //	lastSecond += 1000000;
+        //}
+
+        if (rKeyHeld && !CurrentAttempt.IsReplay && !MenuShown)
+        {
+            quitHoldTime += (float)delta;
+            float progress = Math.Clamp(quitHoldTime / quitHoldDuration, 0, 1);
+            quitProgressBar.Size = new Vector2(300 * progress, 8);
+
+            if (!quitOverlay.Visible)
+            {
+                quitOverlay.Visible = true;
+                Tween showTween = quitOverlay.CreateTween();
+                showTween.TweenProperty(quitOverlay, "modulate", Color.Color8(255, 255, 255, 255), 0.15);
+                showTween.Play();
+            }
+
+            if (quitHoldTime >= quitHoldDuration)
+            {
+                rKeyHeld = false;
+
+                if (CurrentAttempt.Alive)
+                {
+                    SoundManager.FailSound.Play();
+                }
+
+                CurrentAttempt.Alive = false;
+                CurrentAttempt.Qualifies = false;
+
+                if (CurrentAttempt.DeathTime == -1)
+                {
+                    CurrentAttempt.DeathTime = Math.Max(0, CurrentAttempt.Progress);
+                }
+
+                QueueStop();
+                return;
+            }
+        }
+
+        if (stopQueued)
+        {
+            stopQueued = false;
+            Stop();
+            return;
+        }
+
+        if (!Playing)
+        {
+            return;
+        }
+
+        if (CurrentAttempt.IsReplay)
+        {
+            if (!replayViewerSeekHovered || !leftMouseButtonDown)
+            {
+                replayViewerSeek.Value = CurrentAttempt.Progress / CurrentAttempt.LongestReplayLength;
+            }
+
+            Vector2 positionSum = new();
+
+            for (int i = 0; i < CurrentAttempt.Replays.Length; i++)
+            {
+                for (int j = CurrentAttempt.Replays[i].FrameIndex; j < CurrentAttempt.Replays[i].Frames.Length; j++)
+                {
+                    if (CurrentAttempt.Progress < CurrentAttempt.Replays[i].Frames[j].Progress)
+                    {
+                        CurrentAttempt.Replays[i].FrameIndex = Math.Max(0, j - 1);
+                        break;
+                    }
+                }
+
+                int next = Math.Min(CurrentAttempt.Replays[i].FrameIndex + 1, CurrentAttempt.Replays[i].Frames.Length - 2);
+
+                if (!CurrentAttempt.Replays[i].Complete && CurrentAttempt.Progress >= CurrentAttempt.Replays[i].Length)
+                {
+                    CurrentAttempt.Replays[i].Complete = true;
+                    CurrentAttempt.Replays[i].LastNote = CurrentAttempt.PassedNotes;
+
+                    Tween tween = Cursors[i].CreateTween();
+                    tween.TweenProperty(Cursors[i], "transparency", 1, 1).SetTrans(Tween.TransitionType.Quad);
+                    tween.Play();
+                }
+
+                double inverse = Mathf.InverseLerp(CurrentAttempt.Replays[i].Frames[CurrentAttempt.Replays[i].FrameIndex].Progress, CurrentAttempt.Replays[i].Frames[next].Progress, CurrentAttempt.Progress);
+                Vector2 cursorPos = CurrentAttempt.Replays[i].Frames[CurrentAttempt.Replays[i].FrameIndex].CursorPosition.Lerp(CurrentAttempt.Replays[i].Frames[next].CursorPosition, (float)Math.Clamp(inverse, 0, 1));
+
+                try
+                {
+                    Cursors[i].Position = new(cursorPos.X, cursorPos.Y, 0);
+                }
+                catch { }   // dnc
+
+                CurrentAttempt.Replays[i].CurrentPosition = cursorPos;
+                positionSum += cursorPos;
+            }
+
+            Vector2 averagePosition = positionSum / CurrentAttempt.Replays.Length;
+            Vector2 mouseDelta = averagePosition - CurrentAttempt.CursorPosition;
+
+            if (CurrentAttempt.Mods["Spin"])
+            {
+                mouseDelta *= new Vector2(1, -1) / (float)CurrentAttempt.Replays[0].Sensitivity * 106;  // idk lol
+            }
+
+            UpdateCursor(mouseDelta);
+
+            CurrentAttempt.CursorPosition = averagePosition;
+
+            if (CurrentAttempt.Replays.Length == 1 && CurrentAttempt.Replays[0].SkipIndex < CurrentAttempt.Replays[0].Skips.Length && CurrentAttempt.Progress >= CurrentAttempt.Replays[0].Skips[CurrentAttempt.Replays[0].SkipIndex])
+            {
+                CurrentAttempt.Replays[0].SkipIndex++;
+                Skip();
+            }
+
+            int complete = 0;
+
+            foreach (Replay replay in CurrentAttempt.Replays)
+            {
+                if (replay.Complete)
+                {
+                    complete++;
+                }
+            }
+
+            if (complete == CurrentAttempt.Replays.Length)
+            {
+                QueueStop();
+            }
+        }
+        else if (!CurrentAttempt.Stopped && settings.RecordReplays && !CurrentAttempt.Map.Ephemeral && now - CurrentAttempt.LastReplayFrame >= 1000000 / 60)    // 60hz
+        {
+            if (CurrentAttempt.ReplayFrames.Count == 0 || (CurrentAttempt.ReplayFrames[^1][1..2] != new float[] { CurrentAttempt.CursorPosition.X, CurrentAttempt.CursorPosition.Y }))
+            {
+                CurrentAttempt.LastReplayFrame = now;
+                CurrentAttempt.ReplayFrames.Add([
+                    (float)CurrentAttempt.Progress,
+                    CurrentAttempt.CursorPosition.X,
+                    CurrentAttempt.CursorPosition.Y
+                ]);
+            }
+        }
+
+        CurrentAttempt.Progress += delta * 1000 * CurrentAttempt.Speed;
+        CurrentAttempt.Skippable = false;
+
+        if (CurrentAttempt.Map.AudioBuffer != null)
+        {
+            if (CurrentAttempt.Progress >= MapLength - Constants.HIT_WINDOW)
+            {
+                if (SoundManager.Song.Playing)
+                {
+                    SoundManager.Song.Stop();
+                }
+            }
+            else if (!SoundManager.Song.Playing && CurrentAttempt.Progress >= 0)
+            {
+                SoundManager.Song.Play();
+                SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
+            }
+        }
+
+        if (CurrentAttempt.Map.VideoBuffer != null)
+        {
+            if (settings.VideoDim < 100 && !video.IsPlaying() && CurrentAttempt.Progress >= 0)
+            {
+                video.Play();
+
+                Tween videoInTween = videoQuad.CreateTween();
+                videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
+                videoInTween.Play();
+            }
+        }
+
+        int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + Constants.BREAK_TIME : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
+
+        if (nextNoteMillisecond - CurrentAttempt.Progress >= Constants.BREAK_TIME * CurrentAttempt.Speed)
+        {
+            int lastNoteMillisecond = CurrentAttempt.PassedNotes > 0 ? CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes - 1].Millisecond : 0;
+            int skipWindow = nextNoteMillisecond - Constants.BREAK_TIME - lastNoteMillisecond;
+
+            if (skipWindow >= 1000 * CurrentAttempt.Speed) // only allow skipping if i'm gonna allow it for at least 1 second
+            {
+                CurrentAttempt.Skippable = true;
+            }
+        }
+
+        ToProcess = 0;
+        ProcessNotes.Clear();
+
+        // note process check
+        double at = CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].ApproachTime : settings.ApproachTime;
+
+        for (uint i = CurrentAttempt.PassedNotes; i < CurrentAttempt.Map.Notes.Length; i++)
+        {
+            Note note = CurrentAttempt.Map.Notes[i];
+
+            if (note.Millisecond < CurrentAttempt.StartFrom)
+            {
+                continue;
+            }
+
+            if (note.Millisecond + Constants.HIT_WINDOW * CurrentAttempt.Speed < CurrentAttempt.Progress)   // past hit window
+            {
+                if (i + 1 > CurrentAttempt.PassedNotes)
+                {
+                    if (CurrentAttempt.IsReplay && CurrentAttempt.Replays.Length <= 1 && CurrentAttempt.Replays[0].Notes[note.Index] == -1 || !CurrentAttempt.IsReplay && !note.Hit)
+                    {
+                        CurrentAttempt.Miss(note.Index);
+                    }
+
+                    CurrentAttempt.PassedNotes = i + 1;
+                }
+
+                if (!CurrentAttempt.IsReplay)
+                {
+                    continue;
+                }
+            }
+            else if (note.Millisecond > CurrentAttempt.Progress + at * 1000 * CurrentAttempt.Speed) // past approach distance
+            {
+                break;
+            }
+            else if (note.Hit)  // no point
+            {
+                continue;
+            }
+
+            if (settings.AlwaysPlayHitSound && !CurrentAttempt.Map.Notes[i].Hittable && note.Millisecond < CurrentAttempt.Progress)
+            {
+                CurrentAttempt.Map.Notes[i].Hittable = true;
+
+                SoundManager.HitSound.Play();
+            }
+
+            ToProcess++;
+            ProcessNotes.Add(note);
+        }
+
+        // hitreg check
+        for (int i = 0; i < ToProcess; i++)
+        {
+            Note note = ProcessNotes[i];
+
+            if (note.Hit)
+            {
+                continue;
+            }
+
+            if (!CurrentAttempt.IsReplay)
+            {
+                if (note.Millisecond - CurrentAttempt.Progress > 0)
+                {
+                    continue;
+                }
+                else if (CurrentAttempt.CursorPosition.X + Constants.HIT_BOX_SIZE >= note.X - 0.5f && CurrentAttempt.CursorPosition.X - Constants.HIT_BOX_SIZE <= note.X + 0.5f && CurrentAttempt.CursorPosition.Y + Constants.HIT_BOX_SIZE >= note.Y - 0.5f && CurrentAttempt.CursorPosition.Y - Constants.HIT_BOX_SIZE <= note.Y + 0.5f)
+                {
+                    CurrentAttempt.Hit(note.Index);
+                }
+            }
+            else if (CurrentAttempt.Replays.Length > 1 && note.Millisecond - CurrentAttempt.Progress <= 0 || CurrentAttempt.Replays[0].Notes[note.Index] != -1 && note.Millisecond - CurrentAttempt.Progress + CurrentAttempt.Replays[0].Notes[note.Index] * CurrentAttempt.Speed <= 0)
+            {
+                CurrentAttempt.Hit(note.Index);
+            }
+        }
+
+        if (CurrentAttempt.Progress >= MapLength)
+        {
+            Stop();
+            return;
+        }
+
+        if (CurrentAttempt.Skippable)
+        {
+            targetSkipLabelAlpha = 100f / 255f;
+            progressLabel.Modulate = Color.Color8(255, 255, 255, (byte)(96 + (int)(140 * (Math.Sin(Math.PI * now / 750000) / 2 + 0.5))));
+        }
+        else
+        {
+            targetSkipLabelAlpha = 0;
+            progressLabel.Modulate = Color.Color8(255, 255, 255, 190);
+        }
+
+        progressLabel.Text = $"{Util.String.FormatTime(Math.Max(0, CurrentAttempt.Progress) / 1000)} / {Util.String.FormatTime(MapLength / 1000)}";
+        healthTexture.Size = healthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
+        progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
+        skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
         cursor.RotationDegrees += Vector3.Back * settings.CursorRotation * (float)delta;
 
         // trail stuff
@@ -1165,9 +1461,7 @@ public partial class LegacyRunner : BaseScene
         }
         else if (@event is InputEventKey eventKey)
         {
-            Key key = eventKey.PhysicalKeycode != Key.None ? eventKey.PhysicalKeycode : eventKey.Keycode;
-
-            if (key == Key.R)
+            if (eventKey.PhysicalKeycode == Key.R)
             {
                 if (eventKey.Pressed && !eventKey.Echo)
                 {
@@ -1186,10 +1480,11 @@ public partial class LegacyRunner : BaseScene
 
             if (eventKey.Pressed && !eventKey.Echo)
             {
-                switch (key)
+                switch (eventKey.PhysicalKeycode)
                 {
                     case Key.Escape:
                         CurrentAttempt.Qualifies = false;
+
                         if (pauseShown)
                         {
                             HidePause();
@@ -1228,7 +1523,7 @@ public partial class LegacyRunner : BaseScene
                         }
                         break;
                     case Key.F:
-                        settings.FadeOut.Value = settings.FadeOut.Value > 0 ? 0 : 5;
+                        settings.FadeOut.Value = !settings.FadeOut;
                         break;
                     case Key.P:
                         settings.Pushback.Value = !settings.Pushback;

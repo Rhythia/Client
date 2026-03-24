@@ -174,29 +174,10 @@ public partial class SkinManager : Node
         Load();
     }
 
-    private static readonly string[] image_extensions = [".png", ".jpg", ".jpeg"];
-
     private static ImageTexture loadTexture(string skinPath)
     {
         var settings = SettingsManager.Instance.Settings;
-        string skinDir = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}";
-        string fullPath = $"{skinDir}/{skinPath}";
-
-        if (!File.Exists(fullPath))
-        {
-            string basePath = fullPath.GetBaseName();
-            foreach (string ext in image_extensions)
-            {
-                string altPath = basePath + ext;
-                if (File.Exists(altPath))
-                {
-                    fullPath = altPath;
-                    break;
-                }
-            }
-        }
-
-        return ImageTexture.CreateFromImage(Image.LoadFromFile(fullPath));
+        return ImageTexture.CreateFromImage(Image.LoadFromFile($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}"));
     }
 
     private static byte[] loadSound(string skinPath)
