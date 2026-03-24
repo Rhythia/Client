@@ -1,88 +1,83 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Godot;
 
 public partial class MapParser : Node
 {
-    [Signal]
-    public delegate void MapsImportedEventHandler(Map[] maps);
+    [Signal] public delegate void MapsImportStartedEventHandler();
+    [Signal] public delegate void MapsImportFinishedEventHandler(Map[] maps);
+    [Signal] public delegate void MapImportedEventHandler(Map map);
 
-    public static MapParser Instance;
+    public static MapParser Instance { get; private set; }
 
     public override void _Ready()
     {
         Instance = this;
     }
 
-    public static bool IsValidExt(string ext)
-    {
-        return ext == "phxm" || ext == "sspm" || ext == "txt";
-    }
+    public static bool IsValidExt(string ext) => ext == "phxm" || ext == "sspm" || ext == "txt";
 
-    public static void BulkImport(string[] files)
+    public static async Task BulkImport(string[] files, bool notify = false)
     {
-        double start = Time.GetTicksUsec();
-        int good = 0;
-        int corrupted = 0;
-        List<Map> maps = [];
+        if (files.Length == 0 || files == null) return;
 
-        foreach (string file in files)
+        if (notify) ToastNotification.Notify($"Importing {files.Length} map(s)");
+
+        await Task.Run(() =>
         {
-            try
-            {
-                maps.Add(Decode(file, null, false, true));
-                good++;
-            }
-            catch
-            {
-                corrupted++;
-                continue;
-            }
-        }
+            double start = Time.GetTicksUsec();
+            int good = 0;
+            int corrupted = 0;
+            var maps = new ConcurrentBag<Map>();
 
-        Logger.Log($"BULK IMPORT: {(Time.GetTicksUsec() - start) / 1000}ms; TOTAL: {good + corrupted}; CORRUPT: {corrupted}");
+            Callable.From(() => Instance.EmitSignal(SignalName.MapsImportStarted)).CallDeferred();
+            Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = System.Environment.ProcessorCount / 4 }, file =>
+            {
+                try
+                {
+                    Map map = Decode(file, null, false, false);
+                    if (map != null)
+                    {
+                        Encode(map);
+                        maps.Add(map);
+                    }
+                    System.Threading.Interlocked.Increment(ref good);
+                    Callable.From(() => Instance.EmitSignal(SignalName.MapImported, map)).CallDeferred();
+                }
+                catch
+                {
+                    System.Threading.Interlocked.Increment(ref corrupted);
+                }
+            });
+
+            double duration = (Time.GetTicksUsec() - start) / 1000;
+            Logger.Log($"BULK IMPORT: {duration}ms; TOTAL: {good + corrupted}; CORRUPT: {corrupted}");
+            Callable.From(() => Instance.EmitSignal(SignalName.MapsImportFinished, maps.ToArray())).CallDeferred();
+        });
 
         SoundManager.UpdateJukeboxQueue();
-
-        if (maps.Count > 0)
-        {
-            Instance.EmitSignal(SignalName.MapsImported, maps.ToArray());
-        }
+        if (notify) ToastNotification.Notify($"Finished importing {files.Length} map(s)");
     }
 
-    public static void Encode(Map map, bool logBenchmark = true)
+    public static void Encode(Map map, bool logBenchmark = false)
     {
         double start = Time.GetTicksUsec();
 
         map.Collection = $"default";
 
-        string mapFilePath = $"{Constants.USER_FOLDER}/maps/{map.Collection}/{map.Name}.{Constants.DEFAULT_MAP_EXT}";
-        string encodePath = $"{Constants.USER_FOLDER}/cache/{Constants.DEFAULT_MAP_EXT}encode";
+        string mapDirectory = $"{Constants.USER_FOLDER}/maps/{map.Collection}";
+        string mapFilePath = Path.Combine(mapDirectory, $"{map.Name}.{Constants.DEFAULT_MAP_EXT}");
 
-        if (!Directory.Exists($"{Constants.USER_FOLDER}/maps/{map.Collection}"))
-        {
-            Directory.CreateDirectory($"{Constants.USER_FOLDER}/maps/{map.Collection}");
-        }
-
-        if (!Directory.Exists(encodePath))
-        {
-            Directory.CreateDirectory(encodePath);
-        }
-
-        foreach (string file in Directory.GetFiles(encodePath))
-        {
-            File.Delete(file);
-        }
-
-        File.WriteAllText($"{encodePath}/metadata.json", map.EncodeMeta());
-
-        Godot.FileAccess objects = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/cache/{Constants.DEFAULT_MAP_EXT}encode/objects.phxmo", Godot.FileAccess.ModeFlags.Write);
+        if (!Directory.Exists(mapDirectory)) Directory.CreateDirectory(mapDirectory);
 
         /*
 			uint32; ms
@@ -91,78 +86,63 @@ public partial class MapParser : Node
 			1 byte OR int32; y
 		*/
 
-        objects.Store32(12);    // type count
-        objects.Store32((uint)map.Notes.Length);    // note count
-
-        foreach (Note note in map.Notes)
+        using var ms = new MemoryStream();
+        using (var archive = new ZipArchive(ms, ZipArchiveMode.Create))
         {
-            bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
-
-            objects.Store32((uint)note.Millisecond);
-            objects.Store8(Convert.ToByte(quantum));
-
-            if (quantum)
+            var metadata = archive.CreateEntry("metadata.json", CompressionLevel.NoCompression);
+            using (var writer = new StreamWriter(metadata.Open()))
+                writer.Write(map.EncodeMeta());
+            var objects = archive.CreateEntry("objects.phxmo", CompressionLevel.NoCompression);
+            using (var objs = objects.Open())
             {
-                objects.Store32(BitConverter.SingleToUInt32Bits(note.X));
-                objects.Store32(BitConverter.SingleToUInt32Bits(note.Y));
+                using BinaryWriter bw = new BinaryWriter(objs);
+                bw.Write((uint)12);
+                bw.Write((uint)map.Notes.Length);
+                foreach (var note in map.Notes)
+                {
+                    bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
+                    bw.Write((uint)note.Millisecond);
+                    bw.Write(Convert.ToByte(quantum));
+                    if (quantum)
+                    {
+                        bw.Write((float)note.X);
+                        bw.Write((float)note.Y);
+                    }
+                    else
+                    {
+                        bw.Write((byte)(note.X + 1));
+                        bw.Write((byte)(note.Y + 1));
+                    }
+                }
+                bw.Write(0); // timing point count
+                bw.Write(0); // brightness count
+                bw.Write(0); // contrast count
+                bw.Write(0); // saturation count
+                bw.Write(0); // blur count
+                bw.Write(0); // fov count
+                bw.Write(0); // tint count
+                bw.Write(0); // position count
+                bw.Write(0); // rotation count
+                bw.Write(0); // ar factor count
+                bw.Write(0); // text count
             }
-            else
+
+            void addAsset(string name, byte[] buffer)
             {
-                objects.Store8((byte)(note.X + 1)); // 0x00 = -1, 0x01 = 0, 0x02 = 1
-                objects.Store8((byte)(note.Y + 1));
+                var asset = archive.CreateEntry(name, CompressionLevel.NoCompression);
+                using var stream = asset.Open();
+                stream.Write(buffer, 0, buffer.Length);
             }
+
+            if (map.AudioBuffer != null) addAsset($"audio.{map.AudioExt}", map.AudioBuffer);
+            if (map.CoverBuffer != null) addAsset($"cover.png", map.CoverBuffer);
+            if (map.VideoBuffer != null) addAsset($"video.mp4", map.VideoBuffer);
         }
 
-        objects.Store32(0); // timing point count
-        objects.Store32(0); // brightness count
-        objects.Store32(0); // contrast count
-        objects.Store32(0); // saturation count
-        objects.Store32(0); // blur count
-        objects.Store32(0); // fov count
-        objects.Store32(0); // tint count
-        objects.Store32(0); // position count
-        objects.Store32(0); // rotation count
-        objects.Store32(0); // ar factor count
-        objects.Store32(0); // text count
-
-        objects.Close();
-
-        if (map.AudioBuffer != null)
-        {
-            Godot.FileAccess audio = Godot.FileAccess.Open($"{encodePath}/audio.{map.AudioExt}", Godot.FileAccess.ModeFlags.Write);
-            audio.StoreBuffer(map.AudioBuffer);
-            audio.Close();
-        }
-
-        if (map.CoverBuffer != null)
-        {
-            Godot.FileAccess cover = Godot.FileAccess.Open($"{encodePath}/cover.png", Godot.FileAccess.ModeFlags.Write);
-            cover.StoreBuffer(map.CoverBuffer);
-            cover.Close();
-        }
-
-        if (map.VideoBuffer != null)
-        {
-            Godot.FileAccess video = Godot.FileAccess.Open($"{encodePath}/video.mp4", Godot.FileAccess.ModeFlags.Write);
-            video.StoreBuffer(map.VideoBuffer);
-            video.Close();
-        }
-
-        if (File.Exists(mapFilePath))
-        {
-            File.Delete(mapFilePath);
-        }
-
-        ZipFile.CreateFromDirectory(encodePath, mapFilePath, CompressionLevel.NoCompression, false);
-        map.Hash = MapCache.GetMd5Checksum(mapFilePath);
+        map.Hash = Convert.ToHexString(MD5.HashData(ms.ToArray())).ToLower();
+        File.WriteAllBytes(mapFilePath, ms.ToArray());
         map.FilePath = mapFilePath;
         MapCache.InsertMap(map);
-        MapCache.Load(false);
-
-        foreach (string filePath in Directory.GetFiles(encodePath))
-        {
-            File.Delete(filePath);
-        }
 
         if (logBenchmark)
         {
@@ -178,7 +158,6 @@ public partial class MapParser : Node
             throw Logger.Error($"Invalid file path ({path})");
         }
 
-        Map map;
         string ext = path.GetExtension();
         double start = Time.GetTicksUsec();
 
@@ -188,35 +167,19 @@ public partial class MapParser : Node
             throw Logger.Error($"Unsupported file format ({ext})");
         }
 
-        switch (ext)
+        Map map = ext switch
         {
-            case "phxm":
-                map = PHXM(path);
-                break;
-            case "sspm":
-                map = SSPM(path);
-                break;
-            case "txt":
-                map = SSMapV1(path, audio);
-                break;
-            default:
-                map = new();
-                break;
-        }
+            "phxm" => PHXM(path),
+            "sspm" => SSPM(path),
+            "txt" => SSMapV1(path, audio),
+            _ => new()
+        };
 
-        if (logBenchmark)
-        {
-            Logger.Log($"DECODING {ext.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms");
-        }
-
-        if (save)
-        {
-            Encode(map, logBenchmark);
-        }
+        if (logBenchmark) Logger.Log($"DECODING {ext.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms");
+        if (save) Encode(map);
 
         return map;
     }
-
     public static Map SSMapV1(string path, string audioPath = null)
     {
         string name = path.Split("\\")[^1].TrimSuffix(".txt");
@@ -608,7 +571,7 @@ public partial class MapParser : Node
                 stream.CopyTo(memoryStream);
                 stream.Dispose();
 
-                byte[] buffer = memoryStream.GetBuffer();
+                byte[] buffer = memoryStream.ToArray();
                 memoryStream.Dispose();
 
                 return buffer;
@@ -702,8 +665,7 @@ public partial class MapParser : Node
     public static Note[] DecodePHXMO(string path)
     {
         FileParser objects = new(path);
-
-        uint typeCount = objects.GetUInt32();
+        _ = objects.GetUInt32();
         uint noteCount = objects.GetUInt32();
 
         Note[] notes = new Note[noteCount];
@@ -735,8 +697,7 @@ public partial class MapParser : Node
     public static Note[] DecodePHXMO(byte[] buffer)
     {
         FileParser objects = new(buffer);
-
-        uint typeCount = objects.GetUInt32();
+        _ = objects.GetUInt32();
         uint noteCount = objects.GetUInt32();
 
         Note[] notes = new Note[noteCount];

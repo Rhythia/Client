@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtkff13bgd1u4"]
+[gd_scene format=3 uid="uid://dtkff13bgd1u4"]
 
 [ext_resource type="Script" uid="uid://bxx72dwqlrh2o" path="res://scripts/spaces/Grid.cs" id="1_wac2s"]
 [ext_resource type="Texture2D" uid="uid://cnqebcj2iorfr" path="res://textures/grid_tile.png" id="2_83vuq"]
@@ -36,22 +36,19 @@ material = SubResource("StandardMaterial3D_31ska")
 flip_faces = true
 size = Vector3(120, 21, 120)
 
-[node name="Grid" type="Node3D"]
+[node name="Grid" type="Node3D" unique_id=2134769153]
 script = ExtResource("1_wac2s")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2040393744]
 environment = SubResource("Environment_ge866")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-fov = 70.0
-
-[node name="Bottom" type="MeshInstance3D" parent="."]
+[node name="Bottom" type="MeshInstance3D" parent="." unique_id=1669633618]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -10, 0)
 mesh = SubResource("PlaneMesh_yclqf")
 
-[node name="Top" type="MeshInstance3D" parent="."]
+[node name="Top" type="MeshInstance3D" parent="." unique_id=1325224979]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 10, 0)
 mesh = SubResource("PlaneMesh_yclqf")
 
-[node name="Shell" type="MeshInstance3D" parent="."]
+[node name="Shell" type="MeshInstance3D" parent="." unique_id=1123784198]
 mesh = SubResource("BoxMesh_ytxqq")

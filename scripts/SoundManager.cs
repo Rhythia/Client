@@ -13,8 +13,9 @@ public partial class SoundManager : Node, ISkinnable
     public static AudioStreamPlayer FailSound;
     public static AudioStreamPlayer Song;
 
-    [Signal]
-    public delegate void JukeboxPlayedEventHandler(Map map);
+    public Action<Map> JukeboxPlayed;
+
+    public event Action JukeboxEmpty;
 
     public static int[] JukeboxQueue = [];
     public static int JukeboxIndex = 0;
@@ -66,12 +67,34 @@ public partial class SoundManager : Node, ISkinnable
 
         SettingsManager.Instance.Loaded += UpdateVolume;
         Lobby.Instance.SpeedChanged += (speed) => { SoundManager.Song.PitchScale = (float)speed; };
-        MapManager.Selected.ValueChanged += (_, selected) => {
+        MapManager.Selected.ValueChanged += (_, selected) =>
+        {
             var map = selected.Value;
 
             if (Map == null || Map.Name != map.Name)
             {
                 PlayJukebox(map);
+            }
+        };
+
+        MapManager.MapDeleted += (map) =>
+        {
+            UpdateJukeboxQueue();
+
+            if (Map != map)
+            {
+                return;
+            }
+
+            if (JukeboxQueue.Length == 0)
+            {
+                Song.Stop();
+                Map = null;
+                JukeboxEmpty?.Invoke();
+            }
+            else
+            {
+                PlayJukebox(new Random().Next(0, JukeboxQueue.Length));
             }
         };
 
@@ -158,7 +181,7 @@ public partial class SoundManager : Node, ISkinnable
         Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsCacheFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play();
 
-        Instance.EmitSignal(SignalName.JukeboxPlayed, map);
+        Instance.JukeboxPlayed?.Invoke(map);
 
         if (setRichPresence)
         {
@@ -189,13 +212,19 @@ public partial class SoundManager : Node, ISkinnable
         PlayJukebox(map, setRichPresence);
     }
 
+    public static float ComputeVolumeDb(float volume, float master, float range)
+    {
+        if (volume <= 0 || master <= 0) return float.NegativeInfinity;
+        return -80 + range * (float)Math.Pow(volume / 100, 0.1) * (float)Math.Pow(master / 100, 0.1);
+    }
+
     public static void UpdateVolume()
     {
         var settings = SettingsManager.Instance.Settings;
 
-        Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
-        HitSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
-        FailSound.VolumeDb = -80 + 80 * (float)Math.Pow(settings.VolumeSFX.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
+        Song.VolumeDb = ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
+        HitSound.VolumeDb = ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
+        FailSound.VolumeDb = ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
     }
 
     public static void UpdateJukeboxQueue()

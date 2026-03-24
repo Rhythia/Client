@@ -1,5 +1,5 @@
-using Godot;
 using System.Collections.Generic;
+using Godot;
 
 public partial class Lobby : Node
 {
@@ -20,7 +20,7 @@ public partial class Lobby : Node
     /// Millisecond timestamp to start the map from
     /// </summary>
     public static double StartFrom = 0;
-    
+
     public static Dictionary<string, bool> Modifiers = new()
     {
         ["NoFail"] = false,
@@ -50,9 +50,10 @@ public partial class Lobby : Node
     {
         Instance = this;
 
-        MapManager.Selected.ValueChanged += (_, _) => {
+        MapManager.Selected.ValueChanged += (_, _) =>
+        {
             var map = MapManager.Selected.Value;
-            
+
             if (Map == null || Map.Name != map.Name)
             {
                 SetMap(map);

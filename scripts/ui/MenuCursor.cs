@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class MenuCursor : TextureRect, ISkinnable
 {
@@ -23,27 +23,27 @@ public partial class MenuCursor : TextureRect, ISkinnable
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseMotion mouseMotion)
-		{
+        {
             Position = mouseMotion.Position - Size / 2;
         }
     }
 
-	public void UpdateSize(float size)
-	{
+    public void UpdateSize(float size)
+    {
         Size = Vector2.One * 32 * size;
     }
 
     public void UpdateVisible(bool visible, bool updateNativeCursor = true)
     {
         Visible = visible;
-        
+
         if (updateNativeCursor)
         {
             Input.MouseMode = visible ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
         }
     }
 
-	public void UpdateSkin(SkinProfile skin = null)
+    public void UpdateSkin(SkinProfile skin = null)
     {
         skin ??= SkinManager.Instance.Skin;
 

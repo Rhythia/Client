@@ -1,7 +1,7 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 public partial class SettingsProfile
 {
@@ -50,10 +50,10 @@ public partial class SettingsProfile
     public SettingsItem<float> FadeIn { get; private set; }
 
     /// <summary>
-    /// Toggles fade out for the hit objects
+    /// Controls the fade out distance
     /// </summary>
     [Order]
-    public SettingsItem<bool> FadeOut { get; private set; }
+    public SettingsItem<float> FadeOut { get; private set; }
 
     /// <summary>
     /// Toggles hit object pushback
@@ -72,6 +72,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<float> HUDParallax { get; private set; }
+
+    /// <summary>
+    /// space to pause toggle
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> SpaceToPause { get; private set; }
 
     /// <summary>
     /// Adjusts the Field of View
@@ -138,10 +144,16 @@ public partial class SettingsProfile
     public SettingsItem<float> CursorScale { get; private set; }
 
     /// <summary>
+    /// Adjusts the cursor opacity
+    /// </summary>
+    [Order]
+    public SettingsItem<float> CursorOpacity { get; private set; }
+
+    /// <summary>
     /// Degrees to rotate the cursor by every second
     /// </summary>
     [Order]
-    public SettingsItem<int> CursorRotation { get; private set; }
+    public SettingsItem<float> CursorRotation { get; private set; }
 
     /// <summary>
     /// Toggles a trial for your cursor
@@ -219,7 +231,6 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<int> FPS { get; private set; }
 
-
     #endregion
 
     #region Audio
@@ -259,19 +270,38 @@ public partial class SettingsProfile
     #region Other
 
     [Order]
-    public SettingsItem<Variant> RhythiaImport { get; private set; }
+    /// <summary>
+    /// Toggles the framerate counter in the corner
+    /// </summary>
+    public SettingsItem<bool> DisplayFPS { get; private set; }
 
+    // [Order]
+    /// <summary>
+    /// Import settings from previous (nightly) version
+    /// </summary>
+    // public SettingsItem<Variant> RhythiaImport { get; private set; }
+
+    [Order]
     /// <summary>
     /// Toggles recording for replays
     /// </summary>
-    [Order]
     public SettingsItem<bool> RecordReplays { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Restarts settings to the game's defaults
+    /// </summary>
+    public SettingsItem<Variant> ResetToDefaults { get; private set; }
 
     #endregion
 
+    #region Initializers
+
+
+
     public SettingsProfile()
     {
-        #region Initializers
+        #region Gameplay
 
         Sensitivity = new(0.5f)
         {
@@ -301,7 +331,7 @@ public partial class SettingsProfile
             Title = "Approach Rate",
             Description = "Approach rate of hit objects",
             Section = SettingsSection.Gameplay,
-            UpdateAction = _ => updateApproachTime(),
+            UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
             {
                 Step = 0.5f,
@@ -316,7 +346,7 @@ public partial class SettingsProfile
             Title = "Approach Distance",
             Description = "Approach distance of hit objects",
             Section = SettingsSection.Gameplay,
-            UpdateAction = _ => updateApproachTime(),
+            UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
             {
                 Step = 0.5f,
@@ -357,12 +387,18 @@ public partial class SettingsProfile
             }
         };
 
-        FadeOut = new(true)
+        FadeOut = new(5)
         {
             Id = "FadeOut",
             Title = "Fade Out",
             Description = "Toggles fade out for the hit objects",
             Section = SettingsSection.Gameplay,
+            Slider = new()
+            {
+                Step = 0.1f,
+                MinValue = 0,
+                MaxValue = 10
+            }
         };
 
         Pushback = new(true)
@@ -401,6 +437,14 @@ public partial class SettingsProfile
             }
         };
 
+        SpaceToPause = new(false)
+        {
+            Id = "SpaceToPause",
+            Title = "Space to Pause",
+            Description = "Toggles space to pause during gameplay",
+            Section = SettingsSection.Gameplay,
+        };
+
         FoV = new(70)
         {
             Id = "FoV",
@@ -415,20 +459,24 @@ public partial class SettingsProfile
             }
         };
 
+        #endregion
+
+        #region Visual
+
         Skin = new("default")
         {
             Id = "Skin",
             Title = "Skin",
             Description = "Selected skin for the game",
             Section = SettingsSection.Visual,
-            UpdateAction = _ => SkinManager.Load(),
+            UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             Buttons =
             [
                 new() { Title = "Skin Folder", Description = "Open the skin folder", OnPressed = () => { OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}"); } }
             ],
             List = new("default")
             {
-                Values = [ "default" ]
+                Values = ["default"]
             }
         };
 
@@ -438,10 +486,10 @@ public partial class SettingsProfile
             Title = "Menu Space",
             Description = "Overrides the skin's background space for the menu",
             Section = SettingsSection.Visual,
-            UpdateAction = _ => SkinManager.Load(),
+            UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+                Values = ["skin", "void", "grid", "squircles", "waves"]
             }
         };
 
@@ -451,10 +499,10 @@ public partial class SettingsProfile
             Title = "Game Space",
             Description = "Overrides the skin's background space for gameplay",
             Section = SettingsSection.Visual,
-            UpdateAction = _ => SkinManager.Load(),
+            UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+                Values = ["skin", "void", "grid", "squircles", "waves"]
             }
         };
 
@@ -472,10 +520,10 @@ public partial class SettingsProfile
             Title = "Colors",
             Description = "Overrides the skin's colorset",
             Section = SettingsSection.Visual,
-            UpdateAction = _ => SkinManager.Load(),
+            UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "default" ]
+                Values = ["skin", "default"]
             }
         };
 
@@ -499,10 +547,10 @@ public partial class SettingsProfile
             Title = "Note Mesh",
             Description = "Overrides the skin's note mesh",
             Section = SettingsSection.Visual,
-            UpdateAction = _ => SkinManager.Load(),
+            UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "squircle", "square" ]
+                Values = ["skin", "squircle", "square"]
             }
         };
 
@@ -531,6 +579,20 @@ public partial class SettingsProfile
                 Step = 0.025f,
                 MinValue = 0,
                 MaxValue = 4
+            }
+        };
+
+        CursorOpacity = new(1)
+        {
+            Id = "CursorOpacity",
+            Title = "Cursor Opacity",
+            Description = "Adjusts the cursor opacity",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 0.05f,
+                MinValue = 0,
+                MaxValue = 1
             }
         };
 
@@ -606,6 +668,10 @@ public partial class SettingsProfile
             }
         };
 
+        #endregion
+
+        #region Video
+
         VideoRenderScale = new(100)
         {
             Id = "VideoRenderScale",
@@ -650,7 +716,7 @@ public partial class SettingsProfile
             Title = "Fullscreen",
             Description = "Toggles the window to fullscreen",
             Section = SettingsSection.Video,
-            UpdateAction = value => DisplayServer.WindowSetMode(
+            UpdateAction = (value, _) => DisplayServer.WindowSetMode(
                 value
                 ? DisplayServer.WindowMode.ExclusiveFullscreen
                 : DisplayServer.WindowMode.Windowed)
@@ -662,7 +728,7 @@ public partial class SettingsProfile
             Title = "Unlock FPS",
             Description = "Unlocks maximum frames per second",
             Section = SettingsSection.Video,
-            UpdateAction = value => Engine.MaxFps = UnlockFPS ? 0 : FPS
+            UpdateAction = (value, _) => Engine.MaxFps = UnlockFPS ? 0 : FPS
         };
 
         FPS = new(240)
@@ -677,8 +743,12 @@ public partial class SettingsProfile
                 MinValue = 60,
                 MaxValue = 540,
             },
-            UpdateAction = value => Engine.MaxFps = UnlockFPS ? 0 : FPS
+            UpdateAction = (value, _) => Engine.MaxFps = UnlockFPS ? 0 : FPS
         };
+
+        #endregion
+
+        #region Audio
 
         AutoplayJukebox = new(true)
         {
@@ -702,7 +772,7 @@ public partial class SettingsProfile
             Title = "Master Volume",
             Description = "Master volume control for all audio",
             Section = SettingsSection.Audio,
-            UpdateAction = _ => SoundManager.UpdateVolume(),
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
             Slider = new()
             {
                 Step = 1,
@@ -717,7 +787,7 @@ public partial class SettingsProfile
             Title = "Music Volume",
             Description = "Audio control for the music",
             Section = SettingsSection.Audio,
-            UpdateAction = _ => SoundManager.UpdateVolume(),
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
             Slider = new()
             {
                 Step = 1,
@@ -732,7 +802,7 @@ public partial class SettingsProfile
             Title = "SFX Volume",
             Description = "Audio control for sound effects",
             Section = SettingsSection.Audio,
-            UpdateAction = _ => SoundManager.UpdateVolume(),
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
             Slider = new()
             {
                 Step = 1,
@@ -741,17 +811,29 @@ public partial class SettingsProfile
             }
         };
 
-        RhythiaImport = new(default)
+        #endregion
+
+        #region Other
+
+        // RhythiaImport = new(default)
+        // {
+        //     Id = "RhythiaImport",
+        //     Title = "Import Nightly Settings",
+        //     Description = "Imports settings from the nightly client",
+        //     Section = SettingsSection.Other,
+        //     Buttons =
+        //     [
+        //         new() { Title = "Import", Description = "", OnPressed = () => { } }
+        //     ],
+        //     SaveToDisk = false,
+        // };
+
+        DisplayFPS = new(true)
         {
-            Id = "RhythiaImport",
-            Title = "Import Nightly Settings",
-            Description = "Imports settings from the nightly client",
-            Section = SettingsSection.Other,
-            Buttons =
-            [
-                new() { Title = "Import", Description = "", OnPressed = () => { } }
-            ],
-            SaveToDisk = false,
+            Id = "DisplayFPS",
+            Title = "Display FPS",
+            Description = "Toggles the framerate counter in the corner",
+            Section = SettingsSection.Other
         };
 
         RecordReplays = new(true)
@@ -762,10 +844,31 @@ public partial class SettingsProfile
             Section = SettingsSection.Other
         };
 
+        ResetToDefaults = new(default)
+        {
+            Id = "ResetToDefaults",
+            Title = "Reset to Defaults",
+            Description = "Resets all settings to default values",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new()
+                {
+                    Title = "Reset",
+                    Description = "WARNING: THIS RESETS YOUR CURRENT PROFILE",
+                    OnPressed = () => {
+                        SettingsManager.ResetToDefaults();
+                    }
+                }
+            ],
+        };
+
         #endregion
 
         updateApproachTime();
     }
+
+    #endregion
 
     /// <summary>
     /// Orders all the <see cref="SettingsItem{T}"/> that is present in the <see cref="SettingsProfile"/>

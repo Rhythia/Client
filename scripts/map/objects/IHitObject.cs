@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 /// <summary>
 /// Represents a interactable object inside the map

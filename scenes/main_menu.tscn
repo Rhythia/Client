@@ -47,7 +47,6 @@
 [ext_resource type="Script" uid="uid://chb17y8gabhta" path="res://scripts/ui/menu/JukeboxPanel.cs" id="35_jvjdd"]
 [ext_resource type="Script" uid="uid://783e032bf2o3" path="res://scripts/ui/menu/extras/StatsPanel.cs" id="37_wadof"]
 [ext_resource type="Script" uid="uid://bss5l0q8yh47u" path="res://scripts/ui/menu/extras/CreditsPanel.cs" id="39_b4jiv"]
-[ext_resource type="PackedScene" uid="uid://rl7w0xl4w77l" path="res://prefabs/fps_counter.tscn" id="39_u43bj"]
 [ext_resource type="Texture2D" uid="uid://de86kol23e55h" path="res://textures/ui/github.png" id="41_akqfu"]
 [ext_resource type="Texture2D" uid="uid://c60rl8itmawe7" path="res://textures/ui/github_pressed.png" id="42_mb34c"]
 [ext_resource type="Texture2D" uid="uid://cfl8us0rpkpqs" path="res://textures/ui/github_hovered.png" id="43_sgh51"]
@@ -68,8 +67,6 @@ shader = ExtResource("1_3wgol")
 shader_parameter/window_position = Vector2(0, 0)
 shader_parameter/opaqueness = 1.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yiicd"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bl404"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tkeab"]
@@ -78,15 +75,30 @@ shader_parameter/opaqueness = 1.0
 shader = ExtResource("4_1a85y")
 shader_parameter/brightness = 0.5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c87ec"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mb34c"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l7ueg"]
+shader = ExtResource("4_1a85y")
+shader_parameter/brightness = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wadof"]
 bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_0uejd"]
 font = ExtResource("5_hl5e0")
-font_size = 42
+font_size = 36
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gt56"]
-bg_color = Color(1, 1, 1, 0.0156863)
+bg_color = Color(0, 0, 0, 0.0627451)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wc1go"]
 content_margin_left = 8.0
@@ -125,7 +137,7 @@ content_margin_left = 8.0
 content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0, 0, 0, 0.3137255)
+bg_color = Color(0, 0, 0, 0.47058824)
 corner_radius_top_left = 2
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -268,17 +280,6 @@ content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_l7ueg"]
-shader = ExtResource("4_1a85y")
-shader_parameter/brightness = 0.5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wadof"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h3j6r"]
 shader = ExtResource("4_1a85y")
 shader_parameter/brightness = 0.5
@@ -359,7 +360,6 @@ use_native_dialog = true
 
 [node name="Background" type="ColorRect" parent="." unique_id=1217307991]
 visible = false
-z_index = -10
 material = SubResource("ShaderMaterial_2672j")
 anchors_preset = 15
 anchor_right = 1.0
@@ -368,111 +368,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0.0235294, 0.0196078, 0.0352941, 1)
-
-[node name="TileHolder" type="Panel" parent="Background" unique_id=1579134215]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 64.0
-offset_bottom = -64.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_yiicd")
-
-[node name="0" type="ColorRect" parent="Background/TileHolder" unique_id=356124459]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.667
-anchor_right = 0.333
-anchor_bottom = 1.0
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="1" type="ColorRect" parent="Background/TileHolder" unique_id=2108090796]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.333
-anchor_top = 0.667
-anchor_right = 0.667
-anchor_bottom = 1.0
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="2" type="ColorRect" parent="Background/TileHolder" unique_id=308962906]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.667
-anchor_top = 0.667
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="3" type="ColorRect" parent="Background/TileHolder" unique_id=772232298]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.333
-anchor_right = 0.333
-anchor_bottom = 0.667
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="4" type="ColorRect" parent="Background/TileHolder" unique_id=1539677358]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.333
-anchor_top = 0.333
-anchor_right = 0.667
-anchor_bottom = 0.667
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="5" type="ColorRect" parent="Background/TileHolder" unique_id=565962741]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.667
-anchor_top = 0.333
-anchor_right = 1.0
-anchor_bottom = 0.667
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="6" type="ColorRect" parent="Background/TileHolder" unique_id=859921854]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.333
-anchor_bottom = 0.333
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="7" type="ColorRect" parent="Background/TileHolder" unique_id=1782765179]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.333
-anchor_right = 0.667
-anchor_bottom = 0.333
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-
-[node name="8" type="ColorRect" parent="Background/TileHolder" unique_id=906784998]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.667
-anchor_right = 1.0
-anchor_bottom = 0.333
-offset_right = -1.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Menus" type="Panel" parent="." unique_id=169021205]
 anchors_preset = 15
@@ -493,57 +388,62 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_tkeab")
 
-[node name="News" type="Panel" parent="Menus/Home" unique_id=785063220]
-visible = false
+[node name="News" type="PanelContainer" parent="Menus/Home" unique_id=1879796237]
 material = SubResource("ShaderMaterial_dr6yk")
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.6
-anchor_top = 0.2
+anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.8
-offset_top = 96.0
-offset_right = -96.0
-offset_bottom = -96.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_c87ec")
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = 80.0
+offset_right = -64.0
+offset_bottom = -80.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mb34c")
 
-[node name="Header" type="Label" parent="Menus/Home/News" unique_id=1350479761]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-offset_left = 24.0
-offset_top = 8.0
-offset_right = -24.0
-offset_bottom = 32.0
-text = "1.0.2"
+[node name="Background" type="Panel" parent="Menus/Home/News" unique_id=2058881163]
+material = SubResource("ShaderMaterial_l7ueg")
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wadof")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Home/News" unique_id=408198992]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="Menus/Home/News/VBoxContainer" unique_id=1350479761]
+layout_mode = 2
+text = "0.1.1 (early-26feb22)"
 label_settings = SubResource("LabelSettings_0uejd")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="Menus/Home/News" unique_id=1035549202]
+[node name="RichTextLabel" type="RichTextLabel" parent="Menus/Home/News/VBoxContainer" unique_id=473981233]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+theme = ExtResource("6_engjn")
+theme_override_constants/line_separation = 2
+theme_override_constants/paragraph_separation = 6
+theme_override_fonts/normal_font = ExtResource("7_6h3lr")
+bbcode_enabled = true
+text = "[font_size=28][b]FEATURES[/b][font_size=18]
++ Support for image files other than PNG & JPG[br]+ Reset to defaults setting[br]+ Display FPS setting[br]+ Parallax setting now applies to Spin mode[br]* Non-PHXM maps are now imported on startup (SSPM & TXT)
+[font_size=28][b]FIXES[/b][font_size=18]
+* Gameplay performance improvements (~25-35% increase)[br]* Improved map importing (faster and more reliable)[br]* Waves space coloring is more consistent[br]* Pressing ESC to close settings is more reliable[br]* Absolute input made more accurate[br]* Map preview no longer inverted[br]* Spin no longer displays a placeholder mod icon in gameplay
+[font_size=28][b]MISC[/b][font_size=18]
+* Set default window size to 1280x720"
+shortcut_keys_enabled = false
+
+[node name="Panel" type="Panel" parent="Menus/Home/News/VBoxContainer/RichTextLabel" unique_id=1035549202]
+show_behind_parent = true
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = 60.0
-offset_right = -24.0
-offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5gt56")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Menus/Home/News/Panel" unique_id=473981233]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
-theme = ExtResource("6_engjn")
-theme_override_fonts/normal_font = ExtResource("7_6h3lr")
-bbcode_enabled = true
-shortcut_keys_enabled = false
 
 [node name="Buttons" type="VBoxContainer" parent="Menus/Home" unique_id=695816730]
 layout_mode = 1
@@ -1664,6 +1564,42 @@ text = "[font_size=20]lulusuki
 fit_content = true
 horizontal_alignment = 1
 
+[node name="kiwie" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=699076624]
+modulate = Color(1, 0.8156863, 0.53333336, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=20]kiwie
+[color=ffffffbb][font_size=16]Developer"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="fog" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=670577229]
+modulate = Color(0.73922217, 0.46258998, 0.9705774, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=20]fog
+[color=ffffffbb][font_size=16]Developer"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="cake" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1336553338]
+modulate = Color(0.49546552, 0.9457299, 0.77711904, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=20]cake
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="snuz" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1573219614]
+modulate = Color(0.59607846, 0.9843137, 0.59607846, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=20]snuz
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
 [node name="allusionist" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=2118833467]
 modulate = Color(0.9814784, 0.7174443, 0.6400969, 1)
 layout_mode = 2
@@ -1687,9 +1623,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_eku7s")
 [node name="TopBar" type="Panel" parent="." unique_id=560351556]
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
 offset_bottom = 72.0
 mouse_filter = 2
 theme = ExtResource("6_engjn")
@@ -1710,9 +1643,8 @@ layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 1.0
 offset_left = 6.0
-offset_top = 6.0
-offset_right = 50.0
-offset_bottom = -6.0
+offset_top = 8.0
+offset_bottom = -8.0
 texture = ExtResource("18_eku7s")
 expand_mode = 2
 stretch_mode = 5
@@ -1730,7 +1662,7 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]early-26feb05"
+text = "Rhythia [font_size=12][color=ffffffa0]testbuild-3march2026"
 shortcut_keys_enabled = false
 vertical_alignment = 1
 
@@ -1829,10 +1761,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
 offset_top = -72.0
-offset_right = -8.0
-offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
@@ -2066,10 +1995,3 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
-
-[node name="FPSCounter" parent="." unique_id=1596859626 instance=ExtResource("39_u43bj")]
-anchors_preset = 2
-offset_left = 0.0
-offset_top = -23.0
-offset_right = 1.0
-offset_bottom = 0.0

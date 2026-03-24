@@ -1,5 +1,5 @@
-﻿using Godot;
-using System;
+﻿using System;
+using Godot;
 
 /// <summary>
 /// Modifies the timeline object rendering

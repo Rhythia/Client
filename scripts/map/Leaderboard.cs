@@ -18,10 +18,7 @@ public struct Leaderboard
     {
         MapID = mapID;
 
-        if (Path == null)
-        {
-            Path = $"{Constants.USER_FOLDER}/pbs/{MapID}";
-        }
+        Path ??= $"{Constants.USER_FOLDER}/pbs/{MapID}";
 
         byte[] bytes = [];
 
@@ -48,7 +45,7 @@ public struct Leaderboard
             Reset();
         }
 
-        if (FileBuffer.Get(32).Stringify() != SHA256.HashData(bytes).Stringify())
+        if (Valid && FileBuffer.Get(32).Stringify() != SHA256.HashData(bytes).Stringify())
         {
             Logger.Log("Leaderboard file corrupted; invalid leaderboard hash");
             Reset();

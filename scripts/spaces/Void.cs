@@ -1,10 +1,7 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class Void : BaseSpace
 {
-    public override void _Ready()
-    {
-        base._Ready();
-    }
+
 }

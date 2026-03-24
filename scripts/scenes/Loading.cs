@@ -1,7 +1,7 @@
-using Godot;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Godot;
 using Updatum;
 
 public partial class Loading : BaseScene
@@ -44,8 +44,8 @@ public partial class Loading : BaseScene
         if (updateFound)
         {
             var popup = new OptionPopup("Update Found", "Would you like to download the new version?");
-            popup.AddOption("Yes", Callable.From(updateStep));
-            popup.AddOption("No", Callable.From(mapInitializeStep));
+            popup.AddOption("Update", Callable.From(updateStep));
+            popup.AddOption("Cancel", Callable.From(mapInitializeStep));
             popup.Show();
         }
         else
@@ -132,7 +132,7 @@ public partial class Loading : BaseScene
             }
             else
             {
-                MapManager.MapsInitialized += _ => exit();
+                MapManager.MapsInitialized += _ => Callable.From(exit).CallDeferred();
             }
         }));
     }

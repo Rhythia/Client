@@ -191,13 +191,7 @@ public struct Replay
         return hashCode;
     }
 
-    public static bool operator ==(Replay left, Replay right)
-    {
-        return left.Equals(right);
-    }
+    public static bool operator ==(Replay left, Replay right) => left.Equals(right);
 
-    public static bool operator !=(Replay left, Replay right)
-    {
-        return !(left == right);
-    }
+    public static bool operator !=(Replay left, Replay right) => !(left == right);
 }

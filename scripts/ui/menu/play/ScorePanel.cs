@@ -1,7 +1,7 @@
-using Godot;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using Godot;
 
 public partial class ScorePanel : Panel
 {
@@ -18,14 +18,14 @@ public partial class ScorePanel : Panel
     private TextureRect modifierTemplate;
 
     public override void _Ready()
-	{
+    {
         Button = GetNode<Button>("Button");
 
         playerLabel = GetNode<Label>("Player");
-		scoreLabel = GetNode<Label>("Score");
-		accuracyLabel = GetNode<Label>("Accuracy");
-		speedLabel = GetNode<Label>("Speed");
-		timeLabel = GetNode<Label>("Time");
+        scoreLabel = GetNode<Label>("Score");
+        accuracyLabel = GetNode<Label>("Accuracy");
+        speedLabel = GetNode<Label>("Speed");
+        timeLabel = GetNode<Label>("Time");
         modifiers = GetNode<HBoxContainer>("Modifiers");
         modifierTemplate = modifiers.GetNode<TextureRect>("ModifierTemplate");
 
@@ -33,9 +33,9 @@ public partial class ScorePanel : Panel
         Label buttonLabel = buttonHover.GetNode<Label>("Label");
 
         void tweenHover(bool show)
-		{
+        {
             string replayPath = $"{Constants.USER_FOLDER}/replays/{Score.AttemptID}.phxr";
-        
+
             buttonLabel.Text = File.Exists(replayPath) ? "VIEW" : "REPLAY NOT FOUND";
 
             CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).TweenProperty(buttonHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
@@ -46,15 +46,15 @@ public partial class ScorePanel : Panel
         Button.Pressed += Replay;
     }
 
-	public void Setup(Leaderboard.Score score)
-	{
+    public void Setup(Leaderboard.Score score)
+    {
         Score = score;
 
         playerLabel.Text = score.Player;
-        accuracyLabel.Text = $"{score.Accuracy.ToString().PadDecimals(2)}%";
-        speedLabel.Text = $"{score.Speed.ToString().PadDecimals(2)}x";
+        accuracyLabel.Text = $"{score.Accuracy:F2}%";
+        speedLabel.Text = $"{score.Speed:F2}x";
         timeLabel.Text = Util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
-        
+
         if (score.Qualifies)
         {
             scoreLabel.Text = Util.String.PadMagnitude(score.Value.ToString());
@@ -81,12 +81,12 @@ public partial class ScorePanel : Panel
     public void Replay()
     {
         string replayPath = $"{Constants.USER_FOLDER}/replays/{Score.AttemptID}.phxr";
-        
+
         if (File.Exists(replayPath))
         {
             Replay replay = new(replayPath);
             Map map = MapParser.Decode(replay.MapFilePath);
-            
+
             LegacyRunner.Play(map, replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
         }
     }

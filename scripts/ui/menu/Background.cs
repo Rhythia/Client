@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class Background : Panel, ISkinnable
 {
@@ -16,7 +16,7 @@ public partial class Background : Panel, ISkinnable
         UpdateSkin();
     }
 
-	public void UpdateSkin(SkinProfile skin = null)
+    public void UpdateSkin(SkinProfile skin = null)
     {
         skin ??= SkinManager.Instance.Skin;
 

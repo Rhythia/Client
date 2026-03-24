@@ -8,6 +8,9 @@ public partial class BaseScene : Node
     [Export]
     public bool UseMenuSpace = false;
 
+    [Export]
+    public bool AddSpaceAsChild = false;
+
     public ColorRect Transition;
 
     public override void _Ready()
@@ -19,7 +22,7 @@ public partial class BaseScene : Node
 
     public virtual void Load()
     {
-        
+
     }
 
     public virtual void Unload()

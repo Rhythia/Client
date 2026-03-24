@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Godot;
@@ -15,7 +16,7 @@ public partial class Rhythia : Node
     public static Rhythia Instance;
     public static bool Quitting { get; private set; } = false;
 
-    public override void _Ready()
+    public override async void _Ready()
     {
         Instance = this;
 
@@ -74,30 +75,34 @@ public partial class Rhythia : Node
 
         Stats.GamesOpened++;
 
-        List<string> import = [];
 
-        foreach (string file in Directory.GetFiles($"{Constants.USER_FOLDER}/maps", $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
-        {
-            string ext = file.GetExtension();
+        // marking sspms for importing can be done with an one liner, kept the following block of code in case we need to loop over every valid map file for some reason
 
-            if (!MapParser.IsValidExt(ext))
-            {
-                File.Delete(file);
-            }
-            else if (ext != Constants.DEFAULT_MAP_EXT)
-            {
-                import.Add(file);
-            }
-        }
+        // List<string> import = [];
+        // HashSet<string> validExtensions = new HashSet<string> { "phxm", "sspm", "txt" };
+        // var files = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f => validExtensions.Contains(f.GetExtension().ToLower()));
 
-        MapParser.BulkImport([.. import]);
+        // foreach (string file in files)
+        // {
+        //     string ext = file.GetExtension();
 
-        foreach (string file in import)
+        //     if (ext != Constants.DEFAULT_MAP_EXT)
+        //     {
+        //         import.Add(file);
+        //     }
+        // }
+
+        var nonPhxmMaps = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f => f.GetExtension().ToLower() == "sspm" || f.GetExtension().ToLower() == "txt");
+        await MapParser.BulkImport([.. nonPhxmMaps], notify: true);
+
+        // delete after importing
+        foreach (string file in nonPhxmMaps)
         {
             File.Delete(file);
         }
 
-        GetViewport().Connect("files_dropped", Callable.From((string[] files) => {
+        GetViewport().Connect("files_dropped", Callable.From((string[] files) =>
+        {
             EmitSignal(SignalName.FilesDropped, files);
 
             List<string> maps = [];
@@ -184,8 +189,9 @@ public partial class Rhythia : Node
         }
 
         Discord.Client.Dispose();
-        
-        Instance.GetTree().Quit();
+
+        Tween quitTween = Instance.CreateTween();
+        quitTween.TweenCallback(Callable.From(() => { Instance.GetTree().Quit(); })).SetDelay(0.5);
     }
 
     public override void _Notification(int what)
@@ -198,6 +204,15 @@ public partial class Rhythia : Node
             }
 
             Quit();
+        }
+        else if (what == NotificationApplicationFocusOut)
+        {
+            Engine.MaxFps = 30;
+        }
+        else if (what == NotificationApplicationFocusIn)
+        {
+            var settings = SettingsManager.Instance.Settings;
+            Engine.MaxFps = settings.UnlockFPS ? 0 : settings.FPS;
         }
     }
 }

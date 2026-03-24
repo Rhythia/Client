@@ -11,6 +11,3 @@ script = ExtResource("1_31nrd")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=532696618]
 environment = SubResource("Environment_uposg")
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=752985250]
-fov = 70.0
