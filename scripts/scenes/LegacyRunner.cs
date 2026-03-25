@@ -690,9 +690,16 @@ public partial class LegacyRunner : BaseScene
 
         try
         {
-           cursor.Transparency = settings.CursorOpacity.Value;
-            cursorMaterial.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
-            cursorMaterial.Transparency = settings.CursorOpacity.Value < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
+                StandardMaterial3D cursorMaterial = cursor.MaterialOverride as StandardMaterial3D ?? cursor.GetActiveMaterial(0) as StandardMaterial3D;
+
+                cursor.Transparency = settings.CursorOpacity.Value;
+
+                if (cursorMaterial != null)
+                {
+                    cursorMaterial.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+                    cursorMaterial.Transparency = settings.CursorOpacity.Value < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
+                }
+
             cursor.Transparency = settings.CursorOpacity.Value;
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
@@ -803,7 +810,7 @@ public partial class LegacyRunner : BaseScene
         //	lastSecond += 1000000;
         //}
 
-        if (rKeyHeld && !CurrentAttempt.IsReplay && !MenuShown)
+        if (rKeyHeld && !CurrentAttempt.IsReplay)
         {
             quitHoldTime += (float)delta;
             float progress = Math.Clamp(quitHoldTime / quitHoldDuration, 0, 1);
