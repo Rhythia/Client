@@ -691,16 +691,17 @@ public partial class LegacyRunner : BaseScene
         try
         {
                 StandardMaterial3D cursorMaterial = cursor.MaterialOverride as StandardMaterial3D ?? cursor.GetActiveMaterial(0) as StandardMaterial3D;
+                float cursorOpacity = Math.Clamp(settings.CursorOpacity.Value / 100f, 0, 1);
 
-                cursor.Transparency = settings.CursorOpacity.Value;
+                cursor.Transparency = cursorOpacity;
 
                 if (cursorMaterial != null)
                 {
                     cursorMaterial.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
-                    cursorMaterial.Transparency = settings.CursorOpacity.Value < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
+                    cursorMaterial.Transparency = cursorOpacity < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
                 }
 
-            cursor.Transparency = settings.CursorOpacity.Value;
+            cursor.Transparency = cursorOpacity;
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
             panelLeft.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
