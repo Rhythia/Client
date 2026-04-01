@@ -692,8 +692,9 @@ public partial class LegacyRunner : BaseScene
         {
                 StandardMaterial3D cursorMaterial = cursor.MaterialOverride as StandardMaterial3D ?? cursor.GetActiveMaterial(0) as StandardMaterial3D;
                 float cursorOpacity = Math.Clamp(settings.CursorOpacity.Value / 100f, 0, 1);
+                float cursorTransparency = 1f - cursorOpacity;
 
-                cursor.Transparency = cursorOpacity;
+                cursor.Transparency = cursorTransparency;
 
                 if (cursorMaterial != null)
                 {
@@ -701,7 +702,7 @@ public partial class LegacyRunner : BaseScene
                     cursorMaterial.Transparency = cursorOpacity < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
                 }
 
-            cursor.Transparency = cursorOpacity;
+            cursor.Transparency = cursorTransparency;
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
             panelLeft.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
@@ -1342,7 +1343,7 @@ public partial class LegacyRunner : BaseScene
 
     public static void QueueStop()
     {
-        if (!Playing)
+        if (CurrentAttempt.Stopped || stopQueued)
         {
             return;
         }
