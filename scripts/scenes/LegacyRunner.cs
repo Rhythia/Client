@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -63,7 +63,7 @@ public partial class LegacyRunner : BaseScene
     private static ColorRect quitProgressBar;
     private static float quitHoldTime = 0;
     private static bool rKeyHeld = false;
-    private static float quitHoldDuration = 1f;
+    private static float quitHoldDuration = 0.55f;
 
     private double lastFrame = Time.GetTicksUsec();     // delta arg unreliable..
                                                         //private double lastSecond = Time.GetTicksUsec();	// better framerate calculation
@@ -177,7 +177,7 @@ public partial class LegacyRunner : BaseScene
                 ReplayFile.StoreDouble(settings.ApproachRate);
                 ReplayFile.StoreDouble(settings.ApproachDistance);
                 ReplayFile.StoreDouble(settings.FadeIn);
-                ReplayFile.Store8((byte)(settings.FadeOut ? 1 : 0));
+                ReplayFile.Store8((byte)(settings.FadeOut > 0 ? 1 : 0));
                 ReplayFile.Store8((byte)(settings.Pushback ? 1 : 0));
                 ReplayFile.StoreDouble(settings.CameraParallax);
                 ReplayFile.StoreDouble(settings.FoV.Value);
@@ -690,7 +690,19 @@ public partial class LegacyRunner : BaseScene
 
         try
         {
-            (cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+                StandardMaterial3D cursorMaterial = cursor.MaterialOverride as StandardMaterial3D ?? cursor.GetActiveMaterial(0) as StandardMaterial3D;
+                float cursorOpacity = Math.Clamp(settings.CursorOpacity.Value / 100f, 0, 1);
+                float cursorTransparency = 1f - cursorOpacity;
+
+                cursor.Transparency = cursorTransparency;
+
+                if (cursorMaterial != null)
+                {
+                    cursorMaterial.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+                    cursorMaterial.Transparency = cursorOpacity < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled;
+                }
+
+            cursor.Transparency = cursorTransparency;
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
             panelLeft.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
@@ -800,7 +812,7 @@ public partial class LegacyRunner : BaseScene
         //	lastSecond += 1000000;
         //}
 
-        if (rKeyHeld && !CurrentAttempt.IsReplay && !MenuShown)
+        if (rKeyHeld && !CurrentAttempt.IsReplay)
         {
             quitHoldTime += (float)delta;
             float progress = Math.Clamp(quitHoldTime / quitHoldDuration, 0, 1);
@@ -1083,7 +1095,6 @@ public partial class LegacyRunner : BaseScene
         healthTexture.Size = healthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
         progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
         skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
-
         cursor.RotationDegrees += Vector3.Back * settings.CursorRotation * (float)delta;
 
         // trail stuff
@@ -1163,7 +1174,9 @@ public partial class LegacyRunner : BaseScene
         }
         else if (@event is InputEventKey eventKey)
         {
-            if (eventKey.PhysicalKeycode == Key.R)
+            Key key = eventKey.PhysicalKeycode != Key.None ? eventKey.PhysicalKeycode : eventKey.Keycode;
+
+            if (key == Key.R)
             {
                 if (eventKey.Pressed && !eventKey.Echo)
                 {
@@ -1182,11 +1195,10 @@ public partial class LegacyRunner : BaseScene
 
             if (eventKey.Pressed && !eventKey.Echo)
             {
-                switch (eventKey.PhysicalKeycode)
+                switch (key)
                 {
                     case Key.Escape:
                         CurrentAttempt.Qualifies = false;
-
                         if (pauseShown)
                         {
                             HidePause();
@@ -1225,7 +1237,7 @@ public partial class LegacyRunner : BaseScene
                         }
                         break;
                     case Key.F:
-                        settings.FadeOut.Value = !settings.FadeOut;
+                        settings.FadeOut.Value = settings.FadeOut.Value > 0 ? 0 : 5;
                         break;
                     case Key.P:
                         settings.Pushback.Value = !settings.Pushback;
@@ -1331,7 +1343,7 @@ public partial class LegacyRunner : BaseScene
 
     public static void QueueStop()
     {
-        if (!Playing)
+        if (CurrentAttempt.Stopped || stopQueued)
         {
             return;
         }

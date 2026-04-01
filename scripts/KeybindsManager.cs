@@ -5,6 +5,7 @@ public partial class KeybindsManager : Node
 {
     private string wikiLink = "https://wiki.rhythia.net";
     private OptionPopup wikiPopup;
+    private static float volumeBeforeMute = -1;
 
     public override void _Ready()
     {
@@ -40,6 +41,22 @@ public partial class KeybindsManager : Node
                     }
                     break;
                 }
+            }
+
+            if (eventKey.CtrlPressed && eventKey.Keycode == Key.M)
+            {
+                if (volumeBeforeMute < 0)
+                {
+                    volumeBeforeMute = settings.VolumeMaster.Value;
+                    settings.VolumeMaster.Value = 0;
+                }
+                else
+                {
+                    settings.VolumeMaster.Value = volumeBeforeMute;
+                    volumeBeforeMute = -1;
+                }
+
+                SoundManager.UpdateVolume();
             }
         }
     }

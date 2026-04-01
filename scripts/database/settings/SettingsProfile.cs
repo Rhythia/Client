@@ -50,10 +50,10 @@ public partial class SettingsProfile
     public SettingsItem<float> FadeIn { get; private set; }
 
     /// <summary>
-    /// Toggles fade out for the hit objects
+    /// Controls the fade out distance
     /// </summary>
     [Order]
-    public SettingsItem<bool> FadeOut { get; private set; }
+    public SettingsItem<float> FadeOut { get; private set; }
 
     /// <summary>
     /// Toggles hit object pushback
@@ -142,6 +142,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<float> CursorScale { get; private set; }
+
+    /// <summary>
+    /// Adjusts the cursor opacity
+    /// </summary>
+    [Order]
+    public SettingsItem<float> CursorOpacity { get; private set; }
 
     /// <summary>
     /// Degrees to rotate the cursor by every second
@@ -381,12 +387,18 @@ public partial class SettingsProfile
             }
         };
 
-        FadeOut = new(true)
+        FadeOut = new(5)
         {
             Id = "FadeOut",
             Title = "Fade Out",
             Description = "Toggles fade out for the hit objects",
             Section = SettingsSection.Gameplay,
+            Slider = new()
+            {
+                Step = 0.1f,
+                MinValue = 0,
+                MaxValue = 10
+            }
         };
 
         Pushback = new(true)
@@ -567,6 +579,20 @@ public partial class SettingsProfile
                 Step = 0.025f,
                 MinValue = 0,
                 MaxValue = 4
+            }
+        };
+
+        CursorOpacity = new(100)
+        {
+            Id = "CursorOpacity",
+            Title = "Cursor Opacity",
+            Description = "Adjusts the cursor opacity",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
             }
         };
 

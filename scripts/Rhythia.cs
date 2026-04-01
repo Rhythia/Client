@@ -205,5 +205,14 @@ public partial class Rhythia : Node
 
             Quit();
         }
+        else if (what == NotificationApplicationFocusOut)
+        {
+            Engine.MaxFps = 30;
+        }
+        else if (what == NotificationApplicationFocusIn)
+        {
+            var settings = SettingsManager.Instance.Settings;
+            Engine.MaxFps = settings.UnlockFPS ? 0 : settings.FPS;
+        }
     }
 }

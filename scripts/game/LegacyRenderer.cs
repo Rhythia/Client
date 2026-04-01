@@ -23,9 +23,16 @@ public partial class LegacyRenderer : MultiMeshInstance3D
         float ad = (float)(LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].ApproachDistance : settings.ApproachDistance.Value);
         float at = ad / ar;
         float fadeIn = (float)(LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].FadeIn : settings.FadeIn.Value);
-        bool fadeOut = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].FadeOut : settings.FadeOut.Value;
+        float fadeOut = LegacyRunner.CurrentAttempt.IsReplay ? (LegacyRunner.CurrentAttempt.Replays[0].FadeOut ? 5f : 0f) : settings.FadeOut.Value;
         bool pushback = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Pushback : settings.Pushback.Value;
         float hitWindowDepth = pushback ? (float)Constants.HIT_WINDOW * ar / 1000 : 0;
+        float noteOpacity = settings.NoteOpacity;
+        if (noteOpacity > 1)
+        {
+            // Backward compatibility: older profiles may have stored opacity in a 0-100 range.
+            noteOpacity /= 100f;
+        }
+        noteOpacity = Math.Clamp(noteOpacity, 0, 1);
         float noteSize = (float)(LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].NoteSize : settings.NoteSize.Value) / 4;
         Transform3D transform = new(Vector3.Right * noteSize, Vector3.Up * noteSize, Vector3.Back * noteSize, Vector3.Zero);
 
@@ -39,10 +46,10 @@ public partial class LegacyRenderer : MultiMeshInstance3D
             {
                 alpha -= Math.Min(1, (ad - depth) / (ad / 2));
             }
-            else if (fadeOut)
+            else if (fadeOut > 0)
             {
-                // alpha -= (ad - depth) / (ad + (float)Constants.HIT_WINDOW * ar / 1000);
-                alpha *= Math.Min(1, (depth + hitWindowDepth) / (ad + hitWindowDepth));
+                float fadeOutScale = fadeOut / 10f;
+                alpha *= Math.Min(1, (depth + hitWindowDepth) / (ad * fadeOutScale + hitWindowDepth));
             }
 
             if (!pushback && note.Millisecond - LegacyRunner.CurrentAttempt.Progress <= 0)
@@ -55,7 +62,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
 
 
             transform.Origin = new Vector3(note.X, note.Y, -depth);
-            color.A = alpha * settings.NoteOpacity;
+            color.A = alpha * noteOpacity;
             Multimesh.SetInstanceTransform(j, transform);
             Multimesh.SetInstanceColor(j, color);
         }

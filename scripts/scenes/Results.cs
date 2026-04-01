@@ -158,7 +158,7 @@ public partial class Results : BaseScene
 
     public void UpdateVolume()
     {
-        SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
+        SoundManager.Song.VolumeDb = SoundManager.ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
     }
 
     public void Replay()
