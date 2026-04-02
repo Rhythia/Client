@@ -460,6 +460,7 @@ public partial class MapList : Panel, ISkinnable
             if (dragDistance < 500)
             {
                 Select(button.Map);
+                SoundManager.StartMapSelectionPlayback(button.Map);
 
                 button.Select();
                 button.UpdateOutline(1.0f);

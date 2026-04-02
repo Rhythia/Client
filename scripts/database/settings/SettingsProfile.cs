@@ -254,10 +254,46 @@ public partial class SettingsProfile
     public SettingsItem<float> VolumeSFX { get; private set; }
 
     /// <summary>
+    /// Audio control for hit sound
+    /// </summary>
+    [Order]
+    public SettingsItem<float> VolumeHitSound { get; private set; }
+
+    /// <summary>
+    /// Audio control for miss sound
+    /// </summary>
+    [Order]
+    public SettingsItem<float> VolumeMissSound { get; private set; }
+
+    /// <summary>
+    /// Audio control for menu music
+    /// </summary>
+    [Order]
+    public SettingsItem<float> VolumeMenuMusic { get; private set; }
+
+    /// <summary>
     /// Toggles hit sound to always play
     /// </summary>
     [Order]
     public SettingsItem<bool> AlwaysPlayHitSound { get; private set; }
+
+    /// <summary>
+    /// Enables hit sound playback
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> EnableHitSound { get; private set; }
+
+    /// <summary>
+    /// Enables miss sound playback
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> EnableMissSound { get; private set; }
+
+    /// <summary>
+    /// Enables menu music playback
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> EnableMenuMusic { get; private set; }
 
     /// <summary>
     /// Automatically plays the jukebox on start
@@ -766,6 +802,37 @@ public partial class SettingsProfile
             Section = SettingsSection.Audio,
         };
 
+        EnableHitSound = new(true)
+        {
+            Id = "EnableHitSound",
+            Title = "Enable Hit Sound",
+            Description = "Enables hit sound playback",
+            Section = SettingsSection.Audio,
+        };
+
+        EnableMissSound = new(true)
+        {
+            Id = "EnableMissSound",
+            Title = "Enable Miss Sound",
+            Description = "Enables miss sound playback",
+            Section = SettingsSection.Audio,
+        };
+
+        EnableMenuMusic = new(true)
+        {
+            Id = "EnableMenuMusic",
+            Title = "Enable Menu Music",
+            Description = "Enables menu music playback when the menu is quiet",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) =>
+            {
+                if (!init)
+                {
+                    SoundManager.RefreshMenuMusicPlayback();
+                }
+            }
+        };
+
         VolumeMaster = new(50)
         {
             Id = "VolumeMaster",
@@ -800,7 +867,52 @@ public partial class SettingsProfile
         {
             Id = "VolumeSFX",
             Title = "SFX Volume",
-            Description = "Audio control for sound effects",
+            Description = "Audio control for other sound effects",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
+
+        VolumeHitSound = new(50)
+        {
+            Id = "VolumeHitSound",
+            Title = "Hit Sound Volume",
+            Description = "Audio control for hit sound",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
+
+        VolumeMissSound = new(50)
+        {
+            Id = "VolumeMissSound",
+            Title = "Miss Sound Volume",
+            Description = "Audio control for miss sound",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
+
+        VolumeMenuMusic = new(50)
+        {
+            Id = "VolumeMenuMusic",
+            Title = "Menu Music Volume",
+            Description = "Audio control for menu music",
             Section = SettingsSection.Audio,
             UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
             Slider = new()

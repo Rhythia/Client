@@ -174,9 +174,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             Lobby.SetSpeed(value);
 
-            if (SoundManager.Map.Name != Map.Name)
+            if (SoundManager.Map?.Name == Map.Name && SoundManager.Song.Playing)
             {
-                SoundManager.PlayJukebox(Map);
+                SoundManager.Song.PitchScale = (float)Lobby.Speed;
             }
         }
 
@@ -234,14 +234,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             Lobby.SetStartFrom(value);
 
-            if (SoundManager.Map.Name != Map.Name)
+            if (seek && SoundManager.Map?.Name == Map.Name && SoundManager.Song.Playing)
             {
-                SoundManager.PlayJukebox(Map);
-            }
-
-            if (seek)
-            {
-                SoundManager.Song.Play((float)Lobby.StartFrom / 1000);
+                SoundManager.Song.Seek((float)Lobby.StartFrom / 1000);
             }
         }
 

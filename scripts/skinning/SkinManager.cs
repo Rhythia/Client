@@ -130,7 +130,9 @@ public partial class SkinManager : Node
         // Sounds
 
         skin.HitSoundBuffer = loadSound("hit.mp3");
+        skin.MissSoundBuffer = loadSound("miss.mp3");
         skin.FailSoundBuffer = loadSound("fail.mp3");
+        skin.MenuMusicBuffer = loadSound("menu.mp3");
 
         // Meshes
 

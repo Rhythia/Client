@@ -117,7 +117,11 @@ public partial class SkinProfile : GodotObject
 
     public byte[] HitSoundBuffer { get; set; } = [];
 
+    public byte[] MissSoundBuffer { get; set; } = [];
+
     public byte[] FailSoundBuffer { get; set; } = [];
+
+    public byte[] MenuMusicBuffer { get; set; } = [];
 
     public Color[] NoteColors { get; set; } = [new(0xff0059), new(0xffd8e6)];
 

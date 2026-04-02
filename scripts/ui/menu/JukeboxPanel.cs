@@ -126,12 +126,22 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
     private void skip()
     {
+        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+        {
+            return;
+        }
+
         SoundManager.JukeboxIndex++;
         SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
     }
 
     private void rewind()
     {
+        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+        {
+            return;
+        }
+
         if (SoundManager.Song.GetPlaybackPosition() < 2)
         {
             SoundManager.JukeboxIndex--;
