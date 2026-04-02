@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using Godot;
 
 public class GhostMod : Mod, IObjectRenderModifier<Note>
 {
-    public override string Name => "Ghost";
+	public override string Name => "Ghost";
 
-    public override bool Rankable => true;
+	public override bool Rankable => true;
 
-    public override double ScoreMultiplier => 1.03;
+	public override double ScoreMultiplier => 1.03;
 
-    public void ModifyRenderObject(Note note, float depth, Attempt attempt)
-    {
-        float ad = attempt.Settings.ApproachDistance.Value;
+	public void ModifyRenderObject(Note note, float depth, Attempt attempt)
+	{
+		float ad = attempt.Settings.ApproachDistance.Value;
 
-        note.Transparency -= Mathf.Min(1, (ad - depth) / (ad / 2));
-    }
+		note.Transparency -= Mathf.Min(1, (ad - depth) / (ad / 2));
+	}
 }
