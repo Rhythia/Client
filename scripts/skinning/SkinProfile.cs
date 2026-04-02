@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 
 [GlobalClass]
 public partial class SkinProfile : GodotObject
@@ -108,6 +108,8 @@ public partial class SkinProfile : GodotObject
     public ImageTexture ModNoFailImage { get; set; } = new();
 
     public ImageTexture ModGhostImage { get; set; } = new();
+
+    public ImageTexture ModHardRockImage { get; set; } = new();
 
     public ImageTexture BackgroundTileImage { get; set; } = new();
 

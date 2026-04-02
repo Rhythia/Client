@@ -21,7 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://csk7favaty7k2" path="res://user/skins/default/ui/buttons/speed_plus_plus.png" id="14_hri10"]
 [ext_resource type="Texture2D" uid="uid://ddhu70ryjua54" path="res://user/skins/default/ui/buttons/speed_middle.png" id="18_1m5pv"]
 [ext_resource type="Texture2D" uid="uid://4o5eelsayk4d" path="res://user/skins/default/ui/buttons/play.png" id="20_ir45w"]
-[ext_resource type="Texture2D" path="res://user/skins/default/modifiers/hardrock.png" id="21_hardrock"]
+[ext_resource type="Texture2D" path="res://user/skins/default/modifiers/hardrock_v2.png" id="21_hardrock"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_svokg"]
 

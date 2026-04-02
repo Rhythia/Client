@@ -121,6 +121,7 @@ public partial class SkinManager : Node
 
         skin.ModNoFailImage = loadTexture("modifiers/nofail.png");
         skin.ModGhostImage = loadTexture("modifiers/ghost.png");
+        skin.ModHardRockImage = loadTexture("modifiers/hardrock_v2.png");
 
         // Shaders
 

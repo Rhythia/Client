@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://biuc520ipeaer"
-valid=false
+uid="uid://5bpykwvev6iw"
+path="res://.godot/imported/hardrock_v2.png-31745e1e9f88a4838e92165e8a2b1222.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://user/skins/default/modifiers/hardrock.png"
+source_file="res://user/skins/default/modifiers/hardrock_v2.png"
+dest_files=["res://.godot/imported/hardrock_v2.png-31745e1e9f88a4838e92165e8a2b1222.ctex"]
 
 [params]
 

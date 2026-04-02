@@ -19,20 +19,6 @@ public partial class ModifierButton : Button
         updateState(mods);
 
         Lobby.Instance.ModifiersChanged += updateState;
-
-        if (Modifier == "HardRock")
-        {
-            try {
-                string path = "res://user/skins/default/modifiers/hardrock.png";
-                if (FileAccess.FileExists(path))
-                {
-                    Image img = Image.LoadFromFile(ProjectSettings.GlobalizePath(path));
-                    if (img != null) {
-                        Icon = ImageTexture.CreateFromImage(img);
-                    }
-                }
-            } catch (Exception) { }
-        }
     }
 
     public override void _Pressed()
