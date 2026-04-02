@@ -24,10 +24,10 @@ public interface IHitObject : ITimelineObject
     /// <summary>
     /// Hit result of the <see cref="IHitObject"/>
     /// </summary>
-    bool Hit { get; }
+    bool Hit { get; set; }
 
     /// <summary>
     /// Whether the <see cref="IHitObject"/> can be hit
     /// </summary>
-    bool Hittable { get; }
+    bool Hittable { get; set; }
 }

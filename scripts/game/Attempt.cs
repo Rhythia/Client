@@ -34,5 +34,8 @@ public partial class Attempt : GodotObject
 
 	public double DistanceMM { get; set; }
 
+	public double Health { get; set; } = 100;
+	public long Score { get; set; } = 0;
+
 	public Replay? Replay { get; set; }
 }

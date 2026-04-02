@@ -36,6 +36,7 @@ public partial class GameComponent : Node3D
 		Input.UseAccumulatedInput = false;
 
 		HealthProcessor.ApplyAttempt(attempt);
+		HitJudgement.ApplyAttempt(attempt);
 
 		ApplySettings(attempt.Settings);
 	}
@@ -55,19 +56,21 @@ public partial class GameComponent : Node3D
 	public override void _Process(double delta)
 	{
 
-		//  Psuedocode logic for the attempt
-		//  
-		//  bool[] hitResults = HitJudgment.ProcessHitJudgements(CurrentAttempt);
-		//  foreach (var result in hitResults)
-		//  {
-		//      HealthJudgment.ApplyHitObjectResult(result);
-		//      ScoreJudgment.ApplyHitObjectResult(result);
-		//  }
-		//
-		//  CurrentAttempt.Health = HealthJudgment.Health;
-		//  CurrentAttempt.Score = ScoreJudgment.Score;
-		//
-		//  if (HealthJudgment.IsFail) { Handle fail logic }
+		// Process real-time hit/miss judgments
+		var hitResults = HitJudgement.ProcessHitJudgments(CurrentAttempt);
+		foreach (var result in hitResults)
+		{
+			HealthProcessor.ApplyHitObjectResult(result.Hit);
+			// ScoreJudgment.ApplyHitObjectResult(result); // TODO: Implement ScoreProcessor
+		}
+
+		CurrentAttempt.Health = HealthProcessor.Health;
+		// CurrentAttempt.Score = ScoreProcessor.Score;
+
+		if (HealthProcessor.IsFailed) 
+		{ 
+			// Handle fail logic
+		}
 
 		// Update rendering (notes/objects) on attempt state
 		foreach (var renderer in Renderers)
