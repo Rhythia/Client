@@ -101,7 +101,6 @@ public partial class MainMenu : BaseScene
 
         SoundManager.RefreshMenuMusicPlayback();
 
-        // Resume jukebox only in autoplay mode.
         if (SettingsManager.Instance.Settings.AutoplayJukebox.Value && !SoundManager.Song.Playing && SoundManager.Map != null)
         {
             SoundManager.PlayJukebox(SoundManager.JukeboxIndex);

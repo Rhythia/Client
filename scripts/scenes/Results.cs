@@ -24,7 +24,7 @@ public partial class Results : BaseScene
         holder = GetNode<Panel>("Holder");
         cover = GetNode<TextureRect>("Cover");
 
-        // Stop menu music when entering results
+        // stops menu music after going to results scene
         SoundManager.MenuMusic?.Stop();
 
         Input.MouseMode = settings.UseCursorInMenus ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;

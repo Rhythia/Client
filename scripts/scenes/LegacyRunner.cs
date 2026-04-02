@@ -290,7 +290,7 @@ public partial class LegacyRunner : BaseScene
 
             if (!settings.AlwaysPlayHitSound.Value)
             {
-                SoundManager.HitSound.Play();
+                SoundManager.PlayHitSound();
             }
 
             hitTween?.Kill();
@@ -367,6 +367,8 @@ public partial class LegacyRunner : BaseScene
                     QueueStop();
                 }
             }
+
+            SoundManager.PlayMissSound();
 
             multiplierLabel.Text = $"{ComboMultiplier}x";
             missesLabel.Text = $"{Misses}";
@@ -1040,7 +1042,7 @@ public partial class LegacyRunner : BaseScene
             {
                 CurrentAttempt.Map.Notes[i].Hittable = true;
 
-                SoundManager.HitSound.Play();
+                SoundManager.PlayHitSound();
             }
 
             ToProcess++;
@@ -1273,12 +1275,15 @@ public partial class LegacyRunner : BaseScene
 
         SceneManager.Root.GetViewport().GuiGetFocusOwner()?.ReleaseFocus();
 
+        SoundManager.MenuMusic?.Stop();
+
         if (Playing)
         {
             Stop();
         }
 
         CurrentAttempt = new(map, speed, startFrom, mods ?? [], players, replays);
+        SoundManager.BeginGameplayScope(CurrentAttempt.Map);
         Playing = true;
         stopQueued = false;
         Started = Time.GetTicksUsec();
