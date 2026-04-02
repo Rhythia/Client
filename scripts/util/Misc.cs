@@ -21,6 +21,16 @@ namespace Util
                 case "Ghost":
                     tex = SkinManager.Instance.Skin.ModGhostImage;
                     break;
+                case "HardRock":
+                    tex = new ImageTexture();
+                    try {
+                        string path = "res://user/skins/default/modifiers/hardrock.png";
+                        Image img = Image.LoadFromFile(ProjectSettings.GlobalizePath(path));
+                        if (img != null) {
+                            tex = ImageTexture.CreateFromImage(img);
+                        }
+                    } catch (Exception) { }
+                    break;
                 default:
                     tex = new();
                     break;

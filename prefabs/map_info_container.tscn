@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://csk7favaty7k2" path="res://user/skins/default/ui/buttons/speed_plus_plus.png" id="14_hri10"]
 [ext_resource type="Texture2D" uid="uid://ddhu70ryjua54" path="res://user/skins/default/ui/buttons/speed_middle.png" id="18_1m5pv"]
 [ext_resource type="Texture2D" uid="uid://4o5eelsayk4d" path="res://user/skins/default/ui/buttons/play.png" id="20_ir45w"]
+[ext_resource type="Texture2D" path="res://user/skins/default/modifiers/hardrock.png" id="21_hardrock"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_svokg"]
 
@@ -614,6 +615,17 @@ size_flags_horizontal = 0
 layout_mode = 2
 icon = ExtResource("9_abwk8")
 Modifier = "Ghost"
+
+[node name="Hard" type="AspectRatioContainer" parent="Actions/ScrollContainer/Holder/Modifiers/ScrollContainer/HBoxContainer" unique_id=1417833015]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ModifierButton" parent="Actions/ScrollContainer/Holder/Modifiers/ScrollContainer/HBoxContainer/Hard" unique_id=1417833016 instance=ExtResource("7_dccrs")]
+custom_minimum_size = Vector2(58, 54)
+layout_mode = 2
+icon = ExtResource("21_hardrock")
+Modifier = "HardRock"
+Description = "Hard Mode: Reducing note size and hit window"
 
 [node name="Speed" type="Panel" parent="Actions/ScrollContainer/Holder" unique_id=1748400541]
 custom_minimum_size = Vector2(0, 32)

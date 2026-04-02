@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -1010,7 +1010,13 @@ public partial class LegacyRunner : BaseScene
                 continue;
             }
 
-            if (note.Millisecond + Constants.HIT_WINDOW * CurrentAttempt.Speed < CurrentAttempt.Progress)   // past hit window
+            double activeHitWindow = Constants.HIT_WINDOW;
+            if (CurrentAttempt.Mods.TryGetValue("HardRock", out bool hardRock) && hardRock)
+            {
+                activeHitWindow *= 0.5;
+            }
+
+            if (note.Millisecond + activeHitWindow * CurrentAttempt.Speed < CurrentAttempt.Progress)   // past hit window
             {
                 if (i + 1 > CurrentAttempt.PassedNotes)
                 {
@@ -1063,9 +1069,18 @@ public partial class LegacyRunner : BaseScene
                 {
                     continue;
                 }
-                else if (CurrentAttempt.CursorPosition.X + Constants.HIT_BOX_SIZE >= note.X - 0.5f && CurrentAttempt.CursorPosition.X - Constants.HIT_BOX_SIZE <= note.X + 0.5f && CurrentAttempt.CursorPosition.Y + Constants.HIT_BOX_SIZE >= note.Y - 0.5f && CurrentAttempt.CursorPosition.Y - Constants.HIT_BOX_SIZE <= note.Y + 0.5f)
+                else 
                 {
-                    CurrentAttempt.Hit(note.Index);
+                    float activeHitBox = (float)Constants.HIT_BOX_SIZE;
+                    if (CurrentAttempt.Mods.TryGetValue("HardRock", out bool hardRock) && hardRock)
+                    {
+                        activeHitBox *= 0.75f; // Matches 25% reduction in visual size (75% of normal)
+                    }
+
+                    if (CurrentAttempt.CursorPosition.X + activeHitBox >= note.X - 0.5f && CurrentAttempt.CursorPosition.X - activeHitBox <= note.X + 0.5f && CurrentAttempt.CursorPosition.Y + activeHitBox >= note.Y - 0.5f && CurrentAttempt.CursorPosition.Y - activeHitBox <= note.Y + 0.5f)
+                    {
+                        CurrentAttempt.Hit(note.Index);
+                    }
                 }
             }
             else if (CurrentAttempt.Replays.Length > 1 && note.Millisecond - CurrentAttempt.Progress <= 0 || CurrentAttempt.Replays[0].Notes[note.Index] != -1 && note.Millisecond - CurrentAttempt.Progress + CurrentAttempt.Replays[0].Notes[note.Index] * CurrentAttempt.Speed <= 0)
