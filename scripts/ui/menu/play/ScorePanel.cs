@@ -12,6 +12,7 @@ public partial class ScorePanel : Panel
     private Label playerLabel;
     private Label scoreLabel;
     private Label accuracyLabel;
+    private Label rankLabel;
     private Label speedLabel;
     private Label timeLabel;
     private HBoxContainer modifiers;
@@ -24,6 +25,7 @@ public partial class ScorePanel : Panel
         playerLabel = GetNode<Label>("Player");
         scoreLabel = GetNode<Label>("Score");
         accuracyLabel = GetNode<Label>("Accuracy");
+        rankLabel = GetNode<Label>("Rank");
         speedLabel = GetNode<Label>("Speed");
         timeLabel = GetNode<Label>("Time");
         modifiers = GetNode<HBoxContainer>("Modifiers");
@@ -51,6 +53,9 @@ public partial class ScorePanel : Panel
         Score = score;
 
         playerLabel.Text = score.Player;
+        rankLabel.Text = Util.Misc.GetRank(score.Accuracy);
+        rankLabel.LabelSettings = rankLabel.LabelSettings.Duplicate() as LabelSettings;
+        rankLabel.LabelSettings.FontColor = Util.Misc.GetRankColor(rankLabel.Text);
         accuracyLabel.Text = $"{score.Accuracy:F2}%";
         speedLabel.Text = $"{score.Speed:F2}x";
         timeLabel.Text = Util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);

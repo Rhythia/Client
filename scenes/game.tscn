@@ -752,6 +752,19 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("12_whe6p")
 
+[node name="Rank" type="Label" parent="PanelRight/PanelRightViewport"]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15
+anchor_right = 0.5
+anchor_bottom = 0.15
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_rvp5o")
+text = "SS"
+label_settings = SubResource("LabelSettings_usmyc")
+horizontal_alignment = 1
+
 [node name="Accuracy" type="Label" parent="PanelRight/PanelRightViewport" unique_id=1669266042]
 anchors_preset = -1
 anchor_left = 0.5

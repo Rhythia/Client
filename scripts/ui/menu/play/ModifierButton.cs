@@ -6,11 +6,13 @@ public partial class ModifierButton : Button
     [Export]
     public string Modifier = "";
 
+    [Export]
+    public string Description = "";
+
     public override void _Ready()
     {
         base._Ready();
-
-        TooltipText = Modifier;
+        TooltipText = Description != "" ? Description : Modifier;
 
         Godot.Collections.Dictionary<string, bool> mods = new(Lobby.Modifiers);
 

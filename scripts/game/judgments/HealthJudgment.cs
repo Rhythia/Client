@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -13,7 +13,7 @@ public class HealthJudgment
 
     private List<IHealthModifier> healthModifiers = new();
 
-    public double Health { get; private set; } = 1;
+    public double Health { get; private set; } = 100;
 
     public double HealthStep { get; private set; } = 15;
 
@@ -86,6 +86,6 @@ public class HealthJudgment
     private void applyFail()
     {
         IsFailed = true;
-        Failed.Invoke(true);
+        Failed?.Invoke(true);
     }
 }
