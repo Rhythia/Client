@@ -31,6 +31,12 @@ public partial class Results : BaseScene
         holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;
         holder.GetNode<Label>("Mappers").Text = $"by {LegacyRunner.CurrentAttempt.Map.PrettyMappers}";
         holder.GetNode<Label>("Accuracy").Text = $"{LegacyRunner.CurrentAttempt.Accuracy:F2}%";
+        Label rankLabel = holder.GetNode<Label>("Rank");
+        rankLabel.Text = Util.Misc.GetRank(LegacyRunner.CurrentAttempt.Accuracy);
+        rankLabel.LabelSettings = rankLabel.LabelSettings.Duplicate() as LabelSettings;
+        Color rankColor = Util.Misc.GetRankColor(rankLabel.Text);
+        rankColor.A = 0.5f;
+        rankLabel.LabelSettings.FontColor = rankColor;
         holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Score.ToString())}";
         holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Hits.ToString())} / {Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Sum.ToString())}";
         holder.GetNode<Label>("Status").Text = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Status : LegacyRunner.CurrentAttempt.Alive ? (LegacyRunner.CurrentAttempt.Qualifies ? "PASSED" : "DISQUALIFIED") : "FAILED";

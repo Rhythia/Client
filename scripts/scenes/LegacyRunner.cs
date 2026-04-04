@@ -38,6 +38,7 @@ public partial class LegacyRunner : BaseScene
     private static Label replayViewerLabel;
     private static HSlider replayViewerSeek;
     private static Label accuracyLabel;
+    private static Label rankLabel;
     private static Label hitsLabel;
     private static Label missesLabel;
     private static Label sumLabel;
@@ -286,6 +287,8 @@ public partial class LegacyRunner : BaseScene
             hitsLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
             sumLabel.Text = Util.String.PadMagnitude(Sum.ToString());
             accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString("F2"))}%";
+            rankLabel.Text = Util.Misc.GetRank(Hits + Misses == 0 ? 100 : Accuracy);
+            rankLabel.LabelSettings.FontColor = Util.Misc.GetRankColor(rankLabel.Text);
             comboLabel.Text = Combo.ToString();
 
             if (!settings.AlwaysPlayHitSound.Value)
@@ -374,6 +377,8 @@ public partial class LegacyRunner : BaseScene
             missesLabel.LabelSettings.FontColor = Color.Color8(255, 255, 255, 255);
             sumLabel.Text = Util.String.PadMagnitude(Sum.ToString());
             accuracyLabel.Text = $"{(Hits + Misses == 0 ? "100.00" : Accuracy.ToString("F2"))}%";
+            rankLabel.Text = Util.Misc.GetRank(Hits + Misses == 0 ? 100 : Accuracy);
+            rankLabel.LabelSettings.FontColor = Util.Misc.GetRankColor(rankLabel.Text);
             comboLabel.Text = Combo.ToString();
 
             missTween?.Kill();
@@ -499,6 +504,8 @@ public partial class LegacyRunner : BaseScene
         replayViewerLabel = replayViewer.GetNode<Label>("Time");
         replayViewerSeek = replayViewer.GetNode<HSlider>("Seek");
         accuracyLabel = panelRight.GetNode<Label>("Accuracy");
+        rankLabel = panelRight.GetNode<Label>("Rank");
+        rankLabel.LabelSettings = rankLabel.LabelSettings.Duplicate() as LabelSettings;
         hitsLabel = panelRight.GetNode<Label>("Hits");
         missesLabel = panelRight.GetNode<Label>("Misses");
         sumLabel = panelRight.GetNode<Label>("Sum");
@@ -599,6 +606,8 @@ public partial class LegacyRunner : BaseScene
             simpleMissesLabel.Text = "0";
             sumLabel.Text = "0";
             accuracyLabel.Text = "100.00%";
+            rankLabel.Text = "SS";
+            rankLabel.LabelSettings.FontColor = Util.Misc.GetRankColor("SS");
             scoreLabel.Text = "0";
             comboLabel.Text = "0";
             multiplierLabel.Text = "1x";

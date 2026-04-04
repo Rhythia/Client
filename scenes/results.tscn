@@ -90,6 +90,11 @@ font_size = 32
 shader = ExtResource("5_eo0oh")
 shader_parameter/brightness = 1.25
 
+[sub_resource type="LabelSettings" id="LabelSettings_huge_rank"]
+font = ExtResource("2_f4qdi")
+font_size = 550
+font_color = Color(1, 1, 1, 0.5)
+
 [node name="SceneResults" type="Node" unique_id=11944572]
 script = ExtResource("1_llpx6")
 
@@ -229,6 +234,20 @@ offset_left = 32.0
 offset_top = 300.0
 offset_right = -32.0
 offset_bottom = 302.0
+
+[node name="Rank" type="Label" parent="Holder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "SS"
+label_settings = SubResource("LabelSettings_huge_rank")
+horizontal_alignment = 0
+vertical_alignment = 1
+text_overrun_behavior = 3
 
 [node name="Accuracy" type="Label" parent="Holder" unique_id=678663131]
 layout_mode = 1

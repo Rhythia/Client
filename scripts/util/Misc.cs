@@ -70,5 +70,30 @@ namespace Util
             }
             return null;
         }
+
+        public static string GetRank(double accuracy)
+        {
+            if (accuracy >= 100) return "SS";
+            if (accuracy >= 98) return "S";
+            if (accuracy >= 95) return "A";
+            if (accuracy >= 90) return "B";
+            if (accuracy >= 85) return "C";
+            if (accuracy >= 80) return "D";
+            return "F";
+        }
+
+        public static Color GetRankColor(string rank)
+        {
+            return rank switch
+            {
+                "SS" => Color.Color8(255, 105, 180), // Hot Pink
+                "S" => Color.Color8(255, 215, 0),    // Gold
+                "A" => Color.Color8(50, 205, 50),    // Lime Green
+                "B" => Color.Color8(30, 144, 255),   // Dodger Blue
+                "C" => Color.Color8(255, 255, 0),    // Yellow
+                "D" => Color.Color8(255, 165, 0),    // Orange
+                _ => Color.Color8(255, 69, 0),       // Red-Orange (F)
+            };
+        }
     }
 }
