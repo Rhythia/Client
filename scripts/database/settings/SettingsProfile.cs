@@ -387,7 +387,7 @@ public partial class SettingsProfile
             }
         };
 
-        FadeOut = new(5)
+        FadeOut = new(100)
         {
             Id = "FadeOut",
             Title = "Fade Out",
@@ -395,9 +395,9 @@ public partial class SettingsProfile
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
-                Step = 0.1f,
+                Step = 1,
                 MinValue = 0,
-                MaxValue = 10
+                MaxValue = 100
             }
         };
 

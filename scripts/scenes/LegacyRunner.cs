@@ -1237,7 +1237,7 @@ public partial class LegacyRunner : BaseScene
                         }
                         break;
                     case Key.F:
-                        settings.FadeOut.Value = settings.FadeOut.Value > 0 ? 0 : 5;
+                        settings.FadeOut.Value = settings.FadeOut.Value > 0 ? 0 : 100;
                         break;
                     case Key.P:
                         settings.Pushback.Value = !settings.Pushback;

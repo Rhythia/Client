@@ -271,7 +271,7 @@ public partial class SettingsMenu : ColorRect
             if ((bool)setting.GetVariant() != value) { setting.SetVariant(value); }
         };
 
-        setting.Updated += (value) => { updateToggle(button, (bool)value); };
+        setting.Updated += value => updateToggle(button, (bool)value);
 
         updateToggle(button, (bool)setting.GetVariant());
     }

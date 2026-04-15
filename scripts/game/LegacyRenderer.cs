@@ -48,7 +48,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
             }
             else if (fadeOut > 0)
             {
-                float fadeOutScale = fadeOut / 10f;
+                float fadeOutScale = fadeOut / 100f;
                 alpha *= Math.Min(1, (depth + hitWindowDepth) / (ad * fadeOutScale + hitWindowDepth));
             }
 
