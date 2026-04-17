@@ -5,7 +5,7 @@ namespace Spaces;
 public partial class Waves : BaseSpace
 {
     private readonly CompressedTexture2D empty = ResourceLoader.Load<CompressedTexture2D>("res://textures/empty.png");
-    private Godot.Environment environment;
+    private Environment environment;
     private ShaderMaterial skyMaterial;
     private ShaderMaterial waterMaterial;
 

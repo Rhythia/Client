@@ -1,9 +1,9 @@
 using Godot;
 
 namespace Spaces;
+
 public partial class Squircles : BaseSpace
 {
-    private WorldEnvironment worldEnvironment;
     private CpuParticles3D particlesNear;
     private CpuParticles3D particlesFar;
 
@@ -14,11 +14,10 @@ public partial class Squircles : BaseSpace
     {
         base._Ready();
 
-        worldEnvironment = GetNode<WorldEnvironment>("WorldEnvironment");
         particlesNear = GetNode<CpuParticles3D>("ParticlesNear");
         particlesFar = GetNode<CpuParticles3D>("ParticlesFar");
 
-        defaultEnvironmentColor = worldEnvironment.Environment.BackgroundColor;
+        defaultEnvironmentColor = WorldEnvironment.Environment.BackgroundColor;
         defaultParticleColor = particlesNear.Color;
     }
 
@@ -84,7 +83,7 @@ public partial class Squircles : BaseSpace
     {
         Color darkened = color.Darkened(0.9f);
 
-        worldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
+        WorldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
         particlesNear.Color = color.Lightened(0.1f);
         particlesFar.Color = particlesNear.Color;
     }
