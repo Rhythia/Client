@@ -1662,7 +1662,7 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]testbuild-3march2026"
+text = "Rhythia [font_size=12][color=ffffffa0]early-26aprXX"
 shortcut_keys_enabled = false
 vertical_alignment = 1
 
