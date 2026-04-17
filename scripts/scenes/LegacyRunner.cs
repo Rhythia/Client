@@ -549,7 +549,7 @@ public partial class LegacyRunner : BaseScene
         menuButtonsHolder.GetNode<Button>("Restart").Pressed += Restart;
         menuButtonsHolder.GetNode<Button>("Settings").Pressed += () =>
         {
-            SettingsManager.ShowMenu();
+            SettingsMenu.Instance.ShowMenu();
         };
         menuButtonsHolder.GetNode<Button>("Quit").Pressed += () =>
         {
@@ -1210,13 +1210,14 @@ public partial class LegacyRunner : BaseScene
                 {
                     case Key.Escape:
                         CurrentAttempt.Qualifies = false;
+
                         if (pauseShown)
                         {
                             HidePause();
                         }
-                        else if (SettingsManager.Shown)
+                        else if (SettingsMenu.Instance.Shown)
                         {
-                            SettingsManager.HideMenu();
+                            SettingsMenu.Instance.HideMenu();
                         }
                         else
                         {

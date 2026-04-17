@@ -5,6 +5,8 @@ using Godot;
 
 public partial class SettingsMenu : ColorRect
 {
+    public static SettingsMenu Instance;
+
     public bool Shown = false;
 
     private Dictionary<string, Panel> settingPanels = [];
@@ -22,6 +24,8 @@ public partial class SettingsMenu : ColorRect
 
     public override void _Ready()
     {
+        Instance = this;
+
         hideButton = GetNode<Button>("Hide");
         holder = GetNode<Panel>("Holder");
         header = holder.GetNode<Panel>("Header");
@@ -33,8 +37,6 @@ public partial class SettingsMenu : ColorRect
         categoryTemplate = categories.GetNode<ScrollContainer>("CategoryTemplate");
 
         Modulate = Color.Color8(255, 255, 255, 0);
-
-        SettingsManager.Instance.MenuToggled += ShowMenu;
 
         LineEdit profileEdit = header.GetNode<LineEdit>("ProfileEdit");
 
@@ -180,9 +182,9 @@ public partial class SettingsMenu : ColorRect
 
         Logger.Log($"SETTINGS MENU: {(Time.GetTicksUsec() - start) / 1000}ms");
 
-        ShowMenu(false);
+        HideMenu();
 
-        hideButton.Pressed += () => { ShowMenu(false); };
+        hideButton.Pressed += HideMenu;
     }
     // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
     public override void _Input(InputEvent @event)
@@ -202,7 +204,7 @@ public partial class SettingsMenu : ColorRect
         }
     }
 
-    public void ShowMenu(bool show)
+    public void ShowMenu(bool show = true)
     {
         Shown = show;
         hideButton.MouseFilter = show ? MouseFilterEnum.Stop : MouseFilterEnum.Ignore;
@@ -221,6 +223,11 @@ public partial class SettingsMenu : ColorRect
         tween.TweenProperty(holder, "offset_top", Shown ? 0 : 25, 0.25);
         tween.TweenProperty(holder, "offset_bottom", Shown ? 0 : 25, 0.25);
         tween.Chain().TweenCallback(Callable.From(() => { Visible = Shown; }));
+    }
+
+    public void HideMenu()
+    {
+        ShowMenu(false);
     }
 
     public void SelectCategory(ScrollContainer category)
