@@ -14,6 +14,9 @@ public partial class OptionPopup : Control
     public bool Shown = false;
     public Dictionary<string, Button> Options = [];
 
+    [Signal]
+    public delegate void CanceledEventHandler();
+
     private readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/option_popup.tscn");
 
     [Export]
@@ -89,6 +92,7 @@ public partial class OptionPopup : Control
         MoveToFront();
 
         if (show) { Visible = true; }
+        else { EmitSignal(SignalName.Canceled); }
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad);
         tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.1);

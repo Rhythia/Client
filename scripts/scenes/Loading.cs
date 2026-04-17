@@ -46,6 +46,9 @@ public partial class Loading : BaseScene
             var popup = new OptionPopup("Update Found", "Would you like to download the new version?");
             popup.AddOption("Update", Callable.From(updateStep));
             popup.AddOption("Cancel", Callable.From(mapInitializeStep));
+
+            popup.Canceled += mapInitializeStep;
+
             popup.Show();
         }
         else
