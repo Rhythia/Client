@@ -254,17 +254,24 @@ public partial class SettingsMenu : ColorRect
 
         string current = SettingsManager.GetCurrentProfile();
         string[] profiles = Directory.GetFiles($"{Constants.USER_FOLDER}/profiles");
-
+        
+        // add custom profiles to item list
         for (int i = 0; i < profiles.Length; i++)
         {
             string name = profiles[i].GetFile().GetBaseName();
-
+            
             if (name != "default")
             {
                 profilesButton.AddItem(name);
             }
+        }
 
-            if (current == name)
+        // item indices don't always match file order
+        for (int i = 0; i < profilesButton.ItemCount; i++)
+        {
+            string name = profilesButton.GetItemText(i);
+
+            if (name == current)
             {
                 profilesButton.Select(i);
             }
