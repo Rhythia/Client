@@ -11,7 +11,7 @@ public class GhostMod : Mod, IObjectRenderModifier<Note>
 
     public void ModifyRenderObject(Note note, float depth, Attempt attempt)
     {
-        float ad = attempt.Settings.ApproachDistance.Value;
+        float ad = (float)attempt.Settings.ApproachDistance.Value;
 
         note.Transparency -= Mathf.Min(1, (ad - depth) / (ad / 2));
     }

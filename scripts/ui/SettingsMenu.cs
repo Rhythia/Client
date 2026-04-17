@@ -331,13 +331,14 @@ public partial class SettingsMenu : ColorRect
 
     private void updateSlider(HSlider slider, LineEdit lineEdit, double value)
     {
+        value = Math.Round(value * 1000) / 1000;
         lineEdit.Text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
         if (lineEdit.IsInsideTree())
         {
             lineEdit.ReleaseFocus();
         }
-
+        
         slider.SetValueNoSignal(value);
     }
 

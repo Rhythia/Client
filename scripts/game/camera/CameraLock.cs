@@ -11,8 +11,8 @@ public class CameraLock : CameraMode
     {
         var settings = attempt.Settings;
 
-        float sensitivity = settings.Sensitivity.Value;
-        sensitivity *= settings.FoV.Value / 70f;
+        float sensitivity = (float)settings.Sensitivity.Value;
+        sensitivity *= (float)settings.FoV.Value / 70f;
 
         if (settings.CursorDrift.Value)
         {
@@ -26,7 +26,7 @@ public class CameraLock : CameraMode
 
         attempt.CursorPosition = new Vector2(attempt.CursorPosition.X, attempt.CursorPosition.Y);
 
-        camera.Position = new Vector3(0, 0, 3.75f) + new Vector3(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0) * settings.CameraParallax.Value;
+        camera.Position = new Vector3(0, 0, 3.75f) + new Vector3(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0) * (float)settings.CameraParallax.Value;
         camera.Rotation = Vector3.Zero;
 
         attempt.CameraPosition = camera.Position;

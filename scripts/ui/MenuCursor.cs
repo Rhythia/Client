@@ -15,7 +15,7 @@ public partial class MenuCursor : TextureRect, ISkinnable
         settings.UseCursorInMenus.Updated += (value) => UpdateVisible((bool)value);
         SkinManager.Instance.Loaded += UpdateSkin;
 
-        UpdateSize(settings.CursorScale.Value);
+        UpdateSize((float)settings.CursorScale.Value);
         UpdateVisible(settings.UseCursorInMenus.Value);
         UpdateSkin();
     }

@@ -212,19 +212,19 @@ public partial class SoundManager : Node, ISkinnable
         PlayJukebox(map, setRichPresence);
     }
 
-    public static float ComputeVolumeDb(float volume, float master, float range)
+    public static double ComputeVolumeDb(double volume, double master, double range)
     {
-        if (volume <= 0 || master <= 0) return float.NegativeInfinity;
-        return -80 + range * (float)Math.Pow(volume / 100, 0.1) * (float)Math.Pow(master / 100, 0.1);
+        if (volume <= 0 || master <= 0) return double.NegativeInfinity;
+        return -80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1);
     }
 
     public static void UpdateVolume()
     {
         var settings = SettingsManager.Instance.Settings;
 
-        Song.VolumeDb = ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
-        HitSound.VolumeDb = ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
-        FailSound.VolumeDb = ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
+        Song.VolumeDb = (float)ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
+        HitSound.VolumeDb = (float)ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
+        FailSound.VolumeDb = (float)ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
     }
 
     public static void UpdateJukeboxQueue()

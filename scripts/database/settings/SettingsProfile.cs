@@ -11,7 +11,7 @@ public partial class SettingsProfile
     /// Adjusts cursor sensitivity
     /// </summary>
     [Order]
-    public SettingsItem<float> Sensitivity { get; private set; }
+    public SettingsItem<double> Sensitivity { get; private set; }
 
     /// <summary>
     /// Toggles absolute input
@@ -29,31 +29,31 @@ public partial class SettingsProfile
     /// Approach rate of hit objects
     /// </summary>
     [Order]
-    public SettingsItem<float> ApproachRate { get; private set; }
+    public SettingsItem<double> ApproachRate { get; private set; }
 
     /// <summary>
     /// Approach distance of hit objects
     /// </summary>
     [Order]
-    public SettingsItem<float> ApproachDistance { get; private set; }
+    public SettingsItem<double> ApproachDistance { get; private set; }
 
     /// <summary>
     /// Approach time of hit objects
     /// </summary>
     [Order]
-    public SettingsItem<float> ApproachTime { get; private set; }
+    public SettingsItem<double> ApproachTime { get; private set; }
 
     /// <summary>
     /// Distance for the hit objects to become fully opaqu
     /// </summary>
     [Order]
-    public SettingsItem<float> FadeIn { get; private set; }
+    public SettingsItem<double> FadeIn { get; private set; }
 
     /// <summary>
     /// Controls the fade out distance
     /// </summary>
     [Order]
-    public SettingsItem<float> FadeOut { get; private set; }
+    public SettingsItem<double> FadeOut { get; private set; }
 
     /// <summary>
     /// Toggles hit object pushback
@@ -65,13 +65,13 @@ public partial class SettingsProfile
     /// Adjusts the camera parallax
     /// </summary>
     [Order]
-    public SettingsItem<float> CameraParallax { get; private set; }
+    public SettingsItem<double> CameraParallax { get; private set; }
 
     /// <summary>
     /// Adjusts the HUD parallax
     /// </summary>
     [Order]
-    public SettingsItem<float> HUDParallax { get; private set; }
+    public SettingsItem<double> HUDParallax { get; private set; }
 
     /// <summary>
     /// space to pause toggle
@@ -83,7 +83,7 @@ public partial class SettingsProfile
     /// Adjusts the Field of View
     /// </summary>
     [Order]
-    public SettingsItem<float> FoV { get; private set; }
+    public SettingsItem<double> FoV { get; private set; }
 
     #endregion
 
@@ -123,7 +123,7 @@ public partial class SettingsProfile
     /// Sets the maximum opacity of the notes
     /// </summary>
     [Order]
-    public SettingsItem<float> NoteOpacity { get; private set; }
+    public SettingsItem<double> NoteOpacity { get; private set; }
 
     /// <summary>
     /// Overrides the skin's note mesh
@@ -135,25 +135,25 @@ public partial class SettingsProfile
     /// Sets the size of the notes
     /// </summary>
     [Order]
-    public SettingsItem<float> NoteSize { get; private set; }
+    public SettingsItem<double> NoteSize { get; private set; }
 
     /// <summary>
     /// Adjusts the cursor scale
     /// </summary>
     [Order]
-    public SettingsItem<float> CursorScale { get; private set; }
+    public SettingsItem<double> CursorScale { get; private set; }
 
     /// <summary>
     /// Adjusts the cursor opacity
     /// </summary>
     [Order]
-    public SettingsItem<float> CursorOpacity { get; private set; }
+    public SettingsItem<double> CursorOpacity { get; private set; }
 
     /// <summary>
     /// Degrees to rotate the cursor by every second
     /// </summary>
     [Order]
-    public SettingsItem<float> CursorRotation { get; private set; }
+    public SettingsItem<double> CursorRotation { get; private set; }
 
     /// <summary>
     /// Toggles a trial for your cursor
@@ -165,13 +165,13 @@ public partial class SettingsProfile
     /// Adjusts trail visibility time
     /// </summary>
     [Order]
-    public SettingsItem<float> TrailTime { get; private set; }
+    public SettingsItem<double> TrailTime { get; private set; }
 
     /// <summary>
     /// Adjusts the detail for the trail
     /// </summary>
     [Order]
-    public SettingsItem<float> TrailDetail { get; private set; }
+    public SettingsItem<double> TrailDetail { get; private set; }
 
     /// <summary>
     /// Uses the skin's cursor instead of the native cursor
@@ -183,13 +183,13 @@ public partial class SettingsProfile
     /// Adjusts the video background dim
     /// </summary>
     [Order]
-    public SettingsItem<float> VideoDim { get; private set; }
+    public SettingsItem<double> VideoDim { get; private set; }
 
     /// <summary>
     /// Adjusts the scale of the video background
     /// </summary>
     [Order]
-    public SettingsItem<float> VideoRenderScale { get; private set; }
+    public SettingsItem<double> VideoRenderScale { get; private set; }
 
     /// <summary>
     /// Toggles a minimal HUD
@@ -239,19 +239,19 @@ public partial class SettingsProfile
     /// Master control for the audio
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeMaster { get; private set; }
+    public SettingsItem<double> VolumeMaster { get; private set; }
 
     /// <summary>
     /// Audio control for the music
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeMusic { get; private set; }
+    public SettingsItem<double> VolumeMusic { get; private set; }
 
     /// <summary>
     /// Audio control for sound effects
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeSFX { get; private set; }
+    public SettingsItem<double> VolumeSFX { get; private set; }
 
     /// <summary>
     /// Toggles hit sound to always play

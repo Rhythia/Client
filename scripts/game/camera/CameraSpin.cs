@@ -11,8 +11,8 @@ public class CameraSpin : CameraMode
     {
         var settings = attempt.Settings;
 
-        float sensitivity = settings.Sensitivity.Value;
-        sensitivity *= settings.FoV.Value / 70f;
+        float sensitivity = (float)settings.Sensitivity.Value;
+        sensitivity *= (float)settings.FoV.Value / 70f;
 
         camera.Rotation += new Vector3(-mouseDelta.Y / 120 * sensitivity / (float)Math.PI, -mouseDelta.X / 120 * sensitivity / (float)Math.PI, 0);
         camera.Rotation = new Vector3(Math.Clamp(camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)), camera.Rotation.Y, camera.Rotation.Z);

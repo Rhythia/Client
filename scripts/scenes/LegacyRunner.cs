@@ -691,7 +691,7 @@ public partial class LegacyRunner : BaseScene
         try
         {
             StandardMaterial3D cursorMaterial = cursor.MaterialOverride as StandardMaterial3D ?? cursor.GetActiveMaterial(0) as StandardMaterial3D;
-            float cursorOpacity = Math.Clamp(settings.CursorOpacity.Value / 100f, 0, 1);
+            float cursorOpacity = Math.Clamp((float)settings.CursorOpacity.Value / 100, 0, 1);
             float cursorTransparency = 1f - cursorOpacity;
 
             cursor.Transparency = cursorTransparency;
@@ -1108,7 +1108,7 @@ public partial class LegacyRunner : BaseScene
         }
 
         skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
-        cursor.RotationDegrees += Vector3.Back * settings.CursorRotation * (float)delta;
+        cursor.RotationDegrees += Vector3.Back * (float)settings.CursorRotation * (float)delta;
 
         // trail stuff
         if (settings.CursorTrail)
@@ -1547,7 +1547,7 @@ public partial class LegacyRunner : BaseScene
             // The pivot is to mimic ROBLOX's orbital camera
             Vector3 Pivot = Camera.Basis.Z / 4f;
 
-            Camera.Position = Origin + CursorLock * settings.CameraParallax + Pivot;
+            Camera.Position = Origin + CursorLock * (float)settings.CameraParallax + Pivot;
 
             Vector3 LookVector = Camera.Basis.Z;
             Vector2 CameraVec2 = new Vector2(Camera.Position.X, Camera.Position.Y);

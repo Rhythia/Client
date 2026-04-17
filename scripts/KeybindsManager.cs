@@ -47,7 +47,7 @@ public partial class KeybindsManager : Node
             {
                 if (volumeBeforeMute < 0)
                 {
-                    volumeBeforeMute = settings.VolumeMaster.Value;
+                    volumeBeforeMute = (float)settings.VolumeMaster.Value;
                     settings.VolumeMaster.Value = 0;
                 }
                 else
