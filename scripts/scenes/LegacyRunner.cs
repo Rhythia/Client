@@ -1104,7 +1104,14 @@ public partial class LegacyRunner : BaseScene
 
         progressLabel.Text = $"{Util.String.FormatTime(Math.Max(0, CurrentAttempt.Progress) / 1000)} / {Util.String.FormatTime(MapLength / 1000)}";
         healthTexture.Size = healthTexture.Size.Lerp(new Vector2(32 + (float)CurrentAttempt.Health * 10.24f, 80), Math.Min(1, (float)delta * 64));
-        progressBarTexture.Size = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
+
+        Vector2 progressSize = new Vector2(32 + (float)(CurrentAttempt.Progress / MapLength) * 1024, 80);
+
+        if ((int)progressSize.X != (int)progressBarTexture.Size.X)
+        {
+            progressBarTexture.Size = progressSize;
+        }
+
         skipLabel.Modulate = Color.Color8(255, 255, 255, (byte)(skipLabelAlpha * 255));
         cursor.RotationDegrees += Vector3.Back * settings.CursorRotation * (float)delta;
 
