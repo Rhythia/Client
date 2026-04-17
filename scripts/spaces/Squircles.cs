@@ -1,95 +1,91 @@
-using System;
-using System.Collections.Generic;
 using Godot;
 
-namespace Spaces
+namespace Spaces;
+public partial class Squircles : BaseSpace
 {
-    public partial class Squircles : BaseSpace
+    private WorldEnvironment worldEnvironment;
+    private CpuParticles3D particlesNear;
+    private CpuParticles3D particlesFar;
+
+    private Color defaultEnvironmentColor;
+    private Color defaultParticleColor;
+
+    public override void _Ready()
     {
-        private WorldEnvironment worldEnvironment;
-        private CpuParticles3D particlesNear;
-        private CpuParticles3D particlesFar;
+        base._Ready();
 
-        private Color defaultEnvironmentColor;
-        private Color defaultParticleColor;
+        worldEnvironment = GetNode<WorldEnvironment>("WorldEnvironment");
+        particlesNear = GetNode<CpuParticles3D>("ParticlesNear");
+        particlesFar = GetNode<CpuParticles3D>("ParticlesFar");
 
-        public override void _Ready()
+        defaultEnvironmentColor = worldEnvironment.Environment.BackgroundColor;
+        defaultParticleColor = particlesNear.Color;
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+
+        if (Playing)
         {
-            base._Ready();
-
-            worldEnvironment = GetNode<WorldEnvironment>("WorldEnvironment");
-            particlesNear = GetNode<CpuParticles3D>("ParticlesNear");
-            particlesFar = GetNode<CpuParticles3D>("ParticlesFar");
-
-            defaultEnvironmentColor = worldEnvironment.Environment.BackgroundColor;
-            defaultParticleColor = particlesNear.Color;
+            updateColor(NoteHitColor);
         }
-
-        public override void _Process(double delta)
+        else
         {
-            base._Process(delta);
+            Viewport viewport = GetViewport();
+            Vector2 centerOffset = viewport.GetMousePosition() - viewport.GetVisibleRect().Size / 2;
 
-            if (Playing)
-            {
-                updateColor(NoteHitColor);
-            }
-            else
-            {
-                Viewport viewport = GetViewport();
-                Vector2 centerOffset = viewport.GetMousePosition() - viewport.GetVisibleRect().Size / 2;
-
-                Camera.Position = new Vector3(centerOffset.X, centerOffset.Y, 0) / 40000;
-            }
+            Camera.Position = new Vector3(centerOffset.X, centerOffset.Y, 0) / 40000;
         }
+    }
 
-        public override void UpdateMap(Map map)
+    public override void UpdateMap(Map map)
+    {
+        base.UpdateMap(map);
+
+        Color color = defaultParticleColor;
+
+        if (!Playing && Cover != null)
         {
-            base.UpdateMap(map);
+            Image coverImage = Cover.GetImage();
 
-            Color color = defaultParticleColor;
-
-            if (!Playing && Cover != null)
+            if (coverImage.IsCompressed())
             {
-                Image coverImage = Cover.GetImage();
+                return;
+            }
 
-                if (coverImage.IsCompressed())
+            Vector3 avg = Vector3.Zero;
+            int pixelCount = 0;
+
+            for (int x = 0; x < coverImage.GetWidth(); x++)
+            {
+                for (int y = 0; y < coverImage.GetHeight(); y++)
                 {
-                    return;
-                }
+                    Color pixel = coverImage.GetPixel(x, y);
 
-                Vector3 avg = Vector3.Zero;
-                int pixelCount = 0;
-
-                for (int x = 0; x < coverImage.GetWidth(); x++)
-                {
-                    for (int y = 0; y < coverImage.GetHeight(); y++)
+                    if (pixel.A == 0)
                     {
-                        Color pixel = coverImage.GetPixel(x, y);
-
-                        if (pixel.A == 0)
-                        {
-                            continue;
-                        }
-
-                        avg += new Vector3(pixel.R, pixel.G, pixel.B);
-                        pixelCount++;
+                        continue;
                     }
-                }
 
-                avg /= pixelCount;
-                color = new(avg.X, avg.Y, avg.Z);
+                    avg += new Vector3(pixel.R, pixel.G, pixel.B);
+                    pixelCount++;
+                }
             }
 
-            updateColor(color);
+            avg /= pixelCount;
+            color = new(avg.X, avg.Y, avg.Z);
         }
 
-        private void updateColor(Color color)
-        {
-            Color darkened = color.Darkened(0.9f);
+        updateColor(color);
+    }
 
-            worldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
-            particlesNear.Color = color.Lightened(0.1f);
-            particlesFar.Color = particlesNear.Color;
-        }
+    private void updateColor(Color color)
+    {
+        Color darkened = color.Darkened(0.9f);
+
+        worldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
+        particlesNear.Color = color.Lightened(0.1f);
+        particlesFar.Color = particlesNear.Color;
     }
 }
