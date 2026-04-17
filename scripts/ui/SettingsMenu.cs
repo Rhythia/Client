@@ -317,7 +317,9 @@ public partial class SettingsMenu : ColorRect
 
     private void updateSlider(HSlider slider, LineEdit lineEdit, double value)
     {
-        lineEdit.Text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        // rounds to decimal places based on the step value
+        int decimalPlaces = getDecimalPlaces(slider.Step);
+        lineEdit.Text = value.ToString($"F{decimalPlaces}", System.Globalization.CultureInfo.InvariantCulture);
 
         if (lineEdit.IsInsideTree())
         {
@@ -325,6 +327,16 @@ public partial class SettingsMenu : ColorRect
         }
 
         slider.SetValueNoSignal(value);
+    }
+
+    private int getDecimalPlaces(double step)
+    {
+        // round step to remove floating point errors
+        double roundedStep = Math.Round(step, 3);
+
+        string stepStr = roundedStep.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        int decimalIndex = stepStr.IndexOf('.');
+        return decimalIndex >= 0 ? stepStr.Length - decimalIndex - 1 : 0;
     }
 
     private void setupInput(ISettingsItem setting, LineEdit lineEdit)
