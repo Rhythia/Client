@@ -1490,8 +1490,6 @@ public partial class LegacyRunner : BaseScene
             }
         }
 
-        DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Adaptive);
-
         if (results)
         {
             SceneManager.Load("res://scenes/results.tscn");
