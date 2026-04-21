@@ -370,19 +370,19 @@ public partial class SoundManager : Node, ISkinnable
 
     public static float ComputeVolumeDb(float volume, float master, float range)
     {
-        if (volume <= 0 || master <= 0) return double.NegativeInfinity;
-        return -80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1);
+        if (volume <= 0 || master <= 0) return float.NegativeInfinity;
+        return (float)(-80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1));
     }
 
     public static void UpdateVolume()
     {
         var settings = SettingsManager.Instance.Settings;
 
-        Song.VolumeDb = ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
-        MenuMusic.VolumeDb = ComputeVolumeDb(settings.VolumeMenuMusic.Value, settings.VolumeMaster.Value, 70);
-        HitSound.VolumeDb = ComputeVolumeDb(settings.VolumeHitSound.Value, settings.VolumeMaster.Value, 80);
-        MissSound.VolumeDb = ComputeVolumeDb(settings.VolumeMissSound.Value, settings.VolumeMaster.Value, 80);
-        FailSound.VolumeDb = ComputeVolumeDb(settings.VolumeSFX.Value, settings.VolumeMaster.Value, 80);
+        Song.VolumeDb = ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
+        MenuMusic.VolumeDb = ComputeVolumeDb((float)settings.VolumeMenuMusic.Value, (float)settings.VolumeMaster.Value, 70);
+        HitSound.VolumeDb = ComputeVolumeDb((float)settings.VolumeHitSound.Value, (float)settings.VolumeMaster.Value, 80);
+        MissSound.VolumeDb = ComputeVolumeDb((float)settings.VolumeMissSound.Value, (float)settings.VolumeMaster.Value, 80);
+        FailSound.VolumeDb = ComputeVolumeDb((float)settings.VolumeSFX.Value, (float)settings.VolumeMaster.Value, 80);
     }
 
     public static void PlayHitSound()

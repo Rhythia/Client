@@ -263,19 +263,19 @@ public partial class SettingsProfile
     /// Audio control for hit sound
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeHitSound { get; private set; }
+    public SettingsItem<double> VolumeHitSound { get; private set; }
 
     /// <summary>
     /// Audio control for miss sound
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeMissSound { get; private set; }
+    public SettingsItem<double> VolumeMissSound { get; private set; }
 
     /// <summary>
     /// Audio control for menu music
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeMenuMusic { get; private set; }
+    public SettingsItem<double> VolumeMenuMusic { get; private set; }
 
     /// <summary>
     /// Toggles hit sound to always play
@@ -311,7 +311,7 @@ public partial class SettingsProfile
     /// Adjusts the local audio offset in milliseconds
     /// </summary>
     [Order]
-    public SettingsItem<float> LocalOffset { get; private set; }
+    public SettingsItem<double> LocalOffset { get; private set; }
 
     #endregion
 

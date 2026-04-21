@@ -161,7 +161,7 @@ public partial class Results : BaseScene
 
     public void UpdateVolume()
     {
-        SoundManager.Song.VolumeDb = (float)SoundManager.ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
+        SoundManager.Song.VolumeDb = (float)SoundManager.ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
     }
 
     public void Replay()
