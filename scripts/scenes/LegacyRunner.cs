@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -611,11 +611,11 @@ public partial class LegacyRunner : BaseScene
             replayViewerPause.TextureNormal = GD.Load<Texture2D>(Playing ? "res://textures/pause.png" : "res://textures/play.png");
         };
 
-        replayViewerSeek.ValueChanged += (double value) =>
+        replayViewerSeek.ValueChanged += value =>
         {
             replayViewerLabel.Text = $"{Util.String.FormatTime(value * CurrentAttempt.LongestReplayLength / 1000)} / {Util.String.FormatTime(CurrentAttempt.LongestReplayLength / 1000)}";
         };
-        replayViewerSeek.DragEnded += (bool _) =>
+        replayViewerSeek.DragEnded += _ =>
         {
             CurrentAttempt.Hits = 0;
             CurrentAttempt.Misses = 0;
@@ -759,7 +759,6 @@ public partial class LegacyRunner : BaseScene
             cursor.Transparency = cursorTransparency;
             cursorMaterial?.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
 
-            cursor.Transparency = cursorTransparency;
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
             panelLeft.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
@@ -789,6 +788,7 @@ public partial class LegacyRunner : BaseScene
         {
             SoundManager.Song.Stream = Util.Audio.LoadStream(CurrentAttempt.Map.AudioBuffer);
             SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
+            SoundManager.Song.VolumeDb = getTargetMusicVolumeDb();
             SoundManager.Song.Stop();
         }
 
@@ -872,15 +872,7 @@ public partial class LegacyRunner : BaseScene
         lastFrame = now;
         pauseCooldown = Math.Max(0, pauseCooldown - (float)delta);
         updatePauseHudVisualState();
-        //frameCount++;
         skipLabelAlpha = Mathf.Lerp(skipLabelAlpha, targetSkipLabelAlpha, Math.Min(1, (float)delta * 20));
-
-        //if (lastSecond + 1000000 <= now)
-        //{
-        //    fpsCounter.Text = $"{frameCount} FPS";
-        //    frameCount = 0;
-        //    lastSecond += 1000000;
-        //}
 
         if (rKeyHeld && !CurrentAttempt.IsReplay)
         {
@@ -935,21 +927,23 @@ public partial class LegacyRunner : BaseScene
         {
             updatePauseStateEachFrame(delta);
         }
+        else
+        {
+            double audioDelay = CurrentAttempt.Progress - 1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix());
+        
+            if (Math.Abs(audioDelay) > 25 && CurrentAttempt.Progress > 0)
+            {
+                SoundManager.Song.PitchScale = Math.Max(Mathf.Epsilon, (float)CurrentAttempt.Speed + (float)audioDelay / 1000);
+            }
+            else if (Math.Abs(SoundManager.Song.PitchScale - CurrentAttempt.Speed) > Mathf.Epsilon)
+            {
+                SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
+            }
+        }
 
         if (!Playing || MenuShown)
         {
             return;
-        }
-        
-        double audioDelay = CurrentAttempt.Progress - 1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix());
-        
-        if (Math.Abs(audioDelay) > 25 && CurrentAttempt.Progress > 0)
-        {
-            SoundManager.Song.PitchScale = Math.Max(Mathf.Epsilon, (float)CurrentAttempt.Speed + (float)audioDelay / 1000);
-        }
-        else if (SoundManager.Song.PitchScale - CurrentAttempt.Speed > Mathf.Epsilon)
-        {
-            SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
         }
 
         if (CurrentAttempt.IsReplay)
@@ -1047,8 +1041,7 @@ public partial class LegacyRunner : BaseScene
         CurrentAttempt.Skippable = false;
 
         startGameplayMediaAtExpected(isPauseRampActive() ? SoundManager.Song.VolumeDb : getTargetMusicVolumeDb());
-        correctAudioDesync();
-
+            
         int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + 5000 : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
         int lastNoteMillisecond = CurrentAttempt.PassedNotes > 0 ? CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes - 1].Millisecond : 0;
 
@@ -1223,7 +1216,7 @@ public partial class LegacyRunner : BaseScene
     {
         if (CurrentAttempt.Stopped) return;
 
-        if (@event is InputEventMouseMotion eventMouseMotion && (Playing || isPaused() || isPauseRampActive()) && !CurrentAttempt.IsReplay)
+        if (@event is InputEventMouseMotion eventMouseMotion && !MenuShown && (Playing || isPaused() || isPauseRampActive()) && !CurrentAttempt.IsReplay)
         {
             if (!settings.AbsoluteInput)
             {
@@ -1296,18 +1289,10 @@ public partial class LegacyRunner : BaseScene
                     case Key.Escape:
                         CurrentAttempt.Qualifies = false;
 
-                        if (pauseShown)
-                        {
-                            HidePause();
-                        }
-                        else if (SettingsMenu.Instance.Shown)
+                        if (SettingsMenu.Instance.Shown)
                         {
                             SettingsMenu.Instance.HideMenu();
                         }
-                            else if (isPaused() || isPauseRampActive())
-                            {
-                                break;
-                            }
                         else
                         {
                             ShowMenu(!MenuShown);
@@ -1519,7 +1504,7 @@ public partial class LegacyRunner : BaseScene
 
     private static float getTargetMusicVolumeDb()
     {
-        return SoundManager.ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
+        return SoundManager.ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
     }
 
     private static double getExpectedAudioTimeMs(bool includeLocalOffset = true)
@@ -1549,7 +1534,6 @@ public partial class LegacyRunner : BaseScene
 
         if (CurrentAttempt.Map.AudioBuffer != null && audioTime >= 0 && CurrentAttempt.Progress < MapLength)
         {
-            SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
             SoundManager.Song.VolumeDb = targetVolumeDb;
 
             if (!musicStarted || !SoundManager.Song.Playing)
@@ -1568,7 +1552,7 @@ public partial class LegacyRunner : BaseScene
                 video.StreamPosition = (float)videoTime / 1000;
 
                 Tween videoInTween = videoQuad.CreateTween();
-                videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
+                videoInTween.TweenProperty(videoQuad, "transparency", settings.VideoDim / 100, 0.5);
                 videoInTween.Play();
             }
         }
@@ -1608,7 +1592,6 @@ public partial class LegacyRunner : BaseScene
         pauseHudControl.SetProgress(0);
         updatePauseHudVisualState();
         startGameplayMediaAtExpected(pauseRampStartDb, false);
-        correctAudioDesync(true);
         Playing = true;
     }
 
@@ -1636,8 +1619,7 @@ public partial class LegacyRunner : BaseScene
         pauseHoldTime = 0;
         pauseCooldown = pauseCooldownDuration;
         pauseHudControl.SetProgress(1);
-        SoundManager.Song.VolumeDb = 0f;
-        correctAudioDesync(true);
+        SoundManager.Song.VolumeDb = getTargetMusicVolumeDb();
         Playing = true;
         updatePauseHudVisualState();
     }
@@ -1658,40 +1640,15 @@ public partial class LegacyRunner : BaseScene
         pauseHoldTime += (float)delta;
         pauseState = Math.Max(0, pauseState - (float)(delta / pauseHoldDuration));
         pauseHudControl.SetProgress(Math.Clamp(1f - pauseState, 0f, 1f));
+        
         if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing)
         {
-            SoundManager.Song.VolumeDb = Math.Min(SoundManager.Song.VolumeDb + (float)delta * pauseRampRateDbPerSecond, 0f);
+            SoundManager.Song.VolumeDb = Mathf.Lerp(getTargetMusicVolumeDb() - 60, getTargetMusicVolumeDb(), 1 - pauseState);
         }
 
         if (pauseState == 0)
         {
             completeUnpause();
-        }
-    }
-
-    private static void correctAudioDesync(bool force = false)
-    {
-        double expectedMs = Math.Max(0, getExpectedAudioTimeMs());
-        double thresholdMs = pauseDesyncThresholdMs * Math.Max(CurrentAttempt.Speed, 1.0);
-
-        if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing)
-        {
-            double actualMs = SoundManager.Song.GetPlaybackPosition() * 1000;
-
-            if (force || Math.Abs(actualMs - expectedMs) > thresholdMs)
-            {
-                SoundManager.Song.Seek((float)expectedMs / 1000);
-            }
-        }
-
-        if (CurrentAttempt.Map.VideoBuffer != null && video.IsPlaying())
-        {
-            double actualVideoMs = video.StreamPosition * 1000;
-
-            if (force || Math.Abs(actualVideoMs - expectedMs) > thresholdMs)
-            {
-                video.StreamPosition = (float)expectedMs / 1000;
-            }
         }
     }
 
@@ -1776,22 +1733,20 @@ public partial class LegacyRunner : BaseScene
 
     public static void ShowMenu(bool show = true)
     {
-        if (isPaused() || isPauseRampActive())
+        if (isPauseRampActive())
         {
             return;
         }
 
         MenuShown = show;
-        Playing = !MenuShown && !isPaused();
 
         if (MenuShown)
         {
             stopGameplayMedia();
         }
-        else
+        else if (!isPaused())
         {
             startGameplayMediaAtExpected(getTargetMusicVolumeDb());
-            correctAudioDesync(true);
         }
 
         MenuCursor.Instance.UpdateVisible(MenuShown && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
