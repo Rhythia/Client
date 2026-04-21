@@ -156,11 +156,11 @@ public struct Leaderboard
             FileParser FileBuffer = new(buffer);
 
             int attemptIdLength = (int)FileBuffer.GetUInt32();
-            Logger.Log($"[Leaderboard] attemptId length={attemptIdLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
+            // Logger.Log($"[Leaderboard] attemptId length={attemptIdLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
             AttemptID = FileBuffer.GetString(attemptIdLength);
 
             int playerLength = (int)FileBuffer.GetUInt32();
-            Logger.Log($"[Leaderboard] player length={playerLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
+            // Logger.Log($"[Leaderboard] player length={playerLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
             Player = FileBuffer.GetString(playerLength);
 
             Qualifies = FileBuffer.GetBool();
@@ -173,7 +173,7 @@ public struct Leaderboard
             Modifiers = [];
 
             int modifiersLength = (int)FileBuffer.GetUInt32();
-            Logger.Log($"[Leaderboard] modifiers length={modifiersLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
+            // Logger.Log($"[Leaderboard] modifiers length={modifiersLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
 
             foreach (KeyValuePair<string, bool> entry in (Godot.Collections.Dictionary<string, bool>)Json.ParseString(FileBuffer.GetString(modifiersLength)))
             {
