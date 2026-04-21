@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using Godot;
 
@@ -10,24 +11,40 @@ public class FileParser
 
     public FileParser(string path)
     {
-        FileAccess file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+        Godot.FileAccess file = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
 
-        Length = (long)file.GetLength();
-        Buffer = file.GetBuffer(Length);
+        if (file == null)
+        {
+            Buffer = Array.Empty<byte>();
+            Length = 0;
+        }
+        else
+        {
+            Length = (long)file.GetLength();
+            Buffer = file.GetBuffer(Length);
+            file.Close();
+        }
         Pointer = 0;
-
-        file.Close();
     }
 
     public FileParser(byte[] buffer)
     {
-        Length = buffer.Length;
-        Buffer = buffer;
+        Buffer = buffer ?? Array.Empty<byte>();
+        Length = Buffer.Length;
         Pointer = 0;
+    }
+
+    private void CheckBounds(int amount)
+    {
+        if (Pointer + amount > Length)
+        {
+            throw new EndOfStreamException($"Attempted to read {amount} bytes beyond stream length of {Length}.");
+        }
     }
 
     public byte[] Get(int length)
     {
+        CheckBounds(length);
         Pointer += length;
         return Buffer[(Pointer - length)..Pointer];
     }
@@ -52,7 +69,7 @@ public class FileParser
     {
         string line = string.Empty;
 
-        while (true)
+        while (Pointer < Length)
         {
             Pointer++;
             string character = Encoding.UTF8.GetString(Buffer, Pointer - 1, 1);
@@ -68,18 +85,21 @@ public class FileParser
 
     public bool GetBool()
     {
+        CheckBounds(1);
         Pointer += 1;
         return BitConverter.ToBoolean(Buffer, Pointer - 1);
     }
 
     public float GetFloat()
     {
+        CheckBounds(4);
         Pointer += 4;
         return BitConverter.ToSingle(Buffer, Pointer - 4);
     }
 
     public double GetDouble()
     {
+        CheckBounds(8);
         Pointer += 8;
         return BitConverter.ToDouble(Buffer, Pointer - 8);
     }
@@ -91,18 +111,21 @@ public class FileParser
 
     public ushort GetUInt16()
     {
+        CheckBounds(2);
         Pointer += 2;
         return BitConverter.ToUInt16(Buffer, Pointer - 2);
     }
 
     public uint GetUInt32()
     {
+        CheckBounds(4);
         Pointer += 4;
         return BitConverter.ToUInt32(Buffer, Pointer - 4);
     }
 
     public ulong GetUInt64()
     {
+        CheckBounds(8);
         Pointer += 8;
         return BitConverter.ToUInt64(Buffer, Pointer - 8);
     }

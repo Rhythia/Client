@@ -110,6 +110,8 @@ public partial class Lobby : Node
     {
         Map = map;
 
+        SetStartFrom(0);
+
         Instance.EmitSignal(SignalName.MapChanged, Map);
     }
 

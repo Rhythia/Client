@@ -96,7 +96,6 @@ public partial class MapManager : Node
     {
         try
         {
-
             try
             {
                 File.Delete(map.FilePath);
@@ -105,15 +104,20 @@ public partial class MapManager : Node
             {
                 if (File.Exists(map.FilePath))
                 {
-
                     Logger.Error("Unable to delete map");
+                    return;
                 }
             }
 
             MapCache.RemoveMap(map);
-            Maps.Remove(map);
+            Maps.RemoveAll(x => x.Id == map.Id);
 
-            MapDeleted?.Invoke(map);
+
+                Callable.From(() =>
+                {
+                    _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
+                }).CallDeferred();
+            Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();
         }
         catch (Exception e)
         {

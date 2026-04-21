@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using Godot;
 
 public struct Leaderboard
@@ -86,12 +87,14 @@ public struct Leaderboard
         foreach (Score score in Scores)
         {
             ulong offset = file.GetPosition();
+            byte[] attemptIdBytes = Encoding.UTF8.GetBytes(score.AttemptID ?? string.Empty);
+            byte[] playerBytes = Encoding.UTF8.GetBytes(score.Player ?? string.Empty);
 
             file.Store32(0);    // reserved for length
-            file.Store32((uint)score.AttemptID.Length);
-            file.StoreString(score.AttemptID);
-            file.Store32((uint)score.Player.Length);
-            file.StoreString(score.Player);
+            file.Store32((uint)attemptIdBytes.Length);
+            file.StoreBuffer(attemptIdBytes);
+            file.Store32((uint)playerBytes.Length);
+            file.StoreBuffer(playerBytes);
             file.Store8((byte)(score.Qualifies ? 1 : 0));
             file.Store64(score.Value);
             file.StoreDouble(score.Accuracy);
@@ -108,9 +111,10 @@ public struct Leaderboard
             }
 
             string json = Json.Stringify(modifiers);
+            byte[] modifiersBytes = Encoding.UTF8.GetBytes(json);
 
-            file.Store32((uint)json.Length);
-            file.StoreString(json);
+            file.Store32((uint)modifiersBytes.Length);
+            file.StoreBuffer(modifiersBytes);
 
             ulong end = file.GetPosition();
 
@@ -151,8 +155,14 @@ public struct Leaderboard
         {
             FileParser FileBuffer = new(buffer);
 
-            AttemptID = FileBuffer.GetString((int)FileBuffer.GetUInt32());
-            Player = FileBuffer.GetString((int)FileBuffer.GetUInt32());
+            int attemptIdLength = (int)FileBuffer.GetUInt32();
+            Logger.Log($"[Leaderboard] attemptId length={attemptIdLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
+            AttemptID = FileBuffer.GetString(attemptIdLength);
+
+            int playerLength = (int)FileBuffer.GetUInt32();
+            Logger.Log($"[Leaderboard] player length={playerLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
+            Player = FileBuffer.GetString(playerLength);
+
             Qualifies = FileBuffer.GetBool();
             Value = FileBuffer.GetUInt64();
             Accuracy = FileBuffer.GetDouble();
@@ -162,7 +172,10 @@ public struct Leaderboard
             Speed = FileBuffer.GetDouble();
             Modifiers = [];
 
-            foreach (KeyValuePair<string, bool> entry in (Godot.Collections.Dictionary<string, bool>)Json.ParseString(FileBuffer.GetString((int)FileBuffer.GetUInt32())))
+            int modifiersLength = (int)FileBuffer.GetUInt32();
+            Logger.Log($"[Leaderboard] modifiers length={modifiersLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
+
+            foreach (KeyValuePair<string, bool> entry in (Godot.Collections.Dictionary<string, bool>)Json.ParseString(FileBuffer.GetString(modifiersLength)))
             {
                 Modifiers[entry.Key] = entry.Value;
             }

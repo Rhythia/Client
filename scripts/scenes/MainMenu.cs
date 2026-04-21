@@ -99,8 +99,9 @@ public partial class MainMenu : BaseScene
             SceneManager.Space?.UpdateMap(map);
         }
 
-        // Resume jukebox only if song has ended (not if it's still playing from results fade)
-        if (!SoundManager.Song.Playing && SoundManager.Map != null)
+        SoundManager.RefreshMenuMusicPlayback();
+
+        if (SettingsManager.Instance.Settings.AutoplayJukebox.Value && !SoundManager.Song.Playing && SoundManager.Map != null)
         {
             SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
         }
@@ -134,5 +135,7 @@ public partial class MainMenu : BaseScene
 
         Tween inTween = CreateTween().SetTrans(Tween.TransitionType.Quad);
         inTween.TweenProperty(CurrentMenu, "modulate", Color.Color8(255, 255, 255), tweenTime);
+
+        SoundManager.RefreshMenuMusicPlayback();
     }
 }

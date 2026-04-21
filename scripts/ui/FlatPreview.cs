@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Godot;
 
 public partial class FlatPreview : Panel
@@ -70,17 +69,14 @@ public partial class FlatPreview : Panel
 
         if (Time < oldTime)
         {
-            Task.Run(() =>
+            for (int i = 0; i < Map.Notes.Length; i++)
             {
-                for (int i = 0; i < Map.Notes.Length; i++)
+                if (Time < Map.Notes[i].Millisecond)
                 {
-                    if (Time < Map.Notes[i].Millisecond)
-                    {
-                        lastPassedNote = i - 1;
-                        break;
-                    }
+                    lastPassedNote = i - 1;
+                    break;
                 }
-            });
+            }
         }
 
         for (int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1)); i < Map.Notes.Length; i++)

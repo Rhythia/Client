@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -29,6 +29,8 @@ public partial class LegacyRunner : BaseScene
     private static MultiMeshInstance3D notesMultimesh;
     private static MultiMeshInstance3D cursorTrailMultimesh;
     private static TextureRect healthTexture;
+    private static Node healthPanel;
+    private static Node progressBarNode;
     private static TextureRect progressBarTexture;
     private static SubViewport panelLeft;
     private static SubViewport panelRight;
@@ -44,6 +46,7 @@ public partial class LegacyRunner : BaseScene
     private static Label simpleMissesLabel;
     private static Label scoreLabel;
     private static Label multiplierLabel;
+    private static Label pauseCountLabel;
     private static Panel multiplierProgressPanel;
     private static ShaderMaterial multiplierProgressMaterial;
     private static float multiplierProgress = 0;    // more efficient than spamming material.GetShaderParameter()
@@ -57,16 +60,34 @@ public partial class LegacyRunner : BaseScene
     private static bool replayViewerSeekHovered = false;
     private static bool leftMouseButtonDown = false;
 
-    private static Panel pauseOverlay;
-    private static bool pauseShown = false;
+    private static Sprite3D pauseHud;
+    private static PauseHud pauseHudControl;
+    private static float pauseState = 0;
+    private static double pauseMs = 0;
+    private static float pauseCooldown = 0;
+    private static float pauseHoldTime = 0;
+    private static bool spaceHeld = false;
+    private static bool musicStarted = false;
+    private static float pauseHoldDuration = 0.75f;
+    private static float pauseRewindMs = 750f;
+    private static float pauseMinimumProgressMs = 1000f;
+    private static float pauseRampStartDb = -30f;
+    private static float pauseRampRateDbPerSecond = 30f;
+    private static float pauseCooldownDuration = 1f;
+    private static float pauseDesyncThresholdMs = 100f;
+    private static float pauseUiOpacity = 0.75f;
+    private static int pauseUsedCount = 0;
     private static Panel quitOverlay;
     private static ColorRect quitProgressBar;
     private static float quitHoldTime = 0;
     private static bool rKeyHeld = false;
     private static float quitHoldDuration = 0.55f;
+    private static readonly Color pause_counter_color = Color.Color8(255, 255, 255);
+    private static readonly Color quit_hold_fill_start_color = Color.Color8(138, 138, 138, 210);
+    private static readonly Color quit_hold_fill_end_color = Color.Color8(255, 255, 255, 255);
 
     private double lastFrame = Time.GetTicksUsec();     // delta arg unreliable..
-                                                        //private double lastSecond = Time.GetTicksUsec();	// better framerate calculation
+                                                        //private double lastSecond = Time.GetTicksUsec();    // better framerate calculation
     private List<Dictionary<string, object>> lastCursorPositions = [];  // trail
                                                                         //private int frameCount = 0;
     private float skipLabelAlpha = 0;
@@ -290,7 +311,7 @@ public partial class LegacyRunner : BaseScene
 
             if (!settings.AlwaysPlayHitSound.Value)
             {
-                SoundManager.HitSound.Play();
+                SoundManager.PlayHitSound();
             }
 
             hitTween?.Kill();
@@ -340,13 +361,13 @@ public partial class LegacyRunner : BaseScene
 
             //if (Health - HealthStep <= 0)
             //{
-            //	Bell.Play();
-            //	Jesus.Modulate = Color.Color8(255, 255, 255, 196);
+            //    Bell.Play();
+            //    Jesus.Modulate = Color.Color8(255, 255, 255, 196);
             //
-            //	JesusTween?.Kill();
-            //	JesusTween = Jesus.CreateTween();
-            //	JesusTween.TweenProperty(Jesus, "modulate", Color.Color8(255, 255, 255, 0), 1);
-            //	JesusTween.Play();
+            //    JesusTween?.Kill();
+            //    JesusTween = Jesus.CreateTween();
+            //    JesusTween.TweenProperty(Jesus, "modulate", Color.Color8(255, 255, 255, 0), 1);
+            //    JesusTween.Play();
             //}
 
             if (!IsReplay && Health <= 0)
@@ -367,6 +388,8 @@ public partial class LegacyRunner : BaseScene
                     QueueStop();
                 }
             }
+
+            SoundManager.PlayMissSound();
 
             multiplierLabel.Text = $"{ComboMultiplier}x";
             missesLabel.Text = $"{Misses}";
@@ -489,8 +512,10 @@ public partial class LegacyRunner : BaseScene
         cursorTrailMultimesh = holder.GetNode<MultiMeshInstance3D>("CursorTrail");
         //jesus = GetNode<TextureRect>("Jesus");
 
-        healthTexture = holder.GetNode("Health").GetNode("HealthViewport").GetNode<TextureRect>("Main");
-        progressBarTexture = holder.GetNode("ProgressBar").GetNode("ProgressBarViewport").GetNode<TextureRect>("Main");
+        healthPanel = holder.GetNode("Health");
+        healthTexture = healthPanel.GetNode("HealthViewport").GetNode<TextureRect>("Main");
+        progressBarNode = holder.GetNode("ProgressBar");
+        progressBarTexture = progressBarNode.GetNode("ProgressBarViewport").GetNode<TextureRect>("Main");
         panelLeft = holder.GetNode("PanelLeft").GetNode<SubViewport>("PanelLeftViewport");
         panelRight = holder.GetNode("PanelRight").GetNode<SubViewport>("PanelRightViewport");
         //bell = GetNode<AudioStreamPlayer>("Bell");
@@ -505,6 +530,7 @@ public partial class LegacyRunner : BaseScene
         simpleMissesLabel = panelRight.GetNode<Label>("SimpleMisses");
         scoreLabel = panelLeft.GetNode<Label>("Score");
         multiplierLabel = panelLeft.GetNode<Label>("Multiplier");
+        pauseCountLabel = panelLeft.GetNode<Label>("PauseCount");
         multiplierProgressPanel = panelLeft.GetNode<Panel>("MultiplierProgress");
         multiplierProgressMaterial = multiplierProgressPanel.Material as ShaderMaterial;
         video = videoQuad.GetNode("VideoViewport").GetNode<VideoStreamPlayer>("VideoStreamPlayer");
@@ -534,13 +560,22 @@ public partial class LegacyRunner : BaseScene
             icon.Texture = Util.Misc.GetModIcon(activeMods[i]);
         }
 
-        pauseOverlay = GetNode<Panel>("PauseOverlay");
+        pauseHud = GetNode<Sprite3D>("PauseHud");
+        pauseHudControl = pauseHud.GetNode<PauseHud>("PauseVP/Control");
         quitOverlay = GetNode<Panel>("QuitOverlay");
         quitProgressBar = quitOverlay.GetNode("Holder").GetNode("ProgressBackground").GetNode<ColorRect>("ProgressBar");
 
-        pauseShown = false;
+        pauseState = 0;
+        pauseMs = 0;
+        pauseCooldown = 0;
+        pauseHoldTime = 0;
+        spaceHeld = false;
+        musicStarted = false;
+        pauseUsedCount = 0;
         quitHoldTime = 0;
         rKeyHeld = false;
+        updatePauseCounterVisuals();
+        updatePauseHudVisualState();
 
         Panel menuButtonsHolder = menu.GetNode<Panel>("Holder");
 
@@ -632,7 +667,8 @@ public partial class LegacyRunner : BaseScene
                 SoundManager.Song.Play();
             }
 
-            SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
+            double audioTime = Math.Max(0, CurrentAttempt.Progress + settings.LocalOffset.Value);
+            SoundManager.Song.Seek((float)audioTime / 1000);
         };
         replayViewerSeek.FocusEntered += () =>
         {
@@ -654,6 +690,32 @@ public partial class LegacyRunner : BaseScene
             }
 
             simpleMissesLabel.Visible = true;
+        }
+
+        bool superSimpleHUD = settings.SuperSimpleHUD.Value;
+        if (superSimpleHUD)
+        {
+            // Apply everything SimpleHUD hides
+            Godot.Collections.Array<Node> widgets = panelLeft.GetChildren();
+            widgets.AddRange(panelRight.GetChildren());
+            foreach (Node widget in widgets)
+                (widget as CanvasItem).Visible = false;
+            simpleMissesLabel.Visible = true;
+
+            // Additionally hide title, progress text, combo, health, and progress bar
+            titleLabel.Visible = false;
+            progressLabel.Visible = false;
+            comboLabel.Visible = false;
+
+            if (healthPanel is CanvasItem healthCanvas)
+                healthCanvas.Visible = false;
+            else if (healthPanel is Node3D healthNode3D)
+                healthNode3D.Visible = false;
+
+            if (progressBarNode is CanvasItem progressBarCanvas)
+                progressBarCanvas.Visible = false;
+            else if (progressBarNode is Node3D progressBarNode3D)
+                progressBarNode3D.Visible = false;
         }
 
         float fov = (float)(CurrentAttempt.IsReplay ? CurrentAttempt.Replays[0].FoV : settings.FoV.Value);
@@ -720,13 +782,24 @@ public partial class LegacyRunner : BaseScene
         //
         //if (space != "void")
         //{
-        //	node3D.AddChild(GD.Load<PackedScene>($"res://prefabs/spaces/{space}.tscn").Instantiate<Node3D>());
+        //    node3D.AddChild(GD.Load<PackedScene>($"res://prefabs/spaces/{space}.tscn").Instantiate<Node3D>());
         //}
 
         if (CurrentAttempt.Map.AudioBuffer != null)
         {
             SoundManager.Song.Stream = Util.Audio.LoadStream(CurrentAttempt.Map.AudioBuffer);
             SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
+            SoundManager.Song.Stop();
+        }
+
+        musicStarted = false;
+
+        if (CurrentAttempt.Map.Notes != null && CurrentAttempt.Map.Notes.Length > 0)
+        {
+            MapLength = CurrentAttempt.Map.Notes[^1].Millisecond;
+        }
+        else if (CurrentAttempt.Map.AudioBuffer != null)
+        {
             MapLength = (float)SoundManager.Song.Stream.GetLength() * 1000;
         }
         else
@@ -734,21 +807,21 @@ public partial class LegacyRunner : BaseScene
             MapLength = CurrentAttempt.Map.Length + 1000;
         }
 
-        MapLength += Constants.HIT_WINDOW;
+        MapLength += Constants.HIT_WINDOW + 1000;
 
         // TODO: Fix videos
 
         //if (settings.VideoDim < 100 && CurrentAttempt.Map.VideoBuffer != null)
         //{
-        //	if (CurrentAttempt.Speed != 1)
-        //	{
-        //		ToastNotification.Notify("Videos currently only sync on 1x", 1);
-        //	}
+        //    if (CurrentAttempt.Speed != 1)
+        //    {
+        //        ToastNotification.Notify("Videos currently only sync on 1x", 1);
+        //    }
         //          else
         //          {
         //              //File.WriteAllBytes($"{Constants.USER_FOLDER}/cache/video.mp4", CurrentAttempt.Map.VideoBuffer);
         //              video.Stream.File = $"{MapUtil.MapsCacheFolder}/{CurrentAttempt.Map.Name}/video.mp4";
-        //	}
+        //    }
         //}
         if (CurrentAttempt.Replays != null)
         {
@@ -797,14 +870,16 @@ public partial class LegacyRunner : BaseScene
         ulong now = Time.GetTicksUsec();
         delta = (now - lastFrame) / 1000000;    // more reliable
         lastFrame = now;
+        pauseCooldown = Math.Max(0, pauseCooldown - (float)delta);
+        updatePauseHudVisualState();
         //frameCount++;
         skipLabelAlpha = Mathf.Lerp(skipLabelAlpha, targetSkipLabelAlpha, Math.Min(1, (float)delta * 20));
 
         //if (lastSecond + 1000000 <= now)
         //{
-        //	fpsCounter.Text = $"{frameCount} FPS";
-        //	frameCount = 0;
-        //	lastSecond += 1000000;
+        //    fpsCounter.Text = $"{frameCount} FPS";
+        //    frameCount = 0;
+        //    lastSecond += 1000000;
         //}
 
         if (rKeyHeld && !CurrentAttempt.IsReplay)
@@ -812,6 +887,7 @@ public partial class LegacyRunner : BaseScene
             quitHoldTime += (float)delta;
             float progress = Math.Clamp(quitHoldTime / quitHoldDuration, 0, 1);
             quitProgressBar.Size = new Vector2(300 * progress, 8);
+            quitProgressBar.Color = quit_hold_fill_start_color.Lerp(quit_hold_fill_end_color, progress);
 
             if (!quitOverlay.Visible)
             {
@@ -850,7 +926,17 @@ public partial class LegacyRunner : BaseScene
             return;
         }
 
-        if (!Playing)
+        if (isPaused())
+        {
+            return;
+        }
+
+        if (isPauseRampActive())
+        {
+            updatePauseStateEachFrame(delta);
+        }
+
+        if (!Playing || MenuShown)
         {
             return;
         }
@@ -960,45 +1046,15 @@ public partial class LegacyRunner : BaseScene
         CurrentAttempt.Progress += delta * 1000 * CurrentAttempt.Speed;
         CurrentAttempt.Skippable = false;
 
-        if (CurrentAttempt.Map.AudioBuffer != null)
+        startGameplayMediaAtExpected(isPauseRampActive() ? SoundManager.Song.VolumeDb : getTargetMusicVolumeDb());
+        correctAudioDesync();
+
+        int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + 5000 : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
+        int lastNoteMillisecond = CurrentAttempt.PassedNotes > 0 ? CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes - 1].Millisecond : 0;
+
+        if (nextNoteMillisecond - lastNoteMillisecond > 5000 && nextNoteMillisecond >= Math.Max(CurrentAttempt.Progress + 3000 * CurrentAttempt.Speed, 1100 * CurrentAttempt.Speed))
         {
-            if (CurrentAttempt.Progress >= MapLength - Constants.HIT_WINDOW)
-            {
-                if (SoundManager.Song.Playing)
-                {
-                    SoundManager.Song.Stop();
-                }
-            }
-            else if (!SoundManager.Song.Playing && CurrentAttempt.Progress >= 0)
-            {
-                SoundManager.Song.Play();
-                SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
-            }
-        }
-
-        if (CurrentAttempt.Map.VideoBuffer != null)
-        {
-            if (settings.VideoDim < 100 && !video.IsPlaying() && CurrentAttempt.Progress >= 0)
-            {
-                video.Play();
-
-                Tween videoInTween = videoQuad.CreateTween();
-                videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
-                videoInTween.Play();
-            }
-        }
-
-        int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + Constants.BREAK_TIME : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
-
-        if (nextNoteMillisecond - CurrentAttempt.Progress >= Constants.BREAK_TIME * CurrentAttempt.Speed)
-        {
-            int lastNoteMillisecond = CurrentAttempt.PassedNotes > 0 ? CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes - 1].Millisecond : 0;
-            int skipWindow = nextNoteMillisecond - Constants.BREAK_TIME - lastNoteMillisecond;
-
-            if (skipWindow >= 1000 * CurrentAttempt.Speed) // only allow skipping if i'm gonna allow it for at least 1 second
-            {
-                CurrentAttempt.Skippable = true;
-            }
+            CurrentAttempt.Skippable = true;
         }
 
         ToProcess = 0;
@@ -1046,7 +1102,7 @@ public partial class LegacyRunner : BaseScene
             {
                 CurrentAttempt.Map.Notes[i].Hittable = true;
 
-                SoundManager.HitSound.Play();
+                SoundManager.PlayHitSound();
             }
 
             ToProcess++;
@@ -1167,7 +1223,7 @@ public partial class LegacyRunner : BaseScene
     {
         if (CurrentAttempt.Stopped) return;
 
-        if (@event is InputEventMouseMotion eventMouseMotion && (Playing || pauseShown) && !CurrentAttempt.IsReplay)
+        if (@event is InputEventMouseMotion eventMouseMotion && (Playing || isPaused() || isPauseRampActive()) && !CurrentAttempt.IsReplay)
         {
             if (!settings.AbsoluteInput)
             {
@@ -1206,6 +1262,33 @@ public partial class LegacyRunner : BaseScene
                 return;
             }
 
+            if (key == Key.Space && !CurrentAttempt.IsReplay)
+            {
+                if (isPaused())
+                {
+                    if (eventKey.Pressed && !eventKey.Echo)
+                    {
+                        beginUnpause();
+                    }
+                    else if (!eventKey.Pressed)
+                    {
+                        cancelUnpause();
+                    }
+
+                    return;
+                }
+
+                if (isPauseRampActive())
+                {
+                    if (!eventKey.Pressed)
+                    {
+                        cancelUnpause();
+                    }
+
+                    return;
+                }
+            }
+
             if (eventKey.Pressed && !eventKey.Echo)
             {
                 switch (key)
@@ -1221,6 +1304,10 @@ public partial class LegacyRunner : BaseScene
                         {
                             SettingsMenu.Instance.HideMenu();
                         }
+                            else if (isPaused() || isPauseRampActive())
+                            {
+                                break;
+                            }
                         else
                         {
                             ShowMenu(!MenuShown);
@@ -1247,7 +1334,7 @@ public partial class LegacyRunner : BaseScene
                         {
                             if (Lobby.Players.Count > 1) break;
                             if (CurrentAttempt.Skippable) Skip();
-                            else if (settings.SpaceToPause) ShowPause(!pauseShown);
+                            else if (settings.SpaceToPause) beginPause();
                         }
                         break;
                     case Key.F:
@@ -1287,12 +1374,15 @@ public partial class LegacyRunner : BaseScene
 
         SceneManager.Root.GetViewport().GuiGetFocusOwner()?.ReleaseFocus();
 
+        SoundManager.MenuMusic?.Stop();
+
         if (Playing)
         {
             Stop();
         }
 
         CurrentAttempt = new(map, speed, startFrom, mods ?? [], players, replays);
+        SoundManager.BeginGameplayScope(CurrentAttempt.Map);
         Playing = true;
         stopQueued = false;
         Started = Time.GetTicksUsec();
@@ -1348,8 +1438,9 @@ public partial class LegacyRunner : BaseScene
                         SoundManager.Song.Play();
                     }
 
-                    SoundManager.Song.Seek((float)CurrentAttempt.Progress / 1000);
-                    video.StreamPosition = (float)CurrentAttempt.Progress / 1000;
+                    double targetTime = Math.Max(0, CurrentAttempt.Progress + settings.LocalOffset.Value);
+                    SoundManager.Song.Seek((float)targetTime / 1000);
+                    video.StreamPosition = (float)targetTime / 1000;
                 }
             }
         }
@@ -1422,33 +1513,258 @@ public partial class LegacyRunner : BaseScene
         }
     }
 
-    public static void ShowPause(bool show = true)
+    private static bool isPaused() => pauseState < 0;
+
+    private static bool isPauseRampActive() => pauseState > 0;
+
+    private static float getTargetMusicVolumeDb()
     {
-        if (CurrentAttempt.IsReplay || MenuShown) return;
+        return SoundManager.ComputeVolumeDb(settings.VolumeMusic.Value, settings.VolumeMaster.Value, 70);
+    }
 
-        pauseShown = show;
-        Playing = !pauseShown;
-        SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;
+    private static double getExpectedAudioTimeMs(bool includeLocalOffset = true)
+    {
+        return CurrentAttempt.Progress + (includeLocalOffset ? settings.LocalOffset.Value : 0);
+    }
 
-        if (pauseShown)
+    private static void stopGameplayMedia()
+    {
+        if (CurrentAttempt.Map.AudioBuffer != null && SoundManager.Song.Playing)
         {
-            CurrentAttempt.Qualifies = false;
-            pauseOverlay.Visible = true;
+            SoundManager.Song.Stop();
         }
 
-        Tween tween = pauseOverlay.CreateTween();
-        tween.TweenProperty(pauseOverlay, "modulate", Color.Color8(255, 255, 255, (byte)(pauseShown ? 255 : 0)), 0.2).SetTrans(Tween.TransitionType.Quad);
-        tween.TweenCallback(Callable.From(() => { pauseOverlay.Visible = pauseShown; }));
-        tween.Play();
+        musicStarted = false;
+
+        if (CurrentAttempt.Map.VideoBuffer != null && video.IsPlaying())
+        {
+            video.Stop();
+        }
+    }
+
+    private static void startGameplayMediaAtExpected(float targetVolumeDb, bool includeLocalOffset = true)
+    {
+        double audioTime = getExpectedAudioTimeMs(includeLocalOffset);
+        double videoTime = getExpectedAudioTimeMs(includeLocalOffset);
+
+        if (CurrentAttempt.Map.AudioBuffer != null && audioTime >= 0 && CurrentAttempt.Progress < MapLength)
+        {
+            SoundManager.Song.PitchScale = (float)CurrentAttempt.Speed;
+            SoundManager.Song.VolumeDb = targetVolumeDb;
+
+            if (!musicStarted || !SoundManager.Song.Playing)
+            {
+                SoundManager.Song.Play();
+                SoundManager.Song.Seek((float)audioTime / 1000);
+                musicStarted = true;
+            }
+        }
+
+        if (CurrentAttempt.Map.VideoBuffer != null && settings.VideoDim < 100 && videoTime >= 0)
+        {
+            if (!video.IsPlaying())
+            {
+                video.Play();
+                video.StreamPosition = (float)videoTime / 1000;
+
+                Tween videoInTween = videoQuad.CreateTween();
+                videoInTween.TweenProperty(videoQuad, "transparency", (float)settings.VideoDim / 100, 0.5);
+                videoInTween.Play();
+            }
+        }
+    }
+
+    private static void beginPause()
+    {
+        if (CurrentAttempt.IsReplay || MenuShown || pauseCooldown > 0 || !settings.SpaceToPause || CurrentAttempt.Progress <= pauseMinimumProgressMs * CurrentAttempt.Speed || CurrentAttempt.Progress >= MapLength)
+        {
+            return;
+        }
+
+        pauseMs = CurrentAttempt.Progress;
+        pauseState = -1;
+        Playing = false;
+        spaceHeld = false;
+        pauseHoldTime = 0;
+        pauseUsedCount++;
+        CurrentAttempt.Qualifies = false;
+        resetPauseUi();
+        updatePauseCounterVisuals();
+        updatePauseHudVisualState();
+        stopGameplayMedia();
+    }
+
+    private static void beginUnpause()
+    {
+        if (!isPaused())
+        {
+            return;
+        }
+
+        spaceHeld = true;
+        pauseHoldTime = 0;
+        pauseState = 1f;
+        CurrentAttempt.Progress = Math.Max(0, pauseMs - pauseRewindMs * CurrentAttempt.Speed);
+        pauseHudControl.SetProgress(0);
+        updatePauseHudVisualState();
+        startGameplayMediaAtExpected(pauseRampStartDb, false);
+        correctAudioDesync(true);
+        Playing = true;
+    }
+
+    private static void cancelUnpause()
+    {
+        if (!isPauseRampActive())
+        {
+            return;
+        }
+
+        pauseState = -1f;
+        spaceHeld = false;
+        pauseHoldTime = 0;
+        CurrentAttempt.Progress = pauseMs;
+        resetPauseUi();
+        updatePauseHudVisualState();
+        stopGameplayMedia();
+        Playing = false;
+    }
+
+    private static void completeUnpause()
+    {
+        pauseState = 0f;
+        spaceHeld = false;
+        pauseHoldTime = 0;
+        pauseCooldown = pauseCooldownDuration;
+        pauseHudControl.SetProgress(1);
+        SoundManager.Song.VolumeDb = 0f;
+        correctAudioDesync(true);
+        Playing = true;
+        updatePauseHudVisualState();
+    }
+
+    private static void updatePauseStateEachFrame(double delta)
+    {
+        if (!isPauseRampActive())
+        {
+            return;
+        }
+
+        if (!spaceHeld)
+        {
+            cancelUnpause();
+            return;
+        }
+
+        pauseHoldTime += (float)delta;
+        pauseState = Math.Max(0, pauseState - (float)(delta / pauseHoldDuration));
+        pauseHudControl.SetProgress(Math.Clamp(1f - pauseState, 0f, 1f));
+        if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing)
+        {
+            SoundManager.Song.VolumeDb = Math.Min(SoundManager.Song.VolumeDb + (float)delta * pauseRampRateDbPerSecond, 0f);
+        }
+
+        if (pauseState == 0)
+        {
+            completeUnpause();
+        }
+    }
+
+    private static void correctAudioDesync(bool force = false)
+    {
+        double expectedMs = Math.Max(0, getExpectedAudioTimeMs());
+        double thresholdMs = pauseDesyncThresholdMs * Math.Max(CurrentAttempt.Speed, 1.0);
+
+        if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing)
+        {
+            double actualMs = SoundManager.Song.GetPlaybackPosition() * 1000;
+
+            if (force || Math.Abs(actualMs - expectedMs) > thresholdMs)
+            {
+                SoundManager.Song.Seek((float)expectedMs / 1000);
+            }
+        }
+
+        if (CurrentAttempt.Map.VideoBuffer != null && video.IsPlaying())
+        {
+            double actualVideoMs = video.StreamPosition * 1000;
+
+            if (force || Math.Abs(actualVideoMs - expectedMs) > thresholdMs)
+            {
+                video.StreamPosition = (float)expectedMs / 1000;
+            }
+        }
+    }
+
+    private static void resetPauseUi()
+    {
+        spaceHeld = false;
+        pauseHoldTime = 0;
+        pauseHudControl.SetProgress(0);
+    }
+
+    private static void updatePauseCounterVisuals()
+    {
+        pauseCountLabel.Text = pauseUsedCount.ToString();
+
+        if (node?.GetTree() == null)
+        {
+            return;
+        }
+
+        bool showPauseCounter = settings.SpaceToPause.Value && pauseUsedCount > 0 && !settings.SimpleHUD.Value && !settings.SuperSimpleHUD.Value;
+
+        foreach (Node groupNode in node.GetTree().GetNodesInGroup("pause_text"))
+        {
+            if (groupNode is CanvasItem canvasItem)
+            {
+                canvasItem.Visible = showPauseCounter;
+                canvasItem.Modulate = pause_counter_color;
+            }
+        }
+    }
+
+    private static void updatePauseHudVisualState()
+    {
+        if (pauseHud == null || pauseHudControl == null)
+        {
+            return;
+        }
+
+        float maxPercent = pauseState == -1f ? 0f : 1f;
+        float percent = Math.Clamp(1f - pauseState, 0f, maxPercent);
+        bool hideOverlay = isPaused() && Input.IsPhysicalKeyPressed(Key.C);
+        bool hasPausedAtLeastOnce = pauseUsedCount > 0;
+        pauseHud.Visible = hasPausedAtLeastOnce && pauseState != 0f && !hideOverlay;
+        pauseHud.Modulate = new Color(1, 1, 1, Mathf.Abs(pauseState) * pauseUiOpacity);
+        pauseHudControl.SetProgress(percent);
+    }
+
+    public static void ShowPause(bool show = true)
+    {
+        if (show)
+        {
+            beginPause();
+        }
+        else if (isPauseRampActive())
+        {
+            cancelUnpause();
+        }
+        else if (isPaused())
+        {
+            beginUnpause();
+        }
     }
 
     public static void HidePause()
     {
-        ShowPause(false);
+        cancelUnpause();
     }
 
     private static void hideQuitOverlay()
     {
+        quitProgressBar.Size = new Vector2(0, 8);
+        quitProgressBar.Color = quit_hold_fill_start_color;
+
         if (quitOverlay.Visible)
         {
             Tween tween = quitOverlay.CreateTween();
@@ -1460,11 +1776,23 @@ public partial class LegacyRunner : BaseScene
 
     public static void ShowMenu(bool show = true)
     {
-        if (pauseShown) HidePause();
+        if (isPaused() || isPauseRampActive())
+        {
+            return;
+        }
 
         MenuShown = show;
-        Playing = !MenuShown;
-        SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;   // not again
+        Playing = !MenuShown && !isPaused();
+
+        if (MenuShown)
+        {
+            stopGameplayMedia();
+        }
+        else
+        {
+            startGameplayMediaAtExpected(getTargetMusicVolumeDb());
+            correctAudioDesync(true);
+        }
 
         MenuCursor.Instance.UpdateVisible(MenuShown && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
 

@@ -130,7 +130,9 @@ public partial class SkinManager : Node
         // Sounds
 
         skin.HitSoundBuffer = loadSound("hit.mp3");
+        skin.MissSoundBuffer = loadSound("miss.mp3");
         skin.FailSoundBuffer = loadSound("fail.mp3");
+        skin.MenuMusicBuffer = loadSound("menu.mp3");
 
         // Meshes
 
@@ -147,9 +149,7 @@ public partial class SkinManager : Node
 
             for (int i = 0; i < split.Length; i++)
             {
-                split[i] = split[i].TrimPrefix("#").Substr(0, 6);
-                split[i] = new Regex("[^a-fA-F0-9$]").Replace(split[i], "f");
-                colors[i] = Color.FromHtml(split[i]);
+                colors[i] = Util.Misc.ParseColor(split[i], Colors.White);
             }
 
             skin.NoteColors = colors;
@@ -174,29 +174,24 @@ public partial class SkinManager : Node
         Load();
     }
 
-    private static readonly string[] image_extensions = [".png", ".jpg", ".jpeg"];
-
     private static ImageTexture loadTexture(string skinPath)
     {
         var settings = SettingsManager.Instance.Settings;
-        string skinDir = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}";
-        string fullPath = $"{skinDir}/{skinPath}";
+        string fullPath = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}";
 
         if (!File.Exists(fullPath))
         {
-            string basePath = fullPath.GetBaseName();
-            foreach (string ext in image_extensions)
+            string fallbackPath = $"{Constants.USER_FOLDER}/skins/default/{skinPath}";
+            if (!File.Exists(fallbackPath))
             {
-                string altPath = basePath + ext;
-                if (File.Exists(altPath))
-                {
-                    fullPath = altPath;
-                    break;
-                }
+                return null;
             }
+
+            fullPath = fallbackPath;
         }
 
-        return ImageTexture.CreateFromImage(Image.LoadFromFile(fullPath));
+        Image image = Image.LoadFromFile(fullPath);
+        return image != null ? ImageTexture.CreateFromImage(image) : null;
     }
 
     private static byte[] loadSound(string skinPath)

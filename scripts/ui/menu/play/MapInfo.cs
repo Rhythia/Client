@@ -25,6 +25,17 @@ public partial class MapInfo : AspectRatioContainer
         holder = GetNode<Panel>("Holder");
 
         MapManager.Selected.ValueChanged += (_, _) => Select(MapManager.Selected.Value);
+        MapManager.MapDeleted += map =>
+        {
+            Callable.From(() =>
+            {
+                if (Map == null || Map.Name == map.Name)
+                {
+                    Map = null;
+                    InfoContainer?.Transition(false);
+                }
+            }).CallDeferred();
+        };
     }
 
     public override void _Draw()

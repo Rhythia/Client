@@ -23,6 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://lfj8i1bi6kfs" path="res://textures/ui/pause.png" id="23_7silw"]
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto-Bold.ttf" id="23_wf21h"]
 [ext_resource type="FontFile" uid="uid://rs2mb33nd3b1" path="res://fonts/Roboto-Italic.ttf" id="24_j6p10"]
+[ext_resource type="Script" path="res://scripts/scenes/PauseHud.cs" id="25_pausehud"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sijr0"]
 bg_color = Color(0.1072, 0.0896, 0.16, 0.25098)
@@ -200,6 +201,9 @@ font_size = 50
 [sub_resource type="ViewportTexture" id="ViewportTexture_suyxu"]
 viewport_path = NodePath("PanelRight/PanelRightViewport")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_pausehud"]
+viewport_path = NodePath("PauseHud/PauseVP")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ro5ir"]
 resource_local_to_scene = true
 transparency = 1
@@ -231,6 +235,31 @@ font_size = 50
 font = ExtResource("12_axsek")
 font_size = 18
 font_color = Color(1, 1, 1, 0.8)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_base"]
+font = ExtResource("23_wf21h")
+font_size = 84
+font_color = Color(0.50, 0.50, 0.50, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_fill"]
+font = ExtResource("23_wf21h")
+font_size = 84
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_hint"]
+font = ExtResource("12_axsek")
+font_size = 24
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_counter_title"]
+font = ExtResource("12_axsek")
+font_size = 20
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_counter_value"]
+font = ExtResource("12_axsek")
+font_size = 42
+font_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gc8yu"]
 shader = ExtResource("14_3xchs")
@@ -453,28 +482,27 @@ theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
 text = "GIVE UP"
 
-[node name="PauseOverlay" type="Panel" parent="."]
+[node name="PauseHud" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -6)
 visible = false
-modulate = Color(1, 1, 1, 0)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_d5aou")
+pixel_size = 0.012
+no_depth_test = true
+render_priority = 104
+texture = SubResource("ViewportTexture_pausehud")
 
-[node name="Background" type="ColorRect" parent="PauseOverlay"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 0.4)
+[node name="PauseVP" type="SubViewport" parent="PauseHud"]
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(600, 600)
+render_target_update_mode = 4
 
-[node name="Label" type="Label" parent="PauseOverlay"]
+[node name="Control" type="Control" parent="PauseHud/PauseVP"]
+offset_right = 600.0
+offset_bottom = 600.0
+script = ExtResource("25_pausehud")
+
+[node name="Paused" type="Label" parent="PauseHud/PauseVP/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -482,17 +510,23 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -300.0
-offset_top = -60.0
+offset_top = -300.0
 offset_right = 300.0
-offset_bottom = 60.0
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "PAUSED"
-label_settings = SubResource("LabelSettings_pwlqp")
+label_settings = SubResource("LabelSettings_pause_base")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SubLabel" type="Label" parent="PauseOverlay"]
+[node name="ProgressMask" type="Control" parent="PauseHud/PauseVP/Control"]
+layout_mode = 1
+offset_right = 0.0
+offset_bottom = 600.0
+clip_contents = true
+
+[node name="FillPaused" type="Label" parent="PauseHud/PauseVP/Control/ProgressMask"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -500,15 +534,32 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -300.0
-offset_top = 20.0
+offset_top = -300.0
 offset_right = 300.0
-offset_bottom = 60.0
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Press Space to Resume"
-label_settings = SubResource("LabelSettings_tjduq")
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_pause_fill")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="HoldR" type="Label" parent="PauseHud/PauseVP/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 40.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "HOLD R TO EXIT"
+label_settings = SubResource("LabelSettings_pause_hint")
+horizontal_alignment = 1
 
 [node name="QuitOverlay" type="Panel" parent="."]
 visible = false
@@ -546,13 +597,13 @@ horizontal_alignment = 1
 [node name="ProgressBackground" type="ColorRect" parent="QuitOverlay/Holder"]
 custom_minimum_size = Vector2(300, 8)
 layout_mode = 2
-color = Color(0.15, 0.15, 0.15, 0.6)
+color = Color(0.28, 0.28, 0.28, 0.75)
 
 [node name="ProgressBar" type="ColorRect" parent="QuitOverlay/Holder/ProgressBackground"]
 layout_mode = 0
 offset_right = 0.0
 offset_bottom = 8.0
-color = Color(1, 0.3, 0.3, 0.9)
+color = Color(0.54, 0.54, 0.54, 0.82)
 
 [node name="Transition" type="ColorRect" parent="." unique_id=784178581]
 self_modulate = Color(1, 1, 1, 0)
@@ -730,6 +781,38 @@ grow_vertical = 2
 theme = ExtResource("4_rvp5o")
 text = "1x"
 label_settings = SubResource("LabelSettings_usmyc")
+horizontal_alignment = 1
+
+[node name="PauseTitle" type="Label" parent="PanelLeft/PanelLeftViewport" groups=["pause_text"]]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.86
+anchor_right = 0.5
+anchor_bottom = 0.86
+offset_left = -90.0
+offset_top = -18.0
+offset_right = 90.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PAUSES"
+label_settings = SubResource("LabelSettings_pause_counter_title")
+horizontal_alignment = 1
+
+[node name="PauseCount" type="Label" parent="PanelLeft/PanelLeftViewport" groups=["pause_text"]]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.93
+anchor_right = 0.5
+anchor_bottom = 0.93
+offset_left = -90.0
+offset_top = -26.0
+offset_right = 90.0
+offset_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_pause_counter_value")
 horizontal_alignment = 1
 
 [node name="PanelRight" type="MeshInstance3D" parent="." unique_id=1993445313]

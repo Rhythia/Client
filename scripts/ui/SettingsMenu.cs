@@ -416,6 +416,15 @@ public partial class SettingsMenu : ColorRect
         button.Text = setting.Title;
         button.TooltipText = setting.Description;
         button.Visible = true;
-        button.Pressed += () => { setting.OnPressed?.Invoke(); };
+
+        ulong lastPressedAt = 0;
+        button.Pressed += () =>
+        {
+            ulong now = Time.GetTicksMsec();
+            if (now - lastPressedAt < 250) { return; }
+
+            lastPressedAt = now;
+            setting.OnPressed?.Invoke();
+        };
     }
 }
