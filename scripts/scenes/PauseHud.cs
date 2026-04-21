@@ -18,8 +18,8 @@ public partial class PauseHud : Control
 		}
 
 		float clamped = Mathf.Clamp(percent, 0f, 1f);
-		float width = 600f * clamped;
-		progressMask.Position = new Vector2(300f - (width / 2f), 0f);
-		progressMask.Size = new Vector2(width, 600f);
+		float width = 320f * clamped;
+		progressMask.OffsetRight = width / 2;
+		progressMask.OffsetLeft = -width / 2;
 	}
 }
