@@ -234,7 +234,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             Lobby.SetStartFrom(value);
 
-            if (seek && SoundManager.Map?.Name == Map.Name && SoundManager.Song.Playing)
+            if (SoundManager.Map?.Name != Map.Name)
+            {
+                SoundManager.StartMapSelectionPlayback(Map);
+            }
+
+            if (seek && SoundManager.Song.Playing)
             {
                 SoundManager.Song.Seek((float)Lobby.StartFrom / 1000);
             }
