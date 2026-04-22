@@ -930,7 +930,7 @@ public partial class LegacyRunner : BaseScene
         else
         {
             double audioDelay = CurrentAttempt.Progress - 1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix());
-        
+
             if (Math.Abs(audioDelay) > 25 && CurrentAttempt.Progress > 0)
             {
                 SoundManager.Song.PitchScale = Math.Max(Mathf.Epsilon, (float)CurrentAttempt.Speed + (float)audioDelay / 1000);
@@ -1041,7 +1041,7 @@ public partial class LegacyRunner : BaseScene
         CurrentAttempt.Skippable = false;
 
         startGameplayMediaAtExpected(isPauseRampActive() ? SoundManager.Song.VolumeDb : getTargetMusicVolumeDb());
-            
+
         int nextNoteMillisecond = CurrentAttempt.PassedNotes >= CurrentAttempt.Map.Notes.Length ? (int)MapLength + 5000 : CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes].Millisecond;
         int lastNoteMillisecond = CurrentAttempt.PassedNotes > 0 ? CurrentAttempt.Map.Notes[CurrentAttempt.PassedNotes - 1].Millisecond : 0;
 
@@ -1638,7 +1638,7 @@ public partial class LegacyRunner : BaseScene
         pauseHoldTime += (float)delta;
         pauseState = Math.Max(0, pauseState - (float)(delta / pauseHoldDuration));
         pauseHudControl.SetProgress(Math.Clamp(1f - pauseState, 0f, 1f));
-        
+
         if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing)
         {
             SoundManager.Song.VolumeDb = Mathf.Lerp(getTargetMusicVolumeDb() - 60, getTargetMusicVolumeDb(), 1 - pauseState);

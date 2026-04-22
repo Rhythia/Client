@@ -113,10 +113,10 @@ public partial class MapManager : Node
             Maps.RemoveAll(x => x.Id == map.Id);
 
 
-                Callable.From(() =>
-                {
-                    _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
-                }).CallDeferred();
+            Callable.From(() =>
+            {
+                _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
+            }).CallDeferred();
             Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();
         }
         catch (Exception e)

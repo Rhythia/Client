@@ -2,17 +2,68 @@ name: CI
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types:
+      - opened
   workflow_dispatch:
 
 jobs:
+  godot-project-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Verify xllint
+        shell: bash
+        run: |
+          command -v xmllint >/dev/null 2>&1 || {
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libxml2-utils
+          }
+
+      - name: Verify project
+        shell: bash
+        env:
+          CSPROJ_PATH: "Rhythia.csproj"
+          VERSION_FILE: ".github/godot_version.txt"
+        run: |
+          if compgen -G "${CSPROJ_PATH}.old*" > /dev/null; then
+            echo "::error file=${CSPROJ_PATH}.old::${CSPROJ_PATH}.old migration exists"
+            exit 1
+          fi
+
+          if [ ! -f "$CSPROJ_PATH" ]; then
+            echo "::error::$CSPROJ_PATH not found"
+            exit 1
+          fi
+
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "::error::$VERSION_FILE not found"
+            exit 1
+          fi
+
+          EXPECTED_VERSION=$(tr -d '[:space:]' < "$VERSION_FILE")
+          EXPECTED_SDK="Godot.NET.Sdk/${EXPECTED_VERSION}"
+
+          ACTUAL_SDK=$(xmllint --xpath 'string(/Project/@Sdk)' "$CSPROJ_PATH")
+
+          if [ -z "$ACTUAL_SDK" ]; then
+            echo "::error file=$CSPROJ_PATH::no <Project Sdk=\"...\"> attribute found"
+            exit 1
+          fi
+
+          if [ "$ACTUAL_SDK" != "$EXPECTED_SDK" ]; then
+            echo "::error file=$CSPROJ_PATH::expected Sdk=\"$EXPECTED_SDK\" but found Sdk=\"$ACTUAL_SDK\""
+            exit 1
+          fi
+
+          echo "Godot SDK OK: $ACTUAL_SDK"
+
   dotnet-format:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # Checkout v4
     - name: Setup
-      uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9
+      uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # Dotnet 4.0.2
       with:
         dotnet-version: 10.0.x
 

@@ -34,7 +34,7 @@ public class FileParser
         Pointer = 0;
     }
 
-    private void CheckBounds(int amount)
+    private void checkBounds(int amount)
     {
         if (Pointer + amount > Length)
         {
@@ -44,7 +44,7 @@ public class FileParser
 
     public byte[] Get(int length)
     {
-        CheckBounds(length);
+        checkBounds(length);
         Pointer += length;
         return Buffer[(Pointer - length)..Pointer];
     }
@@ -85,21 +85,21 @@ public class FileParser
 
     public bool GetBool()
     {
-        CheckBounds(1);
+        checkBounds(1);
         Pointer += 1;
         return BitConverter.ToBoolean(Buffer, Pointer - 1);
     }
 
     public float GetFloat()
     {
-        CheckBounds(4);
+        checkBounds(4);
         Pointer += 4;
         return BitConverter.ToSingle(Buffer, Pointer - 4);
     }
 
     public double GetDouble()
     {
-        CheckBounds(8);
+        checkBounds(8);
         Pointer += 8;
         return BitConverter.ToDouble(Buffer, Pointer - 8);
     }
@@ -111,21 +111,21 @@ public class FileParser
 
     public ushort GetUInt16()
     {
-        CheckBounds(2);
+        checkBounds(2);
         Pointer += 2;
         return BitConverter.ToUInt16(Buffer, Pointer - 2);
     }
 
     public uint GetUInt32()
     {
-        CheckBounds(4);
+        checkBounds(4);
         Pointer += 4;
         return BitConverter.ToUInt32(Buffer, Pointer - 4);
     }
 
     public ulong GetUInt64()
     {
-        CheckBounds(8);
+        checkBounds(8);
         Pointer += 8;
         return BitConverter.ToUInt64(Buffer, Pointer - 8);
     }

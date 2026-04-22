@@ -35,7 +35,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
         }
 
         noteOpacity = Math.Clamp(noteOpacity, 0, 1);
-        
+
         float noteSize = (float)(LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].NoteSize : settings.NoteSize.Value) / 4;
         Transform3D transform = new(Vector3.Right * noteSize, Vector3.Up * noteSize, Vector3.Back * noteSize, Vector3.Zero);
 

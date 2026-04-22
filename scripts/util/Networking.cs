@@ -1,38 +1,37 @@
 using System;
 using Godot;
 
-namespace Util
+namespace Util;
+
+public static class Networking
 {
-    public static class Networking
+    public static string DefaultIP = "127.0.0.1";
+    public static int DefaultPort = 44220;
+
+    public static string ValidateIP(string ip)
     {
-        public static string DefaultIP = "127.0.0.1";
-        public static int DefaultPort = 44220;
-
-        public static string ValidateIP(string ip)
+        if (ip != "")
         {
-            if (ip != "")
-            {
-                return ip;
-            }
-
-            return DefaultIP;
+            return ip;
         }
 
-        public static int ValidatePort(string port)
-        {
-            try
-            {
-                if (port != "")
-                {
-                    return Math.Clamp(port.ToInt(), 0, 65535);
-                }
-            }
-            catch
-            {
-                ToastNotification.Notify($"Could not set port, defaulting to {DefaultPort}", 1);
-            }
+        return DefaultIP;
+    }
 
-            return DefaultPort;
+    public static int ValidatePort(string port)
+    {
+        try
+        {
+            if (port != "")
+            {
+                return Math.Clamp(port.ToInt(), 0, 65535);
+            }
         }
+        catch
+        {
+            ToastNotification.Notify($"Could not set port, defaulting to {DefaultPort}", 1);
+        }
+
+        return DefaultPort;
     }
 }
