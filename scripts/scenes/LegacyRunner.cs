@@ -794,11 +794,7 @@ public partial class LegacyRunner : BaseScene
 
         musicStarted = false;
 
-        if (CurrentAttempt.Map.Notes != null && CurrentAttempt.Map.Notes.Length > 0)
-        {
-            MapLength = CurrentAttempt.Map.Notes[^1].Millisecond;
-        }
-        else if (CurrentAttempt.Map.AudioBuffer != null)
+        if (CurrentAttempt.Map.AudioBuffer != null)
         {
             MapLength = (float)SoundManager.Song.Stream.GetLength() * 1000;
         }
@@ -807,7 +803,7 @@ public partial class LegacyRunner : BaseScene
             MapLength = CurrentAttempt.Map.Length + 1000;
         }
 
-        MapLength += Constants.HIT_WINDOW + 1000;
+        MapLength += Constants.HIT_WINDOW;
 
         // TODO: Fix videos
 
@@ -930,10 +926,10 @@ public partial class LegacyRunner : BaseScene
         else
         {
             double audioDelay = CurrentAttempt.Progress - 1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix());
-
-            if (Math.Abs(audioDelay) > 25 && CurrentAttempt.Progress > 0)
+        
+            if (Math.Abs(audioDelay / CurrentAttempt.Speed) > 25 && CurrentAttempt.Progress > 0 && CurrentAttempt.Progress < MapLength)
             {
-                SoundManager.Song.PitchScale = Math.Max(Mathf.Epsilon, (float)CurrentAttempt.Speed + (float)audioDelay / 1000);
+                SoundManager.Song.PitchScale = Math.Clamp((float)CurrentAttempt.Speed + (float)audioDelay / 1000, 0.5f, 1.5f);
             }
             else if (Math.Abs(SoundManager.Song.PitchScale - CurrentAttempt.Speed) > Mathf.Epsilon)
             {
