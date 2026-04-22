@@ -537,7 +537,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = ["skin", "void", "grid", "squircles", "waves"]
+                Values = ["skin", "void", "grid", "squircles", "waves", "galaxy"]
             }
         };
 
@@ -550,7 +550,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = ["skin", "void", "grid", "squircles", "waves"]
+                Values = ["skin", "void", "grid", "squircles", "waves", "galaxy"]
             }
         };
 
@@ -775,7 +775,8 @@ public partial class SettingsProfile
             UpdateAction = (value, _) => DisplayServer.WindowSetMode(
                 value
                 ? DisplayServer.WindowMode.ExclusiveFullscreen
-                : DisplayServer.WindowMode.Windowed)
+                : DisplayServer.WindowMode.Windowed
+            )
         };
 
         LockFPS = new(true)
