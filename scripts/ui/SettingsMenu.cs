@@ -1,10 +1,12 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Godot;
 
 public partial class SettingsMenu : ColorRect
 {
+    public static SettingsMenu Instance;
+
     public bool Shown = false;
 
     private Dictionary<string, Panel> settingPanels = [];
@@ -22,6 +24,8 @@ public partial class SettingsMenu : ColorRect
 
     public override void _Ready()
     {
+        Instance = this;
+
         hideButton = GetNode<Button>("Hide");
         holder = GetNode<Panel>("Holder");
         header = holder.GetNode<Panel>("Header");
@@ -34,15 +38,15 @@ public partial class SettingsMenu : ColorRect
 
         Modulate = Color.Color8(255, 255, 255, 0);
 
-        SettingsManager.Instance.MenuToggled += ShowMenu;
-
         LineEdit profileEdit = header.GetNode<LineEdit>("ProfileEdit");
 
-        header.GetNode<Button>("CreateProfile").Pressed += () => {
+        header.GetNode<Button>("CreateProfile").Pressed += () =>
+        {
             profileEdit.Visible = !profileEdit.Visible;
         };
 
-        profileEdit.TextSubmitted += (profile) => {
+        profileEdit.TextSubmitted += (profile) =>
+        {
             profileEdit.Visible = false;
 
             SettingsManager.Save();
@@ -52,7 +56,8 @@ public partial class SettingsMenu : ColorRect
             updateProfileSelection();
         };
 
-        profilesButton.ItemSelected += (index) => {
+        profilesButton.ItemSelected += (index) =>
+        {
             string profile = profilesButton.GetItemText((int)index);
 
             if (profile == SettingsManager.GetCurrentProfile()) { return; }
@@ -76,7 +81,8 @@ public partial class SettingsMenu : ColorRect
 
         foreach (Node child in settingTemplate.GetChildren())
         {
-            if (child.Name == "Title") { continue; };
+            if (child.Name == "Title") { continue; }
+            ;
 
             settingTemplate.RemoveChild(child);
         }
@@ -85,7 +91,8 @@ public partial class SettingsMenu : ColorRect
 
         foreach (KeyValuePair<SettingsSection, List<ISettingsItem>> section in SettingsManager.Instance.Settings.ToOrderedSectionList())
         {
-            if (section.Key == SettingsSection.None) { continue; };
+            if (section.Key == SettingsSection.None) { continue; }
+            ;
 
             string sectionName = section.Key.ToString();
 
@@ -164,7 +171,7 @@ public partial class SettingsMenu : ColorRect
                             panel.AddChild(button);
                         }
                     }
-}
+                }
 
                 container.AddChild(panel);
                 settingPanels[setting.Id] = panel;
@@ -175,9 +182,9 @@ public partial class SettingsMenu : ColorRect
 
         Logger.Log($"SETTINGS MENU: {(Time.GetTicksUsec() - start) / 1000}ms");
 
-        ShowMenu(false);
+        HideMenu();
 
-        hideButton.Pressed += () => { ShowMenu(false); };
+        hideButton.Pressed += HideMenu;
     }
     // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
     public override void _Input(InputEvent @event)
@@ -197,15 +204,15 @@ public partial class SettingsMenu : ColorRect
         }
     }
 
-	public void ShowMenu(bool show)
-	{
+    public void ShowMenu(bool show = true)
+    {
         Shown = show;
         hideButton.MouseFilter = show ? MouseFilterEnum.Stop : MouseFilterEnum.Ignore;
 
         CallDeferred("move_to_front");
 
         if (Shown)
-		{
+        {
             Visible = true;
             holder.OffsetTop = 25;
             holder.OffsetBottom = 25;
@@ -214,12 +221,17 @@ public partial class SettingsMenu : ColorRect
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
         tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0b0)), 0.25);
         tween.TweenProperty(holder, "offset_top", Shown ? 0 : 25, 0.25);
-		tween.TweenProperty(holder, "offset_bottom", Shown ? 0 : 25, 0.25);
+        tween.TweenProperty(holder, "offset_bottom", Shown ? 0 : 25, 0.25);
         tween.Chain().TweenCallback(Callable.From(() => { Visible = Shown; }));
     }
 
-	public void SelectCategory(ScrollContainer category)
-	{
+    public void HideMenu()
+    {
+        ShowMenu(false);
+    }
+
+    public void SelectCategory(ScrollContainer category)
+    {
         if (selectedCategory != null)
         {
             sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 0);
@@ -229,7 +241,7 @@ public partial class SettingsMenu : ColorRect
         selectedCategory = category;
 
         selectedCategory.Visible = true;
-		sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 8);
+        sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 8);
     }
 
     private void updateProfileSelection()
@@ -243,6 +255,7 @@ public partial class SettingsMenu : ColorRect
         string current = SettingsManager.GetCurrentProfile();
         string[] profiles = Directory.GetFiles($"{Constants.USER_FOLDER}/profiles");
 
+        // add custom profiles to item list
         for (int i = 0; i < profiles.Length; i++)
         {
             string name = profiles[i].GetFile().GetBaseName();
@@ -251,8 +264,14 @@ public partial class SettingsMenu : ColorRect
             {
                 profilesButton.AddItem(name);
             }
+        }
 
-            if (current == name)
+        // item indices don't always match file order
+        for (int i = 0; i < profilesButton.ItemCount; i++)
+        {
+            string name = profilesButton.GetItemText(i);
+
+            if (name == current)
             {
                 profilesButton.Select(i);
             }
@@ -260,38 +279,48 @@ public partial class SettingsMenu : ColorRect
     }
 
     private void setupToggle(ISettingsItem setting, CheckButton button)
-	{
-        button.Toggled += value => {
+    {
+        button.Toggled += value =>
+        {
             if ((bool)setting.GetVariant() != value) { setting.SetVariant(value); }
         };
 
-        setting.Updated += (value) => { updateToggle(button, (bool)value); };
+        setting.Updated += value => updateToggle(button, (bool)value);
 
         updateToggle(button, (bool)setting.GetVariant());
     }
 
-	private void updateToggle(CheckButton button, bool value)
-	{
+    private void updateToggle(CheckButton button, bool value)
+    {
         button.ButtonPressed = value;
     }
 
-	private void setupSlider(ISettingsItem setting, HSlider slider, LineEdit lineEdit)
-	{
-		void applyLineEdit()
+    private void setupSlider(ISettingsItem setting, HSlider slider, LineEdit lineEdit)
+    {
+        void applyLineEdit()
         {
-            double value = (lineEdit.Text == "" ? lineEdit.PlaceholderText : lineEdit.Text).ToFloat();
+            if (!double.TryParse(lineEdit.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            {
+                value = double.Parse(lineEdit.PlaceholderText, System.Globalization.CultureInfo.InvariantCulture);
+            }
 
             if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
 
-        // lineEdit.PlaceholderText = ((SettingsItem<Variant>)setting).DefaultValue.ToString();
+        float placeholder = 0;
+
+        if (setting is SettingsItem<float>) { placeholder = (setting as SettingsItem<float>).DefaultValue; }
+        else if (setting is SettingsItem<int>) { placeholder = (setting as SettingsItem<int>).DefaultValue; }
+
+        lineEdit.PlaceholderText = placeholder.ToString("F2");
         slider.Step = setting.Slider.Step;
         slider.MinValue = setting.Slider.MinValue;
         slider.MaxValue = setting.Slider.MaxValue;
 
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
-        slider.ValueChanged += value => {
+        slider.ValueChanged += value =>
+        {
             if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         };
 
@@ -300,9 +329,10 @@ public partial class SettingsMenu : ColorRect
         updateSlider(slider, lineEdit, (double)setting.GetVariant());
     }
 
-	private void updateSlider(HSlider slider, LineEdit lineEdit, double value)
-	{
-        lineEdit.Text = value.ToString();
+    private void updateSlider(HSlider slider, LineEdit lineEdit, double value)
+    {
+        value = Math.Round(value * 1000) / 1000;
+        lineEdit.Text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
         if (lineEdit.IsInsideTree())
         {
@@ -346,7 +376,8 @@ public partial class SettingsMenu : ColorRect
             optionButton.AddItem((string)item);
         }
 
-        optionButton.ItemSelected += (id) => {
+        optionButton.ItemSelected += (id) =>
+        {
             string oldVal = (string)setting.GetVariant();
             string newVal = (string)setting.List.Values[(int)id];
 
@@ -385,6 +416,15 @@ public partial class SettingsMenu : ColorRect
         button.Text = setting.Title;
         button.TooltipText = setting.Description;
         button.Visible = true;
-        button.Pressed += () => { setting.OnPressed?.Invoke(); };
+
+        ulong lastPressedAt = 0;
+        button.Pressed += () =>
+        {
+            ulong now = Time.GetTicksMsec();
+            if (now - lastPressedAt < 250) { return; }
+
+            lastPressedAt = now;
+            setting.OnPressed?.Invoke();
+        };
     }
 }

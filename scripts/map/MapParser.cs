@@ -15,7 +15,7 @@ public partial class MapParser : Node
 {
     [Signal] public delegate void MapsImportStartedEventHandler();
     [Signal] public delegate void MapsImportFinishedEventHandler(Map[] maps);
-    [Signal] public delegate void MapImportedEventHandler(Map map); 
+    [Signal] public delegate void MapImportedEventHandler(Map map);
 
     public static MapParser Instance { get; private set; }
 
@@ -74,7 +74,7 @@ public partial class MapParser : Node
 
         map.Collection = $"default";
 
-        string mapDirectory= $"{Constants.USER_FOLDER}/maps/{map.Collection}";
+        string mapDirectory = $"{Constants.USER_FOLDER}/maps/{map.Collection}";
         string mapFilePath = Path.Combine(mapDirectory, $"{map.Name}.{Constants.DEFAULT_MAP_EXT}");
 
         if (!Directory.Exists(mapDirectory)) Directory.CreateDirectory(mapDirectory);
@@ -107,7 +107,7 @@ public partial class MapParser : Node
                     {
                         bw.Write((float)note.X);
                         bw.Write((float)note.Y);
-                    } 
+                    }
                     else
                     {
                         bw.Write((byte)(note.X + 1));
@@ -127,16 +127,16 @@ public partial class MapParser : Node
                 bw.Write(0); // text count
             }
 
-            void AddAsset(string name, byte[] buffer)
+            void addAsset(string name, byte[] buffer)
             {
                 var asset = archive.CreateEntry(name, CompressionLevel.NoCompression);
                 using var stream = asset.Open();
                 stream.Write(buffer, 0, buffer.Length);
             }
 
-            if (map.AudioBuffer != null) AddAsset($"audio.{map.AudioExt}", map.AudioBuffer);
-            if (map.CoverBuffer != null) AddAsset($"cover.png", map.CoverBuffer);
-            if (map.VideoBuffer != null) AddAsset($"video.mp4", map.VideoBuffer);
+            if (map.AudioBuffer != null) addAsset($"audio.{map.AudioExt}", map.AudioBuffer);
+            if (map.CoverBuffer != null) addAsset($"cover.png", map.CoverBuffer);
+            if (map.VideoBuffer != null) addAsset($"video.mp4", map.VideoBuffer);
         }
 
         map.Hash = Convert.ToHexString(MD5.HashData(ms.ToArray())).ToLower();
@@ -169,10 +169,10 @@ public partial class MapParser : Node
 
         Map map = ext switch
         {
-          "phxm" => PHXM(path),
-          "sspm" => SSPM(path),
-          "txt" => SSMapV1(path, audio),
-          _ => new()
+            "phxm" => PHXM(path),
+            "sspm" => SSPM(path),
+            "txt" => SSMapV1(path, audio),
+            _ => new()
         };
 
         if (logBenchmark) Logger.Log($"DECODING {ext.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms");
@@ -665,8 +665,7 @@ public partial class MapParser : Node
     public static Note[] DecodePHXMO(string path)
     {
         FileParser objects = new(path);
-
-        uint typeCount = objects.GetUInt32();
+        _ = objects.GetUInt32();
         uint noteCount = objects.GetUInt32();
 
         Note[] notes = new Note[noteCount];
@@ -698,8 +697,7 @@ public partial class MapParser : Node
     public static Note[] DecodePHXMO(byte[] buffer)
     {
         FileParser objects = new(buffer);
-
-        uint typeCount = objects.GetUInt32();
+        _ = objects.GetUInt32();
         uint noteCount = objects.GetUInt32();
 
         Note[] notes = new Note[noteCount];

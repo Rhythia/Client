@@ -75,7 +75,7 @@ public partial class Rhythia : Node
 
         Stats.GamesOpened++;
 
-        
+
         // marking sspms for importing can be done with an one liner, kept the following block of code in case we need to loop over every valid map file for some reason
 
         // List<string> import = [];
@@ -94,14 +94,15 @@ public partial class Rhythia : Node
 
         var nonPhxmMaps = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f => f.GetExtension().ToLower() == "sspm" || f.GetExtension().ToLower() == "txt");
         await MapParser.BulkImport([.. nonPhxmMaps], notify: true);
-        
+
         // delete after importing
         foreach (string file in nonPhxmMaps)
         {
             File.Delete(file);
         }
 
-        GetViewport().Connect("files_dropped", Callable.From((string[] files) => {
+        GetViewport().Connect("files_dropped", Callable.From((string[] files) =>
+        {
             EmitSignal(SignalName.FilesDropped, files);
 
             List<string> maps = [];
@@ -186,8 +187,9 @@ public partial class Rhythia : Node
         }
 
         Discord.Client.Dispose();
-        
-        Instance.GetTree().Quit();
+
+        Tween quitTween = Instance.CreateTween();
+        quitTween.TweenCallback(Callable.From(() => { Instance.GetTree().Quit(); })).SetDelay(0.5);
     }
 
     public override void _Notification(int what)
@@ -197,6 +199,15 @@ public partial class Rhythia : Node
             if (SceneManager.Scene != null && SceneManager.Scene is GameScene)
                 Stats.RageQuits++;
             Quit();
+        }
+        else if (what == NotificationApplicationFocusOut)
+        {
+            Engine.MaxFps = 30;
+        }
+        else if (what == NotificationApplicationFocusIn)
+        {
+            var settings = SettingsManager.Instance.Settings;
+            Engine.MaxFps = settings.LockFPS ? settings.FPS : 0;
         }
     }
 }

@@ -73,7 +73,7 @@ public partial class FileInitializer : Node
                     break;
                 case "ArrayMesh":
                     objExporter.Call("save_mesh_to_files", resource, userDir, resFile.Replace(".obj", ""));
-                        continue;
+                    continue;
                 default:
                     Logger.Error($"[{resFile}] {resource.GetType().Name} is not supported for the user folder.");
                     continue;

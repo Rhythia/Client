@@ -4,54 +4,56 @@ using Godot.Collections;
 
 public partial class LinkPopupButton : Button
 {
-	[Export]
-	public string Link;
+    public static string InfoTemplate = "[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{0}[/u][/i]\n\n[color=dddddd]Are you sure?";
 
-	private OptionPopup popup;
+    [Export]
+    public string Link;
 
-	public override void _EnterTree()
-	{
-		base._EnterTree();
+    private OptionPopup popup;
 
-		popup = new("Open Link", "");
+    public override void _EnterTree()
+    {
+        base._EnterTree();
 
-		UpdateLink(Link);
+        popup = new("Open Link", "");
 
-		popup.AddOption("Open", Callable.From(() => { OS.ShellOpen(Link); }), Link);
-		popup.AddOption("Cancel", Callable.From(popup.Hide));
-	}
+        UpdateLink(Link);
 
-	public override void _ExitTree()
-	{
-		base._ExitTree();
+        popup.AddOption("Open", Callable.From(() => { OS.ShellOpen(Link); }), Link);
+        popup.AddOption("Cancel", Callable.From(popup.Hide));
+    }
 
-		popup?.QueueFree();
-	}
+    public override void _ExitTree()
+    {
+        base._ExitTree();
 
-	public override void _Ready()
-	{
-		base._Ready();
+        popup?.QueueFree();
+    }
 
-		Pressed += Press;
-	}
+    public override void _Ready()
+    {
+        base._Ready();
 
-	public void Press()
-	{
-		popup?.Show();
-	}
-	
-	public void UpdateLink(string link)
-	{
-		Link = link;
+        Pressed += Press;
+    }
 
-		if (popup != null)
-		{
-			if (popup.Options.TryGetValue("Open", out Button button))
-			{
-				button.TooltipText = link;
-			}
-			
-			popup.UpdateInfo($"[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{Link}[/u][/i]\n\n[color=dddddd]Are you sure?");
-		}
-	}
+    public void Press()
+    {
+        popup?.Show();
+    }
+
+    public void UpdateLink(string link)
+    {
+        Link = link;
+
+        if (popup != null)
+        {
+            if (popup.Options.TryGetValue("Open", out Button button))
+            {
+                button.TooltipText = link;
+            }
+
+            popup.UpdateInfo(string.Format(InfoTemplate, link));
+        }
+    }
 }

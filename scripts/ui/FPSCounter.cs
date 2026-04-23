@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 public partial class FPSCounter : Label
 {
@@ -21,8 +21,8 @@ public partial class FPSCounter : Label
         Frames++;
         time += delta;
 
-		if (time >= 1)
-		{
+        if (time >= 1)
+        {
             Text = $"{Frames} FPS";
 
             time--;

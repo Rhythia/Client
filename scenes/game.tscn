@@ -36,6 +36,78 @@
 [ext_resource type="Script" uid="uid://dhrqgv44b65ls" path="res://scripts/game/ui/Skip.cs" id="25_nepv3"]
 [ext_resource type="Script" uid="uid://ddtnij8m4eipl" path="res://scripts/game/ui/Grid.cs" id="27_js0lu"]
 [ext_resource type="Script" uid="uid://b7jvxorkr4xfi" path="res://scripts/game/ui/Speed.cs" id="28_gxtfn"]
+[ext_resource type="Script" uid="uid://qjqjxykl30bm" path="res://scripts/scenes/PauseHud.cs" id="25_pausehud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sijr0"]
+bg_color = Color(0.1072, 0.0896, 0.16, 0.25098)
+
+[sub_resource type="LabelSettings" id="LabelSettings_a70tm"]
+font_color = Color(1, 1, 1, 0.25098)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d5aou"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43mxh"]
+bg_color = Color(0.0235294, 0.0196078, 0.0352941, 0.768627)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pwlqp"]
+font = ExtResource("23_wf21h")
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_tjduq"]
+font = ExtResource("24_j6p10")
+font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kncke"]
+bg_color = Color(0.0352941, 0.0313726, 0.0509804, 0.501961)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6kbgk"]
+bg_color = Color(0.0352941, 0.0313726, 0.0509804, 0.501961)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jlnvv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y08lf"]
+bg_color = Color(0.0745098, 0.0666667, 0.101961, 0.501961)
+
+[sub_resource type="Theme" id="Theme_e1j6l"]
+Button/fonts/font = ExtResource("5_pxgh4")
+Button/styles/focus = SubResource("StyleBoxFlat_kncke")
+Button/styles/hover = SubResource("StyleBoxFlat_6kbgk")
+Button/styles/normal = SubResource("StyleBoxEmpty_jlnvv")
+Button/styles/pressed = SubResource("StyleBoxFlat_y08lf")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_pausehud"]
+viewport_path = NodePath("PauseHud/PauseVP")
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_base"]
+font = ExtResource("23_wf21h")
+font_size = 84
+font_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_fill"]
+font = ExtResource("23_wf21h")
+font_size = 84
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_hint"]
+font = ExtResource("12_axsek")
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_r7xjp"]
+font = ExtResource("12_axsek")
+font_size = 18
+font_color = Color(1, 1, 1, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_73q55"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_almyi"]
+transform_format = 1
+use_colors = true
+mesh = ExtResource("2_e1j6l")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a6jk1"]
 resource_name = "Material"
@@ -123,6 +195,14 @@ bg_color = Color(0, 0, 0, 0)
 [sub_resource type="LabelSettings" id="LabelSettings_usmyc"]
 font = ExtResource("12_axsek")
 font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_counter_title"]
+font = ExtResource("12_axsek")
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_pause_counter_value"]
+font = ExtResource("12_axsek")
+font_size = 42
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_suyxu"]
 viewport_path = NodePath("Runner/HUD/PanelRight/PanelRightViewport")
@@ -510,6 +590,212 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Quit" type="Button" parent="Menu/Holder" unique_id=2118605072]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.65
+anchor_right = 1.0
+anchor_bottom = 0.8
+offset_left = 32.0
+offset_right = -32.0
+mouse_default_cursor_shape = 2
+theme = SubResource("Theme_e1j6l")
+theme_override_font_sizes/font_size = 28
+text = "GIVE UP"
+
+[node name="PauseHud" type="Sprite3D" parent="." unique_id=1594331476]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -6)
+pixel_size = 0.012
+no_depth_test = true
+render_priority = 104
+texture = SubResource("ViewportTexture_pausehud")
+
+[node name="PauseVP" type="SubViewport" parent="PauseHud" unique_id=1841571202]
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(600, 600)
+render_target_update_mode = 4
+
+[node name="Control" type="Control" parent="PauseHud/PauseVP" unique_id=1700063552]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 600.0
+offset_bottom = 600.0
+script = ExtResource("25_pausehud")
+
+[node name="Paused" type="Label" parent="PauseHud/PauseVP/Control" unique_id=1511102743]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_pause_base")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProgressMask" type="Control" parent="PauseHud/PauseVP/Control" unique_id=1572831027]
+clip_contents = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FillPaused" type="Label" parent="PauseHud/PauseVP/Control/ProgressMask" unique_id=2138730588]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_pause_fill")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HoldR" type="Label" parent="PauseHud/PauseVP/Control" unique_id=1786763793]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 40.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "HOLD R TO EXIT"
+label_settings = SubResource("LabelSettings_pause_hint")
+horizontal_alignment = 1
+
+[node name="QuitOverlay" type="Panel" parent="." unique_id=316579954]
+visible = false
+modulate = Color(1, 1, 1, 0)
+z_index = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_d5aou")
+
+[node name="Holder" type="VBoxContainer" parent="QuitOverlay" unique_id=289008022]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="QuitOverlay/Holder" unique_id=1425722822]
+layout_mode = 2
+text = "Hold R to Quit"
+label_settings = SubResource("LabelSettings_r7xjp")
+horizontal_alignment = 1
+
+[node name="ProgressBackground" type="ColorRect" parent="QuitOverlay/Holder" unique_id=372914467]
+custom_minimum_size = Vector2(300, 8)
+layout_mode = 2
+color = Color(0.28, 0.28, 0.28, 0.75)
+
+[node name="ProgressBar" type="ColorRect" parent="QuitOverlay/Holder/ProgressBackground" unique_id=541280931]
+layout_mode = 0
+offset_bottom = 8.0
+color = Color(0.54, 0.54, 0.54, 0.82)
+
+[node name="Transition" type="ColorRect" parent="." unique_id=784178581]
+self_modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=112686709]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.75)
+current = true
+fov = 70.0
+size = 5.0
+
+[node name="Notes" type="MultiMeshInstance3D" parent="." unique_id=77746100]
+material_override = SubResource("StandardMaterial3D_73q55")
+cast_shadow = 0
+multimesh = SubResource("MultiMesh_almyi")
+script = ExtResource("3_ew8wr")
+
+[node name="Grid" type="MeshInstance3D" parent="." unique_id=730517176]
+mesh = SubResource("QuadMesh_aih2q")
+
+[node name="CursorTrail" type="MultiMeshInstance3D" parent="." unique_id=913051903]
+material_override = SubResource("StandardMaterial3D_ssr8x")
+multimesh = SubResource("MultiMesh_e28va")
+
+[node name="Cursor" type="MeshInstance3D" parent="." unique_id=292067677]
+mesh = SubResource("QuadMesh_xij4d")
+
+[node name="Health" type="MeshInstance3D" parent="." unique_id=449857227]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -6.3, -10)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_b1hbo")
+
+[node name="HealthViewport" type="SubViewport" parent="Health" unique_id=1637011839]
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(544, 40)
+size_2d_override = Vector2i(1088, 80)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Background" type="TextureRect" parent="Health/HealthViewport" unique_id=2016213185]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_bbly8")
+
+[node name="Main" type="TextureRect" parent="Health/HealthViewport" unique_id=366630384]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_wjg6i")
+expand_mode = 1
+stretch_mode = 1
+
 [node name="ProgressBar" type="MeshInstance3D" parent="Runner/HUD" unique_id=528447019]
 transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 6.3, -10)
 cast_shadow = 0
@@ -719,6 +1005,38 @@ grow_vertical = 2
 theme = ExtResource("4_rvp5o")
 max_value = 1.0
 step = 0.0
+
+[node name="PauseTitle" type="Label" parent="PanelLeft/PanelLeftViewport" unique_id=531787894 groups=["pause_text"]]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.86
+anchor_right = 0.5
+anchor_bottom = 0.86
+offset_left = -90.0
+offset_top = -18.0
+offset_right = 90.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PAUSES"
+label_settings = SubResource("LabelSettings_pause_counter_title")
+horizontal_alignment = 1
+
+[node name="PauseCount" type="Label" parent="PanelLeft/PanelLeftViewport" unique_id=1695472366 groups=["pause_text"]]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.93
+anchor_right = 0.5
+anchor_bottom = 0.93
+offset_left = -90.0
+offset_top = -26.0
+offset_right = 90.0
+offset_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_pause_counter_value")
+horizontal_alignment = 1
 
 [node name="NotificationHolder" type="VBoxContainer" parent="." unique_id=1425635507]
 anchors_preset = 3

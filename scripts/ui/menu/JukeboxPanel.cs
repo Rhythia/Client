@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 /// <summary>
 /// Jukebox UI controls. The jukebox songs are handled in <see cref="SoundManager"/>
@@ -19,7 +19,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
     private ShaderMaterial spectrumMaterial;
 
     public override void _Ready()
-	{
+    {
         Instance = this;
 
         title = GetNode<Label>("Title");
@@ -35,7 +35,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
         rewindButton.Pressed += rewind;
         selectButton.Pressed += select;
 
-        foreach (TextureButton button in new TextureButton[] {pauseButton, skipButton, rewindButton})
+        foreach (TextureButton button in new TextureButton[] { pauseButton, skipButton, rewindButton })
         {
             button.MouseEntered += () => { button.SelfModulate = Color.Color8(255, 255, 255); };
             button.MouseExited += () => { button.SelfModulate = Color.Color8(255, 255, 255, 190); };
@@ -43,7 +43,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
         selectButton.MouseEntered += () => { title.SelfModulate = Color.Color8(255, 255, 255); };
         selectButton.MouseExited += () => { title.SelfModulate = Color.Color8(255, 255, 255, 190); };
-        
+
         if (SettingsManager.Instance.Settings.AutoplayJukebox)
         {
             pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
@@ -57,6 +57,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
         UpdateSkin();
 
         SoundManager.Instance.JukeboxPlayed += UpdateMap;
+        SoundManager.Instance.JukeboxEmpty += ClearMap;
         SkinManager.Instance.Loaded += UpdateSkin;
     }
 
@@ -68,9 +69,12 @@ public partial class JukeboxPanel : Panel, ISkinnable
         {
             progress = SoundManager.Song.GetPlaybackPosition() / (float)SoundManager.Song.Stream.GetLength();
         }
-        
+
         spectrumMaterial.SetShaderParameter("progress", progress);
         spectrumMaterial.SetShaderParameter("margin", 1 - spectrum.Size.X / GetViewport().GetVisibleRect().Size.X);
+
+        var skin = SkinManager.Instance.Skin;
+        pauseButton.TextureNormal = SoundManager.IsJukeboxPaused() ? skin.JukeboxPlayImage : skin.JukeboxPauseImage;
     }
 
     public override void _Input(InputEvent @event)
@@ -92,11 +96,26 @@ public partial class JukeboxPanel : Panel, ISkinnable
         }
     }
 
-	public void UpdateMap(Map map)
-	{
+    public void ClearMap()
+    {
+        title.Text = "";
+        Map = null;
+        selectButton.Disabled = true;
+    }
+
+    public void ShowMenuTheme()
+    {
+        title.Text = "Menu Theme";
+        Map = null;
+        selectButton.Disabled = true;
+    }
+
+    public void UpdateMap(Map map)
+    {
         Map = map;
 
         title.Text = map.PrettyTitle;
+        selectButton.Disabled = false;
 
         pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
     }
@@ -105,26 +124,35 @@ public partial class JukeboxPanel : Panel, ISkinnable
     {
         skin ??= SkinManager.Instance.Skin;
 
-        pauseButton.TextureNormal = SoundManager.Song.Playing ? skin.JukeboxPauseImage : skin.JukeboxPlayImage;
+        pauseButton.TextureNormal = SoundManager.IsJukeboxPaused() ? skin.JukeboxPlayImage : skin.JukeboxPauseImage;
         skipButton.TextureNormal = skin.JukeboxSkipImage;
         rewindButton.TextureNormal = skin.JukeboxSkipImage;
     }
 
     private void pause()
     {
-        var skin = SkinManager.Instance.Skin;
-        SoundManager.Song.StreamPaused = !SoundManager.Song.StreamPaused;
-        pauseButton.TextureNormal = SoundManager.Song.Playing ? skin.JukeboxPauseImage : skin.JukeboxPlayImage;
+        SoundManager.ToggleJukeboxPause();
+        UpdateSkin();
     }
 
     private void skip()
     {
+        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+        {
+            return;
+        }
+
         SoundManager.JukeboxIndex++;
         SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
     }
 
     private void rewind()
     {
+        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+        {
+            return;
+        }
+
         if (SoundManager.Song.GetPlaybackPosition() < 2)
         {
             SoundManager.JukeboxIndex--;
@@ -138,6 +166,11 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
     private void select()
     {
+        if (Map == null)
+        {
+            return;
+        }
+
         MapList.Instance.Select(Map, false);
     }
 }

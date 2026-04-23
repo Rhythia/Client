@@ -1,7 +1,7 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 public partial class SettingsProfile
 {
@@ -11,7 +11,7 @@ public partial class SettingsProfile
     /// Adjusts cursor sensitivity
     /// </summary>
     [Order]
-    public SettingsItem<float> Sensitivity { get; private set; }
+    public SettingsItem<double> Sensitivity { get; private set; }
 
     /// <summary>
     /// Toggles absolute input
@@ -29,31 +29,31 @@ public partial class SettingsProfile
     /// Approach rate of hit objects
     /// </summary>
     [Order]
-    public SettingsItem<float> ApproachRate { get; private set; }
+    public SettingsItem<double> ApproachRate { get; private set; }
 
     /// <summary>
     /// Approach distance of hit objects
     /// </summary>
     [Order]
-    public SettingsItem<float> ApproachDistance { get; private set; }
+    public SettingsItem<double> ApproachDistance { get; private set; }
 
     /// <summary>
     /// Approach time of hit objects
     /// </summary>
     [Order]
-    public SettingsItem<float> ApproachTime { get; private set; }
+    public SettingsItem<double> ApproachTime { get; private set; }
 
     /// <summary>
     /// Distance for the hit objects to become fully opaqu
     /// </summary>
     [Order]
-    public SettingsItem<float> FadeIn { get; private set; }
+    public SettingsItem<double> FadeIn { get; private set; }
 
     /// <summary>
-    /// Toggles fade out for the hit objects
+    /// Controls the fade out distance
     /// </summary>
     [Order]
-    public SettingsItem<bool> FadeOut { get; private set; }
+    public SettingsItem<double> FadeOut { get; private set; }
 
     /// <summary>
     /// Toggles hit object pushback
@@ -65,19 +65,25 @@ public partial class SettingsProfile
     /// Adjusts the camera parallax
     /// </summary>
     [Order]
-    public SettingsItem<float> CameraParallax { get; private set; }
+    public SettingsItem<double> CameraParallax { get; private set; }
 
     /// <summary>
     /// Adjusts the HUD parallax
     /// </summary>
     [Order]
-    public SettingsItem<float> HUDParallax { get; private set; }
+    public SettingsItem<double> HUDParallax { get; private set; }
+
+    /// <summary>
+    /// space to pause toggle
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> SpaceToPause { get; private set; }
 
     /// <summary>
     /// Adjusts the Field of View
     /// </summary>
     [Order]
-    public SettingsItem<float> FoV { get; private set; }
+    public SettingsItem<double> FoV { get; private set; }
 
     #endregion
 
@@ -117,7 +123,7 @@ public partial class SettingsProfile
     /// Sets the maximum opacity of the notes
     /// </summary>
     [Order]
-    public SettingsItem<float> NoteOpacity { get; private set; }
+    public SettingsItem<double> NoteOpacity { get; private set; }
 
     /// <summary>
     /// Overrides the skin's note mesh
@@ -129,19 +135,25 @@ public partial class SettingsProfile
     /// Sets the size of the notes
     /// </summary>
     [Order]
-    public SettingsItem<float> NoteSize { get; private set; }
+    public SettingsItem<double> NoteSize { get; private set; }
 
     /// <summary>
     /// Adjusts the cursor scale
     /// </summary>
     [Order]
-    public SettingsItem<float> CursorScale { get; private set; }
+    public SettingsItem<double> CursorScale { get; private set; }
+
+    /// <summary>
+    /// Adjusts the cursor opacity
+    /// </summary>
+    [Order]
+    public SettingsItem<double> CursorOpacity { get; private set; }
 
     /// <summary>
     /// Degrees to rotate the cursor by every second
     /// </summary>
     [Order]
-    public SettingsItem<int> CursorRotation { get; private set; }
+    public SettingsItem<double> CursorRotation { get; private set; }
 
     /// <summary>
     /// Toggles a trial for your cursor
@@ -153,13 +165,13 @@ public partial class SettingsProfile
     /// Adjusts trail visibility time
     /// </summary>
     [Order]
-    public SettingsItem<float> TrailTime { get; private set; }
+    public SettingsItem<double> TrailTime { get; private set; }
 
     /// <summary>
     /// Adjusts the detail for the trail
     /// </summary>
     [Order]
-    public SettingsItem<float> TrailDetail { get; private set; }
+    public SettingsItem<double> TrailDetail { get; private set; }
 
     /// <summary>
     /// Uses the skin's cursor instead of the native cursor
@@ -171,19 +183,25 @@ public partial class SettingsProfile
     /// Adjusts the video background dim
     /// </summary>
     [Order]
-    public SettingsItem<float> VideoDim { get; private set; }
+    public SettingsItem<double> VideoDim { get; private set; }
 
     /// <summary>
     /// Adjusts the scale of the video background
     /// </summary>
     [Order]
-    public SettingsItem<float> VideoRenderScale { get; private set; }
+    public SettingsItem<double> VideoRenderScale { get; private set; }
 
     /// <summary>
     /// Toggles a minimal HUD
     /// </summary>
     [Order]
     public SettingsItem<bool> SimpleHUD { get; private set; }
+
+    /// <summary>
+    /// Toggles super minimal HUD
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> SuperSimpleHUD { get; private set; }
 
     /// <summary>
     /// Toggles a popup on a hit
@@ -208,17 +226,16 @@ public partial class SettingsProfile
     public SettingsItem<bool> Fullscreen { get; private set; }
 
     /// <summary>
-    /// Unlocks maximum frames per second
+    /// Locks maximum frames per second
     /// </summary>
     [Order]
-    public SettingsItem<bool> UnlockFPS { get; private set; }
+    public SettingsItem<bool> LockFPS { get; private set; }
 
     /// <summary>
     /// Adjusts maximum frames per second
     /// </summary>
     [Order]
     public SettingsItem<int> FPS { get; private set; }
-
 
     #endregion
 
@@ -228,19 +245,37 @@ public partial class SettingsProfile
     /// Master control for the audio
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeMaster { get; private set; }
+    public SettingsItem<double> VolumeMaster { get; private set; }
 
     /// <summary>
     /// Audio control for the music
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeMusic { get; private set; }
+    public SettingsItem<double> VolumeMusic { get; private set; }
 
     /// <summary>
     /// Audio control for sound effects
     /// </summary>
     [Order]
-    public SettingsItem<float> VolumeSFX { get; private set; }
+    public SettingsItem<double> VolumeSFX { get; private set; }
+
+    /// <summary>
+    /// Audio control for hit sound
+    /// </summary>
+    [Order]
+    public SettingsItem<double> VolumeHitSound { get; private set; }
+
+    /// <summary>
+    /// Audio control for miss sound
+    /// </summary>
+    [Order]
+    public SettingsItem<double> VolumeMissSound { get; private set; }
+
+    /// <summary>
+    /// Audio control for menu music
+    /// </summary>
+    [Order]
+    public SettingsItem<double> VolumeMenuMusic { get; private set; }
 
     /// <summary>
     /// Toggles hit sound to always play
@@ -249,10 +284,34 @@ public partial class SettingsProfile
     public SettingsItem<bool> AlwaysPlayHitSound { get; private set; }
 
     /// <summary>
+    /// Enables hit sound playback
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> EnableHitSound { get; private set; }
+
+    /// <summary>
+    /// Enables miss sound playback
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> EnableMissSound { get; private set; }
+
+    /// <summary>
+    /// Enables menu music playback
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> EnableMenuMusic { get; private set; }
+
+    /// <summary>
     /// Automatically plays the jukebox on start
     /// </summary>
     [Order]
     public SettingsItem<bool> AutoplayJukebox { get; private set; }
+
+    /// <summary>
+    /// Adjusts the local audio offset in milliseconds
+    /// </summary>
+    [Order]
+    public SettingsItem<double> LocalOffset { get; private set; }
 
     #endregion
 
@@ -262,7 +321,7 @@ public partial class SettingsProfile
     /// <summary>
     /// Toggles the framerate counter in the corner
     /// </summary>
-    public SettingsItem<bool> DisplayFPS {get; private set; }
+    public SettingsItem<bool> DisplayFPS { get; private set; }
 
     // [Order]
     /// <summary>
@@ -281,11 +340,16 @@ public partial class SettingsProfile
     /// Restarts settings to the game's defaults
     /// </summary>
     public SettingsItem<Variant> ResetToDefaults { get; private set; }
+
     #endregion
+
+    #region Initializers
+
+
 
     public SettingsProfile()
     {
-        #region Initializers
+        #region Gameplay
 
         Sensitivity = new(0.5f)
         {
@@ -371,12 +435,18 @@ public partial class SettingsProfile
             }
         };
 
-        FadeOut = new(true)
+        FadeOut = new(100)
         {
             Id = "FadeOut",
             Title = "Fade Out",
             Description = "Toggles fade out for the hit objects",
             Section = SettingsSection.Gameplay,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
         };
 
         Pushback = new(true)
@@ -415,6 +485,14 @@ public partial class SettingsProfile
             }
         };
 
+        SpaceToPause = new(false)
+        {
+            Id = "SpaceToPause",
+            Title = "Space to Pause",
+            Description = "Toggles space to pause during gameplay",
+            Section = SettingsSection.Gameplay,
+        };
+
         FoV = new(70)
         {
             Id = "FoV",
@@ -429,6 +507,10 @@ public partial class SettingsProfile
             }
         };
 
+        #endregion
+
+        #region Visual
+
         Skin = new("default")
         {
             Id = "Skin",
@@ -442,7 +524,7 @@ public partial class SettingsProfile
             ],
             List = new("default")
             {
-                Values = [ "default" ]
+                Values = ["default"]
             }
         };
 
@@ -455,7 +537,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+                Values = ["skin", "void", "grid", "squircles", "waves", "galaxy"]
             }
         };
 
@@ -468,7 +550,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "void", "grid", "squircles", "waves" ]
+                Values = ["skin", "void", "grid", "squircles", "waves", "galaxy"]
             }
         };
 
@@ -489,7 +571,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "default" ]
+                Values = ["skin", "default"]
             }
         };
 
@@ -516,7 +598,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = [ "skin", "squircle", "square" ]
+                Values = ["skin", "squircle", "square"]
             }
         };
 
@@ -545,6 +627,20 @@ public partial class SettingsProfile
                 Step = 0.025f,
                 MinValue = 0,
                 MaxValue = 4
+            }
+        };
+
+        CursorOpacity = new(100)
+        {
+            Id = "CursorOpacity",
+            Title = "Cursor Opacity",
+            Description = "Adjusts the cursor opacity",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
             }
         };
 
@@ -620,6 +716,10 @@ public partial class SettingsProfile
             }
         };
 
+        #endregion
+
+        #region Video
+
         VideoRenderScale = new(100)
         {
             Id = "VideoRenderScale",
@@ -639,6 +739,14 @@ public partial class SettingsProfile
             Id = "SimpleHUD",
             Title = "Simple HUD",
             Description = "Toggles a minimal HUD",
+            Section = SettingsSection.Visual,
+        };
+
+        SuperSimpleHUD = new(false)
+        {
+            Id = "SuperSimpleHUD",
+            Title = "Super Simple HUD",
+            Description = "Hides health bar, song duration, and song name",
             Section = SettingsSection.Visual,
         };
 
@@ -667,16 +775,17 @@ public partial class SettingsProfile
             UpdateAction = (value, _) => DisplayServer.WindowSetMode(
                 value
                 ? DisplayServer.WindowMode.ExclusiveFullscreen
-                : DisplayServer.WindowMode.Windowed)
+                : DisplayServer.WindowMode.Windowed
+            )
         };
 
-        UnlockFPS = new(true)
+        LockFPS = new(true)
         {
-            Id = "UnlockFPS",
-            Title = "Unlock FPS",
-            Description = "Unlocks maximum frames per second",
+            Id = "LockFPS",
+            Title = "Lock FPS",
+            Description = "Locks maximum frames per second",
             Section = SettingsSection.Video,
-            UpdateAction = (value, _) => Engine.MaxFps = UnlockFPS ? 0 : FPS
+            UpdateAction = (value, _) => Engine.MaxFps = value ? FPS.Value : 0
         };
 
         FPS = new(240)
@@ -691,8 +800,12 @@ public partial class SettingsProfile
                 MinValue = 60,
                 MaxValue = 540,
             },
-            UpdateAction = (value, _) => Engine.MaxFps = UnlockFPS ? 0 : FPS
+            UpdateAction = (value, _) => Engine.MaxFps = LockFPS.Value ? value : 0
         };
+
+        #endregion
+
+        #region Audio
 
         AutoplayJukebox = new(true)
         {
@@ -702,12 +815,57 @@ public partial class SettingsProfile
             Section = SettingsSection.Audio,
         };
 
+        LocalOffset = new(0)
+        {
+            Id = "LocalOffset",
+            Title = "Local Offset",
+            Description = "Adjusts audio offset in milliseconds",
+            Section = SettingsSection.Audio,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = -500,
+                MaxValue = 500
+            }
+        };
+
         AlwaysPlayHitSound = new(false)
         {
             Id = "AlwaysPlayHitSound",
             Title = "Always Play Hit Sound",
             Description = "Toggles hit sound to always play",
             Section = SettingsSection.Audio,
+        };
+
+        EnableHitSound = new(true)
+        {
+            Id = "EnableHitSound",
+            Title = "Enable Hit Sound",
+            Description = "Enables hit sound playback",
+            Section = SettingsSection.Audio,
+        };
+
+        EnableMissSound = new(true)
+        {
+            Id = "EnableMissSound",
+            Title = "Enable Miss Sound",
+            Description = "Enables miss sound playback",
+            Section = SettingsSection.Audio,
+        };
+
+        EnableMenuMusic = new(true)
+        {
+            Id = "EnableMenuMusic",
+            Title = "Enable Menu Music",
+            Description = "Enables menu music playback when the menu is quiet",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) =>
+            {
+                if (!init)
+                {
+                    SoundManager.RefreshMenuMusicPlayback();
+                }
+            }
         };
 
         VolumeMaster = new(50)
@@ -744,7 +902,7 @@ public partial class SettingsProfile
         {
             Id = "VolumeSFX",
             Title = "SFX Volume",
-            Description = "Audio control for sound effects",
+            Description = "Audio control for other sound effects",
             Section = SettingsSection.Audio,
             UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
             Slider = new()
@@ -754,6 +912,55 @@ public partial class SettingsProfile
                 MaxValue = 100
             }
         };
+
+        VolumeHitSound = new(50)
+        {
+            Id = "VolumeHitSound",
+            Title = "Hit Sound Volume",
+            Description = "Audio control for hit sound",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
+
+        VolumeMissSound = new(50)
+        {
+            Id = "VolumeMissSound",
+            Title = "Miss Sound Volume",
+            Description = "Audio control for miss sound",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
+
+        VolumeMenuMusic = new(50)
+        {
+            Id = "VolumeMenuMusic",
+            Title = "Menu Music Volume",
+            Description = "Audio control for menu music",
+            Section = SettingsSection.Audio,
+            UpdateAction = (_, init) => { if (!init) { SoundManager.UpdateVolume(); } },
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
+
+        #endregion
+
+        #region Other
 
         // RhythiaImport = new(default)
         // {
@@ -807,6 +1014,8 @@ public partial class SettingsProfile
 
         updateApproachTime();
     }
+
+    #endregion
 
     /// <summary>
     /// Orders all the <see cref="SettingsItem{T}"/> that is present in the <see cref="SettingsProfile"/>

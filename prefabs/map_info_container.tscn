@@ -254,7 +254,8 @@ offset_right = -8.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
-expand_mode = 2
+expand_mode = 1
+stretch_mode = 6
 
 [node name="ArtistLink" type="Button" parent="Info/ScrollContainer/Holder/CoverContainer/Background" unique_id=752801089]
 layout_mode = 1
@@ -717,7 +718,6 @@ theme = ExtResource("4_4d08m")
 text = "100"
 placeholder_text = "100"
 alignment = 1
-max_length = 5
 context_menu_enabled = false
 emoji_menu_enabled = false
 drag_and_drop_selection_enabled = false
@@ -786,7 +786,6 @@ theme = ExtResource("4_4d08m")
 text = "0:00"
 placeholder_text = "0:00"
 alignment = 1
-max_length = 5
 context_menu_enabled = false
 emoji_menu_enabled = false
 drag_and_drop_selection_enabled = false

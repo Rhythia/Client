@@ -1,7 +1,5 @@
-﻿using Godot;
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.Swift;
+using Godot;
 
 public interface IUIComponent
 {

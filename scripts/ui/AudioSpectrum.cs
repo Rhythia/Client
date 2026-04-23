@@ -1,6 +1,6 @@
-using Godot;
 using System;
 using System.Collections.Generic;
+using Godot;
 
 public partial class AudioSpectrum : Panel
 {
@@ -14,7 +14,7 @@ public partial class AudioSpectrum : Panel
 
     [Export]
     public int MaxFreq = 20000;
-	
+
     [Export]
     public bool NormalizeMagnitude = true;
 
@@ -52,24 +52,24 @@ public partial class AudioSpectrum : Panel
     private float[] magnitudes = [];
 
     public override void _Ready()
-	{
-		SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(Bus, 0);
-	}
-	
+    {
+        SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(Bus, 0);
+    }
+
     public override void _Process(double delta)
     {
-		barCount = (int)Math.Round((Size.X - BarSize) / (BarSize + BarGap));
-        
-		if (magnitudes.Length != barCount)
-		{
-			magnitudes = new float[barCount];
-		}
+        barCount = (int)Math.Round((Size.X - BarSize) / (BarSize + BarGap));
+
+        if (magnitudes.Length != barCount)
+        {
+            magnitudes = new float[barCount];
+        }
 
         float freqStep = (MaxFreq - MinFreq) / (float)barCount;
         float maxMagnitude = 0;
 
         for (int i = 0; i < barCount; i++)
-		{
+        {
             float freqLower = MinFreq + Math.Max(0, i * freqStep);
             float freqUpper = freqLower + freqStep;
             float magnitude = SpectrumAnalyzer.GetMagnitudeForFrequencyRange(freqLower, freqUpper).Length();
@@ -77,7 +77,7 @@ public partial class AudioSpectrum : Panel
             magnitudes[i] = Mathf.Lerp(magnitudes[i], magnitude, (float)Math.Min(1, delta * Responsiveness));
 
             if (magnitudes[i] > maxMagnitude)
-			{
+            {
                 maxMagnitude = magnitudes[i];
             }
         }
@@ -88,10 +88,10 @@ public partial class AudioSpectrum : Panel
         QueueRedraw();
     }
 
-	public override void _Draw()
-	{
+    public override void _Draw()
+    {
         if (barCount == 0) { return; }
-        
+
         Vector2 size = new(Size.X - BarSize, Size.Y);
         Vector2[] points = new Vector2[barCount * 2];
 
