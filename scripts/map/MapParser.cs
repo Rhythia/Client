@@ -571,7 +571,7 @@ public partial class MapParser : Node
                 stream.CopyTo(memoryStream);
                 stream.Dispose();
 
-                byte[] buffer = memoryStream.ToArray();
+                byte[] buffer = memoryStream.GetBuffer();
                 memoryStream.Dispose();
 
                 return buffer;

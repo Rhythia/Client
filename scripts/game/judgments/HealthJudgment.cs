@@ -19,18 +19,18 @@ public class HealthJudgment
 
     public void ApplyAttempt(Attempt attempt)
     {
-        foreach (Mod mod in attempt.Mods)
-        {
-            if (mod is IHealthModifier healthMod)
-            {
-                healthModifiers.Add(healthMod);
-            }
+        // foreach (Mod mod in attempt.Mods)
+        // {
+        //     if (mod is IHealthModifier healthMod)
+        //     {
+        //         healthModifiers.Add(healthMod);
+        //     }
 
-            if (mod is IFailModifier failMod)
-            {
-                failModifiers.Add(failMod);
-            }
-        }
+        //     if (mod is IFailModifier failMod)
+        //     {
+        //         failModifiers.Add(failMod);
+        //     }
+        // }
     }
 
     public void ApplyHitObjectResult(bool hit)

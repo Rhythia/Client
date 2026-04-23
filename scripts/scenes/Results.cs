@@ -29,35 +29,36 @@ public partial class Results : BaseScene
 
         Input.MouseMode = settings.UseCursorInMenus ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
         MenuCursor.Instance.Visible = settings.UseCursorInMenus;
-
-        holder.GetNode<Label>("Title").Text = (LegacyRunner.CurrentAttempt.IsReplay ? "[REPLAY] " : "") + LegacyRunner.CurrentAttempt.Map.PrettyTitle;
-        holder.GetNode<Label>("Difficulty").Text = LegacyRunner.CurrentAttempt.Map.DifficultyName;
-        holder.GetNode<Label>("Mappers").Text = $"by {LegacyRunner.CurrentAttempt.Map.PrettyMappers}";
-        holder.GetNode<Label>("Accuracy").Text = $"{LegacyRunner.CurrentAttempt.Accuracy:F2}%";
-        holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Score.ToString())}";
-        holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Hits.ToString())} / {Util.String.PadMagnitude(LegacyRunner.CurrentAttempt.Sum.ToString())}";
-        holder.GetNode<Label>("Status").Text = LegacyRunner.CurrentAttempt.IsReplay ? LegacyRunner.CurrentAttempt.Replays[0].Status : LegacyRunner.CurrentAttempt.Alive ? (LegacyRunner.CurrentAttempt.Qualifies ? "PASSED" : "DISQUALIFIED") : "FAILED";
-        holder.GetNode<Label>("Speed").Text = $"{LegacyRunner.CurrentAttempt.Speed:F2}x";
+        
+        // fog here, i commented some changes from indev merge just in case something breaks!
+        holder.GetNode<Label>("Title").Text = (GameScene.Attempt.IsReplay ? "[REPLAY] " : "") + GameScene.Attempt.Map.PrettyTitle;
+        holder.GetNode<Label>("Difficulty").Text = GameScene.Attempt.Map.DifficultyName;
+        holder.GetNode<Label>("Mappers").Text = $"by {GameScene.Attempt.Map.PrettyMappers}";
+        holder.GetNode<Label>("Accuracy").Text = $"{GameScene.Attempt.Accuracy.ToString():F2}%";
+        holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(GameScene.Attempt.Score.ToString())}";
+        holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(GameScene.Attempt.Hits.ToString())} / {Util.String.PadMagnitude(GameScene.Attempt.Sum.ToString())}";
+        holder.GetNode<Label>("Status").Text = GameScene.Attempt.IsReplay ? GameScene.Attempt.Replays[0].Status : GameScene.Attempt.Alive ? (GameScene.Attempt.Qualifies ? "PASSED" : "DISQUALIFIED") : "FAILED";
+        holder.GetNode<Label>("Speed").Text = $"{GameScene.Attempt.Speed.ToString():F2}x";
 
         HBoxContainer modifiersContainer = holder.GetNode("Modifiers").GetNode<HBoxContainer>("HBoxContainer");
         TextureRect modTemplate = modifiersContainer.GetNode<TextureRect>("ModifierTemplate");
 
-        foreach (KeyValuePair<string, bool> mod in LegacyRunner.CurrentAttempt.Mods)
+        foreach (KeyValuePair<string, bool> mod in GameScene.Attempt.Mods)
         {
-            if (mod.Value)
-            {
-                TextureRect icon = modTemplate.Duplicate() as TextureRect;
+          if (mod.Value)
+          {
+            TextureRect icon = modTemplate.Duplicate() as TextureRect;
 
-                icon.Visible = true;
-                icon.Texture = Util.Misc.GetModIcon(mod.Key);
+            icon.Visible = true;
+            icon.Texture = Util.Misc.GetModIcon(mod.Key);
 
-                modifiersContainer.AddChild(icon);
-            }
+            modifiersContainer.AddChild(icon);
+          }
         }
 
-        if (LegacyRunner.CurrentAttempt.Map.CoverBuffer != null)
+        if (GameScene.Attempt.Map.CoverBuffer != null)
         {
-            Image img = Util.Misc.LoadImageFromBuffer(LegacyRunner.CurrentAttempt.Map.CoverBuffer);
+            Image img = Util.Misc.LoadImageFromBuffer(GameScene.Attempt.Map.CoverBuffer);
             if (img != null)
             {
                 cover.Texture = ImageTexture.CreateFromImage(img);
@@ -65,51 +66,59 @@ public partial class Results : BaseScene
             }
         }
 
-        if (SettingsManager.Instance.Settings.AutoplayJukebox.Value && LegacyRunner.CurrentAttempt.Map.AudioBuffer != null)
+    //     if (SettingsManager.Instance.Settings.AutoplayJukebox.Value && LegacyRunner.CurrentAttempt.Map.AudioBuffer != null)
+    //     {
+    //         if (!SoundManager.Song.Playing)
+    //         {
+    //             SoundManager.Song.Play();
+    //         }
+    //     }
+
+        if (GameScene.Attempt.Map.AudioBuffer != null)
         {
-            if (!SoundManager.Song.Playing)
-            {
-                SoundManager.Song.Play();
-            }
+          if (!SoundManager.Song.Playing)
+          {
+            SoundManager.Song.Play();
+          }
         }
 
-        SoundManager.Song.PitchScale = (float)LegacyRunner.CurrentAttempt.Speed;
+        SoundManager.Song.PitchScale = (float)GameScene.Attempt.Speed;
 
-        if (!LegacyRunner.CurrentAttempt.Map.Ephemeral)
+        if (!GameScene.Attempt.Map.Ephemeral)
         {
-            // SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[LegacyRunner.CurrentAttempt.Map.ID];
+          // SoundManager.JukeboxIndex = SoundManager.JukeboxQueueInverse[GameScene.Attempt.Map.ID];
         }
 
         Button replayButton = footer.GetNode<Button>("Replay");
 
         footer.GetNode<Button>("Back").Pressed += Stop;
         footer.GetNode<Button>("Play").Pressed += Replay;
-        replayButton.Visible = !LegacyRunner.CurrentAttempt.Map.Ephemeral;
+        replayButton.Visible = !GameScene.Attempt.Map.Ephemeral;
         replayButton.Pressed += () =>
         {
-            string path;
+          string path;
 
-            if (LegacyRunner.CurrentAttempt.IsReplay)
-            {
-                path = $"{Constants.USER_FOLDER}/replays/{LegacyRunner.CurrentAttempt.Replays[0].ID}.phxr";
-            }
-            else
-            {
-                path = LegacyRunner.CurrentAttempt.ReplayFile.GetPath();
-            }
+          if (GameScene.Attempt.IsReplay)
+          {
+            path = $"{Constants.USER_FOLDER}/replays/{GameScene.Attempt.Replays[0].ID}.phxr";
+          }
+          else
+          {
+            path = GameScene.Attempt.ReplayPath;
+          }
 
-            if (File.Exists(path))
-            {
-                Replay replay = new(path);
-                SoundManager.Song.Stop();
+          if (File.Exists(path))
+          {
+            Replay replay = new(path);
+            SoundManager.Song.Stop();
 
-                LegacyRunner.Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
-            }
+            GameScene.Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.Modifiers, null, [replay]);
+          }
         };
-    }
+      }
 
-    public override void _Process(double delta)
-    {
+      public override void _Process(double delta)
+      {
         ulong now = Time.GetTicksUsec();
         delta = (now - LastFrame) / 1000000;
         LastFrame = now;
@@ -117,71 +126,81 @@ public partial class Results : BaseScene
         Vector2 size = GetViewport().GetVisibleRect().Size;
 
         holder.Position = holder.Position.Lerp((size / 2 - MousePosition) * (8 / size.Y), Math.Min(1, (float)delta * 16));
-    }
+      }
 
-    public override void _Input(InputEvent @event)
-    {
+      public override void _Input(InputEvent @event)
+      {
         if (@event is InputEventKey eventKey && eventKey.Pressed)
         {
-            switch (eventKey.PhysicalKeycode)
-            {
-                case Key.Escape:
-                    Stop();
-                    break;
-                case Key.Quoteleft:
-                    Replay();
-                    break;
-                case Key.Space:
-                    GetViewport().SetInputAsHandled();
-                    Replay();
-                    break;
-            }
+          switch (eventKey.PhysicalKeycode)
+          {
+            case Key.Escape:
+              Stop();
+              break;
+            case Key.Quoteleft:
+              Replay();
+              break;
+    //         case Key.Space:
+    //           GetViewPort().SetInputAsHandled();
+    //           Replay();d
+    //           break;
+          }
         }
         else if (@event is InputEventMouseMotion eventMouseMotion)
         {
-            MousePosition = eventMouseMotion.Position;
+          MousePosition = eventMouseMotion.Position;
         }
         else if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {
-            switch (eventMouseButton.ButtonIndex)
-            {
-                case MouseButton.Xbutton1:
-                    Stop();
-                    break;
-            }
+          switch (eventMouseButton.ButtonIndex)
+          {
+            case MouseButton.Xbutton1:
+              Stop();
+              break;
+          }
         }
-    }
+      }
 
-    public override void Load()
-    {
+      public override void Load()
+      {
         base.Load();
 
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Adaptive);
-    }
+      }
 
-    public void UpdateVolume()
-    {
-        SoundManager.Song.VolumeDb = (float)SoundManager.ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
-    }
+      public void UpdateVolume()
+      {
+        SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
+      }
 
-    public void Replay()
-    {
-        Map map = MapParser.Decode(LegacyRunner.CurrentAttempt.Map.FilePath);
-        map.Ephemeral = LegacyRunner.CurrentAttempt.Map.Ephemeral;
+    //   public void UpdateVolume()
+    //   {
+    //       SoundManager.Song.VolumeDb = (float)SoundManager.ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
+    //   }
+
+      public void Replay()
+      {
+        Map map = MapParser.Decode(GameScene.Attempt.Map.FilePath);
+        map.Ephemeral = GameScene.Attempt.Map.Ephemeral;
         SoundManager.Song.Stop();
 
-        LegacyRunner.Play(map, LegacyRunner.CurrentAttempt.Speed, LegacyRunner.CurrentAttempt.StartFrom, LegacyRunner.CurrentAttempt.Mods);
-    }
+        GameScene.Play(map, GameScene.Attempt.Speed, GameScene.Attempt.StartFrom, GameScene.Attempt.Mods);
+      }
 
-    public void Stop()
-    {
-        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
-        {
-            SoundManager.StopScopedSession();
-        }
+    //   public void Stop()
+    //   {
+    //       if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+    //       {
+    //           SoundManager.StopScopedSession();
+    //       }
 
-        SoundManager.Song.PitchScale = (float)Lobby.Speed;
-        SoundManager.UpdateVolume();
+    //       SoundManager.Song.PitchScale = (float)Lobby.Speed;
+    //       SoundManager.UpdateVolume();
+    //       SceneManager.Load("res://scenes/main_menu.tscn");
+    //   }
+
+      public void Stop()
+      {
         SceneManager.Load("res://scenes/main_menu.tscn");
-    }
+      }
 }

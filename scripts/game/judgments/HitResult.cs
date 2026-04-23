@@ -1,5 +1,8 @@
 ﻿using System;
 
-public class HitResult
+public enum HitResult
 {
+    None,
+    Hit,
+    Miss
 }

@@ -260,7 +260,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         startButton.Pressed += () =>
         {
-            LegacyRunner.Play(Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
+            GameScene.Play(Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
         };
 
         // Leaderboard

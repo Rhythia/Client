@@ -12,6 +12,8 @@ public struct Replay
     public string MapFilePath;
     public ulong ReplayNoteCount;
     public string Player;
+
+    // \/ this bad VERY bad, need to use godot's binary functions later
     public FileParser FileBuffer;
     public bool Valid;
     public float Length;
@@ -58,13 +60,16 @@ public struct Replay
         LastNote = 0;
         LastFrame = 0;
 
+        // Get the replay's hash
         byte[] bytes = FileBuffer.Get((int)FileBuffer.Length - 32);
+        string ReplaySHA256 = FileBuffer.Get(32).Stringify();
 
-        if (SHA256.HashData(bytes).Stringify() != FileBuffer.Get(32).Stringify())
+        // crc32 is faster, will change later -fog
+        if (SHA256.HashData(bytes).Stringify() != ReplaySHA256)
         {
             Valid = false;
             ToastNotification.Notify("Replay file corrupted", 2);
-            Logger.Error($"Replay file corrupted; invalid hash");
+            Logger.Error($"Replay file corrupted; invalid SHA256 hash");
             return;
         }
 
@@ -112,6 +117,7 @@ public struct Replay
             };
 
             MapID = FileBuffer.GetString((int)FileBuffer.GetUInt32());
+
             MapNoteCount = FileBuffer.GetUInt64();
             MapFilePath = $"{Constants.USER_FOLDER}/maps/default/{MapID}.phxm";
 
@@ -119,7 +125,7 @@ public struct Replay
             {
                 Valid = false;
                 ToastNotification.Notify("Replay map not found", 2);
-                Logger.Log($"Replay map not found; map ID {MapID}");
+                Logger.Log($"Replay map not found, path: {MapFilePath}.phxm");
                 return;
             }
 
