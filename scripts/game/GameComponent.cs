@@ -1,4 +1,4 @@
-/*using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
@@ -112,4 +112,3 @@ public partial class GameComponent : Node3D
         }
     }
 }
-*/

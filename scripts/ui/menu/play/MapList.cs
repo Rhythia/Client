@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -341,7 +340,7 @@ public partial class MapList : Panel, ISkinnable
 
                     if (Lobby.Map != null && IsVisibleInTree() && focused is not LineEdit)
                     {
-                        GameScene.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
+                        LegacyRunner.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
                     }
                     break;
             }
@@ -389,10 +388,6 @@ public partial class MapList : Panel, ISkinnable
 
         MapManager.Select(map);
 
-        if (selectedMapID == map.Name && playIfPreSelected)
-        {
-            GameScene.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
-        }
 
         selectedMapID = map.Name;
 
