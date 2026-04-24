@@ -1488,6 +1488,8 @@ public partial class LegacyRunner : BaseScene
                     Stats.PassAccuracies.Add(CurrentAttempt.Accuracy);
                 }
             }
+
+            Stats.Save();
         }
 
         if (results)
