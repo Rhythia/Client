@@ -929,7 +929,7 @@ public partial class LegacyRunner : BaseScene
         
             if (Math.Abs(audioDelay / CurrentAttempt.Speed) > 25 && CurrentAttempt.Progress > 0 && CurrentAttempt.Progress < MapLength)
             {
-                SoundManager.Song.PitchScale = Math.Clamp((float)CurrentAttempt.Speed + (float)audioDelay / 1000, 0.5f, 1.5f);
+                SoundManager.Song.PitchScale = (float)Math.Clamp(CurrentAttempt.Speed + audioDelay / 1000, CurrentAttempt.Speed - 0.5, CurrentAttempt.Speed + 0.5);
             }
             else if (Math.Abs(SoundManager.Song.PitchScale - CurrentAttempt.Speed) > Mathf.Epsilon)
             {
@@ -1308,7 +1308,8 @@ public partial class LegacyRunner : BaseScene
                         if (CurrentAttempt.IsReplay)
                         {
                             Playing = !Playing;
-                            SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;   // ooohh my goood
+                            // SoundManager.Song.PitchScale = Playing ? (float)CurrentAttempt.Speed : 0.00000000000001f;   // ooohh my goood
+                            SoundManager.Song.StreamPaused = !Playing;
                             replayViewerPause.TextureNormal = GD.Load<Texture2D>(Playing ? "res://textures/ui/pause.png" : "res://textures/ui/play.png");
                         }
                         else
