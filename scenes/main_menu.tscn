@@ -414,7 +414,7 @@ layout_mode = 2
 
 [node name="Header" type="Label" parent="Menus/Home/News/VBoxContainer" unique_id=1350479761]
 layout_mode = 2
-text = "0.1.1 (early-26feb22)"
+text = "0.1.2 (rc1)"
 label_settings = SubResource("LabelSettings_0uejd")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -428,11 +428,11 @@ theme_override_constants/paragraph_separation = 6
 theme_override_fonts/normal_font = ExtResource("7_6h3lr")
 bbcode_enabled = true
 text = "[font_size=28][b]FEATURES[/b][font_size=18]
-+ Support for image files other than PNG & JPG[br]+ Reset to defaults setting[br]+ Display FPS setting[br]+ Parallax setting now applies to Spin mode[br]* Non-PHXM maps are now imported on startup (SSPM & TXT)
+
 [font_size=28][b]FIXES[/b][font_size=18]
-* Gameplay performance improvements (~25-35% increase)[br]* Improved map importing (faster and more reliable)[br]* Waves space coloring is more consistent[br]* Pressing ESC to close settings is more reliable[br]* Absolute input made more accurate[br]* Map preview no longer inverted[br]* Spin no longer displays a placeholder mod icon in gameplay
+
 [font_size=28][b]MISC[/b][font_size=18]
-* Set default window size to 1280x720"
+"
 shortcut_keys_enabled = false
 
 [node name="Panel" type="Panel" parent="Menus/Home/News/VBoxContainer/RichTextLabel" unique_id=1035549202]
@@ -1662,7 +1662,7 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]early-26aprXX"
+text = "Rhythia [font_size=12][color=ffffffa0]0.1.2-rc1"
 shortcut_keys_enabled = false
 vertical_alignment = 1
 
