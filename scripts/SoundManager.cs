@@ -428,6 +428,8 @@ public partial class SoundManager : Node, ISkinnable
             return;
         }
 
+        JukeboxPanel.Instance?.UpdateMap(Map);
+
         if (menuMusicPausedByUser)
         {
             if (MenuMusic.Playing && !MenuMusic.StreamPaused)
