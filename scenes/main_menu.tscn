@@ -97,6 +97,10 @@ bg_color = Color(1, 1, 1, 1)
 font = ExtResource("5_hl5e0")
 font_size = 36
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k5xsf"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gt56"]
 bg_color = Color(0, 0, 0, 0.0627451)
 
@@ -420,19 +424,20 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Menus/Home/News/VBoxContainer" unique_id=473981233]
-custom_minimum_size = Vector2(0, 400)
+custom_minimum_size = Vector2(0, 480)
 layout_mode = 2
 theme = ExtResource("6_engjn")
 theme_override_constants/line_separation = 2
 theme_override_constants/paragraph_separation = 6
 theme_override_fonts/normal_font = ExtResource("7_6h3lr")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_k5xsf")
 bbcode_enabled = true
 text = "[font_size=28][b]FEATURES[/b][font_size=18]
-
++ Galaxy space[br]+ Tunnel space[br]+ Cursor Rotation setting[br]+ Cursor Opacity setting[br]+ Space to Pause setting[br]+ Local Offset setting[br]+ More volume settings[br]+ Hold R to exit map keybind[br]+ F1 to open wiki keybind[br]+ Ctrl + M to mute keybind[br]+ Miss sounds[br]+ Menu music (currently empty, add menu.mp3 to your skin folder)[br]* Changed Fade Out setting to a slider
 [font_size=28][b]FIXES[/b][font_size=18]
-
+* Comma decimal separator number formatting[br]* Start From slider with comma decimal separator[br]* Map info covers resizing after import[br]* Update map list on map deletion[br]* Safer cover & skin texture loading[br]* Safer note color parsing[br]* Maps failing to import on systems with <4 threads[br]* Dynamic song resyncing during gameplay[br]* Song progress bar incremental update delay[br]* Double Esc to open game menu after opening settings[br]* Flickering notes in replays[br]* Clicking outside update popup causes softlock[br]* Displayed selected profile inaccurate[br]* Number range settings imprecision
 [font_size=28][b]MISC[/b][font_size=18]
-"
+* Cap framerate at 30 when unfocused[br]* Allow windowed mode to be resized"
 shortcut_keys_enabled = false
 
 [node name="Panel" type="Panel" parent="Menus/Home/News/VBoxContainer/RichTextLabel" unique_id=1035549202]
