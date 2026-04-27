@@ -918,16 +918,16 @@ public partial class LegacyRunner : BaseScene
         {
             return;
         }
-
+        
         if (isPauseRampActive())
         {
             updatePauseStateEachFrame(delta);
         }
-        else
+        else if (CurrentAttempt.Progress > 0 && CurrentAttempt.Progress < MapLength && !CurrentAttempt.Stopped)
         {
             double audioDelay = CurrentAttempt.Progress - 1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix());
         
-            if (Math.Abs(audioDelay / CurrentAttempt.Speed) > 25 && CurrentAttempt.Progress > 0 && CurrentAttempt.Progress < MapLength)
+            if (Math.Abs(audioDelay / CurrentAttempt.Speed) > 25)
             {
                 SoundManager.Song.PitchScale = (float)Math.Clamp(CurrentAttempt.Speed + audioDelay / 1000, CurrentAttempt.Speed - 0.5, CurrentAttempt.Speed + 0.5);
             }
