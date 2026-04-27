@@ -6,7 +6,14 @@ public partial class StatsPanel : ExtrasPanel
     public override void _Ready()
     {
         base._Ready();
+        Stats.OnSaved += Update;
         Update();
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        Stats.OnSaved -= Update;
     }
 
     // populates all stat labels from the Stats class

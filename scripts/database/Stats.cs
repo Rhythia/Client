@@ -7,6 +7,8 @@ using Godot.Collections;
 [GlobalClass]
 public partial class Stats : Node
 {
+    public static event Action OnSaved;
+
     public static ulong GamePlaytime = 0;
     public static ulong TotalPlaytime = 0;
     public static ulong GamesOpened = 0;
@@ -61,6 +63,8 @@ public partial class Stats : Node
         file.Close();
 
         File.SetAttributes($"{Constants.USER_FOLDER}/stats", FileAttributes.Hidden);
+
+        OnSaved?.Invoke();
         Logger.Log("Saved stats");
     }
 
