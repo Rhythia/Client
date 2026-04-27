@@ -329,6 +329,7 @@ public partial class SoundManager : Node, ISkinnable
         if (Song != null && (Song.Playing || Song.StreamPaused))
         {
             Song.StreamPaused = !Song.StreamPaused;
+            JukeboxPanel.Instance.UpdateMap(Map);
             return Song.StreamPaused;
         }
 

@@ -113,7 +113,6 @@ public partial class JukeboxPanel : Panel, ISkinnable
     public void UpdateMap(Map map)
     {
         Map = map;
-
         title.Text = map.PrettyTitle;
         selectButton.Disabled = false;
 
@@ -137,7 +136,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
     private void skip()
     {
-        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+        if (!SettingsManager.Instance.Settings.AutoplayJukebox)
         {
             return;
         }
@@ -148,7 +147,7 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
     private void rewind()
     {
-        if (!SettingsManager.Instance.Settings.AutoplayJukebox.Value)
+        if (!SettingsManager.Instance.Settings.AutoplayJukebox)
         {
             return;
         }
