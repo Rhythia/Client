@@ -61,6 +61,8 @@ public partial class Map : RefCounted
 
     public string AudioExt { get; set; } = string.Empty;
 
+    public int PlayCount { get; set; } = 0;
+
     private Texture2D cover = DefaultCover;
 
     [Ignore]

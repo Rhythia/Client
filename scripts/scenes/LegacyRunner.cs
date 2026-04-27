@@ -270,11 +270,11 @@ public partial class LegacyRunner : BaseScene
 
             if (!IsReplay)
             {
-                Stats.NotesHit++;
+                Stats.Instance.NotesHit++;
 
-                if (Combo > Stats.HighestCombo)
+                if (Combo > Stats.Instance.HighestCombo)
                 {
-                    Stats.HighestCombo = Combo;
+                    Stats.Instance.HighestCombo = Combo;
                 }
 
                 HitsInfo[index] = lateness;
@@ -356,7 +356,7 @@ public partial class LegacyRunner : BaseScene
             if (!IsReplay)
             {
                 HitsInfo[index] = -1;
-                Stats.NotesMissed++;
+                Stats.Instance.NotesMissed++;
             }
 
             //if (Health - HealthStep <= 0)
@@ -1355,7 +1355,7 @@ public partial class LegacyRunner : BaseScene
 
     public static void Play(Map map, double speed = 1, double startFrom = 0, Dictionary<string, bool> mods = null, string[] players = null, Replay[] replays = null)
     {
-        map = MapParser.Decode(map.FilePath);
+        Map parsed_map = MapParser.Decode(map.FilePath);
 
         SceneManager.Root.GetViewport().GuiGetFocusOwner()?.ReleaseFocus();
 
@@ -1366,7 +1366,7 @@ public partial class LegacyRunner : BaseScene
             Stop();
         }
 
-        CurrentAttempt = new(map, speed, startFrom, mods ?? [], players, replays);
+        CurrentAttempt = new(parsed_map, speed, startFrom, mods ?? [], players, replays);
         SoundManager.BeginGameplayScope(CurrentAttempt.Map);
         Playing = true;
         stopQueued = false;
@@ -1375,16 +1375,9 @@ public partial class LegacyRunner : BaseScene
 
         if (!CurrentAttempt.IsReplay)
         {
-            Stats.Attempts++;
-
-            if (!Stats.FavoriteMaps.ContainsKey(map.Name))
-            {
-                Stats.FavoriteMaps[map.Name] = 1;
-            }
-            else
-            {
-                Stats.FavoriteMaps[map.Name]++;
-            }
+            Stats.Instance.Attempts++;
+            map.PlayCount++;
+            MapManager.Update(map);
         }
 
         SceneManager.Load("res://scenes/game.tscn");
@@ -1453,8 +1446,8 @@ public partial class LegacyRunner : BaseScene
 
         if (!CurrentAttempt.IsReplay)
         {
-            Stats.GamePlaytime += (Time.GetTicksUsec() - Started) / 1000000;
-            Stats.TotalDistance += (ulong)CurrentAttempt.DistanceMM;
+            Stats.Instance.GamePlaytime += (Time.GetTicksUsec() - Started) / 1000000;
+            Stats.Instance.TotalDistance += (ulong)CurrentAttempt.DistanceMM;
 
             if (CurrentAttempt.StartFrom == 0)
             {
@@ -1472,22 +1465,25 @@ public partial class LegacyRunner : BaseScene
 
                 if (CurrentAttempt.Qualifies)
                 {
-                    Stats.Passes++;
-                    Stats.TotalScore += CurrentAttempt.Score;
+                    Stats.Instance.Passes++;
+                    Stats.Instance.TotalScore += CurrentAttempt.Score;
 
                     if (CurrentAttempt.Accuracy == 100)
                     {
-                        Stats.FullCombos++;
+                        Stats.Instance.FullCombos++;
                     }
 
-                    if (CurrentAttempt.Score > Stats.HighestScore)
+                    if (CurrentAttempt.Score > Stats.Instance.HighestScore)
                     {
-                        Stats.HighestScore = CurrentAttempt.Score;
+                        Stats.Instance.HighestScore = CurrentAttempt.Score;
                     }
 
-                    Stats.PassAccuracies.Add(CurrentAttempt.Accuracy);
+                    // TEST: test if this is good
+                    Stats.Instance.AverageAccuracy = (Stats.Instance.AverageAccuracy + CurrentAttempt.Accuracy) / Stats.Instance.Passes;
                 }
             }
+
+            Stats.Instance.ForceUpdate();
         }
 
         if (results)

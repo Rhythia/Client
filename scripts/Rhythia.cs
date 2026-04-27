@@ -40,41 +40,8 @@ public partial class Rhythia : Node
         }
 
         // Stats
-
-        if (!File.Exists($"{Constants.USER_FOLDER}/stats"))
-        {
-            Logger.Log("Stats file not found");
-            File.WriteAllText($"{Constants.USER_FOLDER}/stats", "");
-            Stats.Save();
-        }
-
-        try
-        {
-            Stats.Load();
-        }
-        catch
-        {
-            Stats.GamePlaytime = 0;
-            Stats.TotalPlaytime = 0;
-            Stats.GamesOpened = 0;
-            Stats.TotalDistance = 0;
-            Stats.NotesHit = 0;
-            Stats.NotesMissed = 0;
-            Stats.HighestCombo = 0;
-            Stats.Attempts = 0;
-            Stats.Passes = 0;
-            Stats.FullCombos = 0;
-            Stats.HighestScore = 0;
-            Stats.TotalScore = 0;
-            Stats.RageQuits = 0;
-            Stats.PassAccuracies = [];
-            Stats.FavoriteMaps = [];
-
-            Stats.Save();
-        }
-
-        Stats.GamesOpened++;
-
+        Stats.Initialize();
+        Stats.Instance.GamesOpened++;
 
         // marking sspms for importing can be done with an one liner, kept the following block of code in case we need to loop over every valid map file for some reason
 
@@ -180,12 +147,12 @@ public partial class Rhythia : Node
             LegacyRunner.CurrentAttempt.Stop();
         }
 
-        Stats.TotalPlaytime += (Time.GetTicksUsec() - Constants.STARTED) / 1000000;
+        Stats.Instance.TotalPlaytime += (Time.GetTicksUsec() - Constants.STARTED) / 1000000;
 
         if (loaded)
         {
             SettingsManager.Save();
-            Stats.Save();
+            Stats.Instance.Save();
         }
 
         Discord.Client.Dispose();
@@ -200,7 +167,7 @@ public partial class Rhythia : Node
         {
             if (SceneManager.Scene != null && SceneManager.Scene is LegacyRunner)
             {
-                Stats.RageQuits++;
+                Stats.Instance.RageQuits++;
             }
 
             Quit();
