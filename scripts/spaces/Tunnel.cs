@@ -32,7 +32,7 @@ public partial class Tunnel : BaseSpace
 		// Ring movement
 		if (rings.Position.Round() != ringLoopEnd)
 		{
-			rings.Position += new Vector3 (0,0,(float)settings.ApproachRate) * (float)delta / 2 ;
+			rings.Position += Vector3.Back * (float)(settings.ApproachRate * delta / 2);
 		}
 		else
 		{
