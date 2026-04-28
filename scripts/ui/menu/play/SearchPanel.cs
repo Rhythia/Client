@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 public partial class SearchPanel : Panel
@@ -26,7 +25,9 @@ public partial class SearchPanel : Panel
     {
         if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.CtrlPressed && !eventKey.AltPressed)
         {
-            if (GetViewport().GuiGetFocusOwner() == null && eventKey.Keycode != Key.Space && eventKey.Keycode != Key.Escape)
+            Control focusOwner = GetViewport().GuiGetFocusOwner();
+
+            if (focusOwner is not LineEdit && eventKey.Keycode != Key.Space && eventKey.Keycode != Key.Escape)
             {
                 lineEdit.GrabFocus();
             }
