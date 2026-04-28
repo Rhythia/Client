@@ -311,12 +311,12 @@ public partial class SettingsMenu : ColorRect
             if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
 
-        float placeholder = 0;
+        double placeholder = 0;
 
-        if (setting is SettingsItem<float>) { placeholder = (setting as SettingsItem<float>).DefaultValue; }
+        if (setting is SettingsItem<double>) { placeholder = (setting as SettingsItem<double>).DefaultValue; }
         else if (setting is SettingsItem<int>) { placeholder = (setting as SettingsItem<int>).DefaultValue; }
 
-        lineEdit.PlaceholderText = placeholder.ToString("F2");
+        lineEdit.PlaceholderText = placeholder.ToString("F4");
         slider.Step = setting.Slider.Step;
         slider.MinValue = setting.Slider.MinValue;
         slider.MaxValue = setting.Slider.MaxValue;
