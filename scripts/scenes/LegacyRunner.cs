@@ -757,7 +757,7 @@ public partial class LegacyRunner : BaseScene
             float cursorTransparency = 1f - cursorOpacity;
 
             cursor.Transparency = cursorTransparency;
-            cursorMaterial?.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+            cursorMaterial.AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
 
             (cursorTrailMultimesh.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
             (grid.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
