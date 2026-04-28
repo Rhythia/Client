@@ -121,7 +121,7 @@ public partial class Results : BaseScene
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey && eventKey.Pressed)
+        if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.Echo)
         {
             switch (eventKey.PhysicalKeycode)
             {
