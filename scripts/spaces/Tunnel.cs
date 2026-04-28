@@ -9,7 +9,7 @@ public partial class Tunnel : BaseSpace
 	private StandardMaterial3D ringMaterialA;
 	private StandardMaterial3D ringMaterialB;
 	private Node3D rings;
-	private Vector3 ringLoopEnd = new(0, 0, 53);
+	private float ringLoopEnd = 52.5f;
 	private Vector3 ringPosReset;
 
 	public override void _Ready()
@@ -30,7 +30,7 @@ public partial class Tunnel : BaseSpace
 		base._Process(delta);
 		
 		// Ring movement
-		if (rings.Position.Round() != ringLoopEnd)
+		if (rings.Position.Z < ringLoopEnd)
 		{
 			rings.Position += Vector3.Back * (float)(settings.ApproachRate * delta / 2);
 		}
