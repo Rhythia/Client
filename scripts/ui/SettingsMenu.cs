@@ -92,7 +92,6 @@ public partial class SettingsMenu : ColorRect
         foreach (KeyValuePair<SettingsSection, List<ISettingsItem>> section in SettingsManager.Instance.Settings.ToOrderedSectionList())
         {
             if (section.Key == SettingsSection.None) { continue; }
-            ;
 
             string sectionName = section.Key.ToString();
 
@@ -120,6 +119,11 @@ public partial class SettingsMenu : ColorRect
 
             foreach (ISettingsItem setting in section.Value)
             {
+                if (!setting.Visible)
+                {
+                    continue;
+                }
+
                 Panel panel = settingTemplate.Duplicate() as Panel;
                 panel.Name = setting.Id;
                 panel.Visible = true;
