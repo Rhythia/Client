@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using Godot;
 
 public class FileParser
 {
@@ -24,6 +23,7 @@ public class FileParser
             Buffer = file.GetBuffer(Length);
             file.Close();
         }
+
         Pointer = 0;
     }
 
