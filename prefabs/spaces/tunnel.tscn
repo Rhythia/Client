@@ -14,16 +14,17 @@ fog_mode = 1
 fog_light_color = Color(0, 0, 0, 1)
 fog_light_energy = 0.01
 fog_density = 1.0
-fog_depth_curve = 0.8485277
+fog_depth_curve = 0.8485127
 fog_depth_begin = 5.0
-fog_depth_end = 500.0
+fog_depth_end = 150.0
 
 [sub_resource type="StandardMaterial3D" id="2"]
 cull_mode = 2
 shading_mode = 0
 albedo_texture = ExtResource("2_5m0re")
 distance_fade_mode = 1
-distance_fade_min_distance = 150.0
+distance_fade_min_distance = 10.0
+distance_fade_max_distance = 40.0
 
 [sub_resource type="QuadMesh" id="4"]
 material = SubResource("2")
@@ -35,7 +36,8 @@ cull_mode = 2
 shading_mode = 0
 albedo_texture = ExtResource("3_frc3x")
 distance_fade_mode = 1
-distance_fade_min_distance = 150.0
+distance_fade_min_distance = 10.0
+distance_fade_max_distance = 40.0
 
 [sub_resource type="QuadMesh" id="5"]
 material = SubResource("1")
