@@ -113,10 +113,13 @@ public partial class JukeboxPanel : Panel, ISkinnable
     public void UpdateMap(Map map)
     {
         Map = map;
-        title.Text = map.PrettyTitle;
-        selectButton.Disabled = false;
 
-        pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
+        if (Map != null)
+        {
+            title.Text = map.PrettyTitle;
+            selectButton.Disabled = false;
+            pauseButton.TextureNormal = SkinManager.Instance.Skin.JukeboxPauseImage;
+        }
     }
 
     public void UpdateSkin(SkinProfile skin = null)
