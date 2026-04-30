@@ -68,6 +68,10 @@ folder_colors={
 "res://user/": "pink"
 }
 
+[gui]
+
+timers/tooltip_delay_sec=0.1
+
 [input_devices]
 
 pointing/android/enable_long_press_as_right_click=true
