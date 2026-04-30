@@ -144,7 +144,7 @@ public partial class SkinManager : Node
 
         if (File.Exists(colorsetPath))
         {
-            string[] split = File.ReadAllText(colorsetPath).Split(",");
+            string[] split = File.ReadAllText(colorsetPath).ReplaceLineEndings(",").Split(",");
             Color[] colors = new Color[split.Length];
 
             for (int i = 0; i < split.Length; i++)
