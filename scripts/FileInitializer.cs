@@ -13,7 +13,7 @@ public partial class FileInitializer : Node
         objExporter = new Node();
         AddChild(objExporter);
         objExporter.SetScript(script);
-
+        
         deepCopy();
     }
 
@@ -26,10 +26,8 @@ public partial class FileInitializer : Node
             Directory.CreateDirectory(userDir);
         }
 
-
         foreach (string resFile in DirAccess.GetFilesAt($"res://user{resDir}"))
         {
-
             string userFile = $"{userDir}/{resFile}";
             string ext = resFile.GetExtension();
 
@@ -51,7 +49,6 @@ public partial class FileInitializer : Node
 
         foreach (string resFile in ResourceLoader.ListDirectory($"res://user{resDir}").Where(x => x.Last() != '/'))
         {
-
             string userFile = $"{userDir}/{resFile}";
             string ext = resFile.GetExtension();
 
@@ -78,10 +75,11 @@ public partial class FileInitializer : Node
                     Logger.Error($"[{resFile}] {resource.GetType().Name} is not supported for the user folder.");
                     continue;
             }
+
             File.WriteAllBytes(userFile, buffer);
         }
 
-        foreach (string dir in Godot.DirAccess.GetDirectoriesAt($"res://user{resDir}"))
+        foreach (string dir in DirAccess.GetDirectoriesAt($"res://user{resDir}"))
         {
             deepCopy($"{resDir}/{dir}");
         }

@@ -150,7 +150,7 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 	var faces: Dictionary = {}
 
 	var mat_name: String = "default"
-	var count_mtl: int =0
+	var count_mtl: int = 0
 	
 	# Parse
 	var lines: PackedStringArray = obj.split("\n", false)
@@ -162,7 +162,7 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 				pass
 			"v":
 				# Vertice
-				var n_v: Vector3 = 2 * Vector3(parts[1].to_float(), parts[2].to_float(), parts[3].to_float())
+				var n_v: Vector3 = Vector3(parts[1].to_float(), parts[2].to_float(), parts[3].to_float())
 				vertices.append(n_v)
 			"vn":
 				# Normal

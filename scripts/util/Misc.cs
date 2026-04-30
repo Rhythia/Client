@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using Godot;
 
 namespace Util;
@@ -47,7 +44,7 @@ public class Misc
 
     public static void CopyReference(Node node, Node reference)
     {
-        Util.Misc.CopyProperties(node, reference);
+        CopyProperties(node, reference);
 
         reference.ReplaceBy(node);
         reference.QueueFree();
