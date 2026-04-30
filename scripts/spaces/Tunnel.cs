@@ -9,7 +9,8 @@ public partial class Tunnel : BaseSpace
 	private StandardMaterial3D ringMaterialA;
 	private StandardMaterial3D ringMaterialB;
 	private Node3D rings;
-	private const float ringLoopEnd = 52.5f;
+    
+	private const float ring_loop_end = 52.5f;
 
 	public override void _Ready()
 	{
@@ -28,7 +29,7 @@ public partial class Tunnel : BaseSpace
 		base._Process(delta);
 		
 		// Ring movement
-		rings.Position = Vector3.Back * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2) % ringLoopEnd;
+		rings.Position = Vector3.Back * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2) % ring_loop_end;
 		
 		// Hit FX
 		tileMaterial.AlbedoColor = NoteHitColor;
