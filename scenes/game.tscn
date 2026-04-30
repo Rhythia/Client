@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://vp1nmsiqt5yv"]
 
 [ext_resource type="Script" uid="uid://8s0npsnw42ce" path="res://scripts/scenes/LegacyRunner.cs" id="1_1hgss"]
-[ext_resource type="ArrayMesh" uid="uid://ceww5w8t33lqy" path="res://user/meshes/squircle.obj" id="2_e1j6l"]
 [ext_resource type="Texture2D" uid="uid://b3g4aw54n6bow" path="res://user/skins/default/game/grid.png" id="2_q78ea"]
 [ext_resource type="Script" uid="uid://okqdw5gj567n" path="res://scripts/game/LegacyRenderer.cs" id="3_ew8wr"]
 [ext_resource type="Texture2D" uid="uid://3e1tjlr4m0wt" path="res://user/skins/default/game/cursor.png" id="3_negii"]
@@ -11,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://4x2vfpyjkri6" path="res://user/skins/default/game/health.png" id="7_wjg6i"]
 [ext_resource type="Texture2D" uid="uid://dmc5f6ajp8xv1" path="res://user/skins/default/game/progress_background.png" id="8_eu3ux"]
 [ext_resource type="Shader" uid="uid://dsysoy6w8ndnk" path="res://scripts/shaders/video_background.gdshader" id="8_ocxsu"]
+[ext_resource type="ArrayMesh" uid="uid://uqxu6tq6xhhg" path="res://user/meshes/squircle.obj" id="9_e1j6l"]
 [ext_resource type="Texture2D" uid="uid://d3s17ehomjscd" path="res://user/skins/default/game/progress.png" id="9_nde5v"]
 [ext_resource type="FontFile" uid="uid://cmjos3o0k2f6t" path="res://fonts/Comfortaa-Medium.ttf" id="11_o37lt"]
 [ext_resource type="Texture2D" uid="uid://80bitp5weqrb" path="res://user/skins/default/game/panel_left_background.png" id="11_sdncv"]
@@ -85,8 +85,8 @@ font_color = Color(1, 1, 1, 0.8)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_73q55"]
 transparency = 1
-cull_mode = 2
 shading_mode = 0
+specular_mode = 2
 disable_fog = true
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
@@ -94,7 +94,7 @@ vertex_color_is_srgb = true
 [sub_resource type="MultiMesh" id="MultiMesh_almyi"]
 transform_format = 1
 use_colors = true
-mesh = ExtResource("2_e1j6l")
+mesh = ExtResource("9_e1j6l")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a6jk1"]
 resource_name = "Material"
@@ -520,6 +520,7 @@ vertical_alignment = 1
 [node name="ProgressMask" type="Control" parent="PauseHud/PauseVP/Control" unique_id=1572831027]
 clip_contents = true
 layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5

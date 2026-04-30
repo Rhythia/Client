@@ -1,6 +1,5 @@
 # Blender 5.0.1
 # www.blender.org
-mtllib square.mtl
 o Cube.001
 v 0.800000 0.800000 -0.075000
 v 0.800000 -0.800000 -0.075000
