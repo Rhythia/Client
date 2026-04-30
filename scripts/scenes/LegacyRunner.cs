@@ -1635,8 +1635,8 @@ public partial class LegacyRunner : BaseScene
         pauseHoldTime += (float)delta;
         pauseState = Math.Max(0, pauseState - (float)(delta / pauseHoldDuration));
         pauseHudControl.SetProgress(Math.Clamp(1f - pauseState, 0f, 1f));
-
-        if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing)
+        
+        if (CurrentAttempt.Map.AudioBuffer != null && musicStarted && SoundManager.Song.Playing && getTargetMusicVolumeDb() > float.NegativeInfinity)
         {
             SoundManager.Song.VolumeDb = Mathf.Lerp(getTargetMusicVolumeDb() - 60, getTargetMusicVolumeDb(), 1 - pauseState);
         }
