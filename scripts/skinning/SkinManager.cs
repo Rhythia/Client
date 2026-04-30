@@ -222,7 +222,7 @@ public partial class SkinManager : Node
     {
         bool exists = ResourceLoader.Exists(path) || Godot.FileAccess.FileExists(path);
 
-        return exists ? (ArrayMesh)Util.Misc.OBJParser.Call("load_obj", path) : GD.Load<ArrayMesh>($"res://user/meshes/squircle.obj");
+        return Util.Misc.OBJParser.Call("load_obj", exists ? path : "res://user/meshes/squircle.obj").As<ArrayMesh>();
     }
 
     private static BaseSpace loadSpace(string path)
