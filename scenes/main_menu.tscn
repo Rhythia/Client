@@ -418,7 +418,7 @@ layout_mode = 2
 
 [node name="Header" type="Label" parent="Menus/Home/News/VBoxContainer" unique_id=1350479761]
 layout_mode = 2
-text = "0.1.2 (rc1)"
+text = "0.1.2 (early-26apr30)"
 label_settings = SubResource("LabelSettings_0uejd")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -433,9 +433,9 @@ theme_override_fonts/normal_font = ExtResource("7_6h3lr")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_k5xsf")
 bbcode_enabled = true
 text = "[font_size=28][b]FEATURES[/b][font_size=18]
-+ Galaxy space[br]+ Tunnel space[br]+ Cursor Rotation setting[br]+ Cursor Opacity setting[br]+ Space to Pause setting[br]+ Local Offset setting[br]+ More volume settings[br]+ Super Simple HUD setting[br]+ Hold R to exit map keybind[br]+ F1 to open wiki keybind[br]+ Ctrl + M to mute keybind[br]+ Miss sounds[br]+ Menu music (currently empty, add menu.mp3 to your skin folder)[br]* Changed Fade Out setting to a slider
++ Galaxy space[br]+ Tunnel space[br]+ Cursor Rotation setting[br]+ Cursor Opacity setting[br]+ Space to Pause setting[br]+ Local Offset setting[br]+ More volume settings[br]+ Super Simple HUD setting[br]+ Hold R to exit map keybind[br]+ F1 to open wiki keybind[br]+ Ctrl + M to mute keybind[br]+ Miss sounds[br]+ Menu music (currently empty, replace menu.mp3 to your skin folder)[br]* Changed Fade Out setting to a slider & updated its behaviour to work more like Fade In[br]* Added support for nightly colorset format
 [font_size=28][b]FIXES[/b][font_size=18]
-* Comma decimal separator number formatting[br]* Start From slider with comma decimal separator[br]* Map info covers resizing after import[br]* Update map list on map deletion[br]* Safer cover & skin texture loading[br]* Safer note color parsing[br]* Maps failing to import on systems with <4 threads[br]* Dynamic song resyncing during gameplay[br]* Song progress bar incremental update delay[br]* Double Esc to open game menu after opening settings[br]* Flickering notes in replays[br]* Clicking outside update popup causes softlock[br]* Displayed selected profile inaccurate[br]* Number range settings imprecision
+* Fixed comma decimal separator number formatting[br]* Fixed Start From slider with comma decimal separator[br]* Fixed map info covers resizing after import[br]* Fixed map list not updating on map deletion[br]* Safer cover & skin texture loading[br]* Safer note color parsing[br]* Fixed maps failing to import on systems with <4 threads[br]* Dynamic song resyncing during gameplay[br]* Fixed song progress bar incremental update delay[br]* Fixed double Esc to open game menu after opening settings[br]* Fixed flickering notes in replays[br]* Fixed clicking outside the update popup causing a softlock[br]* Fixed displayed selected profile inaccurate[br]* Fixed number range settings imprecision[br]* Fixed song search bar not focusing on key press after using slider
 [font_size=28][b]MISC[/b][font_size=18]
 * Cap framerate at 30 when unfocused[br]* Allow windowed mode to be resized"
 shortcut_keys_enabled = false
@@ -1667,7 +1667,7 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]0.1.2-rc1"
+text = "Rhythia [font_size=12][color=ffffffa0]0.1.2 (early-26apr30)"
 shortcut_keys_enabled = false
 vertical_alignment = 1
 
