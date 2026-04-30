@@ -927,7 +927,7 @@ public partial class LegacyRunner : BaseScene
         {
             double audioDelay = CurrentAttempt.Progress - 1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix());
         
-            if (Math.Abs(audioDelay / CurrentAttempt.Speed) > 25)
+            if (Math.Abs(audioDelay / CurrentAttempt.Speed) > Math.Max(40, delta))
             {
                 SoundManager.Song.PitchScale = (float)Math.Clamp(CurrentAttempt.Speed + audioDelay / 1000, Math.Max(0.01, CurrentAttempt.Speed - 0.5), CurrentAttempt.Speed + 0.5);
             }
