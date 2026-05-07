@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bloah4i51wdsj"]
+
+[ext_resource type="Script" uid="uid://2onud88s5nkr" path="res://scripts/spaces/Solid.cs" id="1_rw8lf"]
+
+[sub_resource type="Environment" id="Environment_n6lso"]
+background_mode = 1
+background_color = Color(0.011764706, 0, 0.09019608, 1)
+background_energy_multiplier = 1.2
+glow_intensity = 1.5
+glow_bloom = 0.15
+
+[node name="Squircles" type="Node3D" unique_id=1958332010]
+script = ExtResource("1_rw8lf")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=495103429]
+environment = SubResource("Environment_n6lso")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1770879942]
+fov = 50.0
+size = 1.25
