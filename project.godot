@@ -75,6 +75,10 @@ timers/tooltip_delay_sec=0.1
 
 pointing/android/enable_long_press_as_right_click=true
 
+[internationalization]
+
+rendering/root_node_layout_direction=1
+
 [physics]
 
 common/physics_ticks_per_second=120
