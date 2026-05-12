@@ -12,7 +12,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
     public Leaderboard Leaderboard = new();
 
     private readonly PackedScene leaderboardScoreTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/score_panel.tscn");
-    
+
     // Info & main buttons
 
     [ExportCategory("Info")]

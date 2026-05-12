@@ -178,7 +178,7 @@ public static class MapCache
     {
         var existing = DatabaseService.Connection.Find<Map>(x => x.Hash == x.Hash);
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
-        
+
         try
         {
             if (updated != null && existing != null)

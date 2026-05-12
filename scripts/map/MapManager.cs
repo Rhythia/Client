@@ -78,7 +78,7 @@ public partial class MapManager : Node
         map.VideoBuffer = null;
 
         var oldmap = MapParser.Decode(map.FilePath);
-        
+
         map.Mappers = map.PrettyMappers.Split(" ");
         map.AudioBuffer = oldmap.AudioBuffer;
         map.CoverBuffer = oldmap.CoverBuffer;
