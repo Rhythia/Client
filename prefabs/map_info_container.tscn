@@ -176,7 +176,7 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="MapInfoContainer" type="Panel" unique_id=150923669]
+[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "infoSubholder", "mainLabel", "extraLabel", "artistLink", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -186,6 +186,31 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_svokg")
 script = ExtResource("1_50xtp")
+info = NodePath("Info")
+dim = NodePath("Dim")
+coverBackground = NodePath("Info/ScrollContainer/Holder/CoverContainer/Background")
+cover = NodePath("Info/ScrollContainer/Holder/CoverContainer/Background/Cover")
+infoSubholder = NodePath("Info/ScrollContainer/Holder")
+mainLabel = NodePath("Info/ScrollContainer/Holder/Subholder/Main")
+extraLabel = NodePath("Info/ScrollContainer/Holder/Subholder/Extra")
+artistLink = NodePath("Info/ScrollContainer/Holder/CoverContainer/Background/ArtistLink")
+favoriteButton = NodePath("Info/ScrollContainer/Holder/Subholder/Buttons/Favorite")
+videoButton = NodePath("Info/ScrollContainer/Holder/Subholder/Buttons/Video")
+videoDialog = NodePath("Info/ScrollContainer/Holder/Subholder/Buttons/Video/VideoDialog")
+copyButton = NodePath("Info/ScrollContainer/Holder/Subholder/Buttons/Copy")
+copyDialog = NodePath("Info/ScrollContainer/Holder/Subholder/Buttons/Copy/CopyDialog")
+deleteButton = NodePath("Info/ScrollContainer/Holder/Subholder/Buttons/Delete")
+actions = NodePath("Actions")
+preview = NodePath("Actions/ScrollContainer/Holder/Preview/AspectRatioContainer/FlatPreview")
+speedHolder = NodePath("Actions/ScrollContainer/Holder/Speed")
+speedPresets = NodePath("Actions/ScrollContainer/Holder/Speed/ScrollContainer/Presets")
+playHolder = NodePath("Actions/ScrollContainer/Holder/Play")
+startButton = NodePath("Actions/ScrollContainer/Holder/Play/Button")
+leaderboard = NodePath("Leaderboard")
+lbScrollContainer = NodePath("Leaderboard/ScrollContainer")
+lbContainer = NodePath("Leaderboard/ScrollContainer/VBoxContainer")
+lbExpand = NodePath("Leaderboard/Expand")
+lbHide = NodePath("LeaderboardHide")
 
 [node name="Info" type="Panel" parent="." unique_id=1638277412]
 layout_mode = 1
@@ -314,7 +339,7 @@ text = "[color=ffffff88]{0}
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="MainLabel" type="RichTextLabel" parent="Info/ScrollContainer/Holder/Subholder" unique_id=394044659]
+[node name="Main" type="RichTextLabel" parent="Info/ScrollContainer/Holder/Subholder" unique_id=394044659]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0

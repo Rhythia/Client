@@ -12,65 +12,116 @@ public partial class MapInfoContainer : Panel, ISkinnable
     public Leaderboard Leaderboard = new();
 
     private readonly PackedScene leaderboardScoreTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/score_panel.tscn");
+    
+    // Info & main buttons
 
+    [ExportCategory("Info")]
+
+    [Export]
     private Panel info;
+
+    [Export]
+    private ColorRect dim;
+
+    [Export]
     private TextureRect coverBackground;
+
+    [Export]
     private TextureRect cover;
+
+    [Export]
     private Panel infoSubholder;
+
+    [Export]
     private RichTextLabel mainLabel;
     private string mainLabelFormat;
+
+    [Export]
     private RichTextLabel extraLabel;
     private string extraLabelFormat;
+
+    [Export]
     private LinkPopupButton artistLink;
     private string artistLinkFormat;
-    private HBoxContainer mapButtonsContainer;
+
+    [Export]
     private Button favoriteButton;
+
+    [Export]
     private Button videoButton;
+
+    [Export]
     private FileDialog videoDialog;
+
+    [Export]
     private Button copyButton;
+
+    [Export]
     private FileDialog copyDialog;
+
+    [Export]
     private Button deleteButton;
 
+    // Actions panel
+
+    [ExportCategory("Actions")]
+
+    [Export]
     private Panel actions;
-    private Panel previewHolder;
-    private Panel modesHolder;
-    private Panel modifiersHolder;
+
+    [Export]
+    private FlatPreview preview;
+
+    // [Export]
+    // private Panel previewHolder;
+
+    // [Export]
+    // private Panel modesHolder;
+
+    // [Export]
+    // private Panel modifiersHolder;
+
+    [Export]
     private Panel speedHolder;
+
+    [Export]
     private HBoxContainer speedPresets;
+
+    [Export]
     private Panel playHolder;
+
+    [Export]
     private Button startButton;
 
+    // Leaderboard
+
+    [ExportCategory("Leaderboards")]
+
+    [Export]
     private Panel leaderboard;
+
+    [Export]
     private ScrollContainer lbScrollContainer;
+
+    [Export]
     private VBoxContainer lbContainer;
+
+    [Export]
     private Button lbExpand;
+
+    [Export]
     private Button lbHide;
 
-    private ColorRect dim;
+    // Misc
+
     private ShaderMaterial outlineMaterial;
 
     public override void _Ready()
     {
-        info = GetNode<Panel>("Info");
-
-        Panel infoHolder = info.GetNode("ScrollContainer").GetNode<Panel>("Holder");
-
-        coverBackground = infoHolder.GetNode("CoverContainer").GetNode<TextureRect>("Background");
-        cover = coverBackground.GetNode<TextureRect>("Cover");
-        infoSubholder = infoHolder.GetNode<Panel>("Subholder");
-        mainLabel = infoSubholder.GetNode<RichTextLabel>("MainLabel");
         mainLabelFormat = mainLabel.Text;
-        extraLabel = infoSubholder.GetNode<RichTextLabel>("Extra");
         extraLabelFormat = extraLabel.Text;
-        artistLink = coverBackground.GetNode<LinkPopupButton>("ArtistLink");
         artistLinkFormat = artistLink.Text;
-        mapButtonsContainer = infoSubholder.GetNode<HBoxContainer>("Buttons");
-        favoriteButton = mapButtonsContainer.GetNode<Button>("Favorite");
-        videoButton = mapButtonsContainer.GetNode<Button>("Video");
-        videoDialog = videoButton.GetNode<FileDialog>("VideoDialog");
-        copyButton = mapButtonsContainer.GetNode<Button>("Copy");
-        copyDialog = copyButton.GetNode<FileDialog>("CopyDialog");
-        deleteButton = mapButtonsContainer.GetNode<Button>("Delete");
+        outlineMaterial = info.GetNode<Panel>("Outline").Material as ShaderMaterial;
 
         favoriteButton.Pressed += () =>
         {
@@ -114,33 +165,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         coverBackground.Connect("resized", Callable.From(updateOffset));
 
-        actions = GetNode<Panel>("Actions");
-
-        Panel actionsHolder = actions.GetNode("ScrollContainer").GetNode<Panel>("Holder");
-
-        previewHolder = actionsHolder.GetNode<Panel>("Preview");
-        modesHolder = actionsHolder.GetNode<Panel>("Modes");
-        modifiersHolder = actionsHolder.GetNode<Panel>("Modifiers");
-        speedHolder = actionsHolder.GetNode<Panel>("Speed");
-        speedPresets = speedHolder.GetNode("ScrollContainer").GetNode<HBoxContainer>("Presets");
-        playHolder = actionsHolder.GetNode<Panel>("Play");
-        startButton = playHolder.GetNode<Button>("Button");
-
-        leaderboard = GetNode<Panel>("Leaderboard");
-        lbScrollContainer = leaderboard.GetNode<ScrollContainer>("ScrollContainer");
-        lbContainer = lbScrollContainer.GetNode<VBoxContainer>("VBoxContainer");
-        lbExpand = leaderboard.GetNode<Button>("Expand");
-        lbHide = GetNode<Button>("LeaderboardHide");
-
-        dim = GetNode<ColorRect>("Dim");
-        outlineMaterial = info.GetNode<Panel>("Outline").Material as ShaderMaterial;
-
         Modulate = Color.Color8(255, 255, 255, 0);
 
         // Speed setup
 
-        HSlider speedSlider = speedHolder.GetNode<HSlider>("HSlider");
-        LineEdit speedEdit = speedHolder.GetNode<LineEdit>("LineEdit");
+        var speedSlider = speedHolder.GetNode<HSlider>("HSlider");
+        var speedEdit = speedHolder.GetNode<LineEdit>("LineEdit");
 
         void displaySpeed(double speed)
         {
@@ -190,8 +220,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // StartFrom setup
 
-        HSlider startFromSlider = playHolder.GetNode<HSlider>("HSlider");
-        LineEdit startFromEdit = playHolder.GetNode<LineEdit>("LineEdit");
+        var startFromSlider = playHolder.GetNode<HSlider>("HSlider");
+        var startFromEdit = playHolder.GetNode<LineEdit>("LineEdit");
 
         void displayStartFrom(double startFrom)
         {
@@ -265,7 +295,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Leaderboard
 
-        Panel lbExpandHover = lbExpand.GetNode<Panel>("Hover");
+        var lbExpandHover = lbExpand.GetNode<Panel>("Hover");
 
         void tweenExpandHover(bool show)
         {
@@ -365,7 +395,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         Lobby.SetStartFrom(0);
 
-        previewHolder.GetNode("AspectRatioContainer").GetNode<FlatPreview>("FlatPreview").Setup(map, true);
+        preview.Setup(map, true);
 
         // Leaderboard
 
