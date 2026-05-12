@@ -378,10 +378,24 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Info
 
-        int clampedDifficulty = Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1);
-        mainLabel.Text = string.Format(mainLabelFormat, map.PrettyTitle, Constants.DIFFICULTY_COLORS[clampedDifficulty].ToHtml(), map.DifficultyName, map.PrettyMappers);
-        extraLabel.Text = string.Format(extraLabelFormat, Util.String.FormatTime(map.Length / 1000), map.Notes.Length, map.Name);
-        coverBackground.SelfModulate = Constants.DIFFICULTY_COLORS[clampedDifficulty];
+        var difficultyColor = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
+
+        mainLabel.Text = string.Format(
+            mainLabelFormat,
+            Util.String.SanitizeBBCode(map.PrettyTitle),
+            difficultyColor.ToHtml(),
+            Util.String.SanitizeBBCode(map.DifficultyName),
+            Util.String.SanitizeBBCode(map.PrettyMappers)
+        );
+
+        extraLabel.Text = string.Format(
+            extraLabelFormat,
+            Util.String.FormatTime(map.Length / 1000),
+            map.Notes.Length,
+            Util.String.SanitizeBBCode(map.Name)
+        );
+
+        coverBackground.SelfModulate = difficultyColor;
         cover.Texture = map.Cover;
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
         favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;

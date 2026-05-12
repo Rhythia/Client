@@ -45,8 +45,8 @@ public partial class MapButtonWide : MapButton
         extra.Text = string.Format("[outline_size=2][outline_color=000000][color=808080]{0} — [color={1}]{2} [color=808080]by [color=b0b0b0]{3}",
             Util.String.FormatTime(map.Length / 1000),
             Constants.DIFFICULTY_COLORS[map.Difficulty].ToHtml(),
-            map.DifficultyName,
-            map.PrettyMappers
+            Util.String.SanitizeBBCode(map.DifficultyName),
+            Util.String.SanitizeBBCode(map.PrettyMappers)
         );
 
         stickoutOffset = selected ? 0.05f : 0;

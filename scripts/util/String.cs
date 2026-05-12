@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Godot;
 
 namespace Util;
@@ -70,5 +71,17 @@ public class String
         }
 
         return formatted.TrimSuffix(pad) + decimals;
+    }
+
+    public static string SanitizeZalgo(string input, int limit = 3)
+    {
+        var zalgoSpamRegex = new Regex("([\\p{M}]){" + (limit + 1) + ",}");
+
+        return zalgoSpamRegex.Replace(input, "$1");
+    }
+
+    public static string SanitizeBBCode(string input)
+    {
+        return input.Replace("[", "[lb]");
     }
 }

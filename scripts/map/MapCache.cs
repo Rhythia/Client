@@ -178,6 +178,7 @@ public static class MapCache
     {
         var existing = DatabaseService.Connection.Find<Map>(x => x.Hash == x.Hash);
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
+        
         try
         {
             if (updated != null && existing != null)
@@ -276,13 +277,18 @@ public static class MapCache
 
         if (maps.Count < 1)
         {
-            MapManager.Maps = new();
+            MapManager.Maps = [];
             return;
         }
 
         var sortedMaps = maps.Where(x => x.Favorite).OrderBy(x => x.PrettyTitle).ToList();
 
         sortedMaps.AddRange(maps.Where(x => !x.Favorite).OrderBy(x => x.PrettyTitle));
+
+        foreach (var map in sortedMaps)
+        {
+            MapManager.Sanitize(map);
+        }
 
         MapManager.Maps = sortedMaps;
     }
