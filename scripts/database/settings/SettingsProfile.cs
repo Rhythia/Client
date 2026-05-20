@@ -243,6 +243,12 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<int> FPS { get; private set; }
 
+    /// <summary>
+    /// Toggles V-Sync when in menus
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> VSyncMenus { get; private set; }
+
     #endregion
 
     #region Audio
@@ -821,6 +827,17 @@ public partial class SettingsProfile
                 MaxValue = 540,
             },
             UpdateAction = (value, _) => Engine.MaxFps = LockFPS.Value ? value : 0
+        };
+
+        VSyncMenus = new(true)
+        {
+            Id = "VSyncMenus",
+            Title = "V-Sync in Menus",
+            Description = "Toggles V-Sync when in menus",
+            Section = SettingsSection.Video,
+            UpdateAction = (value, _) => DisplayServer.WindowSetVsyncMode(
+                value ? DisplayServer.VSyncMode.Enabled : DisplayServer.VSyncMode.Disabled
+            )
         };
 
         #endregion
