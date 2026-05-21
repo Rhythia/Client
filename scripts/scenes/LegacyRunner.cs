@@ -1343,8 +1343,6 @@ public partial class LegacyRunner : BaseScene
     {
         base.Load();
 
-        DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
-
         MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
         SceneManager.Space.UpdateMap(CurrentAttempt.Map);
