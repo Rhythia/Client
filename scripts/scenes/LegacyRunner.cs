@@ -1343,6 +1343,9 @@ public partial class LegacyRunner : BaseScene
     {
         base.Load();
 
+        // TODO: Update this when new runner is merged
+        DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
+
         MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
         SceneManager.Space.UpdateMap(CurrentAttempt.Map);
