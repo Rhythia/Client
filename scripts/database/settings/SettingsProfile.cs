@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Godot;
 
@@ -624,7 +625,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             List = new("skin")
             {
-                Values = ["skin", "squircle", "square"]
+                Values = getAvailableMeshes()
             }
         };
 
@@ -1096,5 +1097,22 @@ public partial class SettingsProfile
     private void updateApproachTime()
     {
         ApproachTime.Value = ApproachDistance / ApproachRate;
+    }
+
+    private static List<string> getAvailableMeshes()
+    {
+        List<string> meshes = ["skin"];
+        string meshDir = $"{Constants.USER_FOLDER}/meshes";
+
+        if (Directory.Exists(meshDir))
+        {
+            string[] objFiles = Directory.GetFiles(meshDir, "*.obj");
+            foreach (string file in objFiles)
+            {
+                meshes.Add(Path.GetFileNameWithoutExtension(file));
+            }
+        }
+
+        return meshes;
     }
 }

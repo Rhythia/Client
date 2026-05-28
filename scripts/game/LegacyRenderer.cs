@@ -8,6 +8,13 @@ public partial class LegacyRenderer : MultiMeshInstance3D
     public override void _Ready()
     {
         settings = SettingsManager.Instance.Settings;
+        Multimesh.Mesh = SkinManager.Instance.Skin.NoteMesh;
+        SkinManager.Instance.Connect(SkinManager.SignalName.Loaded, new Callable(this, nameof(OnSkinLoaded)));
+    }
+
+    public void OnSkinLoaded(SkinProfile skin)
+    {
+        Multimesh.Mesh = skin.NoteMesh;
     }
 
     public override void _Process(double delta)
