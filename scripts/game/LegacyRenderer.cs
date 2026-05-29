@@ -9,12 +9,7 @@ public partial class LegacyRenderer : MultiMeshInstance3D
     {
         settings = SettingsManager.Instance.Settings;
         Multimesh.Mesh = SkinManager.Instance.Skin.NoteMesh;
-        SkinManager.Instance.Connect(SkinManager.SignalName.Loaded, new Callable(this, nameof(OnSkinLoaded)));
-    }
-
-    public void OnSkinLoaded(SkinProfile skin)
-    {
-        Multimesh.Mesh = skin.NoteMesh;
+        SkinManager.Instance.Loaded += onSkinLoaded;
     }
 
     public override void _Process(double delta)
@@ -86,5 +81,10 @@ public partial class LegacyRenderer : MultiMeshInstance3D
             Multimesh.SetInstanceTransform(j, transform);
             Multimesh.SetInstanceColor(j, color);
         }
+    }
+
+    private void onSkinLoaded(SkinProfile skin)
+    {
+        Multimesh.Mesh = skin.NoteMesh;
     }
 }
