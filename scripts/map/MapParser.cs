@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Godot;
+using Godot.Collections;
 
 public partial class MapParser : Node
 {
@@ -20,7 +21,7 @@ public partial class MapParser : Node
         Instance = this;
     }
 
-    public static bool IsValidExt(string ext) => ext == "phxm" || ext == "sspm" || ext == "txt";
+    public static bool IsValidExt(string ext) => ext == "phxm" || ext == "sspm" || ext == "txt" || ext == "rhm";
 
     public static async Task BulkImport(string[] files, bool notify = false)
     {
@@ -40,12 +41,14 @@ public partial class MapParser : Node
             {
                 try
                 {
-                    Map map = Decode(file, null, false, false);
+                    var map = Decode(file, null, false, false);
+
                     if (map != null)
                     {
                         Encode(map);
                         maps.Add(map);
                     }
+
                     System.Threading.Interlocked.Increment(ref good);
                     Callable.From(() => Instance.EmitSignal(SignalName.MapImported, map)).CallDeferred();
                 }
@@ -168,6 +171,7 @@ public partial class MapParser : Node
             "phxm" => PHXM(path),
             "sspm" => SSPM(path),
             "txt" => SSMapV1(path, audio),
+            "rhm" => RHM(path),
             _ => new()
         };
 
@@ -179,14 +183,14 @@ public partial class MapParser : Node
     public static Map SSMapV1(string path, string audioPath = null)
     {
         string name = path.Split("\\")[^1].TrimSuffix(".txt");
-        Godot.FileAccess file = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
+        var file = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
         Map map;
 
         try
         {
-            string[] split = file.GetLine().Split(",");
-            Note[] notes = new Note[split.Length - 1];
             byte[] audioBuffer = null;
+            string[] split = file.GetLine().Split(",");
+            var notes = new Note[split.Length - 1];
 
             for (int i = 1; i < split.Length; i++)
             {
@@ -197,7 +201,7 @@ public partial class MapParser : Node
 
             if (audioPath != null)
             {
-                Godot.FileAccess audio = Godot.FileAccess.Open(audioPath, Godot.FileAccess.ModeFlags.Read);
+                var audio = Godot.FileAccess.Open(audioPath, Godot.FileAccess.ModeFlags.Read);
 
                 audioBuffer = audio.GetBuffer((long)audio.GetLength());
 
@@ -340,7 +344,7 @@ public partial class MapParser : Node
                 audioBuffer = file.Get(audioByteLength);
             }
 
-            Note[] notes = new Note[noteCount];
+            var notes = new Note[noteCount];
 
             for (int i = 0; i < noteCount; i++)
             {
@@ -365,7 +369,7 @@ public partial class MapParser : Node
                 notes[i] = new Note(i, millisecond, x - 1, -y + 1);
             }
 
-            Array.Sort(notes);
+            System.Array.Sort(notes);
 
             for (int i = 0; i < notes.Length; i++)
             {
@@ -493,7 +497,7 @@ public partial class MapParser : Node
 
             file.Seek((int)markerByteOffset);
 
-            Note[] notes = new Note[noteCount];
+            var notes = new Note[noteCount];
 
             for (int i = 0; i < noteCount; i++)
             {
@@ -519,7 +523,7 @@ public partial class MapParser : Node
                 notes[i] = new Note(0, millisecond, x - 1, -y + 1);
             }
 
-            Array.Sort(notes);
+            System.Array.Sort(notes);
 
             for (int i = 0; i < notes.Length; i++)
             {
@@ -540,88 +544,37 @@ public partial class MapParser : Node
 
     public static Map PHXM(string path)
     {
-        string decodePath = $"{Constants.USER_FOLDER}/cache/{Constants.DEFAULT_MAP_EXT}decode";
-
-        if (!Directory.Exists(decodePath))
-        {
-            Directory.CreateDirectory(decodePath);
-        }
-
-        foreach (string filePath in Directory.GetFiles(decodePath))
-        {
-            File.Delete(filePath);
-        }
-
         Map map;
 
         try
         {
-            using var file = ZipFile.OpenRead(path);
+            var file = ZipFile.OpenRead(path);
 
-            byte[] getEntryBuffer(string entryName)
-            {
-                ZipArchiveEntry entry = file.GetEntry(entryName) ?? throw new($"Entry {entryName} for map {path} is missing!");
-                Stream stream = entry.Open();
-                MemoryStream memoryStream = new();
-
-                stream.CopyTo(memoryStream);
-                stream.Dispose();
-
-                byte[] buffer = memoryStream.GetBuffer();
-                memoryStream.Dispose();
-
-                return buffer;
-            }
-
-            byte[] metaBuffer = getEntryBuffer("metadata.json");
-            byte[] objectsBuffer = getEntryBuffer("objects.phxmo");
+            byte[] metaBuffer = getZipEntryBuffer(file, "metadata.json");
+            byte[] objectsBuffer = getZipEntryBuffer(file, "objects.phxmo");
             byte[] audioBuffer = null;
             byte[] coverBuffer = null;
             byte[] videoBuffer = null;
 
-            Godot.Collections.Dictionary metadata = (Godot.Collections.Dictionary)Json.ParseString(Encoding.UTF8.GetString(metaBuffer));
+            var metadata = (Dictionary)Json.ParseString(Encoding.UTF8.GetString(metaBuffer));
             FileParser objects = new(objectsBuffer);
 
             if ((bool)metadata["HasAudio"])
             {
-                audioBuffer = getEntryBuffer($"audio.{metadata["AudioExt"]}");
+                audioBuffer = getZipEntryBuffer(file, $"audio.{metadata["AudioExt"]}");
             }
 
             if ((bool)metadata["HasCover"])
             {
-                coverBuffer = getEntryBuffer("cover.png");
+                coverBuffer = getZipEntryBuffer(file, "cover.png");
             }
 
             if ((bool)metadata["HasVideo"])
             {
-                videoBuffer = getEntryBuffer("video.mp4");
+                videoBuffer = getZipEntryBuffer(file, "video.mp4");
             }
 
-            uint typeCount = objects.GetUInt32();
-            uint noteCount = objects.GetUInt32();
-
-            Note[] notes = new Note[noteCount];
-
-            for (int i = 0; i < noteCount; i++)
-            {
-                int ms = (int)objects.GetUInt32();
-                bool quantum = objects.GetBool();
-                float x;
-                float y;
-
-                if (quantum)
-                {
-                    x = objects.GetFloat();
-                    y = objects.GetFloat();
-                }
-                else
-                {
-                    x = objects.Get(1)[0] - 1;
-                    y = objects.Get(1)[0] - 1;
-                }
-
-                notes[i] = new(i, ms, x, y);
-            }
+            var notes = DecodePHXMO(objectsBuffer);
 
             file.Dispose();
 
@@ -661,10 +614,17 @@ public partial class MapParser : Node
     public static Note[] DecodePHXMO(string path)
     {
         FileParser objects = new(path);
+
+        return DecodePHXMO(objects.Buffer);
+    }
+
+    public static Note[] DecodePHXMO(byte[] buffer)
+    {
+        FileParser objects = new(buffer);
         _ = objects.GetUInt32();
         uint noteCount = objects.GetUInt32();
 
-        Note[] notes = new Note[noteCount];
+        var notes = new Note[noteCount];
 
         for (int i = 0; i < noteCount; i++)
         {
@@ -690,35 +650,94 @@ public partial class MapParser : Node
         return notes;
     }
 
-    public static Note[] DecodePHXMO(byte[] buffer)
+    public static Map RHM(string path)
     {
-        FileParser objects = new(buffer);
-        _ = objects.GetUInt32();
-        uint noteCount = objects.GetUInt32();
+        Map map;
 
-        Note[] notes = new Note[noteCount];
-
-        for (int i = 0; i < noteCount; i++)
+        try
         {
-            int ms = (int)objects.GetUInt32();
-            bool quantum = objects.GetBool();
-            float x;
-            float y;
+            var file = ZipFile.OpenRead(path);
 
-            if (quantum)
+            byte[] mapBuffer = getZipEntryBuffer(file, "map");
+            var mapData = (Dictionary)Json.ParseString(Encoding.UTF8.GetString(mapBuffer));
+
+            var noteData = (Godot.Collections.Array)mapData["Notes"];
+            var notes = new Note[noteData.Count];
+
+            for (int i = 0; i < notes.Length; i++)
             {
-                x = objects.GetFloat();
-                y = objects.GetFloat();
-            }
-            else
-            {
-                x = objects.Get(1)[0] - 1;
-                y = objects.Get(1)[0] - 1;
+                var note = (Dictionary)noteData[i];
+
+                notes[i] = new(i, (int)note["Time"], (float)note["X"] - 1, 1 - (float)note["Y"]);
             }
 
-            notes[i] = new(i, ms, x, y);
+            string artist = null, title = null;
+            string[] split = ((string)mapData["Title"]).Split(" - ");
+
+            if (split.Length == 1)
+            {
+                title = split[0];
+            }
+            else if (split.Length > 1)
+            {
+                artist = split[0];
+                title = "";
+
+                for (int i = 1; i < split.Length; i++)
+                {
+                    title += split[i];
+                }
+            }
+
+            string[] mappers = (string[])mapData["Mappers"];
+            int difficulty = (int)mapData["Difficulty"];
+            string difficultyName = (string)mapData["CustomDifficultyName"];
+
+            string imagePath = (string)mapData["ImagePath"];
+            string audioPath = file.GetEntry("audio")?.Name ?? (string)mapData["AudioFileName"];
+
+            byte[] audioBuffer = getZipEntryBuffer(file, audioPath);
+            byte[] coverBuffer = getZipEntryBuffer(file, imagePath);
+
+            file.Dispose();
+
+            map = new(
+                path,
+                notes,
+                null,
+                artist ?? "",
+                title ?? "",
+                0,
+                mappers,
+                difficulty,
+                difficultyName,
+                notes[^1].Millisecond,
+                audioBuffer,
+                coverBuffer
+            );
+        }
+        catch (Exception exception)
+        {
+            ToastNotification.Notify($"RHM file corrupted", 2);
+            Logger.Error(exception);
+            throw;
         }
 
-        return notes;
+        return map;
+    }
+
+    private static byte[] getZipEntryBuffer(ZipArchive file, string entryName)
+    {
+        ZipArchiveEntry entry = file.GetEntry(entryName) ?? throw new($"ZipArchiveEntry {entryName} is missing!");
+        Stream stream = entry.Open();
+        MemoryStream memoryStream = new();
+
+        stream.CopyTo(memoryStream);
+        stream.Dispose();
+
+        byte[] buffer = memoryStream.GetBuffer();
+        memoryStream.Dispose();
+
+        return buffer;
     }
 }

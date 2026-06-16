@@ -102,13 +102,15 @@ public partial class Map : RefCounted
         if (cover == DefaultCover && File.Exists($"{path}/cover.png"))
         {
             byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
-            Image image = Util.Misc.LoadImageFromBuffer(coverBuffer);
+            var image = Util.Misc.LoadImageFromBuffer(coverBuffer);
+
             if (image != null)
+            {
                 cover = ImageTexture.CreateFromImage(image);
+            }
         }
 
         return cover;
-
     }
 
     public Map() { }
@@ -122,34 +124,20 @@ public partial class Map : RefCounted
         ArtistPlatform = artistPlatform;
         Title = (title ?? "").StripEscapes();
         PrettyTitle = Artist != "" ? $"{Artist} - {Title}" : Title;
-        if (id == null)
-        {
-            PrettyTitle = "Temp Map";
-        }
-        ;
-
         Rating = rating;
         Mappers = mappers ?? ["N/A"];
         PrettyMappers = "N/A";
         CachedMappers = "N/A";
-        if (mappers != null)
-        {
-            PrettyMappers = mappers.Join();
-            CachedMappers = mappers.Join("_");
-        }
+        PrettyMappers = Mappers.Join();
+        CachedMappers = Mappers.Join("_");
         Difficulty = Math.Clamp(difficulty, 0, Constants.DIFFICULTIES.Length - 1);
         DifficultyName = difficultyName?.StripEscapes() ?? Constants.DIFFICULTIES[Difficulty];
         AudioBuffer = audioBuffer;
         CoverBuffer = coverBuffer;
         VideoBuffer = videoBuffer;
-        Notes = data ?? Array.Empty<Note>();
+        Notes = data ?? [];
         Length = length ?? Notes[^1].Millisecond;
-        Name = "N/A";
-        if (id != null)
-        {
-            Name = id.Replace(" ", "_") ?? new Regex("[^a-zA-Z0-9_-]").Replace($"{Mappers.Stringify()}_{PrettyTitle}".Replace(" ", "_"), "");
-        }
-        // Name = id.Replace(" ", "_") ?? new Regex("[^a-zA-Z0-9_-]").Replace($"{Mappers.Stringify()}_{PrettyTitle}".Replace(" ", "_"), "");
+        Name = id?.Replace(" ", "_") ?? new Regex("[^a-zA-Z0-9_-]").Replace($"{Mappers.Stringify()}_{PrettyTitle}".Replace(" ", "_"), "");
         AudioExt = (AudioBuffer != null && Encoding.UTF8.GetString(AudioBuffer[0..4]) == "OggS") ? "ogg" : "mp3";
 
         MapManager.Sanitize(this);
