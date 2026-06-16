@@ -126,9 +126,12 @@ public partial class MapList : Panel, ISkinnable
         SkinManager.Instance.Loaded += UpdateSkin;
         MapParser.Instance.MapsImportFinished += maps =>
         {
-            MapCache.Load(false);
-            UpdateMaps();
-            Select(maps[0]);
+            if (maps.Length > 0)
+            {
+                MapCache.Load(false);
+                UpdateMaps();
+                Select(maps[0]);
+            }
         };
         MapManager.MapsInitialized += _ => UpdateMaps();
         MapManager.MapUpdated += map =>
