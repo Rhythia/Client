@@ -74,13 +74,6 @@ public partial class MapParser : Node
 
         if (!Directory.Exists(exportPath)) Directory.CreateDirectory(exportPath);
 
-        /*
-			uint32; ms
-			1 byte; quantum
-			1 byte OR int32; x
-			1 byte OR int32; y
-		*/
-
         using var ms = new MemoryStream();
         using (var archive = new ZipArchive(ms, ZipArchiveMode.Create))
         {
