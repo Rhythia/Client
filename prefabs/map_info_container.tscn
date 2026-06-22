@@ -6,6 +6,7 @@
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="4_4d08m"]
 [ext_resource type="Script" uid="uid://c1235cyjfh4rl" path="res://scripts/ui/LinkPopupButton.cs" id="4_dccrs"]
 [ext_resource type="Texture2D" uid="uid://7px5v8ikildx" path="res://user/skins/default/ui/buttons/favorite.png" id="5_1m5pv"]
+[ext_resource type="Texture2D" uid="uid://dkpbociv8fgfd" path="res://user/skins/default/ui/buttons/export.png" id="5_g02bu"]
 [ext_resource type="Script" uid="uid://dy45uerqy0yd7" path="res://scripts/ui/FlatPreview.cs" id="5_svokg"]
 [ext_resource type="Texture2D" uid="uid://degvlg4p0if70" path="res://user/skins/default/ui/buttons/add_video.png" id="6_g02bu"]
 [ext_resource type="Texture2D" uid="uid://cgxbwx4f28lt2" path="res://user/skins/default/ui/buttons/copy.png" id="7_oibm8"]
@@ -175,7 +176,7 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "infoSubholder", "mainLabel", "extraLabel", "artistLink", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
+[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "infoSubholder", "mainLabel", "extraLabel", "artistLink", "exportButton", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -193,6 +194,7 @@ infoSubholder = NodePath("Info/ScrollContainer/HBoxContainer")
 mainLabel = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Main")
 extraLabel = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Extra")
 artistLink = NodePath("Info/ScrollContainer/HBoxContainer/Background/ArtistLink")
+exportButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Export")
 favoriteButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Favorite")
 videoButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Video")
 videoDialog = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Video/VideoDialog")
@@ -356,6 +358,17 @@ offset_bottom = -6.0
 grow_horizontal = 0
 grow_vertical = 0
 alignment = 2
+
+[node name="Export" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=2033571562]
+layout_mode = 2
+tooltip_text = "Export (Shift+Click for .sspm export)"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("4_4d08m")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/icon_max_width = 24
+icon = ExtResource("5_g02bu")
+icon_alignment = 1
 
 [node name="Favorite" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=1022164792]
 layout_mode = 2

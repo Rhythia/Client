@@ -67,6 +67,77 @@ public partial class MapParser : Node
         if (notify) ToastNotification.Notify($"Finished importing {files.Length} map(s)");
     }
 
+    public static void ExportEncode(Map map)
+    {
+        string exportPath = $"{Constants.USER_FOLDER}/export/";
+        string exportFilePath = Path.Combine(exportPath, $"{map.Name}.phxm");
+
+        if (!Directory.Exists(exportPath)) Directory.CreateDirectory(exportPath);
+
+        /*
+			uint32; ms
+			1 byte; quantum
+			1 byte OR int32; x
+			1 byte OR int32; y
+		*/
+
+        using var ms = new MemoryStream();
+        using (var archive = new ZipArchive(ms, ZipArchiveMode.Create))
+        {
+            var metadata = archive.CreateEntry("metadata.json", CompressionLevel.NoCompression);
+            using (var writer = new StreamWriter(metadata.Open()))
+                writer.Write(map.EncodeMeta());
+            var objects = archive.CreateEntry("objects.phxmo", CompressionLevel.NoCompression);
+            using (var objs = objects.Open())
+            {
+                using BinaryWriter bw = new BinaryWriter(objs);
+                bw.Write((uint)12);
+                bw.Write((uint)map.Notes.Length);
+                foreach (var note in map.Notes)
+                {
+                    bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
+                    bw.Write((uint)note.Millisecond);
+                    bw.Write(Convert.ToByte(quantum));
+                    if (quantum)
+                    {
+                        bw.Write((float)note.X);
+                        bw.Write((float)note.Y);
+                    }
+                    else
+                    {
+                        bw.Write((byte)(note.X + 1));
+                        bw.Write((byte)(note.Y + 1));
+                    }
+                }
+                bw.Write(0); // timing point count
+                bw.Write(0); // brightness count
+                bw.Write(0); // contrast count
+                bw.Write(0); // saturation count
+                bw.Write(0); // blur count
+                bw.Write(0); // fov count
+                bw.Write(0); // tint count
+                bw.Write(0); // position count
+                bw.Write(0); // rotation count
+                bw.Write(0); // ar factor count
+                bw.Write(0); // text count
+            }
+
+            void addAsset(string name, byte[] buffer)
+            {
+                var asset = archive.CreateEntry(name, CompressionLevel.NoCompression);
+                using var stream = asset.Open();
+                stream.Write(buffer, 0, buffer.Length);
+            }
+
+            if (map.AudioBuffer != null) addAsset($"audio.{map.AudioExt}", map.AudioBuffer);
+            if (map.CoverBuffer != null) addAsset($"cover.png", map.CoverBuffer);
+            if (map.VideoBuffer != null) addAsset($"video.mp4", map.VideoBuffer);
+        }
+
+        map.Hash = Convert.ToHexString(MD5.HashData(ms.ToArray())).ToLower();
+        File.WriteAllBytes(exportFilePath, ms.ToArray());
+    }
+
     public static void Encode(Map map, bool logBenchmark = false)
     {
         double start = Time.GetTicksUsec();

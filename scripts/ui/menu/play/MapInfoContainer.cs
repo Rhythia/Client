@@ -45,6 +45,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
     private string artistLinkFormat;
 
     [Export]
+    private Button exportButton;
+
+    [Export]
     private Button favoriteButton;
 
     [Export]
@@ -122,6 +125,20 @@ public partial class MapInfoContainer : Panel, ISkinnable
         extraLabelFormat = extraLabel.Text;
         artistLinkFormat = artistLink.Text;
         outlineMaterial = info.GetNode<Panel>("Outline").Material as ShaderMaterial;
+
+        exportButton.Pressed += () =>
+        {
+            string exportPath = $"{Constants.USER_FOLDER}/export/";
+            string exportFilePath = Path.Combine(exportPath, $"{Map.Name}.phxm");
+
+            _ = ToastNotification.Notify($"Exporting to {exportFilePath}", 1);
+            MapParser.ExportEncode(Map);
+
+            _ = ToastNotification.Notify($"Done! Opening export folder...", 0);
+
+            OS.ShellShowInFileManager($"{Constants.USER_FOLDER}/export/");
+
+        };
 
         favoriteButton.Pressed += () =>
         {
