@@ -134,9 +134,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
             _ = ToastNotification.Notify($"Exporting to {exportFilePath}", 1);
             MapParser.ExportEncode(Map);
 
-            _ = ToastNotification.Notify($"Done! Opening export folder...", 0);
+            _ = ToastNotification.Notify($"Done! Opening export...", 0);
 
-            OS.ShellShowInFileManager($"{Constants.USER_FOLDER}/export/");
+            OS.ShellShowInFileManager(exportFilePath);
 
         };
 
