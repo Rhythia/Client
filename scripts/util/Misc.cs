@@ -1,4 +1,8 @@
+using System;
 using System.Globalization;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using Godot;
 
 namespace Util;
@@ -59,6 +63,24 @@ public class Misc
 
             node.Set(key, reference.Get(key));
         }
+    }
+
+    public static byte[] HashFiles(string[] paths)
+    {
+        using var md5 = MD5.Create();
+
+        foreach (var path in paths) // we do not need to order the paths since it will always be the same -fog
+        {
+            byte[] filePathBytes = Encoding.UTF8.GetBytes(path);
+            byte[] fileData = File.ReadAllBytes(path);
+
+            md5.TransformBlock(filePathBytes, 0, filePathBytes.Length, null, 0);
+            md5.TransformBlock(fileData, 0, fileData.Length, null, 0);
+        }
+
+        md5.TransformFinalBlock(Array.Empty<byte>(), 0 ,0);
+
+        return md5.Hash;
     }
 
     public static void CopyReference(Node node, Node reference)
