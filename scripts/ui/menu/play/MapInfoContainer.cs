@@ -161,17 +161,17 @@ public partial class MapInfoContainer : Panel, ISkinnable
         //    MapManager.InsertVideo(Map, file);
         //};
 
-        copyButton.Pressed += () =>
-        {
-            copyDialog.Popup();
+        // copyButton.Pressed += () =>
+        // {
+        //     copyDialog.Popup();
 
-        };
+        // };
 
-        copyDialog.FileSelected += (path) =>
-        {
-            File.Copy(Map.FilePath, path);
-            _ = ToastNotification.Notify($"Copied to {path}");
-        };
+        // copyDialog.FileSelected += (path) =>
+        // {
+        //     File.Copy(Map.FolderPath, path);
+        //     _ = ToastNotification.Notify($"Copied to {path}");
+        // };
 
         deleteButton.Pressed += () =>
         {
