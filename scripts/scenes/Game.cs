@@ -170,7 +170,7 @@ public partial class Game : BaseScene
 
         StartQueued = true;
 
-        var parsedMap = MapParser.Decode(map.FilePath, Rhythia.AudioFilePath);
+        var parsedMap = MapParser.Decode(map.FolderPath, Rhythia.AudioFilePath);
         Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays);
 
         if (!Attempt.IsReplay)
@@ -189,7 +189,7 @@ public partial class Game : BaseScene
         Runner.Stop(false);
 
         var oldAttempt = Attempt;
-        var map = MapParser.Decode(oldAttempt.Map.FilePath, Rhythia.AudioFilePath);
+        var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
         Attempt = new(map, oldAttempt.Speed, oldAttempt.StartFrom, oldAttempt.CameraMode, oldAttempt.Modifiers, oldAttempt.Players, oldAttempt.Replays);
 
         SceneManager.ReloadCurrentScene();

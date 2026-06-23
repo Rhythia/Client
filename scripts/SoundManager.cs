@@ -221,7 +221,7 @@ public partial class SoundManager : Node, ISkinnable
 
         JukeboxIndex = MapManager.Maps.FindIndex(x => x.Id == map.Id);
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsCacheFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play();
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -280,7 +280,7 @@ public partial class SoundManager : Node, ISkinnable
             }
         }
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsCacheFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play(0);
 
         Instance.JukeboxPlayed?.Invoke(map);

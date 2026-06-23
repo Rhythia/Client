@@ -17,15 +17,20 @@ public partial class Map : RefCounted
     public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
+    public DateTime LastModifiedMetadata { get; set; }
+    public DateTime LastModifiedNotes { get; set; }
 
-    public string Hash { get; set; }
+    /// <summary>
+    /// The hash of the metadata.json, then the objects.phxmo in order
+    /// </summary>
+    public string MetadataObjectHash { get; set; }
 
     public string Collection { get; set; } = string.Empty;
 
     [Ignore]
     public MapSet MapSet { get; set; }
 
-    public string FilePath { get; set; } = string.Empty;
+    public string FolderPath { get; set; } = string.Empty;
 
     public bool Favorite { get; set; }
 
@@ -86,7 +91,7 @@ public partial class Map : RefCounted
     {
         try
         {
-            notes = MapParser.DecodePHXMO($"{MapUtil.MapsCacheFolder}/{Name}/objects.phxmo");
+            notes = MapParser.DecodePHXMO($"{MapUtil.MapsFolder}/{Name}/objects.phxmo");
             return notes;
         }
         catch
@@ -97,7 +102,7 @@ public partial class Map : RefCounted
 
     private Texture2D getCover()
     {
-        string path = $"{MapUtil.MapsCacheFolder}/{Name}";
+        string path = $"{MapUtil.MapsFolder}/{Name}";
 
         if (cover == DefaultCover && File.Exists($"{path}/cover.png"))
         {
@@ -115,9 +120,9 @@ public partial class Map : RefCounted
 
     public Map() { }
 
-    public Map(string filePath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")
+    public Map(string folderPath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")
     {
-        FilePath = filePath;
+        FolderPath = folderPath;
         Ephemeral = ephemeral;
         Artist = (artist ?? "").StripEscapes();
         ArtistLink = artistLink;

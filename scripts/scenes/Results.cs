@@ -173,7 +173,7 @@ public partial class Results : BaseScene
     {
         var attempt = Game.Attempt;
 
-        Map map = MapParser.Decode(attempt.Map.FilePath);
+        Map map = MapParser.Decode(attempt.Map.FolderPath);
         map.Ephemeral = attempt.Map.Ephemeral;
         SoundManager.Song.Stop();
 

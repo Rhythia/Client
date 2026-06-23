@@ -74,7 +74,7 @@ public partial class PlaytestOverlay : Panel
                 speedValue = speedDouble;
             }
 
-            var map = MapParser.Decode(oldAttempt.Map.FilePath, Rhythia.AudioFilePath);
+            var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
 
             Game.Attempt = new(map, speedValue, GetStartFrom(startFromEdit) * 1000, Rhythia.TempCam, Rhythia.TempMods);
             SceneManager.ReloadCurrentScene();

@@ -168,7 +168,7 @@ public struct Replay
             MapID = FileBuffer.GetString((int)FileBuffer.GetUInt32());
 
             MapNoteCount = FileBuffer.GetUInt64();
-            MapFilePath = $"{Constants.USER_FOLDER}/maps/default/{MapID}.phxm";
+            MapFilePath = $"{Constants.USER_FOLDER}/maps/{MapID}.phxm";
 
             if (!File.Exists(MapFilePath))
             {
