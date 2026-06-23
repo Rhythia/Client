@@ -135,9 +135,7 @@ public partial class MapParser : Node
     {
         double start = Time.GetTicksUsec();
 
-        map.Collection = $"default";
-
-        string mapDirectory = $"{Constants.USER_FOLDER}/maps/{map.Collection}";
+        string mapDirectory = $"{Constants.USER_FOLDER}/maps";
         string mapFilePath = Path.Combine(mapDirectory, $"{map.Name}.{Constants.DEFAULT_MAP_EXT}");
 
         if (!Directory.Exists(mapDirectory)) Directory.CreateDirectory(mapDirectory);

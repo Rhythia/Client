@@ -164,7 +164,7 @@ public static class MapCache
             {
                 var map = MapParser.Decode(file);
                 map.Collection = file.GetBaseDir().Split("/")[^1];
-                map.FilePath = $"{Constants.USER_FOLDER}/maps/{map.Collection}/{map.Name}.{Constants.DEFAULT_MAP_EXT}";
+                map.FilePath = $"{Constants.USER_FOLDER}/maps/{map.Name}.{Constants.DEFAULT_MAP_EXT}";
                 map.Hash = GetMd5Checksum(file);
                 File.Move(file, map.FilePath);
                 InsertMap(map);
@@ -206,8 +206,8 @@ public static class MapCache
                 return -1;
             }
 
-            string newPath = Path.Combine(MapUtil.MapsFolder, map.Collection, map.Name);
-            string existingPath = Path.Combine(MapUtil.MapsFolder, map.Collection, existing?.FilePath ?? updated.FilePath);
+            string newPath = Path.Combine(MapUtil.MapsFolder, map.Name);
+            string existingPath = Path.Combine(MapUtil.MapsFolder, existing?.FilePath ?? updated.FilePath);
 
             if (existingPath != newPath)
             {
