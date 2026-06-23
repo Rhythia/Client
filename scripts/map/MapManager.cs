@@ -58,35 +58,35 @@ public partial class MapManager : Node
 
         map.VideoBuffer = videoBuffer;
 
-        var oldmap = MapParser.Decode(map.FilePath);
+        var oldmap = MapParser.Decode(map.FolderPath);
 
         map.Mappers = map.CachedMappers.Split("_");
         map.AudioBuffer = oldmap.AudioBuffer;
         map.CoverBuffer = oldmap.CoverBuffer;
 
-        File.Delete(map.FilePath);
+        Directory.Delete(map.FolderPath);
 
         MapParser.Encode(map);
-        map.Hash = MapCache.GetMd5Checksum(map.FilePath);
+        map.FolderPath = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
     }
 
     public static void RemoveVideo(Map map)
     {
-        _ = Godot.FileAccess.Open(map.FilePath, Godot.FileAccess.ModeFlags.Read);
+        _ = Godot.FileAccess.Open(map.FolderPath, Godot.FileAccess.ModeFlags.Read);
 
         map.VideoBuffer = null;
 
-        var oldmap = MapParser.Decode(map.FilePath);
+        var oldmap = MapParser.Decode(map.FolderPath);
 
         map.Mappers = map.PrettyMappers.Split(" ");
         map.AudioBuffer = oldmap.AudioBuffer;
         map.CoverBuffer = oldmap.CoverBuffer;
 
-        File.Delete(map.FilePath);
+        File.Delete(map.FolderPath);
 
         MapParser.Encode(map);
-        map.Hash = MapCache.GetMd5Checksum(map.FilePath);
+        map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
     }
 
@@ -96,11 +96,11 @@ public partial class MapManager : Node
         {
             try
             {
-                File.Delete(map.FilePath);
+                File.Delete(map.FolderPath);
             }
             catch
             {
-                if (File.Exists(map.FilePath))
+                if (File.Exists(map.FolderPath))
                 {
                     Logger.Error("Unable to delete map");
                     return;

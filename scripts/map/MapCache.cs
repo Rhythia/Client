@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Godot;
+using Octokit;
 using Util;
 
 public static class MapCache
@@ -28,12 +30,24 @@ public static class MapCache
 
         try
         {
-            string[] files = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories);
+            // string[] files = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories);
+
+            // List<string> mapsList = Directory
+            //     .GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
+            //     .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
+            //     .ToList();
+
+            // Map files go first since they will be encoded to folders after they get parsed in MapParser.cs
+            List<string> mapsList = Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories)
+                .Concat(Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
+                .ToList();
+
+            string[] toParseMaps = mapsList.ToArray();
 
             if (fullSync)
             {
-                syncFiles(files);
-                addNonCachedFiles(files);
+                syncFiles(toParseMaps);
+                addNonCachedFiles(toParseMaps);
 
                 OnFilesSyncFinished?.Invoke(FilesSynced.Value);
                 FilesToSync.Value = 0;
@@ -48,35 +62,39 @@ public static class MapCache
         }
     }
 
-    private static void syncFiles(string[] files)
+    private static void syncFiles(string[] toParseMaps)
     {
         var maps = FetchAll();
 
         FilesToSync.Value = maps.Count;
         FilesSynced.Value = 0;
 
-        for (int i = 0; i < files.Length; i++)
+        for (int i = 0; i < toParseMaps.Length; i++)
         {
-            files[i] = BackSlashToForwardSlash(files[i]);
+            toParseMaps[i] = BackSlashToForwardSlash(toParseMaps[i]);
         }
 
-        var filesHashSet = files.ToHashSet();
+        var mapsHashSet = toParseMaps.ToHashSet();
 
         foreach (var map in maps)
         {
-            string filePath = BackSlashToForwardSlash(map.FilePath);
+            string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
-            if (filesHashSet.Contains(filePath))
+            // Checks if the map is actually inside the maps folder
+            if (mapsHashSet.Contains(mapPath))
             {
-                string checksum = GetMd5Checksum(filePath);
+                string checksum = GetMd5Checksum(mapPath);
+                DateTime metadataModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "metadata.json"));
+                DateTime objectModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "objects.phxmo"));
 
-                if (map.Hash == checksum)
+                GD.Print($"{Path.Combine(mapPath, "metadata.json")} = {metadataModifiedDate}");
+
+                bool metadataCheck = metadataModifiedDate == map.LastModifiedMetadata;
+                bool objectsCheck = objectModifiedDate == map.LastModifiedNotes;
+
+                if (map.MetadataObjectHash == checksum || metadataCheck || objectsCheck)
                 {
-                    if (!Directory.Exists($"{MapUtil.MapsCacheFolder}/{map.Name}"))
-                    {
-                        InsertIntoMapCacheFolder(map);
-                    }
-
+                    GD.Print("skip");
                     FilesSynced.Value += 1;
                     continue;
                 }
@@ -85,75 +103,124 @@ public static class MapCache
 
                 try
                 {
-                    newMap = MapParser.Decode(filePath, null, false, true);
+                    newMap = MapParser.Decode(mapPath, null, false, true);
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(ex);
-                    File.Delete(filePath);
+                    if (File.Exists(mapPath))
+                    {
+                        File.Delete(mapPath);
+                    }
+                    else if (Directory.Exists(mapPath))
+                    {
+                        Directory.Delete(mapPath, true);
+                    }
                     DatabaseService.Connection.Delete(map);
 
                     FilesSynced.Value += 1;
                     continue;
                 }
 
+                newMap.LastModifiedMetadata = metadataModifiedDate;
+                newMap.LastModifiedNotes = objectModifiedDate;
+
                 newMap.Id = map.Id;
-                newMap.Hash = checksum;
+                newMap.MetadataObjectHash = checksum;
 
                 DatabaseService.Connection.Update(newMap);
-                InsertIntoMapCacheFolder(map);
+                // InsertIntoMapCacheFolder(map);
                 Logger.Log($"Updated cached map: {newMap.Name}");
-
                 FilesSynced.Value += 1;
                 continue;
             }
             else
             {
-                removeCacheFolder(map);
+                // removeCacheFolder(map);
+                try
+                {
+                    Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
+                }
+                catch
+                {
+                    return;
+                }
                 DatabaseService.Connection.Delete(map);
-                Logger.Log($"Removed {filePath} from the cache, as it no longer exists.");
+                Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
 
                 FilesSynced.Value += 1;
             }
         }
     }
 
-    public static void InsertIntoMapCacheFolder(Map map)
-    {
-        string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
-        using var stream = File.OpenRead(map.FilePath);
-        var archive = new ZipArchive(stream);
+    // public static void InsertIntoMapCacheFolder(Map map)
+    // {
+    //     string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
 
-        if (Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
+    //     // for phxm shit i guess
+    //     if (File.Exists(map.FolderPath))
+    //     {
+    //         using var stream = File.OpenRead(map.FolderPath);
+    //         var archive = new ZipArchive(stream);
 
-        archive.ExtractToDirectory(path, true);
-    }
+    //         if (Directory.Exists(path))
+    //         {
+    //             Directory.Delete(path, true);
+    //         }
 
-    private static void removeCacheFolder(Map map)
-    {
-        try
-        {
-            Directory.Delete($"{MapUtil.MapsCacheFolder}/{map.Name}", true);
-        }
-        catch
-        {
-            return;
-        }
-    }
+    //         archive.ExtractToDirectory(path, true);
+    //     }
+    //     else if (Directory.Exists(map.FolderPath)) 
+    //     {
+    //         GD.Print("PATH PATH PATH!!!");
+    //         if (Directory.Exists(path))
+    //         {
+    //             Directory.Delete(path, true);
+    //         }
 
-    private static void addNonCachedFiles(string[] files)
+    //         Directory.CreateDirectory(path);
+
+    //         foreach (string file in Directory.GetFiles(map.FolderPath))
+    //         {
+    //             string destFile = Path.Combine(path, Path.GetFileName(file));
+    //             File.Copy(file, destFile, overwrite: true);
+    //         }
+    //     }
+        
+    //     // using var stream = File.OpenRead(map.FilePath);
+    //     // var archive = new ZipArchive(stream);
+
+    //     // if (Directory.Exists(path))
+    //     // {
+    //     //     Directory.Delete(path, true);
+    //     // }
+
+    //     // archive.ExtractToDirectory(path, true);
+
+    // }
+
+    // private static void removeCacheFolder(Map map)
+    // {
+    //     try
+    //     {
+    //         Directory.Delete($"{MapUtil.MapsCacheFolder}/{map.Name}", true);
+    //     }
+    //     catch
+    //     {
+    //         return;
+    //     }
+    // }
+
+    private static void addNonCachedFiles(string[] toParseMaps)
     {
         var maps = FetchAll();
 
         HashSet<string> hashSet = new();
-        maps.ForEach(map => hashSet.Add(map.FilePath));
+        maps.ForEach(map => hashSet.Add(map.FolderPath));
 
-        foreach (string file in files)
+        foreach (string toParseMap in toParseMaps)
         {
-            if (hashSet.Contains(BackSlashToForwardSlash(file)))
+            if (hashSet.Contains(BackSlashToForwardSlash(toParseMap)))
             {
                 continue;
             }
@@ -162,16 +229,16 @@ public static class MapCache
 
             try
             {
-                var map = MapParser.Decode(file);
-                map.Collection = file.GetBaseDir().Split("/")[^1];
-                map.FilePath = $"{Constants.USER_FOLDER}/maps/{map.Name}.{Constants.DEFAULT_MAP_EXT}";
-                map.Hash = GetMd5Checksum(file);
-                File.Move(file, map.FilePath);
+                var map = MapParser.Decode(toParseMap);
+                // var map = !Directory.Exists(file) ? MapParser.Decode(file) : MapParser.DecodeFolder(file); 
+                map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
+                // map.FilePath = !Directory.Exists(map.FilePath) ? $"{Constants.USER_FOLDER}/maps/{map.Name}.{Constants.DEFAULT_MAP_EXT}" : $"{Constants.USER_FOLDER}/maps/{map.Name}";
+                map.MetadataObjectHash = GetMd5Checksum(toParseMap);
                 InsertMap(map);
             }
             catch
             {
-                File.Delete(file);
+                Directory.Delete(toParseMap, true);
                 Logger.Log($"Failed to add map non-cached map");
             }
 
@@ -181,7 +248,7 @@ public static class MapCache
 
     public static int InsertMap(Map map)
     {
-        var existing = DatabaseService.Connection.Find<Map>(x => x.Hash == x.Hash);
+        var existing = DatabaseService.Connection.Find<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash);
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
 
         try
@@ -194,9 +261,8 @@ public static class MapCache
             }
 
             DatabaseService.Connection.Insert(map);
-            InsertIntoMapCacheFolder(map);
 
-            return DatabaseService.Connection.Get<Map>(x => x.Hash == map.Hash).Id;
+            return DatabaseService.Connection.Get<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash).Id;
         }
         catch (Exception e)
         {
@@ -207,11 +273,11 @@ public static class MapCache
             }
 
             string newPath = Path.Combine(MapUtil.MapsFolder, map.Name);
-            string existingPath = Path.Combine(MapUtil.MapsFolder, existing?.FilePath ?? updated.FilePath);
+            string existingPath = Path.Combine(MapUtil.MapsFolder, existing?.FolderPath ?? updated.FolderPath);
 
             if (existingPath != newPath)
             {
-                File.Delete(newPath);
+                Directory.Delete(newPath, true);
                 return -1;
             }
 
@@ -224,7 +290,6 @@ public static class MapCache
         try
         {
             DatabaseService.Connection.Update(map);
-            InsertIntoMapCacheFolder(map);
         }
         catch (Exception e)
         {
@@ -253,7 +318,7 @@ public static class MapCache
         {
             foreach (var map in maps)
             {
-                string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
+                string path = $"{MapUtil.MapsFolder}/{map.Name}";
 
                 if (map.Cover == Map.DefaultCover && File.Exists($"{path}/cover.png"))
                 {
@@ -298,39 +363,45 @@ public static class MapCache
         MapManager.Maps = sortedMaps;
     }
 
-    public static List<MapSet> ConvertToMapSets(IEnumerable<Map> maps)
-    {
-        var groupedMaps = maps
-            .GroupBy(u => u.Collection)
-            .Select(x => x.ToList())
-            .ToList();
+    // public static List<MapSet> ConvertToMapSets(IEnumerable<Map> maps)
+    // {
+    //     var groupedMaps = maps
+    //         .GroupBy(u => u.Collection)
+    //         .Select(x => x.ToList())
+    //         .ToList();
 
-        var mapSets = new List<MapSet>();
+    //     var mapSets = new List<MapSet>();
 
-        foreach (var mapSet in groupedMaps)
-        {
-            var set = new MapSet()
-            {
-                Directory = mapSet.First().Collection,
-                Maps = mapSet
-            };
+    //     foreach (var mapSet in groupedMaps)
+    //     {
+    //         var set = new MapSet()
+    //         {
+    //             Directory = mapSet.First().Collection,
+    //             Maps = mapSet
+    //         };
 
-            set.Maps.ForEach(x => x.MapSet = set);
-            mapSets.Add(set);
-        }
+    //         set.Maps.ForEach(x => x.MapSet = set);
+    //         mapSets.Add(set);
+    //     }
 
-        return mapSets;
-    }
+    //     return mapSets;
+    // }
 
     public static string GetMd5Checksum(string path)
     {
-        using (var md5 = MD5.Create())
-        {
-            using (var stream = File.OpenRead(path))
-            {
-                return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
-            }
-        }
+        string metadataPath = Path.Combine(path, "metadata.json");
+        string objectsPath = Path.Combine(path, "objects.phxmo");
+        byte[] hash = Misc.HashFiles([metadataPath, objectsPath]);
+
+        return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
+
+        // using (var md5 = MD5.Create())
+        // {
+        //     using (var stream = File.OpenRead(path))
+        //     {
+        //         return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
+        //     }
+        // }
     }
 
     public static List<Map> FetchAll() => DatabaseService.Connection.Table<Map>().ToList();
