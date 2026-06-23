@@ -71,10 +71,7 @@ public class Misc
 
         foreach (var path in paths) // we do not need to order the paths since it will always be the same -fog
         {
-            byte[] filePathBytes = Encoding.UTF8.GetBytes(path);
             byte[] fileData = File.ReadAllBytes(path);
-
-            md5.TransformBlock(filePathBytes, 0, filePathBytes.Length, null, 0);
             md5.TransformBlock(fileData, 0, fileData.Length, null, 0);
         }
 
