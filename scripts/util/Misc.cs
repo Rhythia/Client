@@ -67,15 +67,28 @@ public class Misc
 
     public static byte[] HashFiles(string[] paths)
     {
+        GD.Print("hi from hashfiles");
         using var md5 = MD5.Create();
+        GD.Print($"created hash, heres the paths! {paths[0]}");
 
-        foreach (var path in paths) // we do not need to order the paths since it will always be the same -fog
+        foreach (string path in paths) // we do not need to order the paths since it will always be the same -fog
         {
+            GD.Print($"HASH PRINT!: {path}");
+            GD.Print($"Exists: {File.Exists(path)}");
+
+            var info = new FileInfo(path);
+            GD.Print($"Length: {info.Length}");
             byte[] fileData = File.ReadAllBytes(path);
+            GD.Print($"Read {fileData.Length} bytes");
             md5.TransformBlock(fileData, 0, fileData.Length, null, 0);
+            GD.Print("Transformed");
         }
 
+        GD.Print("final hash");
+
         md5.TransformFinalBlock(Array.Empty<byte>(), 0 ,0);
+
+        GD.Print("returning final hash");
 
         return md5.Hash;
     }

@@ -26,6 +26,9 @@ public partial class MapParser : Node
 
     public static async Task BulkImport(string[] files, bool notify = false)
     {
+
+        GD.Print("HELLO FROM BULK!");
+
         if (files.Length == 0 || files == null) return;
 
         if (notify) _ = ToastNotification.Notify($"Importing {files.Length} map(s)");
@@ -627,7 +630,6 @@ public partial class MapParser : Node
 
         try
         {
-            GD.Print($"{path}/metadata.json");
             string metadataString = File.ReadAllText($"{path}/metadata.json");
             var metadata = (Dictionary)Json.ParseString(metadataString);
 
@@ -686,7 +688,7 @@ public partial class MapParser : Node
             throw;
         }
 
-        GD.Print(map.Title);
+        GD.Print($"HI FROM DECODER! Heres the name: {map.Name}");
         
         return map;
     }
