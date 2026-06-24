@@ -46,6 +46,7 @@ public static class MapCache
 
             if (fullSync)
             {
+                GD.Print("full");
                 syncFiles(toParseMaps);
                 addNonCachedFiles(toParseMaps);
 
@@ -65,6 +66,7 @@ public static class MapCache
     private static void syncFiles(string[] toParseMaps)
     {
         var maps = FetchAll();
+        GD.Print("fetched");
 
         FilesToSync.Value = maps.Count;
         FilesSynced.Value = 0;
@@ -78,19 +80,27 @@ public static class MapCache
 
         foreach (var map in maps)
         {
+            GD.Print($"mapdb = {map.Title}");
+
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
+
+            GD.Print($"HASHSET: {mapsHashSet}, {mapPath}");
 
             // Checks if the map is actually inside the maps folder
             if (mapsHashSet.Contains(mapPath))
             {
+                GD.Print("1");
                 string checksum = GetMd5Checksum(mapPath);
+                GD.Print($"2: {mapPath}");
                 DateTime metadataModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "metadata.json"));
                 DateTime objectModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "objects.phxmo"));
+                GD.Print("3");
 
                 GD.Print($"{Path.Combine(mapPath, "metadata.json")} = {metadataModifiedDate}");
 
                 bool metadataCheck = metadataModifiedDate == map.LastModifiedMetadata;
                 bool objectsCheck = objectModifiedDate == map.LastModifiedNotes;
+                GD.Print("4");
 
                 if (map.MetadataObjectHash == checksum || metadataCheck || objectsCheck)
                 {
@@ -98,12 +108,16 @@ public static class MapCache
                     FilesSynced.Value += 1;
                     continue;
                 }
+                GD.Print("5");
 
                 Map newMap;
+
+                GD.Print("dfdsjlkfdjsf");
 
                 try
                 {
                     newMap = MapParser.Decode(mapPath, null, false, true);
+                    GD.Print($"NEW MAPTITLE: {newMap.Title}");
                 }
                 catch (Exception ex)
                 {
@@ -137,14 +151,13 @@ public static class MapCache
             else
             {
                 // removeCacheFolder(map);
-                try
+                GD.Print("MAP NOT FOUND!");
+
+                if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
                 {
                     Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
                 }
-                catch
-                {
-                    return;
-                }
+
                 DatabaseService.Connection.Delete(map);
                 Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
 
@@ -229,11 +242,15 @@ public static class MapCache
 
             try
             {
+                GD.Print("new map!");
                 var map = MapParser.Decode(toParseMap);
+                GD.Print($"map decoded!: {map.Name}");
                 // var map = !Directory.Exists(file) ? MapParser.Decode(file) : MapParser.DecodeFolder(file); 
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
+                GD.Print($"folder pathed! hashing: {toParseMap}");
                 // map.FilePath = !Directory.Exists(map.FilePath) ? $"{Constants.USER_FOLDER}/maps/{map.Name}.{Constants.DEFAULT_MAP_EXT}" : $"{Constants.USER_FOLDER}/maps/{map.Name}";
-                map.MetadataObjectHash = GetMd5Checksum(toParseMap);
+                map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
+                GD.Print("inserting");
                 InsertMap(map);
             }
             catch
@@ -248,8 +265,11 @@ public static class MapCache
 
     public static int InsertMap(Map map)
     {
+        GD.Print("insert received!");
         var existing = DatabaseService.Connection.Find<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash);
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
+
+        GD.Print($"existing: {existing}, updated: {updated}");
 
         try
         {
@@ -389,9 +409,13 @@ public static class MapCache
 
     public static string GetMd5Checksum(string path)
     {
+        GD.Print($"hi from hash! path: {path}");
         string metadataPath = Path.Combine(path, "metadata.json");
+        GD.Print("meta hash!");
         string objectsPath = Path.Combine(path, "objects.phxmo");
+        GD.Print("objects hash!");
         byte[] hash = Misc.HashFiles([metadataPath, objectsPath]);
+        GD.Print("returning hash!");
 
         return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
 
