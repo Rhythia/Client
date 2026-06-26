@@ -17,8 +17,8 @@ public partial class Map : RefCounted
     public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
-    public DateTime LastModifiedMetadata { get; set; }
-    public DateTime LastModifiedNotes { get; set; }
+    public string LastModifiedMetadata { get; set; }
+    public string LastModifiedNotes { get; set; }
 
     /// <summary>
     /// The hash of the metadata.json, then the objects.phxmo in order
@@ -120,10 +120,13 @@ public partial class Map : RefCounted
 
     public Map() { }
 
-    public Map(string folderPath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")
+    public Map(string folderPath, string metadataObjHash = "", string lastModifiedMetadata = "", string lastModifiedNotes = "", Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")
     {
         FolderPath = folderPath;
         Ephemeral = ephemeral;
+        MetadataObjectHash = metadataObjHash;
+        LastModifiedMetadata = lastModifiedMetadata;
+        LastModifiedNotes = lastModifiedNotes;
         Artist = (artist ?? "").StripEscapes();
         ArtistLink = artistLink;
         ArtistPlatform = artistPlatform;
