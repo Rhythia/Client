@@ -26,9 +26,6 @@ public partial class MapParser : Node
 
     public static async Task BulkImport(string[] files, bool notify = false)
     {
-
-        GD.Print("HELLO FROM BULK!");
-
         if (files.Length == 0 || files == null) return;
 
         if (notify) _ = ToastNotification.Notify($"Importing {files.Length} map(s)");
@@ -155,38 +152,40 @@ public partial class MapParser : Node
         File.WriteAllText(Path.Combine(mapFolderPath, "metadata.json"), map.EncodeMeta());
 
         using var stream = File.Create(Path.Combine(mapFolderPath, "objects.phxmo"));
-        using BinaryWriter bw = new BinaryWriter(stream);
-        
-        bw.Write((uint)12);
-        bw.Write((uint)map.Notes.Length);
-        foreach (var note in map.Notes)
+        // using BinaryWriter bw = new BinaryWriter(stream);
+        using (var bw = new BinaryWriter(stream))
         {
-            bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
-            bw.Write((uint)note.Millisecond);
-            bw.Write(Convert.ToByte(quantum));
-            if (quantum)
+            bw.Write((uint)12);
+            bw.Write((uint)map.Notes.Length);
+            foreach (var note in map.Notes)
             {
-                bw.Write((float)note.X);
-                bw.Write((float)note.Y);
+                bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
+                bw.Write((uint)note.Millisecond);
+                bw.Write(Convert.ToByte(quantum));
+                if (quantum)
+                {
+                    bw.Write((float)note.X);
+                    bw.Write((float)note.Y);
+                }
+                else
+                {
+                    bw.Write((byte)(note.X + 1));
+                    bw.Write((byte)(note.Y + 1));
+                }
             }
-            else
-            {
-                bw.Write((byte)(note.X + 1));
-                bw.Write((byte)(note.Y + 1));
-            }
-        }
 
-        bw.Write(0); // timing point count
-        bw.Write(0); // brightness count
-        bw.Write(0); // contrast count
-        bw.Write(0); // saturation count
-        bw.Write(0); // blur count
-        bw.Write(0); // fov count
-        bw.Write(0); // tint count
-        bw.Write(0); // position count
-        bw.Write(0); // rotation count
-        bw.Write(0); // ar factor count
-        bw.Write(0); // text count
+            bw.Write(0); // timing point count
+            bw.Write(0); // brightness count
+            bw.Write(0); // contrast count
+            bw.Write(0); // saturation count
+            bw.Write(0); // blur count
+            bw.Write(0); // fov count
+            bw.Write(0); // tint count
+            bw.Write(0); // position count
+            bw.Write(0); // rotation count
+            bw.Write(0); // ar factor count
+            bw.Write(0); // text count
+        }
 
         void addAsset(string name, byte[] buffer)
         {
@@ -206,8 +205,11 @@ public partial class MapParser : Node
 
         map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
 
-        map.LastModifiedMetadata = File.GetLastWriteTime(Path.Combine(mapFolderPath, "metadata.json"));
-        map.LastModifiedNotes = File.GetLastWriteTime(Path.Combine(mapFolderPath, "objects.phxmo"));
+
+        DateTime metadataModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "metadata.json"));
+        DateTime objectsModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "objects.phxmo"));
+        map.LastModifiedMetadata = metadataModified.ToString();
+        map.LastModifiedNotes = objectsModified.ToString();
 
         map.FolderPath = mapFolderPath;
         // need to do map caching stuff here
@@ -290,7 +292,7 @@ public partial class MapParser : Node
                 audio.Close();
             }
 
-            map = new(path, notes, null, "", name, audioBuffer: audioBuffer);
+            map = new(path, "", "", "", notes, null, "", name, audioBuffer: audioBuffer);
         }
         catch (Exception exception)
         {
@@ -458,7 +460,7 @@ public partial class MapParser : Node
                 notes[i].Index = i;
             }
 
-            map = new(path ?? $"{Constants.USER_FOLDER}/maps/{song}_temp.sspm", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
+            map = new(path ?? $"{Constants.USER_FOLDER}/maps/{song}_temp.sspm", "", "", "", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
         }
         catch (Exception exception)
         {
@@ -612,7 +614,7 @@ public partial class MapParser : Node
                 notes[i].Index = i;
             }
 
-            map = new(path, notes, id, artist, song, 0, mappers, difficulty, difficultyName, (int)mapLength, audioBuffer, coverBuffer);
+            map = new(path, "", "", "", notes, id, artist, song, 0, mappers, difficulty, difficultyName, (int)mapLength, audioBuffer, coverBuffer);
         }
         catch (Exception exception)
         {
@@ -639,7 +641,7 @@ public partial class MapParser : Node
             byte[] coverBuffer = null;
             byte[] videoBuffer = null;
 
-            FileParser objects = new(objectsBuffer);
+            // FileParser objects = new(objectsBuffer);
 
             if ((bool)metadata["HasAudio"])
             {
@@ -662,8 +664,19 @@ public partial class MapParser : Node
             metadata.TryGetValue("ArtistLink", out Variant artistLink);
             metadata.TryGetValue("ArtistPlatform", out Variant artistPlatform);
 
+
+
+            byte[] hash = Misc.HashFiles([Path.Combine(path, "metadata.json"), Path.Combine(path, "objects.phxmo")]);
+
+            DateTime metadataModified = File.GetLastWriteTime(Path.Combine(path, "metadata.json"));
+            DateTime objectsModified = File.GetLastWriteTime(Path.Combine(path, "objects.phxmo"));
+
+
             map = new(
                 path,
+                BitConverter.ToString(hash).Replace("-", "").ToLower(),
+                metadataModified.ToString(),
+                objectsModified.ToString(),
                 notes,
                 (string)metadata["ID"],
                 (string)metadata["Artist"],
@@ -687,8 +700,6 @@ public partial class MapParser : Node
             Logger.Error(exception);
             throw;
         }
-
-        GD.Print($"HI FROM DECODER! Heres the name: {map.Name}");
         
         return map;
     }
@@ -856,6 +867,9 @@ public partial class MapParser : Node
 
             map = new(
                 path,
+                "",
+                "",
+                "",
                 notes,
                 null,
                 artist ?? "",
