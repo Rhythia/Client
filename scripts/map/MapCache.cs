@@ -79,7 +79,7 @@ public static class MapCache
 
         foreach (var map in maps)
         {
-
+            
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
             // Checks if the map is actually inside the maps folder
@@ -96,13 +96,9 @@ public static class MapCache
                 bool metadataCheck = map.LastModifiedMetadata == metadataResult;
                 bool objectsCheck = map.LastModifiedNotes == notesResult;
 
-                // GD.Print($"{Path.Combine(mapPath, "metadata.json")} = {map.LastModifiedMetadata},{metadataCheck}");
-                // GD.Print($"{Path.Combine(mapPath, "metadata.json")} = {metadataResult},{objectsCheck}");
-
                 // last modified is faster and lowkey more important -fog
                 if (metadataCheck || objectsCheck)
                 {
-                    GD.Print("skip");
                     FilesSynced.Value++;
                     continue;
                 }
@@ -112,7 +108,6 @@ public static class MapCache
                 string checksum = GetMd5Checksum(mapPath);
                 if (map.MetadataObjectHash == checksum)
                 {
-                    GD.Print("skip, but with hash");
                     FilesSynced.Value++;
                     continue;
                 }
@@ -136,7 +131,7 @@ public static class MapCache
                     }
                     DatabaseService.Connection.Delete(map);
 
-                    FilesSynced.Value += 1;
+                    FilesSynced.Value++;
                     continue;
                 }
 
@@ -149,7 +144,7 @@ public static class MapCache
                 DatabaseService.Connection.Update(newMap);
                 // InsertIntoMapCacheFolder(map);
                 Logger.Log($"Updated cached map: {newMap.Name}");
-                FilesSynced.Value += 1;
+                FilesSynced.Value++;
                 continue;
             }
             else
@@ -232,6 +227,8 @@ public static class MapCache
         HashSet<string> hashSet = new();
         maps.ForEach(map => hashSet.Add(map.FolderPath));
 
+        FilesToSync.Value = toParseMaps.Count() - maps.Count();
+
         foreach (string toParseMap in toParseMaps)
         {
             if (hashSet.Contains(BackSlashToForwardSlash(toParseMap)))
@@ -239,14 +236,12 @@ public static class MapCache
                 continue;
             }
 
-            FilesToSync.Value += 1;
+            // FilesToSync.Value += 1;
 
             try
             {
                 var map = MapParser.Decode(toParseMap);
-                // var map = !Directory.Exists(file) ? MapParser.Decode(file) : MapParser.DecodeFolder(file); 
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
-                // map.FilePath = !Directory.Exists(map.FilePath) ? $"{Constants.USER_FOLDER}/maps/{map.Name}.{Constants.DEFAULT_MAP_EXT}" : $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
                 InsertMap(map);
             }
@@ -416,6 +411,33 @@ public static class MapCache
         //     }
         // }
     }
+
+    // public static int GetMapCount(List<Map> maps, string[] mapFiles)
+    // {
+    //     int map_count = 0;
+
+    //     HashSet<string> hashSet = new();
+    //     maps.ForEach(map => hashSet.Add(map.FolderPath));
+
+        
+
+    //     foreach (string map_entry in mapFiles)
+    //     {
+    //         if (File.Exists(map_entry))
+    //         {
+    //             map_count++;
+    //         }
+    //         else if (Directory.Exists(map_entry))
+    //         {
+    //             if (hashSet.Contains(BackSlashToForwardSlash($"{MapUtil.MapsFolder}/{map_entry}")))
+    //             {
+    //                 map_count++;
+    //             }
+    //         }
+    //     }
+
+    //     return map_count;
+    // }
 
     public static List<Map> FetchAll() => DatabaseService.Connection.Table<Map>().ToList();
 
