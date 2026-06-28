@@ -630,6 +630,7 @@ public partial class MapParser : Node
 
     public static Map PHXMFolder(string path)
     {
+
         Map map;
 
         try
@@ -775,6 +776,13 @@ public partial class MapParser : Node
 
         string extractedFolderName = Path.GetFileNameWithoutExtension(path);
         string extractedFolderPath = Path.Combine(mapDirectory, extractedFolderName);
+
+        if (Directory.Exists(extractedFolderPath))
+        {
+            Directory.Delete(extractedFolderPath, true); // true = recursive
+            Map existingMap = DatabaseService.Connection.Table<Map>().FirstOrDefault(x => x.FolderPath == extractedFolderPath);
+            MapCache.RemoveMap(existingMap);
+        }
 
         ZipFile.ExtractToDirectory(path, extractedFolderPath);
         File.Delete(path);

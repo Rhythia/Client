@@ -39,9 +39,13 @@ public static class MapCache
             //     .ToList();
 
             // Map files go first since they will be encoded to folders after they get parsed in MapParser.cs
-            List<string> mapsList = Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories)
-                .Concat(Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
-                .ToList();
+            List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
+                    .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
+                    .ToList();
+
+            // List<string> mapsList = Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories)
+            //     .Concat(Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
+            //     .ToList();
 
             string[] toParseMaps = mapsList.ToArray();
 
@@ -162,64 +166,6 @@ public static class MapCache
         }
     }
 
-    // public static void InsertIntoMapCacheFolder(Map map)
-    // {
-    //     string path = $"{MapUtil.MapsCacheFolder}/{map.Name}";
-
-    //     // for phxm shit i guess
-    //     if (File.Exists(map.FolderPath))
-    //     {
-    //         using var stream = File.OpenRead(map.FolderPath);
-    //         var archive = new ZipArchive(stream);
-
-    //         if (Directory.Exists(path))
-    //         {
-    //             Directory.Delete(path, true);
-    //         }
-
-    //         archive.ExtractToDirectory(path, true);
-    //     }
-    //     else if (Directory.Exists(map.FolderPath)) 
-    //     {
-    //         GD.Print("PATH PATH PATH!!!");
-    //         if (Directory.Exists(path))
-    //         {
-    //             Directory.Delete(path, true);
-    //         }
-
-    //         Directory.CreateDirectory(path);
-
-    //         foreach (string file in Directory.GetFiles(map.FolderPath))
-    //         {
-    //             string destFile = Path.Combine(path, Path.GetFileName(file));
-    //             File.Copy(file, destFile, overwrite: true);
-    //         }
-    //     }
-        
-    //     // using var stream = File.OpenRead(map.FilePath);
-    //     // var archive = new ZipArchive(stream);
-
-    //     // if (Directory.Exists(path))
-    //     // {
-    //     //     Directory.Delete(path, true);
-    //     // }
-
-    //     // archive.ExtractToDirectory(path, true);
-
-    // }
-
-    // private static void removeCacheFolder(Map map)
-    // {
-    //     try
-    //     {
-    //         Directory.Delete($"{MapUtil.MapsCacheFolder}/{map.Name}", true);
-    //     }
-    //     catch
-    //     {
-    //         return;
-    //     }
-    // }
-
     private static void addNonCachedFiles(string[] toParseMaps)
     {
         var maps = FetchAll();
@@ -227,7 +173,9 @@ public static class MapCache
         HashSet<string> hashSet = new();
         maps.ForEach(map => hashSet.Add(map.FolderPath));
 
+        // Maps that need to be parsed - maps in database cache
         FilesToSync.Value = toParseMaps.Count() - maps.Count();
+        FilesSynced.Value = 0;
 
         foreach (string toParseMap in toParseMaps)
         {
@@ -240,6 +188,7 @@ public static class MapCache
 
             try
             {
+                GD.Print($"decoding: {toParseMap}\nfilestosync: {FilesToSync.Value}, filessynced: {FilesSynced.Value}");
                 var map = MapParser.Decode(toParseMap);
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
@@ -402,42 +351,7 @@ public static class MapCache
         byte[] hash = Misc.HashFiles([metadataPath, objectsPath]);
 
         return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
-
-        // using (var md5 = MD5.Create())
-        // {
-        //     using (var stream = File.OpenRead(path))
-        //     {
-        //         return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
-        //     }
-        // }
     }
-
-    // public static int GetMapCount(List<Map> maps, string[] mapFiles)
-    // {
-    //     int map_count = 0;
-
-    //     HashSet<string> hashSet = new();
-    //     maps.ForEach(map => hashSet.Add(map.FolderPath));
-
-        
-
-    //     foreach (string map_entry in mapFiles)
-    //     {
-    //         if (File.Exists(map_entry))
-    //         {
-    //             map_count++;
-    //         }
-    //         else if (Directory.Exists(map_entry))
-    //         {
-    //             if (hashSet.Contains(BackSlashToForwardSlash($"{MapUtil.MapsFolder}/{map_entry}")))
-    //             {
-    //                 map_count++;
-    //             }
-    //         }
-    //     }
-
-    //     return map_count;
-    // }
 
     public static List<Map> FetchAll() => DatabaseService.Connection.Table<Map>().ToList();
 
