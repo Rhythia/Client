@@ -214,6 +214,8 @@ public partial class MapParser : Node
         map.FolderPath = mapFolderPath;
         // need to do map caching stuff here
 
+        MapCache.InsertMap(map);
+
         if (logBenchmark)
         {
             Logger.Log($"ENCODING {Constants.DEFAULT_MAP_EXT.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms");
@@ -260,8 +262,8 @@ public partial class MapParser : Node
         }
         else
         {
-            _ = ToastNotification.Notify($"Invalid file path", 2);
-            throw Logger.Error($"Invalid file path ({path})");
+            _ = ToastNotification.Notify($"Invalid map path", 2);
+            throw Logger.Error($"Invalid map path ({path})");
         }
     }
     public static Map SSMapV1(string path, string audioPath = null)
