@@ -354,7 +354,6 @@ public static class MapCache
                             }
                         }).CallDeferred();
                     }
-
                 }
             }
         });
