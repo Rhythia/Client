@@ -79,7 +79,7 @@ public static class MapCache
 
         foreach (var map in maps)
         {
-            
+
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
             // Checks if the map is actually inside the maps folder
@@ -157,7 +157,7 @@ public static class MapCache
                 DatabaseService.Connection.Delete(map);
                 Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
 
-                FilesSynced.Value += 1;
+                FilesSynced.Value++;
             }
         }
     }
@@ -251,7 +251,7 @@ public static class MapCache
                 Logger.Log($"Failed to add map non-cached map");
             }
 
-            FilesSynced.Value += 1;
+            FilesSynced.Value++;
         }
     }
 
