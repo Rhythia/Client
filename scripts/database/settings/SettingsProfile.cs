@@ -150,6 +150,7 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<double> NoteSize { get; private set; }
 
+
     /// <summary>
     /// Adjusts the cursor scale
     /// </summary>
@@ -203,6 +204,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<double> VideoRenderScale { get; private set; }
+
+    /// <summary>
+    /// Toggles Grid Guides
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> GridGuides { get; private set; }
 
     /// <summary>
     /// Toggles a minimal HUD
@@ -667,6 +674,14 @@ public partial class SettingsProfile
                 MinValue = 0,
                 MaxValue = 2
             }
+        };
+
+        GridGuides = new(true)
+        {
+            Id = "GridGuides",
+            Title = "Grid Guides",
+            Description = "Enables grid guides",
+            Section = SettingsSection.Visual,
         };
 
         CursorScale = new(1)

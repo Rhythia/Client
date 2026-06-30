@@ -6,6 +6,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
     [Export] public Runner Runner { get; set; }
     public MeshInstance3D Cursor { get; set; }
     public MultiMeshInstance3D CursorTrail { get; set; }
+    public MeshInstance3D GridGuides { get; set; }
 
     private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
     private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
@@ -20,6 +21,11 @@ public partial class Grid : MeshInstance3D, IUIComponent
 
     public void Init()
     {
+        GridGuides ??= GetNode<MeshInstance3D>("GridGuides");
+
+        GridGuides.Visible = Runner.Attempt.Settings.GridGuides ? true : false;
+        (GridGuides.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridGuidesImage;
+
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         (Cursor.Mesh as QuadMesh).Size = new Vector2((float)(Constants.CURSOR_SIZE * Runner.Attempt.Settings.CursorScale), (float)(Constants.CURSOR_SIZE * Runner.Attempt.Settings.CursorScale));
 
@@ -103,4 +109,3 @@ public partial class Grid : MeshInstance3D, IUIComponent
 
     }
 }
-

@@ -21,6 +21,7 @@
 [ext_resource type="FontFile" uid="uid://cmjos3o0k2f6t" path="res://fonts/Comfortaa-Medium.ttf" id="11_o37lt"]
 [ext_resource type="Texture2D" uid="uid://80bitp5weqrb" path="res://user/skins/default/game/panel_left_background.png" id="11_sdncv"]
 [ext_resource type="FontFile" uid="uid://b6hgjef6s6oly" path="res://fonts/Comfortaa-Bold.ttf" id="12_axsek"]
+[ext_resource type="Texture2D" uid="uid://cxl0501pqg6dk" path="res://user/skins/default/game/grid_guides.png" id="12_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://diba7c3s8as4s" path="res://user/skins/default/game/panel_right_background.png" id="12_whe6p"]
 [ext_resource type="Texture2D" uid="uid://dw2gxd3m24h4m" path="res://user/skins/default/game/hits.png" id="13_6rhgc"]
 [ext_resource type="Script" uid="uid://c3gf0hgrqqqx5" path="res://scripts/game/ui/PanelRight.cs" id="13_sww3w"]
@@ -82,6 +83,17 @@ albedo_texture = ExtResource("13_6rhgc")
 transform_format = 1
 use_colors = true
 mesh = SubResource("QuadMesh_5p2n8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05nbr"]
+resource_name = "Material"
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("12_pr1ej")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_0sl42"]
+material = SubResource("StandardMaterial3D_05nbr")
+size = Vector2(4, 4)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_pl11u"]
 viewport_path = NodePath("Runner/HUD/Health/HealthViewport")
@@ -305,6 +317,12 @@ skeleton = NodePath("../../../..")
 [node name="CursorTrail" type="MultiMeshInstance3D" parent="Runner/HUD/Grid" unique_id=913051903]
 material_override = SubResource("StandardMaterial3D_ssr8x")
 multimesh = SubResource("MultiMesh_e28va")
+
+[node name="GridGuides" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=2145859938]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, -0.2)
+visible = false
+mesh = SubResource("QuadMesh_0sl42")
+skeleton = NodePath("../../../..")
 
 [node name="Health" type="MeshInstance3D" parent="Runner/HUD" unique_id=449857227]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -6.3, -10)
