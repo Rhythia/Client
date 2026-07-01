@@ -8,7 +8,7 @@ public partial class TriTunnel : BaseSpace
     private MeshInstance3D tunnel;
     private StandardMaterial3D tunnelTexture;
     private Vector3 tunnelPosReset;
-    private Color tunnelColorReset = new(255, 255, 255);
+    private Color tunnelColor;
     private const float tunnel_loop_end = 148f;
 
     public override void _Ready()
@@ -19,6 +19,7 @@ public partial class TriTunnel : BaseSpace
         tunnel = GetNode<MeshInstance3D>("Tunnel");
         tunnelPosReset = tunnel.Position;
         tunnelTexture = tunnel.MaterialOverride as StandardMaterial3D;
+        tunnelColor = tunnelTexture.AlbedoColor;
     }
 
     public override void _Process(double delta)
@@ -36,6 +37,6 @@ public partial class TriTunnel : BaseSpace
         }
 
         // Hit VFX
-        tunnelTexture.AlbedoColor = settings.SpaceHitEffects ? NoteHitColor : tunnelColorReset;
+        tunnelTexture.AlbedoColor = settings.SpaceHitEffects ? NoteHitColor : tunnelColor;
     }
 }

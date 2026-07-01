@@ -23,7 +23,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
     {
         GridGuides ??= GetNode<MeshInstance3D>("GridGuides");
 
-        GridGuides.Visible = Runner.Attempt.Settings.GridGuides ? true : false;
+        GridGuides.Visible = Runner.Attempt.Settings.GridGuides;
         (GridGuides.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridGuidesImage;
 
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
