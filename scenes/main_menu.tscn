@@ -1617,8 +1617,9 @@ anchor_left = 0.5
 anchor_right = 0.75
 anchor_bottom = 1.0
 offset_left = 150.0
-offset_top = 200.0
-offset_bottom = -200.0
+offset_top = 160.0
+offset_right = 230.0
+offset_bottom = -160.0
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qw82i")
@@ -1725,10 +1726,35 @@ fit_content = true
 horizontal_alignment = 1
 
 [node name="noobour" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1684835200]
+modulate = Color(0.05882353, 0.5058824, 0.7176471, 1)
 layout_mode = 2
 bbcode_enabled = true
 text = "[font_size=20]noobour
-[color=0f81b7][font_size=16]Contributor"
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="jonyro" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=478363351]
+modulate = Color(0.9607843, 0.60784316, 0.6784314, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=20][u]jonyro / jrolly
+[color=ffffffbb][font_size=16]\"Rhymm\" Menu theme artist"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer/jonyro" unique_id=1840543780]
+show_behind_parent = true
+clip_contents = true
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 33.0
+offset_bottom = 12.0
+mouse_filter = 1
+flat = true
+script = ExtResource("44_ybca7")
+Link = "https://soundcloud.com/jonyro"
 
 [node name="Outline" type="Panel" parent="Menus/Extras/Credits" unique_id=239136532]
 material = SubResource("ShaderMaterial_yxnar")
@@ -2107,6 +2133,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sgh51")
 
 [node name="Transition" type="ColorRect" parent="." unique_id=86050768]
+visible = false
 self_modulate = Color(1, 1, 1, 0)
 z_index = 2
 anchors_preset = 15
