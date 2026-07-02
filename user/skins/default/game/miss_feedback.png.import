@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bh68kecn6dn1c"
 path.s3tc="res://.godot/imported/miss_feedback.png-f749b90e50f474257c76230765b4e05c.s3tc.ctex"
+path.etc2="res://.godot/imported/miss_feedback.png-f749b90e50f474257c76230765b4e05c.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://user/skins/default/game/miss_feedback.png"
-dest_files=["res://.godot/imported/miss_feedback.png-f749b90e50f474257c76230765b4e05c.s3tc.ctex"]
+dest_files=["res://.godot/imported/miss_feedback.png-f749b90e50f474257c76230765b4e05c.s3tc.ctex", "res://.godot/imported/miss_feedback.png-f749b90e50f474257c76230765b4e05c.etc2.ctex"]
 
 [params]
 

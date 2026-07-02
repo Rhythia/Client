@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://d4n3duxjt288o"
 path.s3tc="res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.s3tc.ctex"
+path.etc2="res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/galaxy_rainbow.png"
-dest_files=["res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.s3tc.ctex"]
+dest_files=["res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.s3tc.ctex", "res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.etc2.ctex"]
 
 [params]
 

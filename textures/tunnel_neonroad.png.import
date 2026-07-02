@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://frwrbwqgan5x"
 path.s3tc="res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.s3tc.ctex"
+path.etc2="res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/tunnel_neonroad.png"
-dest_files=["res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.s3tc.ctex"]
+dest_files=["res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.s3tc.ctex", "res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.etc2.ctex"]
 
 [params]
 

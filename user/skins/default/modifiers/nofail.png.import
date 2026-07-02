@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b0k0ltu15bart"
 path.s3tc="res://.godot/imported/nofail.png-41ae6f785118cf09cdb55eae4ced59b7.s3tc.ctex"
+path.etc2="res://.godot/imported/nofail.png-41ae6f785118cf09cdb55eae4ced59b7.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://user/skins/default/modifiers/nofail.png"
-dest_files=["res://.godot/imported/nofail.png-41ae6f785118cf09cdb55eae4ced59b7.s3tc.ctex"]
+dest_files=["res://.godot/imported/nofail.png-41ae6f785118cf09cdb55eae4ced59b7.s3tc.ctex", "res://.godot/imported/nofail.png-41ae6f785118cf09cdb55eae4ced59b7.etc2.ctex"]
 
 [params]
 

@@ -85,5 +85,6 @@ common/physics_ticks_per_second=120
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 textures/lossless_compression/force_png=true
 environment/defaults/default_clear_color=Color(0.0885599, 0.08855992, 0.08855987, 1)

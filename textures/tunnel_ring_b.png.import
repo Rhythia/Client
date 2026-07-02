@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://rvoiaddddovf"
 path.s3tc="res://.godot/imported/tunnel_ring_b.png-1c35dfc6f563f961d39e6af154dd0376.s3tc.ctex"
+path.etc2="res://.godot/imported/tunnel_ring_b.png-1c35dfc6f563f961d39e6af154dd0376.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/tunnel_ring_b.png"
-dest_files=["res://.godot/imported/tunnel_ring_b.png-1c35dfc6f563f961d39e6af154dd0376.s3tc.ctex"]
+dest_files=["res://.godot/imported/tunnel_ring_b.png-1c35dfc6f563f961d39e6af154dd0376.s3tc.ctex", "res://.godot/imported/tunnel_ring_b.png-1c35dfc6f563f961d39e6af154dd0376.etc2.ctex"]
 
 [params]
 

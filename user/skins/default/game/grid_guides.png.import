@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cxl0501pqg6dk"
 path.s3tc="res://.godot/imported/grid_guides.png-bf7128d5e8176789cb3f95022a243e8b.s3tc.ctex"
+path.etc2="res://.godot/imported/grid_guides.png-bf7128d5e8176789cb3f95022a243e8b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://user/skins/default/game/grid_guides.png"
-dest_files=["res://.godot/imported/grid_guides.png-bf7128d5e8176789cb3f95022a243e8b.s3tc.ctex"]
+dest_files=["res://.godot/imported/grid_guides.png-bf7128d5e8176789cb3f95022a243e8b.s3tc.ctex", "res://.godot/imported/grid_guides.png-bf7128d5e8176789cb3f95022a243e8b.etc2.ctex"]
 
 [params]
 

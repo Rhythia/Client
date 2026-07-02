@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://3e1tjlr4m0wt"
 path.s3tc="res://.godot/imported/cursor.png-cf9624786284c61ac8ae54ca14020559.s3tc.ctex"
+path.etc2="res://.godot/imported/cursor.png-cf9624786284c61ac8ae54ca14020559.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://user/skins/default/game/cursor.png"
-dest_files=["res://.godot/imported/cursor.png-cf9624786284c61ac8ae54ca14020559.s3tc.ctex"]
+dest_files=["res://.godot/imported/cursor.png-cf9624786284c61ac8ae54ca14020559.s3tc.ctex", "res://.godot/imported/cursor.png-cf9624786284c61ac8ae54ca14020559.etc2.ctex"]
 
 [params]
 
