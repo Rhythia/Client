@@ -7,6 +7,8 @@ using Godot;
 
 public partial class Runner : Node3D
 {
+    private const uint MaxScore = 1_000_000;
+
     [Signal] public delegate void AttemptStatsUpdatedEventHandler(Attempt attempt);
     [Signal] public delegate void SkipAvailableEventHandler(Attempt attempt);
     [Signal] public delegate void HitResultChangedEventHandler(int noteIndex, HitResult hitResult);
@@ -439,11 +441,21 @@ public partial class Runner : Node3D
         }
     }
 
+    public uint CalculateHitScore(float factor, uint comboMultiplier, uint combo, double modsMultiplier)
+    {
+        double maxScorePerNote = Attempt?.Map?.Notes.Length > 0 ? MaxScore / (double)Attempt.Map.Notes.Length : 0;
+        double comboFactor = 1 + combo / 100d;
+        double speedFactor = ((Speed - 1) / 2.5 + 1);
+        double rawScore = maxScorePerNote * comboMultiplier * comboFactor * factor * modsMultiplier * speedFactor;
+
+        return (uint)Math.Round(rawScore);
+    }
+
     private void onHitResultChanged(int noteIndex, HitResult hitResult)
     {
         float lateness = Attempt.IsReplay ? Attempt.HitsInfo[noteIndex] : (float)(((int)Attempt.Progress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
         float factor = 1 - Math.Max(0, lateness - 25) / 150f;
-        uint hitScore = (uint)(100 * Attempt.ComboMultiplier * Attempt.ModsMultiplier * factor * ((Speed - 1) / 2.5 + 1));
+        uint hitScore = CalculateHitScore(factor, Attempt.ComboMultiplier, Attempt.Combo, Attempt.ModsMultiplier);
 
         switch (hitResult)
         {
@@ -454,7 +466,7 @@ public partial class Runner : Node3D
                 Attempt.Combo++;
                 Attempt.ComboMultiplierProgress++;
                 Attempt.LastHitColour = SkinManager.Instance.Skin.NoteColors[noteIndex % SkinManager.Instance.Skin.NoteColors.Length];
-                Attempt.Score += hitScore;
+                Attempt.Score = Math.Min(MaxScore, Attempt.Score + hitScore);
 
                 if (!Attempt.IsReplay)
                 {
