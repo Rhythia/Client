@@ -1226,6 +1226,7 @@ public partial class SettingsProfile
 
         SettingsProfile nightlyProfile = new SettingsProfile();
 
+        // sensitivity scales with fov but in nightly it doesnt
         nightlyProfile.Sensitivity.Value = getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity.Value;
         nightlyProfile.AbsoluteSensitivity.Value = getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity.Value;
         nightlyProfile.AbsoluteInput.Value = getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput.Value;
