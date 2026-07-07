@@ -53,7 +53,7 @@ public partial class SettingsMenu : ColorRect
             SettingsManager.SetCurrentProfile(profile);
             SettingsManager.Reload();
 
-            updateProfileSelection();
+            UpdateProfileSelection();
         };
 
         profilesButton.ItemSelected += (index) =>
@@ -67,7 +67,7 @@ public partial class SettingsMenu : ColorRect
             SettingsManager.Load();
         };
 
-        updateProfileSelection();
+        UpdateProfileSelection();
 
         Panel settingTemplate = categoryTemplate.GetNode("Container").GetNode<Panel>("SettingTemplate");
         CheckButton checkButtonTemplate = settingTemplate.GetNode<CheckButton>("CheckButton");
@@ -248,7 +248,7 @@ public partial class SettingsMenu : ColorRect
         sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 8);
     }
 
-    private void updateProfileSelection()
+    public void UpdateProfileSelection()
     {
         // skip default
         for (int i = 1; i < profilesButton.ItemCount; i++)

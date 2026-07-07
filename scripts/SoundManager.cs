@@ -375,6 +375,12 @@ public partial class SoundManager : Node, ISkinnable
         return (float)(-80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1));
     }
 
+    public static float ComputeVolumeFromDb(float db, float master, float range)
+    {
+        if (float.IsNegativeInfinity(db) || master <= 0) return 0;
+        return (float)Math.Clamp(100 * Math.Pow((db + 80) / (range * Math.Pow(master / 100, 0.1)), 10), 0, 100);
+    }
+
     public static void UpdateVolume()
     {
         var settings = SettingsManager.Instance.Settings;
