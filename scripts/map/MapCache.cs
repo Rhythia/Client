@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -94,6 +94,7 @@ public static class MapCache
 
                 newMap.Id = map.Id;
                 newMap.Hash = checksum;
+                newMap.Favorite = map.Favorite
 
                 DatabaseService.Connection.Update(newMap);
                 InsertIntoMapCacheFolder(map);
