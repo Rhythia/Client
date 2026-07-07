@@ -94,7 +94,7 @@ public static class MapCache
 
                 newMap.Id = map.Id;
                 newMap.Hash = checksum;
-                newMap.Favorite = map.Favorite
+                newMap.Favorite = map.Favorite;
 
                 DatabaseService.Connection.Update(newMap);
                 InsertIntoMapCacheFolder(map);
