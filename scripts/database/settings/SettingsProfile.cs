@@ -351,6 +351,12 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
+    /// File dialog for the nightly import
+    /// </summary>
+    public SettingsItem<Variant> ImportDialog { get; private set; }
+
+    [Order]
+    /// <summary>
     /// Toggles recording for replays
     /// </summary>
     public SettingsItem<bool> RecordReplays { get; private set; }
@@ -1043,113 +1049,25 @@ public partial class SettingsProfile
                     string nightlyDir = $"{Path.GetDirectoryName(Constants.USER_FOLDER)}/SoundSpacePlus";
 
                     if (Directory.Exists(nightlyDir)) {
-                        string nightlySettingsPath = $"{nightlyDir}/settings.json";
-
-                        string nightlySettings = File.Exists(nightlySettingsPath) ? File.ReadAllText(nightlySettingsPath) : null;
-
-                        if (nightlySettings == null) {
-                            ToastNotification.Notify("Nightly settings not found, choose the settings file manually.");
-                        };
-
-                        using JsonDocument json = JsonDocument.Parse(nightlySettings);
-                        JsonElement root = json.RootElement;
-
-                        T? getSetting<T>(string key) where T : struct {
-                            if (root.TryGetProperty(key, out JsonElement element)) {
-                                return element.Deserialize<T>();
-                            }
-
-                            return null;
-                        }
-
-                        // needs a separate helper for strings due to the struct constraint in getSetting()
-                        string? getStringSetting(string key) {
-                            if (root.TryGetProperty(key, out JsonElement element)) {
-                                return element.GetString();
-                            }
-                            return null;
-                        }
-
-                        double importVolume(string nightlyKey, double range) {
-                            double? channelDb = getSetting<double>(nightlyKey);
-
-                            if (channelDb == null) {
-                                return 50;
-                            }
-
-                            double masterDb = getSetting<double>("master_volume") ?? 20 * Math.Log10(0.5);
-                            double totalDb = Math.Clamp(masterDb + channelDb.Value, -80, 0);
-
-                            return SoundManager.ComputeVolumeFromDb((float)totalDb, 100, (float)range);
-                        }
-
-                        SettingsProfile nightlyProfile = new SettingsProfile();
-
-                        nightlyProfile.Sensitivity.Value = getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity.Value;
-                        nightlyProfile.AbsoluteSensitivity.Value = getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity.Value;
-                        nightlyProfile.AbsoluteInput.Value = getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput.Value;
-                        nightlyProfile.CursorDrift.Value = getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift.Value;
-                        nightlyProfile.ApproachRate.Value = getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate.Value;
-                        nightlyProfile.ApproachDistance.Value = getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance.Value;
-                        nightlyProfile.Pushback.Value = getSetting<bool>("do_note_pushback") ?? nightlyProfile.Pushback.Value;
-                        nightlyProfile.CameraParallax.Value = getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax.Value;
-                        nightlyProfile.HUDParallax.Value = getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax.Value;
-                        nightlyProfile.FoV.Value = getSetting<double>("fov") ?? nightlyProfile.FoV.Value;
-                        nightlyProfile.NoteColors.Value = getStringSetting("selected_colorset") ?? nightlyProfile.NoteColors.Value;
-                        nightlyProfile.NoteMesh.Value = getStringSetting("selected_mesh") ?? nightlyProfile.NoteMesh.Value;
-                        nightlyProfile.NoteSize.Value = getSetting<double>("note_size") * 0.875 ?? nightlyProfile.NoteSize.Value;
-                        nightlyProfile.NoteOpacity.Value = getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity.Value;
-                        nightlyProfile.CursorScale.Value = getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale.Value;
-                        nightlyProfile.CursorRotation.Value = getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation.Value;
-                        nightlyProfile.CursorTrail.Value = getSetting<bool>("cursor_trail") ?? nightlyProfile.CursorTrail.Value;
-                        nightlyProfile.TrailTime.Value = getSetting<double>("trail_time") ?? nightlyProfile.TrailTime.Value;
-                        nightlyProfile.TrailDetail.Value = getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail.Value;
-                        nightlyProfile.SimpleHUD.Value = getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD.Value;
-                        nightlyProfile.HitPopups.Value = getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups.Value;
-                        nightlyProfile.MissPopups.Value = getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups.Value;
-                        nightlyProfile.Fullscreen.Value = getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen.Value;
-                        nightlyProfile.FPS.Value = getSetting<int>("target_fps") ?? nightlyProfile.FPS.Value;
-                        nightlyProfile.VolumeMaster.Value = 100;
-                        nightlyProfile.VolumeMusic.Value = importVolume("music_volume", 70);;
-                        nightlyProfile.VolumeHitSound.Value = importVolume("hit_volume", 80);
-                        nightlyProfile.VolumeMissSound.Value = importVolume("miss_volume", 80);
-                        nightlyProfile.VolumeSFX.Value = importVolume("fail_volume", 80);
-                        nightlyProfile.EnableHitSound.Value = getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound.Value;
-                        nightlyProfile.EnableMissSound.Value = getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound.Value;
-                        nightlyProfile.EnableMenuMusic.Value = getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic.Value;
-                        nightlyProfile.AutoplayJukebox.Value = getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox.Value;
-                        nightlyProfile.LocalOffset.Value = getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset.Value;
-                        nightlyProfile.RecordReplays.Value = getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays.Value;
-
-                        // prevents overriding existing 'nightly' profile
-                        string getProfileName(string baseName) {
-                            string profilesDir = $"{Constants.USER_FOLDER}/profiles";
-                            Directory.CreateDirectory(profilesDir);
-
-                            string name = baseName;
-                            int suffix = 0;
-
-                            while (File.Exists($"{profilesDir}/{name}.json")) {
-                                suffix++;
-                                name = $"{baseName}-{suffix}";
-                            }
-
-                            return name;
-                        }
-
-                        string profileName = getProfileName("nightly");
-                        string profileJson = SettingsProfileConverter.Serialize(nightlyProfile);
-                        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profileName}.json", profileJson);
-
-                        SettingsManager.SetCurrentProfile(profileName);
-                        SettingsManager.Load();
-                        SettingsMenu.Instance.UpdateProfileSelection();
-
-                        ToastNotification.Notify($"Created profile '{profileName}'");
+                            ImportFromNightlySettings($"{nightlyDir}/settings.json");
                     }
                 } }
             ],
             SaveToDisk = false,
+        };
+
+        ImportDialog = new(default)
+        {
+            Id = "ImportDialog",
+            Title = "",
+            Description = "",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Choose file", Description = "", OnPressed = () => {
+                    SettingsMenu.Instance.ImportNightlyDialog.PopupCentered();
+                }}
+            ]
         };
 
         DisplayFPS = new(true)
@@ -1256,5 +1174,120 @@ public partial class SettingsProfile
         }
 
         return meshes;
+    }
+
+    public static void ImportFromNightlySettings(string settingsPath)
+    {
+        string nightlySettings = File.Exists(settingsPath) ? File.ReadAllText(settingsPath) : null;
+
+        if (nightlySettings == null)
+        {
+            ToastNotification.Notify("Nightly settings not found, choose the settings file manually.");
+            return;
+        }
+
+        using JsonDocument json = JsonDocument.Parse(nightlySettings);
+        JsonElement root = json.RootElement;
+
+        T? getSetting<T>(string key) where T : struct
+        {
+            if (root.TryGetProperty(key, out JsonElement element))
+            {
+                return element.Deserialize<T>();
+            }
+
+            return null;
+        }
+
+        // needs a separate helper for strings due to the struct constraint in getSetting()
+        string? getStringSetting(string key)
+        {
+            if (root.TryGetProperty(key, out JsonElement element))
+            {
+                return element.GetString();
+            }
+            return null;
+        }
+
+        double importVolume(string nightlyKey, double range)
+        {
+            double? channelDb = getSetting<double>(nightlyKey);
+
+            if (channelDb == null)
+            {
+                return 50;
+            }
+
+            double masterDb = getSetting<double>("master_volume") ?? 20 * Math.Log10(0.5);
+            double totalDb = Math.Clamp(masterDb + channelDb.Value, -80, 0);
+
+            return SoundManager.ComputeVolumeFromDb((float)totalDb, 100, (float)range);
+        }
+
+        SettingsProfile nightlyProfile = new SettingsProfile();
+
+        nightlyProfile.Sensitivity.Value = getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity.Value;
+        nightlyProfile.AbsoluteSensitivity.Value = getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity.Value;
+        nightlyProfile.AbsoluteInput.Value = getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput.Value;
+        nightlyProfile.CursorDrift.Value = getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift.Value;
+        nightlyProfile.ApproachRate.Value = getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate.Value;
+        nightlyProfile.ApproachDistance.Value = getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance.Value;
+        nightlyProfile.Pushback.Value = getSetting<bool>("do_note_pushback") ?? nightlyProfile.Pushback.Value;
+        nightlyProfile.CameraParallax.Value = getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax.Value;
+        nightlyProfile.HUDParallax.Value = getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax.Value;
+        nightlyProfile.FoV.Value = getSetting<double>("fov") ?? nightlyProfile.FoV.Value;
+        nightlyProfile.NoteColors.Value = getStringSetting("selected_colorset") ?? nightlyProfile.NoteColors.Value;
+        nightlyProfile.NoteMesh.Value = getStringSetting("selected_mesh") ?? nightlyProfile.NoteMesh.Value;
+        nightlyProfile.NoteSize.Value = getSetting<double>("note_size") * 0.875 ?? nightlyProfile.NoteSize.Value;
+        nightlyProfile.NoteOpacity.Value = getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity.Value;
+        nightlyProfile.CursorScale.Value = getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale.Value;
+        nightlyProfile.CursorRotation.Value = getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation.Value;
+        nightlyProfile.CursorTrail.Value = getSetting<bool>("cursor_trail") ?? nightlyProfile.CursorTrail.Value;
+        nightlyProfile.TrailTime.Value = getSetting<double>("trail_time") ?? nightlyProfile.TrailTime.Value;
+        nightlyProfile.TrailDetail.Value = getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail.Value;
+        nightlyProfile.SimpleHUD.Value = getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD.Value;
+        nightlyProfile.HitPopups.Value = getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups.Value;
+        nightlyProfile.MissPopups.Value = getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups.Value;
+        nightlyProfile.Fullscreen.Value = getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen.Value;
+        nightlyProfile.FPS.Value = getSetting<int>("target_fps") ?? nightlyProfile.FPS.Value;
+        nightlyProfile.VolumeMaster.Value = 100;
+        nightlyProfile.VolumeMusic.Value = importVolume("music_volume", 70); ;
+        nightlyProfile.VolumeHitSound.Value = importVolume("hit_volume", 80);
+        nightlyProfile.VolumeMissSound.Value = importVolume("miss_volume", 80);
+        nightlyProfile.VolumeSFX.Value = importVolume("fail_volume", 80);
+        nightlyProfile.EnableHitSound.Value = getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound.Value;
+        nightlyProfile.EnableMissSound.Value = getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound.Value;
+        nightlyProfile.EnableMenuMusic.Value = getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic.Value;
+        nightlyProfile.AutoplayJukebox.Value = getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox.Value;
+        nightlyProfile.LocalOffset.Value = getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset.Value;
+        nightlyProfile.RecordReplays.Value = getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays.Value;
+
+        // prevents overriding existing 'nightly' profile
+        string getProfileName(string baseName)
+        {
+            string profilesDir = $"{Constants.USER_FOLDER}/profiles";
+            Directory.CreateDirectory(profilesDir);
+
+            string name = baseName;
+            int suffix = 0;
+
+            while (File.Exists($"{profilesDir}/{name}.json"))
+            {
+                suffix++;
+                name = $"{baseName}-{suffix}";
+            }
+
+            return name;
+        }
+
+        string profileName = getProfileName("nightly");
+        string profileJson = SettingsProfileConverter.Serialize(nightlyProfile);
+        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profileName}.json", profileJson);
+
+        SettingsManager.SetCurrentProfile(profileName);
+        SettingsManager.Load();
+        SettingsMenu.Instance.UpdateProfileSelection();
+
+        ToastNotification.Notify($"Created profile '{profileName}'");
     }
 }

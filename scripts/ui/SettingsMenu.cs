@@ -22,6 +22,8 @@ public partial class SettingsMenu : ColorRect
 
     private ScrollContainer selectedCategory;
 
+    [Export] public FileDialog ImportNightlyDialog;
+
     public override void _Ready()
     {
         Instance = this;
@@ -189,6 +191,7 @@ public partial class SettingsMenu : ColorRect
         HideMenu();
 
         hideButton.Pressed += HideMenu;
+        ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
     }
     // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
     public override void _Input(InputEvent @event)

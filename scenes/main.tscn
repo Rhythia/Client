@@ -130,7 +130,7 @@ handle_input_locally = false
 size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
-[node name="Settings" type="ColorRect" parent="." unique_id=1393582030]
+[node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog")]
 visible = false
 z_index = 1
 anchors_preset = 15
@@ -141,6 +141,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.501961)
 script = ExtResource("2_o6xl0")
+ImportNightlyDialog = NodePath("ImportNightlyDialog")
 
 [node name="Hide" type="Button" parent="Settings" unique_id=1153372742]
 self_modulate = Color(1, 1, 1, 0)
@@ -333,6 +334,8 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_jhjkh")
@@ -428,6 +431,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_popqt")
+
+[node name="ImportNightlyDialog" type="FileDialog" parent="Settings" unique_id=1831752407]
+title = "Open a File"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json")
+use_native_dialog = true
 
 [node name="Volume" type="Panel" parent="." unique_id=1219254705]
 modulate = Color(1, 1, 1, 0)
