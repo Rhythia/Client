@@ -86,6 +86,14 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wadof"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 10
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l7ueg"]
 shader = ExtResource("4_1a85y")
 shader_parameter/brightness = 0.5
@@ -1628,10 +1636,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_eku7s")
 [node name="TopBar" type="Panel" parent="." unique_id=560351556]
 anchors_preset = -1
 anchor_right = 1.0
-offset_bottom = 72.0
+offset_left = 72
+offset_top = 8
+offset_right = -64
+offset_bottom = 72
 mouse_filter = 2
-theme = ExtResource("6_engjn")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_18lcc")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wadof")
 
 [node name="Background" type="Panel" parent="TopBar" unique_id=250946787]
 material = SubResource("ShaderMaterial_l7ueg")
