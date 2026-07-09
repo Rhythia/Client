@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using Godot;
 
@@ -1046,10 +1047,9 @@ public partial class SettingsProfile
             Buttons =
             [
                 new() { Title = "Import", Description = "", OnPressed = () => {
-                    string nightlyDir = $"{Path.GetDirectoryName(Constants.USER_FOLDER)}/SoundSpacePlus";
 
-                    if (Directory.Exists(nightlyDir)) {
-                            ImportFromNightlySettings($"{nightlyDir}/settings.json");
+                    if (Directory.Exists(Constants.NIGHTLY_FOLDER)) {
+                        ImportFromNightlySettings($"{Constants.NIGHTLY_FOLDER}/settings.json");
                     }
                 } }
             ],

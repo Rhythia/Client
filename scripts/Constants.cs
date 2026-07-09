@@ -10,6 +10,8 @@ public partial class Constants : Node
 
     public static readonly string USER_FOLDER = OS.GetUserDataDir();
 
+    public static readonly string NIGHTLY_FOLDER = $"{Path.GetDirectoryName(USER_FOLDER)}/SoundSpacePlus";
+
     public static readonly string DEFAULT_MAP_EXT = "phxm";
 
     public static readonly bool TEMP_MAP_MODE = false;//OS.GetCmdlineArgs().Length > 0;
