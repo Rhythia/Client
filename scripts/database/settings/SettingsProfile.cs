@@ -1252,7 +1252,7 @@ public partial class SettingsProfile
         nightlyProfile.Fullscreen.Value = getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen.Value;
         nightlyProfile.FPS.Value = getSetting<int>("target_fps") ?? nightlyProfile.FPS.Value;
         nightlyProfile.VolumeMaster.Value = 100;
-        nightlyProfile.VolumeMusic.Value = importVolume("music_volume", 70); ;
+        nightlyProfile.VolumeMusic.Value = importVolume("music_volume", 70);
         nightlyProfile.VolumeHitSound.Value = importVolume("hit_volume", 80);
         nightlyProfile.VolumeMissSound.Value = importVolume("miss_volume", 80);
         nightlyProfile.VolumeSFX.Value = importVolume("fail_volume", 80);
