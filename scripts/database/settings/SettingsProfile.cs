@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text.Json;
 using Godot;
 
@@ -1226,42 +1225,55 @@ public partial class SettingsProfile
 
         SettingsProfile nightlyProfile = new SettingsProfile();
 
-        // sensitivity scales with fov but in nightly it doesnt
-        nightlyProfile.Sensitivity.Value = getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity.Value;
-        nightlyProfile.AbsoluteSensitivity.Value = getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity.Value;
-        nightlyProfile.AbsoluteInput.Value = getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput.Value;
-        nightlyProfile.CursorDrift.Value = getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift.Value;
-        nightlyProfile.ApproachRate.Value = getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate.Value;
-        nightlyProfile.ApproachDistance.Value = getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance.Value;
-        nightlyProfile.Pushback.Value = getSetting<bool>("do_note_pushback") ?? nightlyProfile.Pushback.Value;
-        nightlyProfile.CameraParallax.Value = getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax.Value;
-        nightlyProfile.HUDParallax.Value = getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax.Value;
-        nightlyProfile.FoV.Value = getSetting<double>("fov") ?? nightlyProfile.FoV.Value;
-        nightlyProfile.NoteColors.Value = getStringSetting("selected_colorset") ?? nightlyProfile.NoteColors.Value;
-        nightlyProfile.NoteMesh.Value = getStringSetting("selected_mesh") ?? nightlyProfile.NoteMesh.Value;
-        nightlyProfile.NoteSize.Value = getSetting<double>("note_size") * 0.875 ?? nightlyProfile.NoteSize.Value;
-        nightlyProfile.NoteOpacity.Value = getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity.Value;
-        nightlyProfile.CursorScale.Value = getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale.Value;
-        nightlyProfile.CursorRotation.Value = getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation.Value;
-        nightlyProfile.CursorTrail.Value = getSetting<bool>("cursor_trail") ?? nightlyProfile.CursorTrail.Value;
-        nightlyProfile.TrailTime.Value = getSetting<double>("trail_time") ?? nightlyProfile.TrailTime.Value;
-        nightlyProfile.TrailDetail.Value = getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail.Value;
-        nightlyProfile.SimpleHUD.Value = getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD.Value;
-        nightlyProfile.HitPopups.Value = getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups.Value;
-        nightlyProfile.MissPopups.Value = getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups.Value;
-        nightlyProfile.Fullscreen.Value = getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen.Value;
-        nightlyProfile.FPS.Value = getSetting<int>("target_fps") ?? nightlyProfile.FPS.Value;
-        nightlyProfile.VolumeMaster.Value = 100;
-        nightlyProfile.VolumeMusic.Value = importVolume("music_volume", 70);
-        nightlyProfile.VolumeHitSound.Value = importVolume("hit_volume", 80);
-        nightlyProfile.VolumeMissSound.Value = importVolume("miss_volume", 80);
-        nightlyProfile.VolumeSFX.Value = importVolume("fail_volume", 80);
-        nightlyProfile.EnableHitSound.Value = getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound.Value;
-        nightlyProfile.EnableMissSound.Value = getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound.Value;
-        nightlyProfile.EnableMenuMusic.Value = getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic.Value;
-        nightlyProfile.AutoplayJukebox.Value = getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox.Value;
-        nightlyProfile.LocalOffset.Value = getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset.Value;
-        nightlyProfile.RecordReplays.Value = getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays.Value;
+        Dictionary<string, Func<Variant>> conversions = new()
+        {
+            // sensitivity scales with fov but in nightly it doesnt
+            ["Sensitivity"] = () => getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity.Value,
+            ["AbsoluteSensitivity"] = () => getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity.Value,
+            ["AbsoluteInput"] = () => getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput.Value,
+            ["CursorDrift"] = () => getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift.Value,
+            ["ApproachRate"] = () => getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate.Value,
+            ["ApproachDistance"] = () => getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance.Value,
+            ["Pushback"] = () => getSetting<bool>("do_note_pushback") ?? nightlyProfile.Pushback.Value,
+            ["CameraParallax"] = () => getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax.Value,
+            ["HUDParallax"] = () => getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax.Value,
+            ["FoV"] = () => getSetting<double>("fov") ?? nightlyProfile.FoV.Value,
+            ["Colors"] = () => getStringSetting("selected_colorset") ?? nightlyProfile.NoteColors.Value,
+            ["NoteMesh"] = () => getStringSetting("selected_mesh") ?? nightlyProfile.NoteMesh.Value,
+            ["NoteSize"] = () => getSetting<double>("note_size") * 0.875 ?? nightlyProfile.NoteSize.Value,
+            ["NoteOpacity"] = () => getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity.Value,
+            ["CursorScale"] = () => getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale.Value,
+            ["CursorRotation"] = () => getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation.Value,
+            ["CursorTrail"] = () => getSetting<bool>("cursor_trail") ?? nightlyProfile.CursorTrail.Value,
+            ["TrailTime"] = () => getSetting<double>("trail_time") ?? nightlyProfile.TrailTime.Value,
+            ["TrailDetail"] = () => getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail.Value,
+            ["SimpleHUD"] = () => getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD.Value,
+            ["HitPopups"] = () => getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups.Value,
+            ["MissPopups"] = () => getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups.Value,
+            ["Fullscreen"] = () => getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen.Value,
+            ["FPS"] = () => getSetting<int>("target_fps") ?? nightlyProfile.FPS.Value,
+            ["VolumeMaster"] = () => 100,
+            ["VolumeMusic"] = () => importVolume("music_volume", 70),
+            ["VolumeHitSound"] = () => importVolume("hit_volume", 80),
+            ["VolumeMissSound"] = () => importVolume("miss_volume", 80),
+            ["VolumeSFX"] = () => importVolume("fail_volume", 80),
+            ["EnableHitSound"] = () => getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound.Value,
+            ["EnableMissSound"] = () => getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound.Value,
+            ["EnableMenuMusic"] = () => getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic.Value,
+            ["AutoplayJukebox"] = () => getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox.Value,
+            ["LocalOffset"] = () => getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset.Value,
+            ["RecordReplays"] = () => getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays.Value,
+        };
+
+        var settingsById = typeof(SettingsProfile).GetProperties()
+            .Where(p => typeof(ISettingsItem).IsAssignableFrom(p.PropertyType))
+            .Select(p => (ISettingsItem)p.GetValue(nightlyProfile))
+            .ToDictionary(item => item.Id);
+
+        foreach (var (id, convert) in conversions)
+        {
+            settingsById[id].SetVariant(convert());
+        }
 
         // prevents overriding existing 'nightly' profile
         string getProfileName(string baseName)
