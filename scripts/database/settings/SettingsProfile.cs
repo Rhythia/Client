@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using Godot;
 
@@ -354,6 +355,18 @@ public partial class SettingsProfile
     /// File dialog for the nightly import
     /// </summary>
     public SettingsItem<Variant> ImportDialog { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Imports meshes from the nightly folder
+    /// </summary>
+    public SettingsItem<Variant> ImportMeshesNightly { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Imports colorsets from the nightly folder
+    /// </summary>
+    public SettingsItem<Variant> ImportColorsetsNightly { get; private set; }
 
     [Order]
     /// <summary>
@@ -1069,6 +1082,34 @@ public partial class SettingsProfile
             ]
         };
 
+        ImportMeshesNightly = new(default)
+        {
+            Id = "ImportMeshesNightly",
+            Title = "Import Nightly Meshes",
+            Description = "Imports meshes from the nightly folder",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Import Nightly Meshes", Description = "Imports meshes from the nightly folder", OnPressed = () => {
+                    ImportMeshesFromNightly();
+                }}
+            ]
+        };
+
+        ImportColorsetsNightly = new(default)
+        {
+            Id = "ImportColorsetsNightly",
+            Title = "Import Nightly Colorsets",
+            Description = "Imports colorsets from the nightly folder",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Import Nightly Colorsets", Description = "Imports colorsets from the nightly folder", OnPressed = () => {
+                    ImportColorsetsFromNightly();
+                }}
+            ]
+        };
+
         DisplayFPS = new(true)
         {
             Id = "DisplayFPS",
@@ -1302,5 +1343,70 @@ public partial class SettingsProfile
         SettingsMenu.Instance.UpdateProfileSelection();
 
         ToastNotification.Notify($"Created profile '{profileName}'");
+    }
+
+    public static void ImportColorsetsFromNightly()
+    {
+        string nightlyColorsetsDir = $"{Constants.NIGHTLY_FOLDER}/colorsets";
+        string colorsetsDir = $"{Constants.USER_FOLDER}/colorsets";
+        int importedCount = 0;
+
+        if (!Directory.Exists(nightlyColorsetsDir))
+        {
+            ToastNotification.Notify("The nightly colorsets folder doesn't exist");
+            return;
+        }
+
+        Directory.CreateDirectory(colorsetsDir);
+
+        foreach (string file in Directory.GetFiles(nightlyColorsetsDir))
+        {
+            string fileName = Path.GetFileName(file);
+            string destinationPath = $"{colorsetsDir}/{fileName}";
+
+            if (!File.Exists(destinationPath))
+            {
+                File.Copy(file, destinationPath);
+                importedCount++;
+            }
+        }
+
+        ToastNotification.Notify($"Imported {importedCount} colorsets from nightly");
+    }
+
+    public static void ImportMeshesFromNightly()
+    {
+        string nightlyMeshesDir = $"{Constants.NIGHTLY_FOLDER}/meshes";
+        string meshesDir = $"{Constants.USER_FOLDER}/meshes";
+        int importedCount = 0;
+
+        if (!Directory.Exists(nightlyMeshesDir))
+        {
+            ToastNotification.Notify("The nightly meshes folder doesn't exist");
+            return;
+        }
+
+        Directory.CreateDirectory(meshesDir);
+
+        foreach (string file in Directory.GetFiles(nightlyMeshesDir, "*.obj"))
+        {
+            string fileName = Path.GetFileName(file);
+            string destinationPath = $"{meshesDir}/{fileName}";
+
+            if (!File.Exists(destinationPath))
+            {
+                string mtlFile = Path.ChangeExtension(file, ".mtl");
+                string mtlDestinationPath = $"{meshesDir}/{Path.GetFileName(mtlFile)}";
+
+                File.Copy(file, destinationPath);
+                if (File.Exists(mtlFile))
+                {
+                    File.Copy(mtlFile, mtlDestinationPath);
+                }
+                importedCount++;
+            }
+        }
+
+        ToastNotification.Notify($"Imported {importedCount} meshes from nightly");
     }
 }
