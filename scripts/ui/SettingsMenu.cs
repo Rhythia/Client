@@ -434,4 +434,15 @@ public partial class SettingsMenu : ColorRect
             setting.OnPressed?.Invoke();
         };
     }
+
+    public void RefreshList(ISettingsItem setting)
+    {
+        OptionButton optionButton = settingPanels[setting.Id].GetNode<OptionButton>("OptionButton");
+        optionButton.Clear();
+
+        foreach (Variant item in setting.List.Values)
+        {
+            optionButton.AddItem(item.AsString());
+        }
+    }
 }
