@@ -29,7 +29,10 @@ public partial class Tunnel : BaseSpace
         base._Process(delta);
 
         // Ring movement
-        rings.Position = Vector3.Back * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2) % ring_loop_end;
+        if (settings.SpaceEffects)
+        {
+            rings.Position = Vector3.Back * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2) % ring_loop_end;
+        }
 
         // Hit FX
         tileMaterial.AlbedoColor = NoteHitColor;

@@ -27,7 +27,7 @@ public partial class TriTunnel : BaseSpace
         base._Process(delta);
 
         // Tunnel movement
-        if (tunnel.Position.Z < tunnel_loop_end)
+        if (tunnel.Position.Z < tunnel_loop_end && settings.SpaceEffects)
         {
             tunnel.Position += Vector3.Back * (float)(settings.ApproachRate * delta / 6);
         }

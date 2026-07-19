@@ -121,6 +121,12 @@ public partial class SettingsProfile
     public SettingsItem<bool> SpaceHitEffects { get; private set; }
 
     /// <summary>
+    /// Toggles certain effects on certain spaces
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> SpaceEffects { get; private set; }
+
+    /// <summary>
     /// Overrides the skin's colorset
     /// </summary>
     [Order]
@@ -196,14 +202,14 @@ public partial class SettingsProfile
     /// <summary>
     /// Adjusts the video background dim
     /// </summary>
-    [Order]
-    public SettingsItem<double> VideoDim { get; private set; }
+    //[Order]
+    //public SettingsItem<double> VideoDim { get; private set; }
 
     /// <summary>
     /// Adjusts the scale of the video background
     /// </summary>
-    [Order]
-    public SettingsItem<double> VideoRenderScale { get; private set; }
+    //[Order]
+    //public SettingsItem<double> VideoRenderScale { get; private set; }
 
     /// <summary>
     /// Toggles Grid Guides
@@ -244,6 +250,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<bool> Fullscreen { get; private set; }
+
+    /// <summary>
+    /// When in Fullscreen, enables or disables Borderless Fullscreen (In favor of Exclusive Fullscreen)
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> BorderlessFullscreenMode { get; private set; }
 
     /// <summary>
     /// Locks maximum frames per second
@@ -419,11 +431,11 @@ public partial class SettingsProfile
             Section = SettingsSection.Gameplay,
         };
 
-        ApproachRate = new(32)
+        ApproachRate = new(30)
         {
             Id = "ApproachRate",
             Title = "Approach Rate",
-            Description = "Approach rate of hit objects",
+            Description = "(AR) Approach rate of notes. How fast notes spawn (Bigger # = faster)",
             Section = SettingsSection.Gameplay,
             UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
@@ -434,11 +446,11 @@ public partial class SettingsProfile
             }
         };
 
-        ApproachDistance = new(20)
+        ApproachDistance = new(15)
         {
             Id = "ApproachDistance",
             Title = "Approach Distance",
-            Description = "Approach distance of hit objects",
+            Description = "(AD) Approach distance of notes. How far away they spawn (Bigger # = further)",
             Section = SettingsSection.Gameplay,
             UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
@@ -467,11 +479,11 @@ public partial class SettingsProfile
             Section = SettingsSection.Gameplay,
         };
 
-        FadeIn = new(15)
+        FadeIn = new(10)
         {
             Id = "FadeIn",
             Title = "Fade In",
-            Description = "Distance for the hit objects to become fully opaque",
+            Description = "Starting from when notes spawn in, the distance required to travel before becoming fully opaque",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -485,7 +497,7 @@ public partial class SettingsProfile
         {
             Id = "FadeOut",
             Title = "Fade Out",
-            Description = "Toggles fade out for the hit objects",
+            Description = "Starting from when notes reach the half point, the transparency of notes when going past the playfield",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -499,11 +511,11 @@ public partial class SettingsProfile
         {
             Id = "Pushback",
             Title = "Pushback",
-            Description = "Toggles hit object pushback",
+            Description = "Toggles whether notes are visible past the playfield or not",
             Section = SettingsSection.Gameplay,
         };
 
-        CameraParallax = new(0.1f)
+        CameraParallax = new(0.25f)
         {
             Id = "CameraParallax",
             Title = "Camera Parallax",
@@ -608,6 +620,14 @@ public partial class SettingsProfile
             Section = SettingsSection.Visual
         };
 
+        SpaceEffects = new(true)
+        {
+            Id = "SpaceEffects",
+            Title = "Space Effects",
+            Description = "Toggles certain effects on certain spaces (Currently affects: Waves, Vortex, tri-tunnel, and tunnel)",
+            Section = SettingsSection.Visual
+        };
+
         NoteColors = new("skin")
         {
             Id = "Colors",
@@ -635,7 +655,7 @@ public partial class SettingsProfile
             }
         };
 
-        NoteOpacityExponent = new(1.25)
+        NoteOpacityExponent = new(1)
         {
             Id = "NoteOpacityExponent",
             Title = "Note Opacity Exponent",
@@ -666,7 +686,7 @@ public partial class SettingsProfile
         {
             Id = "NoteSize",
             Title = "Note Size",
-            Description = "Sets the size of the notes",
+            Description = "Sets the size of the notes, does not change hitboxes",
             Section = SettingsSection.Visual,
             Slider = new()
             {
@@ -688,7 +708,7 @@ public partial class SettingsProfile
         {
             Id = "CursorScale",
             Title = "Cursor Scale",
-            Description = "Adjusts the cursor scale",
+            Description = "Adjusts the cursor scale, does not change hitboxes",
             Section = SettingsSection.Visual,
             Slider = new()
             {
@@ -737,7 +757,7 @@ public partial class SettingsProfile
         TrailTime = new(0.05f)
         {
             Id = "TrailTime",
-            Title = "Trail Time",
+            Title = "Cursor Trail Time",
             Description = "Adjusts trail visibility time",
             Section = SettingsSection.Visual,
             Slider = new()
@@ -748,17 +768,17 @@ public partial class SettingsProfile
             }
         };
 
-        TrailDetail = new(1)
+        TrailDetail = new(100)
         {
             Id = "TrailDetail",
-            Title = "Trail Detail",
-            Description = "(Not implemented) Adjusts the detail for the trail",
+            Title = "Cursor Trail Detail",
+            Description = "Adjusts the detail for the trail, a high value may impact performance",
             Section = SettingsSection.Visual,
             Slider = new()
             {
-                Step = 0.05f,
+                Step = 1f,
                 MinValue = 0,
-                MaxValue = 5
+                MaxValue = 500
             }
         };
 
@@ -770,43 +790,43 @@ public partial class SettingsProfile
             Section = SettingsSection.Visual
         };
 
-        VideoDim = new(80)
-        {
-            Id = "VideoDim",
-            Title = "Video BG Dim",
-            Description = "Adjusts the video background dim",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 1,
-                MinValue = 0,
-                MaxValue = 100
-            }
-        };
+        //VideoDim = new(80)
+        //{
+        //Id = "VideoDim",
+        //Title = "Video BG Dim",
+        //Description = "Adjusts the video background dim",
+        //Section = SettingsSection.Visual,
+        //Slider = new()
+        //{
+        //Step = 1,
+        //MinValue = 0,
+        //MaxValue = 100
+        //}
+        //};
 
         #endregion
 
         #region Video
 
-        VideoRenderScale = new(100)
-        {
-            Id = "VideoRenderScale",
-            Title = "Video BG Render Scale",
-            Description = "Adjusts the scale of the video background",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 1,
-                MinValue = 0,
-                MaxValue = 100
-            }
-        };
+        //VideoRenderScale = new(100)
+        //{
+        //Id = "VideoRenderScale",
+        //Title = "Video BG Render Scale",
+        //Description = "Adjusts the scale of the video background",
+        //Section = SettingsSection.Visual,
+        //Slider = new()
+        //{
+        //Step = 1,
+        //MinValue = 0,
+        //MaxValue = 100
+        //}
+        //};
 
         SimpleHUD = new(false)
         {
             Id = "SimpleHUD",
             Title = "Simple HUD",
-            Description = "Toggles a minimal HUD",
+            Description = "Hides the Left panel completely, enables a simple miss counter on the right.",
             Section = SettingsSection.Visual,
         };
 
@@ -840,14 +860,49 @@ public partial class SettingsProfile
             Title = "Fullscreen",
             Description = "Toggles the window to fullscreen",
             Section = SettingsSection.Video,
-            UpdateAction = (value, _) => DisplayServer.WindowSetMode(
-                value
-                ? DisplayServer.WindowMode.ExclusiveFullscreen
-                : DisplayServer.WindowMode.Windowed
-            )
+            UpdateAction = (value, _) =>
+            {
+                if (!BorderlessFullscreenMode)
+                {
+                    DisplayServer.WindowSetMode(
+                        value
+                    ? DisplayServer.WindowMode.ExclusiveFullscreen
+                    : DisplayServer.WindowMode.Windowed
+                    );
+                }
+                else
+                {
+                    DisplayServer.WindowSetMode(
+                        value
+                    ? DisplayServer.WindowMode.Fullscreen
+                    : DisplayServer.WindowMode.Windowed
+                    );
+                }
+
+            }
         };
 
-        LockFPS = new(true)
+        BorderlessFullscreenMode = new(false)
+        {
+            Id = "BorderlessFullscreenMode",
+            Title = "Borderless Fullscreen Mode",
+            Description = "Toggles between Borderless (On), or Exclusive fullscreen (Off - default)",
+            Section = SettingsSection.Video,
+            UpdateAction = (value, _) =>
+             {
+                 if (DisplayServer.WindowGetMode() == DisplayServer.WindowMode.ExclusiveFullscreen) ;
+                 {
+                     DisplayServer.WindowSetMode(
+                     value
+                     ? DisplayServer.WindowMode.Fullscreen
+                     : DisplayServer.WindowMode.ExclusiveFullscreen
+                     );
+                 }
+
+             }
+        };
+
+        LockFPS = new(false)
         {
             Id = "LockFPS",
             Title = "Lock FPS",
@@ -860,13 +915,13 @@ public partial class SettingsProfile
         {
             Id = "FPS",
             Title = "FPS",
-            Description = "Adjusts maximum frames per second",
+            Description = "Adjusts maximum frames per second, we recommend this being 4x your refresh rate",
             Section = SettingsSection.Video,
             Slider = new()
             {
                 Step = 5,
-                MinValue = 60,
-                MaxValue = 540,
+                MinValue = 30,
+                MaxValue = 2000,
             },
             UpdateAction = (value, _) => Engine.MaxFps = LockFPS.Value ? value : 0
         };

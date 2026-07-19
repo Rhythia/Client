@@ -8,11 +8,13 @@ public partial class Waves : BaseSpace
     private Environment environment;
     private ShaderMaterial skyMaterial;
     private ShaderMaterial waterMaterial;
+    private SettingsProfile settings;
 
     public override void _Ready()
     {
         base._Ready();
 
+        settings = SettingsManager.Instance.Settings;
         environment = GetNode<WorldEnvironment>("WorldEnvironment").Environment;
         skyMaterial = environment.Sky.SkyMaterial as ShaderMaterial;
         waterMaterial = (GetNode<MeshInstance3D>("Water").Mesh as PlaneMesh).Material as ShaderMaterial;
@@ -69,11 +71,18 @@ public partial class Waves : BaseSpace
     {
         base.UpdateState(playing);
 
-        if (Playing)
+        if (Playing && settings.SpaceEffects == false)
         {
             skyMaterial.SetShaderParameter("image_a", empty);
             skyMaterial.SetShaderParameter("image_b", empty);
             skyMaterial.SetShaderParameter("image_lerp", 0.0);
         }
+        else
+        {
+            skyMaterial.SetShaderParameter("image_b", skyMaterial.GetShaderParameter("image_a"));
+            skyMaterial.SetShaderParameter("image_a", Cover != null ? Cover : empty);
+            skyMaterial.SetShaderParameter("image_lerp", 0.0);
+        }
+
     }
 }
