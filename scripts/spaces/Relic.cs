@@ -5,20 +5,20 @@ namespace Spaces;
 public partial class Relic : BaseSpace
 {
     private SettingsProfile settings;
-    private Node3D Particles;
-    private GpuParticles3D Aura;
-    private GpuParticles3D Left;
-    private GpuParticles3D Right;
+    private Node3D particles;
+    private GpuParticles3D aura;
+    private GpuParticles3D left;
+    private GpuParticles3D right;
 
     public override void _Ready()
     {
         base._Ready();
 
         settings = SettingsManager.Instance.Settings;
-        Particles = GetNode<Node3D>("Particles");
-        Aura = Particles.GetNode<GpuParticles3D>("Aura");
-        Left = Particles.GetNode<GpuParticles3D>("Left");
-        Right = Particles.GetNode<GpuParticles3D>("Right");
+        particles = GetNode<Node3D>("Particles");
+        aura = particles.GetNode<GpuParticles3D>("Aura");
+        left = particles.GetNode<GpuParticles3D>("Left");
+        right = particles.GetNode<GpuParticles3D>("Right");
 
     }
     public override void _Process(double delta)
@@ -26,15 +26,15 @@ public partial class Relic : BaseSpace
         base._Process(delta);
         if (!settings.SpaceEffects)
         {
-            Aura.Emitting = false;
-            Left.Emitting = false;
-            Right.Emitting = false;
+            aura.Emitting = false;
+            left.Emitting = false;
+            right.Emitting = false;
         }
         else
         {
-            Aura.Emitting = true;
-            Left.Emitting = true;
-            Right.Emitting = true;
+            aura.Emitting = true;
+            left.Emitting = true;
+            right.Emitting = true;
         }
         ;
     }
