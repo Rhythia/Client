@@ -21,7 +21,7 @@
 [ext_resource type="FontFile" uid="uid://cmjos3o0k2f6t" path="res://fonts/Comfortaa-Medium.ttf" id="11_o37lt"]
 [ext_resource type="Texture2D" uid="uid://80bitp5weqrb" path="res://user/skins/default/game/panel_left_background.png" id="11_sdncv"]
 [ext_resource type="FontFile" uid="uid://b6hgjef6s6oly" path="res://fonts/Comfortaa-Bold.ttf" id="12_axsek"]
-[ext_resource type="Texture2D" uid="uid://cxl0501pqg6dk" path="res://user/skins/default/game/grid_guides.png" id="12_pr1ej"]
+[ext_resource type="Texture2D" uid="uid://ccdaf14yq65jf" path="res://user/skins/default/game/grid_guides.png" id="12_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://diba7c3s8as4s" path="res://user/skins/default/game/panel_right_background.png" id="12_whe6p"]
 [ext_resource type="Texture2D" uid="uid://dw2gxd3m24h4m" path="res://user/skins/default/game/hits.png" id="13_6rhgc"]
 [ext_resource type="Script" uid="uid://c3gf0hgrqqqx5" path="res://scripts/game/ui/PanelRight.cs" id="13_sww3w"]

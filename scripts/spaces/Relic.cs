@@ -24,18 +24,8 @@ public partial class Relic : BaseSpace
     public override void _Process(double delta)
     {
         base._Process(delta);
-        if (!settings.SpaceEffects)
-        {
-            aura.Emitting = false;
-            left.Emitting = false;
-            right.Emitting = false;
-        }
-        else
-        {
-            aura.Emitting = true;
-            left.Emitting = true;
-            right.Emitting = true;
-        }
-        ;
+        aura.Emitting = settings.SpaceEffects;
+        left.Emitting = settings.SpaceEffects;
+        right.Emitting = settings.SpaceEffects;
     }
 }

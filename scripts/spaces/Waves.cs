@@ -71,7 +71,7 @@ public partial class Waves : BaseSpace
     {
         base.UpdateState(playing);
 
-        if (Playing && settings.SpaceEffects == false)
+        if (Playing && !settings.SpaceEffects)
         {
             skyMaterial.SetShaderParameter("image_a", empty);
             skyMaterial.SetShaderParameter("image_b", empty);
@@ -83,6 +83,5 @@ public partial class Waves : BaseSpace
             skyMaterial.SetShaderParameter("image_a", Cover != null ? Cover : empty);
             skyMaterial.SetShaderParameter("image_lerp", 0.0);
         }
-
     }
 }

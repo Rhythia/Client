@@ -109,9 +109,9 @@ public partial class SettingsProfile
     public SettingsItem<string> MenuSpace { get; private set; }
 
     /// <summary>
-	/// Overrides the skin's background space for the game
-	/// </summary>
-	[Order]
+    /// Overrides the skin's background space for the game
+    /// </summary>
+    [Order]
     public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
@@ -145,9 +145,9 @@ public partial class SettingsProfile
     public SettingsItem<double> NoteOpacityExponent { get; private set; }
 
     /// <summary>
-	/// Overrides the skin's note mesh
-	/// </summary>
-	[Order]
+    /// Overrides the skin's note mesh
+    /// </summary>
+    [Order]
     public SettingsItem<string> NoteMesh { get; private set; }
 
     /// <summary>
@@ -252,10 +252,10 @@ public partial class SettingsProfile
     public SettingsItem<bool> Fullscreen { get; private set; }
 
     /// <summary>
-    /// When in Fullscreen, enables or disables Borderless Fullscreen (In favor of Exclusive Fullscreen)
+    /// Toggles Borderless Fullscreen mode if Fullscreen is enabled
     /// </summary>
     [Order]
-    public SettingsItem<bool> BorderlessFullscreenMode { get; private set; }
+    public SettingsItem<bool> BorderlessFullscreen { get; private set; }
 
     /// <summary>
     /// Locks maximum frames per second
@@ -381,9 +381,9 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
-	/// Restarts settings to the game's defaults
-	/// </summary>
-	public SettingsItem<Variant> ResetToDefaults { get; private set; }
+    /// Restarts settings to the game's defaults
+    /// </summary>
+    public SettingsItem<Variant> ResetToDefaults { get; private set; }
 
     #endregion
 
@@ -435,7 +435,7 @@ public partial class SettingsProfile
         {
             Id = "ApproachRate",
             Title = "Approach Rate",
-            Description = "(AR) Approach rate of notes. How fast notes spawn (Bigger # = faster)",
+            Description = "(AR) Approach rate of hit objects, adjusts how fast hit objects come to the playfield (bigger # = faster)",
             Section = SettingsSection.Gameplay,
             UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
@@ -450,7 +450,7 @@ public partial class SettingsProfile
         {
             Id = "ApproachDistance",
             Title = "Approach Distance",
-            Description = "(AD) Approach distance of notes. How far away they spawn (Bigger # = further)",
+            Description = "(AD) Approach distance of hit objects, adjusts how far away hit objects spawn (bigger # = further)",
             Section = SettingsSection.Gameplay,
             UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
@@ -483,7 +483,7 @@ public partial class SettingsProfile
         {
             Id = "FadeIn",
             Title = "Fade In",
-            Description = "Starting from when notes spawn in, the distance required to travel before becoming fully opaque",
+            Description = "Starting from when hit objects spawn in, the distance required to travel before becoming fully opaque",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -493,11 +493,11 @@ public partial class SettingsProfile
             }
         };
 
-        FadeOut = new(100)
+        FadeOut = new(75)
         {
             Id = "FadeOut",
             Title = "Fade Out",
-            Description = "Starting from when notes reach the half point, the transparency of notes when going past the playfield",
+            Description = "Starting from when hit objects reach the half point, the transparency of hit objects when going past the playfield",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -511,7 +511,7 @@ public partial class SettingsProfile
         {
             Id = "Pushback",
             Title = "Pushback",
-            Description = "Toggles whether notes are visible past the playfield or not",
+            Description = "Toggles whether hit objects are visible past the playfield or not",
             Section = SettingsSection.Gameplay,
         };
 
@@ -624,7 +624,7 @@ public partial class SettingsProfile
         {
             Id = "SpaceEffects",
             Title = "Space Effects",
-            Description = "Toggles certain effects on certain spaces (Currently affects: Waves, Vortex, tri-tunnel, and tunnel)",
+            Description = "Toggles non-hit effects for the game space",
             Section = SettingsSection.Visual
         };
 
@@ -655,7 +655,7 @@ public partial class SettingsProfile
             }
         };
 
-        NoteOpacityExponent = new(1)
+        NoteOpacityExponent = new(1.25)
         {
             Id = "NoteOpacityExponent",
             Title = "Note Opacity Exponent",
@@ -826,7 +826,7 @@ public partial class SettingsProfile
         {
             Id = "SimpleHUD",
             Title = "Simple HUD",
-            Description = "Hides the Left panel completely, enables a simple miss counter on the right.",
+            Description = "Hides the regular left and right panel, and instead displays a simple miss counter on the right",
             Section = SettingsSection.Visual,
         };
 
@@ -860,46 +860,16 @@ public partial class SettingsProfile
             Title = "Fullscreen",
             Description = "Toggles the window to fullscreen",
             Section = SettingsSection.Video,
-            UpdateAction = (value, _) =>
-            {
-                if (!BorderlessFullscreenMode)
-                {
-                    DisplayServer.WindowSetMode(
-                        value
-                    ? DisplayServer.WindowMode.ExclusiveFullscreen
-                    : DisplayServer.WindowMode.Windowed
-                    );
-                }
-                else
-                {
-                    DisplayServer.WindowSetMode(
-                        value
-                    ? DisplayServer.WindowMode.Fullscreen
-                    : DisplayServer.WindowMode.Windowed
-                    );
-                }
-
-            }
+            UpdateAction = (value, _) => updateWindowMode()
         };
 
-        BorderlessFullscreenMode = new(false)
+        BorderlessFullscreen = new(false)
         {
-            Id = "BorderlessFullscreenMode",
-            Title = "Borderless Fullscreen Mode",
-            Description = "Toggles between Borderless (On), or Exclusive fullscreen (Off - default)",
+            Id = "BorderlessFullscreen",
+            Title = "Borderless Fullscreen",
+            Description = "Alters the Fullscreen toggle to use Borderless fullscreen instead of Exclusive, may fix some issues with drawing tablets",
             Section = SettingsSection.Video,
-            UpdateAction = (value, _) =>
-             {
-                 if (DisplayServer.WindowGetMode() == DisplayServer.WindowMode.ExclusiveFullscreen) ;
-                 {
-                     DisplayServer.WindowSetMode(
-                     value
-                     ? DisplayServer.WindowMode.Fullscreen
-                     : DisplayServer.WindowMode.ExclusiveFullscreen
-                     );
-                 }
-
-             }
+            UpdateAction = (value, _) => updateWindowMode()
         };
 
         LockFPS = new(false)
@@ -915,13 +885,13 @@ public partial class SettingsProfile
         {
             Id = "FPS",
             Title = "FPS",
-            Description = "Adjusts maximum frames per second, we recommend this being 4x your refresh rate",
+            Description = "Adjusts maximum frames per second, we recommend this being 42x your refresh rate",
             Section = SettingsSection.Video,
             Slider = new()
             {
                 Step = 5,
                 MinValue = 30,
-                MaxValue = 2000,
+                MaxValue = 1000,
             },
             UpdateAction = (value, _) => Engine.MaxFps = LockFPS.Value ? value : 0
         };
@@ -1200,6 +1170,13 @@ public partial class SettingsProfile
     private void updateApproachTime()
     {
         ApproachTime.Value = ApproachDistance / ApproachRate;
+    }
+
+    private void updateWindowMode()
+    {
+        var windowMode = Fullscreen ? (!BorderlessFullscreen ? DisplayServer.WindowMode.ExclusiveFullscreen : DisplayServer.WindowMode.Fullscreen) : DisplayServer.WindowMode.Windowed;
+
+        DisplayServer.WindowSetMode(windowMode);
     }
 
     private static List<string> getAvailableMeshes()

@@ -9,7 +9,6 @@ public partial class Vortex : BaseSpace
     private SkinProfile skin;
 
     private Node3D squircles;
-    private Node3D squircleOne;
     private StandardMaterial3D[] squircleMaterials;
     private Color[] lastHitColors;
     private Color squircleColorReset = new("ffffff");
