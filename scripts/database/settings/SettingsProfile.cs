@@ -353,7 +353,7 @@ public partial class SettingsProfile
     /// <summary>
     /// File dialog for the nightly import
     /// </summary>
-    public SettingsItem<Variant> ImportDialog { get; private set; }
+    public SettingsItem<Variant> NightlyImportDialog { get; private set; }
 
     [Order]
     /// <summary>
@@ -1057,7 +1057,7 @@ public partial class SettingsProfile
             Section = SettingsSection.Other,
             Buttons =
             [
-                new() { Title = "Import", Description = "", OnPressed = () => {
+                new() { Title = "Import", Description = "Automatically import settings from nightly", OnPressed = () => {
 
                     if (Directory.Exists(Constants.NIGHTLY_FOLDER)) {
                         ImportFromNightlySettings($"{Constants.NIGHTLY_FOLDER}/settings.json");
@@ -1067,15 +1067,15 @@ public partial class SettingsProfile
             SaveToDisk = false,
         };
 
-        ImportDialog = new(default)
+        NightlyImportDialog = new(default)
         {
-            Id = "ImportDialog",
-            Title = "",
+            Id = "NightlyImportDialog",
+            Title = "", // this has no title because its supposed to be a button belonging to the field above
             Description = "",
             Section = SettingsSection.Other,
             Buttons =
             [
-                new() { Title = "Choose file", Description = "", OnPressed = () => {
+                new() { Title = "Choose file", Description = "Import manually from a nightly settings file", OnPressed = () => {
                     SettingsMenu.Instance.ImportNightlyDialog.PopupCentered();
                 }}
             ]
