@@ -1078,7 +1078,8 @@ public partial class SettingsProfile
                 new() { Title = "Choose file", Description = "Import manually from a nightly settings file", OnPressed = () => {
                     SettingsMenu.Instance.ImportNightlyDialog.PopupCentered();
                 }}
-            ]
+            ],
+            SaveToDisk = false,
         };
 
         ImportNightlyMeshes = new(default)
@@ -1094,7 +1095,8 @@ public partial class SettingsProfile
                     SettingsManager.Instance.Settings.NoteMesh.List.Values = getAvailableMeshes();
                     SettingsMenu.Instance.RefreshList(SettingsManager.Instance.Settings.NoteMesh);
                 }}
-            ]
+            ],
+            SaveToDisk = false,
         };
 
         ImportNightlyColorsets = new(default)
@@ -1110,7 +1112,8 @@ public partial class SettingsProfile
                     SettingsManager.Load();
                     SettingsMenu.Instance.RefreshList(SettingsManager.Instance.Settings.NoteColors);
                 }}
-            ]
+            ],
+            SaveToDisk = false,
         };
 
         DisplayFPS = new(true)
