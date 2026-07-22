@@ -497,7 +497,7 @@ public partial class SettingsProfile
         {
             Id = "FadeOut",
             Title = "Fade Out",
-            Description = "Starting from when hit objects reach the half point, the transparency of hit objects when going past the playfield",
+            Description = "The transparency of hit objects when going past the playfield",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -826,7 +826,7 @@ public partial class SettingsProfile
         {
             Id = "SimpleHUD",
             Title = "Simple HUD",
-            Description = "Hides the regular left and right panel, and instead displays a simple miss counter on the right",
+            Description = "Hides the regular left and right panels, and instead displays a simple miss counter on the right",
             Section = SettingsSection.Visual,
         };
 
@@ -860,7 +860,7 @@ public partial class SettingsProfile
             Title = "Fullscreen",
             Description = "Toggles the window to fullscreen",
             Section = SettingsSection.Video,
-            UpdateAction = (value, _) => updateWindowMode()
+            UpdateAction = (_, _) => updateWindowMode()
         };
 
         BorderlessFullscreen = new(false)
@@ -869,7 +869,7 @@ public partial class SettingsProfile
             Title = "Borderless Fullscreen",
             Description = "Alters the Fullscreen toggle to use Borderless fullscreen instead of Exclusive, may fix some issues with drawing tablets",
             Section = SettingsSection.Video,
-            UpdateAction = (value, _) => updateWindowMode()
+            UpdateAction = (_, _) => updateWindowMode()
         };
 
         LockFPS = new(false)
@@ -885,7 +885,7 @@ public partial class SettingsProfile
         {
             Id = "FPS",
             Title = "FPS",
-            Description = "Adjusts maximum frames per second, we recommend this being 42x your refresh rate",
+            Description = "Adjusts maximum frames per second, we recommend this being 2x your refresh rate",
             Section = SettingsSection.Video,
             Slider = new()
             {
