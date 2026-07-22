@@ -19,11 +19,12 @@ public partial class Relic : BaseSpace
         aura = particles.GetNode<GpuParticles3D>("Aura");
         left = particles.GetNode<GpuParticles3D>("Left");
         right = particles.GetNode<GpuParticles3D>("Right");
-
     }
+
     public override void _Process(double delta)
     {
         base._Process(delta);
+
         aura.Emitting = settings.SpaceEffects;
         left.Emitting = settings.SpaceEffects;
         right.Emitting = settings.SpaceEffects;
