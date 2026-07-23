@@ -79,11 +79,14 @@ public partial class StatsPanel : ExtrasPanel
         averageAccuracy.Text = $"{stats.AverageAccuracy:F2}";
         rageQuits.Text = $"{stats.RageQuits}";
 
-        Map map = MapManager.Maps.Aggregate((m1, m2) => m1.PlayCount > m2.PlayCount ? m1 : m2);
-        if (map.PlayCount > 0)
+        if (MapManager.Maps.Count > 0)
         {
-            favouriteMap.Text = $"{map.Title}";
+            Map map = MapManager.Maps.Aggregate((m1, m2) => m1.PlayCount > m2.PlayCount ? m1 : m2);
+
+            if (map.PlayCount > 0)
+            {
+                favouriteMap.Text = $"{map.Title}";
+            }
         }
     }
-
 }

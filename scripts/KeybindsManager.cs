@@ -25,7 +25,7 @@ public partial class KeybindsManager : Node
             {
                 case Key.F1:
                 {
-                    if (!Game.Instance.Runner.Playing)
+                    if (!Game.Instance?.Runner?.Playing ?? true)
                     {
                         wikiPopup.Show(!wikiPopup.Shown);
                     }

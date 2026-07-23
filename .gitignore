@@ -25,6 +25,7 @@ export_presets.cfg
 
 # Mono-specific ignores
 *.csproj.user
+*.csproj.old*
 .mono/
 data_*/
 mono_crash.*.json

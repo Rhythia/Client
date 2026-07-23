@@ -19,23 +19,23 @@
       },
       "Godot.SourceGenerators": {
         "type": "Direct",
-        "requested": "[4.6.2, )",
-        "resolved": "4.6.2",
-        "contentHash": "CqSn9E38CqCvHARIpZXzYw/KkDKkrGjCYjRrKq3kTAIsDGOOZ/W9wiVnfbvmTpER7gbbrFKAd6WA201ELBynQw=="
+        "requested": "[4.7.1, )",
+        "resolved": "4.7.1",
+        "contentHash": "XNYxnzQtZw/3ebPgpVC5eKMH5z3mx/MFNAb9rNeb/SmyMus+u4GPbwMN1ZsmXf0j4a9L/Uj55PbZIHLk96EFyQ=="
       },
       "GodotSharp": {
         "type": "Direct",
-        "requested": "[4.6.2, )",
-        "resolved": "4.6.2",
-        "contentHash": "yWYaxRtawrYOQ6TZqKovkw6IN3jNWLTjfrL+pvoGdprvGT7LOYdBCwy0OU7rSfzTn48Rr4IuyuZoSuC0Cp2JeA=="
+        "requested": "[4.7.1, )",
+        "resolved": "4.7.1",
+        "contentHash": "OCTPz0MtENY0J1e9Sw4VB9qxS0DK9xpEQLAIMRzCtnVKiJvHZUAAnJ9mU4ewW5+88V4beewp3dl8OE813Qw73g=="
       },
       "GodotSharpEditor": {
         "type": "Direct",
-        "requested": "[4.6.2, )",
-        "resolved": "4.6.2",
-        "contentHash": "WbxolK7BIzSl7d8jhTQQSwZ7JEf+6RHeaZWa6aw7f/qXsN/hXzFSgQvpKxGrLo0icQlowjvF0NomnYO5owMG7w==",
+        "requested": "[4.7.1, )",
+        "resolved": "4.7.1",
+        "contentHash": "MAX9wPgjX9BM+EOMxuF++mWKdvO2y0ZiEAfv6D68HGseQc8mX//yc7QrJizXSJ4ii1nh3krXZSyIJ77nmjOgYA==",
         "dependencies": {
-          "GodotSharp": "4.6.2"
+          "GodotSharp": "4.7.1"
         }
       },
       "Semver": {

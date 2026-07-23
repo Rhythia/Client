@@ -5,8 +5,8 @@
 <h3 align="center">A free-to-play rhythm game where you move your mouse across a 3×3 grid.</h3>
 
 <p align="center">
-  <a href="https://discord.gg/rhythia"><img src="https://img.shields.io/discord/1234567890?label=Discord&logo=discord&logoColor=white&color=5865F2" alt="Discord"></a>
-  <img src="https://img.shields.io/badge/Godot-4.6-%23478CBF?logo=godot-engine&logoColor=white" alt="Godot 4.6">
+  <a href="https://discord.gg/rhythia"><img src="https://img.shields.io/discord/1064060807320702996?label=Discord&logo=discord&logoColor=white&color=5865F2" alt="Discord"></a>
+  <a href="https://godotengine.org/download"><img src="https://img.shields.io/badge/Godot-4.7-%23478CBF?logo=godot-engine&logoColor=white" alt="Godot 4.7">
 </p>
 
 ---
@@ -39,7 +39,7 @@
 
 ## About
 
-**Rhythia** (formerly *Sound Space Plus*) is a free and open-source rhythm game built with **Godot 4.6** and **C#**.
+**Rhythia** (formerly *Sound Space Plus*) is a free and open-source rhythm game built with **Godot 4.7** and **C#**.
 
 ---
 
@@ -200,7 +200,7 @@ We ❤️ developers! Contributions are welcome — whether it's bug fixes, feat
 
 | Software | Notes |
 |---|---|
-| [Godot 4.6 Stable (.NET)](https://godotengine.org/download) | The C# / .NET build is required |
+| [Godot 4.7 Stable (.NET)](https://godotengine.org/download) | The C# / .NET build is required |
 | [Git](https://git-scm.com/downloads) | Windows: Git for Windows · Linux: `git` package |
 | [GitHub Account](https://github.com/signup) | Needed to fork and open pull requests |
 
@@ -233,7 +233,7 @@ git lfs pull
 
 #### 3. Open in Godot
 
-1. Open **Godot 4.6 (.NET)**.
+1. Open **Godot 4.7 (.NET)**.
 2. Click **Import**.
 3. Browse to your cloned repository folder and select `project.godot`.
 4. Click **Open**.
@@ -267,6 +267,7 @@ git lfs pull
 - Keep PRs focused — one feature or fix per PR.
 - Test your changes locally before submitting.
 - For large changes, open an issue first to discuss the approach.
+- Always state AI usage in PRs and issues, you should be able to explain and fix any code you submit.
 
 ---
 

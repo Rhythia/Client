@@ -1818,7 +1818,7 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]runner-rewrite"
+text = "Rhythia [font_size=12][color=ffffffa0]0.2"
 shortcut_keys_enabled = false
 vertical_alignment = 1
 
@@ -2142,7 +2142,6 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sgh51")
 
 [node name="Transition" type="ColorRect" parent="." unique_id=86050768]
-visible = false
 self_modulate = Color(1, 1, 1, 0)
 z_index = 2
 anchors_preset = 15

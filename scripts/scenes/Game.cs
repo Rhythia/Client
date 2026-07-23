@@ -156,6 +156,13 @@ public partial class Game : BaseScene
         Runner.Play();
         StartQueued = false;
 
+        if (!Attempt.IsReplay)
+        {
+            Stats.Instance.Attempts++;
+            Attempt.Map.PlayCount++;
+            MapManager.Update(Attempt.Map);
+        }
+
         if (Rhythia.TempMode && !PlaytestOverlay.PlaytestInit)
         {
             PlaytestOverlay.Attempt = Attempt;
@@ -172,13 +179,6 @@ public partial class Game : BaseScene
 
         var parsedMap = MapParser.Decode(map.FilePath, Rhythia.AudioFilePath);
         Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays);
-
-        if (!Attempt.IsReplay)
-        {
-            Stats.Instance.Attempts++;
-            map.PlayCount++;
-            MapManager.Update(map);
-        }
 
         SceneManager.Load("res://scenes/game.tscn");
     }

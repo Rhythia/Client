@@ -354,9 +354,6 @@ public partial class MapList : Panel, ISkinnable
                     if (Lobby.Map != null && IsVisibleInTree() && focused is not LineEdit)
                     {
                         Game.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.CameraMode, Lobby.Modifiers);
-                        //                     if (Lobby.Map != null && IsVisibleInTree() && focused is not LineEdit)
-                        //                     {
-                        //                         LegacyRunner.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
                     }
                     break;
             }
@@ -377,35 +374,27 @@ public partial class MapList : Panel, ISkinnable
         }
     }
 
+    /// <returns>
+    /// Whether or not the selected map has changed.
+    /// </returns>
     public bool Select(Map map, bool playIfPreSelected = true)
     {
-        // if (map == null)
-        // {
-        //     return false;
-        // }
+        bool changed = selectedMapID == null || selectedMapID != map.Name;
 
-        // if (selectedMapID == map.Name)
-        // {
-        //     if (playIfPreSelected)
-        //     {
-        //         LegacyRunner.Play(map, Lobby.Speed, Lobby.StartFrom, Lobby.Modifiers);
-        //     }
-
-        //     Focus(map);
-        //     SceneManager.Space?.UpdateMap(map);
-        //     return false;
-        // }
-
-        if (selectedMapID != null && selectedMapID != map.Name && mapButtons.TryGetValue(selectedMapID, out MapButton value))
+        if (changed)
         {
-            value.Deselect();
-            value.UpdateOutline(0f);
+            MapManager.Select(map);
+            SceneManager.Space?.UpdateMap(map);
+            SoundManager.StartMapSelectionPlayback(map);
+
+            if (selectedMapID != null && mapButtons.TryGetValue(selectedMapID, out var oldButton))
+            {
+                oldButton.Deselect();
+                oldButton.UpdateOutline(0f);
+            }
         }
 
-        MapManager.Select(map);
-
-        // this was also in a merge conflict
-        if (selectedMapID == map.Name && playIfPreSelected)
+        if (!changed && playIfPreSelected)
         {
             Game.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.CameraMode, Lobby.Modifiers);
         }
@@ -414,8 +403,7 @@ public partial class MapList : Panel, ISkinnable
 
         Focus(map);
 
-        SceneManager.Space?.UpdateMap(map);
-        return true;
+        return changed;
     }
 
     public void Focus(Map map)
@@ -541,15 +529,8 @@ public partial class MapList : Panel, ISkinnable
         };
         button.Pressed += () =>
         {
-            if (dragDistance < 500)
+            if (dragDistance < 500 && Select(button.Map))
             {
-                bool selectionChanged = Select(button.Map);
-
-                if (selectionChanged)
-                {
-                    SoundManager.StartMapSelectionPlayback(button.Map);
-                }
-
                 button.Select();
                 button.UpdateOutline(1.0f);
             }

@@ -41,8 +41,8 @@ public partial class ScorePanel : Panel
             CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).TweenProperty(buttonHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
         }
 
-        Button.MouseEntered += () => { tweenHover(true); };
-        Button.MouseExited += () => { tweenHover(false); };
+        Button.MouseEntered += () => tweenHover(true);
+        Button.MouseExited += () => tweenHover(false);
         Button.Pressed += Replay;
     }
 
@@ -51,8 +51,6 @@ public partial class ScorePanel : Panel
         Score = score;
 
         playerLabel.Text = score.Player;
-        //         accuracyLabel.Text = $"{score.Accuracy.ToString():F2}%";
-        //         speedLabel.Text = $"{score.Speed.ToString():F2}x";
         accuracyLabel.Text = $"{score.Accuracy:F2}%";
         speedLabel.Text = $"{score.Speed:F2}x";
         timeLabel.Text = Util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);

@@ -63,7 +63,7 @@ public partial class Runner : Node3D
 
         // De-sync corrector
 
-        if (Attempt.Progress > 0 && Attempt.Progress < Attempt.MapLength && !Attempt.Stopped)
+        if (Attempt.Progress > 0 && Attempt.Progress < Attempt.Length && !Attempt.Stopped)
         {
             double audioDelay = Attempt.Progress - settings.LocalOffset - (1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix()));
 
@@ -141,7 +141,7 @@ public partial class Runner : Node3D
         ProcessObjects();
         RenderObjects(delta);
 
-        if (StopQueued || Attempt.Progress >= Attempt.MapLength && !Attempt.IsReplay)
+        if (StopQueued || Attempt.Progress >= Attempt.Length && !Attempt.IsReplay)
         {
             StopQueued = false;
             Stop();
