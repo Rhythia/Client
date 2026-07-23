@@ -1756,6 +1756,15 @@ flat = true
 script = ExtResource("44_ybca7")
 Link = "https://soundcloud.com/jonyro"
 
+[node name="xwalfie" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=427847284]
+modulate = Color(0.2627451, 1, 0.9529412, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=20]xwalfie
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
 [node name="Outline" type="Panel" parent="Menus/Extras/Credits" unique_id=239136532]
 material = SubResource("ShaderMaterial_yxnar")
 layout_mode = 1

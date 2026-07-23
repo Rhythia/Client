@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Godot;
 
 public partial class SettingsProfile
@@ -361,11 +362,29 @@ public partial class SettingsProfile
     /// </summary>
     public SettingsItem<bool> DisplayFPS { get; private set; }
 
-    // [Order]
+    [Order]
     /// <summary>
     /// Import settings from previous (nightly) version
     /// </summary>
-    // public SettingsItem<Variant> RhythiaImport { get; private set; }
+    public SettingsItem<Variant> ImportNightlyProfile { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// File dialog for the nightly import
+    /// </summary>
+    public SettingsItem<Variant> NightlyImportDialog { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Imports meshes from the nightly folder
+    /// </summary>
+    public SettingsItem<Variant> ImportNightlyMeshes { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Imports colorsets from the nightly folder
+    /// </summary>
+    public SettingsItem<Variant> ImportNightlyColorsets { get; private set; }
 
     [Order]
     /// <summary>
@@ -1070,18 +1089,72 @@ public partial class SettingsProfile
 
         #region Other
 
-        // RhythiaImport = new(default)
-        // {
-        //     Id = "RhythiaImport",
-        //     Title = "Import Nightly Settings",
-        //     Description = "Imports settings from the nightly client",
-        //     Section = SettingsSection.Other,
-        //     Buttons =
-        //     [
-        //         new() { Title = "Import", Description = "", OnPressed = () => { } }
-        //     ],
-        //     SaveToDisk = false,
-        // };
+        ImportNightlyProfile = new(default)
+        {
+            Id = "ImportNightlyProfile",
+            Title = "Import Nightly Settings",
+            Description = "Imports settings from the nightly client",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Import", Description = "Automatically import settings from nightly", OnPressed = () => {
+
+                    if (Directory.Exists(Constants.NIGHTLY_FOLDER)) {
+                        ImportFromNightlySettings($"{Constants.NIGHTLY_FOLDER}/settings.json");
+                    }
+                } }
+            ],
+            SaveToDisk = false,
+        };
+
+        NightlyImportDialog = new(default)
+        {
+            Id = "NightlyImportDialog",
+            Title = "", // this has no title because its supposed to be a button belonging to the field above
+            Description = "",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Choose file", Description = "Import manually from a nightly settings file", OnPressed = () => {
+                    SettingsMenu.Instance.ImportNightlyDialog.PopupCentered();
+                }}
+            ],
+            SaveToDisk = false,
+        };
+
+        ImportNightlyMeshes = new(default)
+        {
+            Id = "ImportNightlyMeshes",
+            Title = "Import Nightly Meshes",
+            Description = "Imports meshes from the nightly folder",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Import Nightly Meshes", Description = "Imports meshes from the nightly folder", OnPressed = () => {
+                    importMeshesFromNightly();
+                    SettingsManager.Instance.Settings.NoteMesh.List.Values = getAvailableMeshes();
+                    SettingsMenu.Instance.RefreshList(SettingsManager.Instance.Settings.NoteMesh);
+                }}
+            ],
+            SaveToDisk = false,
+        };
+
+        ImportNightlyColorsets = new(default)
+        {
+            Id = "ImportNightlyColorsets",
+            Title = "Import Nightly Colorsets",
+            Description = "Imports colorsets from the nightly folder",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Import Nightly Colorsets", Description = "Imports colorsets from the nightly folder", OnPressed = () => {
+                    importColorsetsFromNightly();
+                    SettingsManager.Load();
+                    SettingsMenu.Instance.RefreshList(SettingsManager.Instance.Settings.NoteColors);
+                }}
+            ],
+            SaveToDisk = false,
+        };
 
         DisplayFPS = new(true)
         {
@@ -1194,5 +1267,200 @@ public partial class SettingsProfile
         }
 
         return meshes;
+    }
+
+    public static void ImportFromNightlySettings(string settingsPath)
+    {
+        string nightlySettings = File.Exists(settingsPath) ? File.ReadAllText(settingsPath) : null;
+
+        if (nightlySettings == null)
+        {
+            ToastNotification.Notify("Nightly settings not found, choose the settings file manually.");
+            return;
+        }
+
+        using JsonDocument json = JsonDocument.Parse(nightlySettings);
+        JsonElement root = json.RootElement;
+
+        T? getSetting<T>(string key) where T : struct
+        {
+            if (root.TryGetProperty(key, out JsonElement element))
+            {
+                return element.Deserialize<T>();
+            }
+
+            return null;
+        }
+
+        // needs a separate helper for strings due to the struct constraint in getSetting()
+        string? getStringSetting(string key)
+        {
+            if (root.TryGetProperty(key, out JsonElement element))
+            {
+                return element.GetString();
+            }
+
+            return null;
+        }
+
+        double importVolume(string nightlyKey, double range)
+        {
+            double? channelDb = getSetting<double>(nightlyKey);
+
+            if (channelDb == null)
+            {
+                return 50;
+            }
+
+            double masterDb = getSetting<double>("master_volume") ?? 20 * Math.Log10(0.5);
+            double totalDb = Math.Clamp(masterDb + channelDb.Value, -80, 0);
+
+            return SoundManager.ComputeVolumeFromDb((float)totalDb, 100, (float)range);
+        }
+
+        SettingsProfile nightlyProfile = new SettingsProfile();
+
+        Dictionary<string, Func<Variant>> conversions = new()
+        {
+            // sensitivity scales with fov but in nightly it doesnt
+            ["Sensitivity"] = () => getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity,
+            ["AbsoluteSensitivity"] = () => getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity,
+            ["AbsoluteInput"] = () => getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput,
+            ["CursorDrift"] = () => getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift,
+            ["ApproachRate"] = () => getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate,
+            ["ApproachDistance"] = () => getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance,
+            ["Pushback"] = () => getSetting<bool>("do_note_pushback") ?? nightlyProfile.Pushback,
+            ["CameraParallax"] = () => getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax,
+            ["HUDParallax"] = () => getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax,
+            ["FoV"] = () => getSetting<double>("fov") ?? nightlyProfile.FoV,
+            ["Colors"] = () => getStringSetting("selected_colorset") ?? nightlyProfile.NoteColors,
+            ["NoteMesh"] = () => getStringSetting("selected_mesh") ?? nightlyProfile.NoteMesh,
+            ["NoteSize"] = () => getSetting<double>("note_size") * 0.875 ?? nightlyProfile.NoteSize,
+            ["NoteOpacity"] = () => getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity,
+            ["CursorScale"] = () => getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale,
+            ["CursorRotation"] = () => getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation,
+            ["CursorTrail"] = () => getSetting<bool>("cursor_trail") ?? nightlyProfile.CursorTrail,
+            ["TrailTime"] = () => getSetting<double>("trail_time") ?? nightlyProfile.TrailTime,
+            ["TrailDetail"] = () => getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail,
+            ["SimpleHUD"] = () => getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD,
+            ["HitPopups"] = () => getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups,
+            ["MissPopups"] = () => getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups,
+            ["Fullscreen"] = () => getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen,
+            ["FPS"] = () => getSetting<int>("target_fps") ?? nightlyProfile.FPS,
+            ["VolumeMaster"] = () => 100,
+            ["VolumeMusic"] = () => importVolume("music_volume", 70),
+            ["VolumeHitSound"] = () => importVolume("hit_volume", 80),
+            ["VolumeMissSound"] = () => importVolume("miss_volume", 80),
+            ["VolumeSFX"] = () => importVolume("fail_volume", 80),
+            ["EnableHitSound"] = () => getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound,
+            ["EnableMissSound"] = () => getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound,
+            ["EnableMenuMusic"] = () => getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic,
+            ["AutoplayJukebox"] = () => getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox,
+            ["LocalOffset"] = () => getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset,
+            ["RecordReplays"] = () => getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays,
+        };
+
+        var settingsById = typeof(SettingsProfile).GetProperties()
+            .Where(p => typeof(ISettingsItem).IsAssignableFrom(p.PropertyType))
+            .Select(p => (ISettingsItem)p.GetValue(nightlyProfile))
+            .ToDictionary(item => item.Id);
+
+        foreach (var (id, convert) in conversions)
+        {
+            settingsById[id].SetVariant(convert());
+        }
+
+        // prevents overriding existing 'nightly' profile
+        string getProfileName(string baseName)
+        {
+            string profilesDir = $"{Constants.USER_FOLDER}/profiles";
+            Directory.CreateDirectory(profilesDir);
+
+            string name = baseName;
+            int suffix = 0;
+
+            while (File.Exists($"{profilesDir}/{name}.json"))
+            {
+                suffix++;
+                name = $"{baseName}-{suffix}";
+            }
+
+            return name;
+        }
+
+        string profileName = getProfileName("nightly");
+        string profileJson = SettingsProfileConverter.Serialize(nightlyProfile);
+        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profileName}.json", profileJson);
+
+        SettingsManager.SetCurrentProfile(profileName);
+        SettingsManager.Load();
+        SettingsMenu.Instance.UpdateProfileSelection();
+
+        ToastNotification.Notify($"Created profile '{profileName}'");
+    }
+
+    private static void importColorsetsFromNightly()
+    {
+        string nightlyColorsetsDir = $"{Constants.NIGHTLY_FOLDER}/colorsets";
+        string colorsetsDir = $"{Constants.USER_FOLDER}/colorsets";
+        int importedCount = 0;
+
+        if (!Directory.Exists(nightlyColorsetsDir))
+        {
+            ToastNotification.Notify("The nightly colorsets folder doesn't exist");
+            return;
+        }
+
+        Directory.CreateDirectory(colorsetsDir);
+
+        foreach (string file in Directory.GetFiles(nightlyColorsetsDir))
+        {
+            string fileName = Path.GetFileName(file);
+            string destinationPath = $"{colorsetsDir}/{fileName}";
+
+            if (!File.Exists(destinationPath))
+            {
+                File.Copy(file, destinationPath);
+                importedCount++;
+            }
+        }
+
+        ToastNotification.Notify($"Imported {importedCount} colorsets from nightly");
+    }
+
+    private static void importMeshesFromNightly()
+    {
+        string nightlyMeshesDir = $"{Constants.NIGHTLY_FOLDER}/meshes";
+        string meshesDir = $"{Constants.USER_FOLDER}/meshes";
+        int importedCount = 0;
+
+        if (!Directory.Exists(nightlyMeshesDir))
+        {
+            ToastNotification.Notify("The nightly meshes folder doesn't exist");
+            return;
+        }
+
+        Directory.CreateDirectory(meshesDir);
+
+        foreach (string file in Directory.GetFiles(nightlyMeshesDir, "*.obj"))
+        {
+            string fileName = Path.GetFileName(file);
+            string destinationPath = $"{meshesDir}/{fileName}";
+
+            if (!File.Exists(destinationPath))
+            {
+                string mtlFile = Path.ChangeExtension(file, ".mtl");
+                string mtlDestinationPath = $"{meshesDir}/{Path.GetFileName(mtlFile)}";
+
+                File.Copy(file, destinationPath);
+                if (File.Exists(mtlFile))
+                {
+                    File.Copy(mtlFile, mtlDestinationPath);
+                }
+                importedCount++;
+            }
+        }
+
+        ToastNotification.Notify($"Imported {importedCount} meshes from nightly");
     }
 }

@@ -20,4 +20,3 @@
     <PackageReference Include="Updatum" Version="1.3.2" />
   </ItemGroup>
 </Project>
-
