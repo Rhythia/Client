@@ -182,7 +182,7 @@ public partial class MapParser : Node
     }
     public static Map SSMapV1(string path, string audioPath = null)
     {
-        string name = path.Split("\\")[^1].TrimSuffix(".txt");
+        string name = path.GetFile().TrimSuffix(".txt");
         var file = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
         Map map;
 
