@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwygmhmegsm4f"
-path.s3tc="res://.godot/imported/icon.svg-3540dd99eafb6c4e602e8c59cee418fa.s3tc.ctex"
-path.etc2="res://.godot/imported/icon.svg-3540dd99eafb6c4e602e8c59cee418fa.etc2.ctex"
+uid="uid://drdy0vqnqfkt0"
+path.s3tc="res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.s3tc.ctex"
+path.etc2="res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/icon.svg"
-dest_files=["res://.godot/imported/icon.svg-3540dd99eafb6c4e602e8c59cee418fa.s3tc.ctex", "res://.godot/imported/icon.svg-3540dd99eafb6c4e602e8c59cee418fa.etc2.ctex"]
+source_file="res://textures/Illuminati.png"
+dest_files=["res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.s3tc.ctex", "res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.etc2.ctex"]
 
 [params]
 
@@ -40,6 +40,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
