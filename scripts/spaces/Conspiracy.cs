@@ -6,16 +6,12 @@ namespace Spaces;
 public partial class Conspiracy : BaseSpace
 {
     private SettingsProfile settings;
-
     private Node3D icons;
     private Vector3 iconsStartPos;
-
     private Node3D scrollingText;
     private Vector3 scrollingTextStartPos;
-
     private Node3D scrollingQuestionMarks;
     private StandardMaterial3D scrollingQuestionMarkTexture;
-
     private const float scrolling_text_loop_end = 46f;
 
 
@@ -25,12 +21,8 @@ public partial class Conspiracy : BaseSpace
 
         icons = GetNode<Node3D>("Icons");
         iconsStartPos = icons.Position;
-
-
-
         scrollingQuestionMarks = GetNode<Node3D>("ScrollingQuestionMarks");
         scrollingQuestionMarkTexture = (scrollingQuestionMarks.GetNode<MeshInstance3D>("Left").Mesh as PlaneMesh).Material as StandardMaterial3D;
-
         scrollingText = GetNode<Node3D>("ScrollingText");
         scrollingTextStartPos = scrollingText.Position;
 
@@ -40,7 +32,6 @@ public partial class Conspiracy : BaseSpace
     public override void _Process(double delta)
     {
         base._Process(delta);
-
 
         if (settings.SpaceEffects)
         {
