@@ -12,6 +12,7 @@ public partial class PanelLeft : UIComponent
     private Tween multiplierTween;
 
     private Label score, multiplier;
+    private Label altCombo;
 
     public override void _ExitTree()
     {
@@ -25,6 +26,7 @@ public partial class PanelLeft : UIComponent
         viewport.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
         score = viewport.GetNode<Label>("Score");
         multiplier = viewport.GetNode<Label>("Multiplier");
+        altCombo = viewport.GetNode<Label>("ComboCount");
 
         multiplierProgressMaterial = viewport.GetNode<Panel>("MultiplierProgress").Material as ShaderMaterial;
         multiplierProgressMaterial.SetShaderParameter("progress", targetMultiplierProgress);
@@ -39,6 +41,23 @@ public partial class PanelLeft : UIComponent
             foreach (Node widget in widgets)
                 (widget as CanvasItem).Visible = false;
         }
+        else
+        {
+            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
+            foreach (Node widget in widgets)
+                (widget as CanvasItem).Visible = true;
+        }
+
+        if (!Runner.Attempt.Settings.AltComboCounter)
+        {
+            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
+            foreach (Node widget in widgets)
+                if ((widget as CanvasItem).Name == "ComboCount")
+                {
+                    (widget as CanvasItem).Visible = false;
+                }
+        }
+
     }
 
     public override void _PhysicsProcess(double delta)
@@ -53,6 +72,8 @@ public partial class PanelLeft : UIComponent
     {
         score.Text = Util.String.PadMagnitude(attempt.Score.ToString());
         multiplier.Text = $"{attempt.ComboMultiplier}x";
+        altCombo.Text = $"{attempt.Combo}";
+
 
         targetMultiplierProgress = (float)attempt.ComboMultiplierProgress / attempt.ComboMultiplierIncrement;
 

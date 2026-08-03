@@ -143,11 +143,7 @@ font_size = 50
 
 [sub_resource type="LabelSettings" id="LabelSettings_pause_counter_title"]
 font = ExtResource("12_axsek")
-font_size = 20
-
-[sub_resource type="LabelSettings" id="LabelSettings_pause_counter_value"]
-font = ExtResource("12_axsek")
-font_size = 42
+font_size = 50
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_suyxu"]
 viewport_path = NodePath("Runner/HUD/PanelRight/PanelRightViewport")
@@ -423,7 +419,7 @@ text = "1x"
 label_settings = SubResource("LabelSettings_usmyc")
 horizontal_alignment = 1
 
-[node name="PauseTitle" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
+[node name="ComboCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
 visible = false
 anchors_preset = -1
 anchor_left = 0.5
@@ -436,25 +432,8 @@ offset_right = 90.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "PAUSES"
-label_settings = SubResource("LabelSettings_pause_counter_title")
-horizontal_alignment = 1
-
-[node name="PauseCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1695472366]
-visible = false
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.93
-anchor_right = 0.5
-anchor_bottom = 0.93
-offset_left = -90.0
-offset_top = -26.0
-offset_right = 90.0
-offset_bottom = 26.0
-grow_horizontal = 2
-grow_vertical = 2
 text = "0"
-label_settings = SubResource("LabelSettings_pause_counter_value")
+label_settings = SubResource("LabelSettings_pause_counter_title")
 horizontal_alignment = 1
 
 [node name="PanelRight" type="MeshInstance3D" parent="Runner/HUD" unique_id=1993445313]

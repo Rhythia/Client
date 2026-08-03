@@ -110,9 +110,9 @@ public partial class SettingsProfile
     public SettingsItem<string> MenuSpace { get; private set; }
 
     /// <summary>
-	/// Overrides the skin's background space for the game
-	/// </summary>
-	[Order]
+    /// Overrides the skin's background space for the game
+    /// </summary>
+    [Order]
     public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
@@ -146,9 +146,9 @@ public partial class SettingsProfile
     public SettingsItem<double> NoteOpacityExponent { get; private set; }
 
     /// <summary>
-	/// Overrides the skin's note mesh
-	/// </summary>
-	[Order]
+    /// Overrides the skin's note mesh
+    /// </summary>
+    [Order]
     public SettingsItem<string> NoteMesh { get; private set; }
 
     /// <summary>
@@ -229,6 +229,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<bool> SuperSimpleHUD { get; private set; }
+
+    /// <summary>
+    /// Moves the Combo Counter to the HUD
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> AltComboCounter { get; private set; }
 
     /// <summary>
     /// Toggles a popup on a hit
@@ -400,9 +406,9 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
-	/// Restarts settings to the game's defaults
-	/// </summary>
-	public SettingsItem<Variant> ResetToDefaults { get; private set; }
+    /// Restarts settings to the game's defaults
+    /// </summary>
+    public SettingsItem<Variant> ResetToDefaults { get; private set; }
 
     #endregion
 
@@ -854,6 +860,14 @@ public partial class SettingsProfile
             Id = "SuperSimpleHUD",
             Title = "Super Simple HUD",
             Description = "Hides health bar, song duration, and song name",
+            Section = SettingsSection.Visual,
+        };
+
+        AltComboCounter = new(false)
+        {
+            Id = "AltComboCounter",
+            Title = "Alt. Combo Counter",
+            Description = "Moves the Combo Counter to the HUD",
             Section = SettingsSection.Visual,
         };
 

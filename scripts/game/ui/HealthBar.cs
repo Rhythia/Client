@@ -27,11 +27,8 @@ public partial class HealthBar : UIComponent
 
         healthBarTexture.Modulate = new(0xffffffff);
 
-        if (Runner.Attempt.Settings.SuperSimpleHUD)
-        {
-            healthBarTexture.Visible = false;
-            healthBarBGTexture.Visible = false;
-        }
+        healthBarTexture.Visible = Runner.Attempt.Settings.SuperSimpleHUD ? false : true;
+        healthBarBGTexture.Visible = Runner.Attempt.Settings.SuperSimpleHUD ? false : true;
 
         Runner.AttemptStatsUpdated += OnStatsUpdated;
     }

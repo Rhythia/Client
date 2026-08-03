@@ -43,6 +43,13 @@ public partial class PanelRight : UIComponent
                 (widget as CanvasItem).Visible = false;
             simpleMisses.Visible = true;
         }
+        else
+        {
+            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
+            foreach (Node widget in widgets)
+                (widget as CanvasItem).Visible = true;
+            simpleMisses.Visible = false;
+        }
     }
 
     public override void _PhysicsProcess(double delta)
