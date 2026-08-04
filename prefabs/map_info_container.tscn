@@ -361,7 +361,7 @@ alignment = 2
 
 [node name="Export" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=2033571562]
 layout_mode = 2
-tooltip_text = "Export (Shift+Click for .sspm export)"
+tooltip_text = "Exports map into a .phxm file to share easily"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("4_4d08m")
