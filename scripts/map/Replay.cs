@@ -169,7 +169,10 @@ public struct Replay
 
             MapNoteCount = FileBuffer.GetUInt64();
             MapFilePath = $"{Constants.USER_FOLDER}/maps/{MapID}";
-            MapFilePath = Path.GetFileNameWithoutExtension(MapFilePath); // just in case it tries to read a .phxm file
+            if (Path.GetExtension(MapFilePath).Equals(".phxm", StringComparison.OrdinalIgnoreCase))
+            {
+                MapFilePath = Path.ChangeExtension(MapFilePath, null); // just in case it tries to read a .phxm file
+            }
 
             if (!Directory.Exists(MapFilePath))
             {
