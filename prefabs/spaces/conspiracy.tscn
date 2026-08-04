@@ -13,8 +13,10 @@ background_mode = 1
 background_color = Color(0.06053035, 0.06053035, 0.060530342, 1)
 glow_intensity = 1.5
 glow_bloom = 0.15
-fog_light_color = Color(0.039215688, 0.039215688, 0.039215688, 1)
+fog_enabled = true
+fog_light_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
 fog_light_energy = 0.1
+fog_density = 0.05
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fp3uj"]
 render_priority = 1
