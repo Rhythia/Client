@@ -97,11 +97,16 @@ public partial class MapManager : Node
         {
             try
             {
-                File.Delete(map.FolderPath);
+                Directory.Delete(map.FolderPath, true);
+                if (!Directory.Exists(map.FolderPath))
+                {
+                    Logger.Log($"{map.Title} has been deleted");
+                }
+
             }
             catch
             {
-                if (File.Exists(map.FolderPath))
+                if (File.Exists(map.FolderPath) || Directory.Exists(map.FolderPath))
                 {
                     Logger.Error("Unable to delete map");
                     return;
