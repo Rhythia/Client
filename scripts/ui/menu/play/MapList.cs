@@ -130,13 +130,19 @@ public partial class MapList : Panel, ISkinnable
             {
                 MapCache.Load(false);
                 UpdateMaps();
+                Sort();
                 Select(maps[0]);
             }
         };
-        MapManager.MapsInitialized += _ => UpdateMaps();
+        MapManager.MapsInitialized += _ =>
+        {
+            UpdateMaps();
+            Sort();
+        };
         MapManager.MapUpdated += map =>
         {
             UpdateMaps();
+            Sort();
         };
         MapManager.MapDeleted += map =>
         {
@@ -153,6 +159,7 @@ public partial class MapList : Panel, ISkinnable
             {
                 clear();
                 UpdateMaps();
+                Sort();
             }).CallDeferred();
         };
 
@@ -456,6 +463,7 @@ public partial class MapList : Panel, ISkinnable
         AuthorQuery = author ?? AuthorQuery;
 
         UpdateMaps();
+        Sort();
     }
 
     public void UpdateMaps()
