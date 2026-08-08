@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://b63r17aoq4ulj"]
 
 [ext_resource type="Script" uid="uid://x0340t34h0g0" path="res://scripts/spaces/Conspiracy.cs" id="1_f3k8h"]
-[ext_resource type="Texture2D" uid="uid://drdy0vqnqfkt0" path="res://textures/Conspiracy/Illuminati.png" id="2_v26q4"]
-[ext_resource type="Texture2D" uid="uid://bp8o83a0vokqg" path="res://textures/Conspiracy/Scroll.png" id="3_em4na"]
-[ext_resource type="Texture2D" uid="uid://b5wk51axojb11" path="res://textures/Conspiracy/Money.png" id="3_mirhg"]
-[ext_resource type="Texture2D" uid="uid://buhmtw5a1yrnq" path="res://textures/Conspiracy/Globe.png" id="3_ycx0p"]
-[ext_resource type="Texture2D" uid="uid://k2srca1qh3b2" path="res://textures/Conspiracy/Front.png" id="4_xo752"]
-[ext_resource type="Texture2D" uid="uid://bkitmwuvjiuqb" path="res://textures/Conspiracy/back.png" id="5_iimi0"]
+[ext_resource type="Texture2D" uid="uid://drdy0vqnqfkt0" path="res://textures/spaces/conspiracy/Illuminati.png" id="2_v26q4"]
+[ext_resource type="Texture2D" uid="uid://bp8o83a0vokqg" path="res://textures/spaces/conspiracy/Scroll.png" id="3_em4na"]
+[ext_resource type="Texture2D" uid="uid://b5wk51axojb11" path="res://textures/spaces/conspiracy/Money.png" id="3_mirhg"]
+[ext_resource type="Texture2D" uid="uid://buhmtw5a1yrnq" path="res://textures/spaces/conspiracy/Globe.png" id="3_ycx0p"]
+[ext_resource type="Texture2D" uid="uid://k2srca1qh3b2" path="res://textures/spaces/conspiracy/Front.png" id="4_xo752"]
+[ext_resource type="Texture2D" uid="uid://bkitmwuvjiuqb" path="res://textures/spaces/conspiracy/back.png" id="5_iimi0"]
 
 [sub_resource type="Environment" id="Environment_n6lso"]
 background_mode = 1

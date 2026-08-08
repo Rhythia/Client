@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://k2srca1qh3b2"
-path.s3tc="res://.godot/imported/Front.png-4f08f9052d5a4f5c607ae0de85384423.s3tc.ctex"
-path.etc2="res://.godot/imported/Front.png-4f08f9052d5a4f5c607ae0de85384423.etc2.ctex"
+uid="uid://drdy0vqnqfkt0"
+path.s3tc="res://.godot/imported/Illuminati.png-a5038dcab24f2e17dd2a2c1c23196cea.s3tc.ctex"
+path.etc2="res://.godot/imported/Illuminati.png-a5038dcab24f2e17dd2a2c1c23196cea.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/Conspiracy/Front.png"
-dest_files=["res://.godot/imported/Front.png-4f08f9052d5a4f5c607ae0de85384423.s3tc.ctex", "res://.godot/imported/Front.png-4f08f9052d5a4f5c607ae0de85384423.etc2.ctex"]
+source_file="res://textures/spaces/conspiracy/Illuminati.png"
+dest_files=["res://.godot/imported/Illuminati.png-a5038dcab24f2e17dd2a2c1c23196cea.s3tc.ctex", "res://.godot/imported/Illuminati.png-a5038dcab24f2e17dd2a2c1c23196cea.etc2.ctex"]
 
 [params]
 

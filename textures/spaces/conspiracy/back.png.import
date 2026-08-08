@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://frwrbwqgan5x"
-path.s3tc="res://.godot/imported/tunnel_neonroad.png-f7ed5297713cc83edc4d6263f2bb6510.s3tc.ctex"
-path.etc2="res://.godot/imported/tunnel_neonroad.png-f7ed5297713cc83edc4d6263f2bb6510.etc2.ctex"
+uid="uid://bkitmwuvjiuqb"
+path.s3tc="res://.godot/imported/back.png-dd8312b848ca185d0540babca50671e2.s3tc.ctex"
+path.etc2="res://.godot/imported/back.png-dd8312b848ca185d0540babca50671e2.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/Tunnel/tunnel_neonroad.png"
-dest_files=["res://.godot/imported/tunnel_neonroad.png-f7ed5297713cc83edc4d6263f2bb6510.s3tc.ctex", "res://.godot/imported/tunnel_neonroad.png-f7ed5297713cc83edc4d6263f2bb6510.etc2.ctex"]
+source_file="res://textures/spaces/conspiracy/back.png"
+dest_files=["res://.godot/imported/back.png-dd8312b848ca185d0540babca50671e2.s3tc.ctex", "res://.godot/imported/back.png-dd8312b848ca185d0540babca50671e2.etc2.ctex"]
 
 [params]
 

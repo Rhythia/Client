@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d4n3duxjt288o"
-path.s3tc="res://.godot/imported/galaxy_rainbow.png-e01b1021474fa897025cc76df37f833f.s3tc.ctex"
-path.etc2="res://.godot/imported/galaxy_rainbow.png-e01b1021474fa897025cc76df37f833f.etc2.ctex"
+uid="uid://b5wk51axojb11"
+path.s3tc="res://.godot/imported/Money.png-6b70d38ad1be11af3e512c8c1e81aa00.s3tc.ctex"
+path.etc2="res://.godot/imported/Money.png-6b70d38ad1be11af3e512c8c1e81aa00.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/Galaxy/galaxy_rainbow.png"
-dest_files=["res://.godot/imported/galaxy_rainbow.png-e01b1021474fa897025cc76df37f833f.s3tc.ctex", "res://.godot/imported/galaxy_rainbow.png-e01b1021474fa897025cc76df37f833f.etc2.ctex"]
+source_file="res://textures/spaces/conspiracy/Money.png"
+dest_files=["res://.godot/imported/Money.png-6b70d38ad1be11af3e512c8c1e81aa00.s3tc.ctex", "res://.godot/imported/Money.png-6b70d38ad1be11af3e512c8c1e81aa00.etc2.ctex"]
 
 [params]
 
