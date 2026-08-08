@@ -14,7 +14,6 @@ public partial class Conspiracy : BaseSpace
     private StandardMaterial3D scrollingQuestionMarkTexture;
     private const float scrolling_text_loop_end = 46f;
 
-
     public override void _Ready()
     {
         settings = SettingsManager.Instance.Settings;

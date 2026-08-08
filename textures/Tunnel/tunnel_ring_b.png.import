@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d4n3duxjt288o"
-path.s3tc="res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.s3tc.ctex"
-path.etc2="res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.etc2.ctex"
+uid="uid://rvoiaddddovf"
+path.s3tc="res://.godot/imported/tunnel_ring_b.png-4b6a37a111c91c905d94125362551e84.s3tc.ctex"
+path.etc2="res://.godot/imported/tunnel_ring_b.png-4b6a37a111c91c905d94125362551e84.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/galaxy_rainbow.png"
-dest_files=["res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.s3tc.ctex", "res://.godot/imported/galaxy_rainbow.png-5150f0d13d80cbbaa64705ec8f0a135d.etc2.ctex"]
+source_file="res://textures/Tunnel/tunnel_ring_b.png"
+dest_files=["res://.godot/imported/tunnel_ring_b.png-4b6a37a111c91c905d94125362551e84.s3tc.ctex", "res://.godot/imported/tunnel_ring_b.png-4b6a37a111c91c905d94125362551e84.etc2.ctex"]
 
 [params]
 

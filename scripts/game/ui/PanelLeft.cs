@@ -35,29 +35,15 @@ public partial class PanelLeft : UIComponent
 
         Runner.AttemptStatsUpdated += OnStatsUpdated;
 
-        if (Runner.Attempt.Settings.SimpleHUD || Runner.Attempt.Settings.SuperSimpleHUD)
+        bool isVisible = !Runner.Attempt.Settings.SimpleHUD && !Runner.Attempt.Settings.SuperSimpleHUD;
+
+        Godot.Collections.Array<Node> widgets = viewport.GetChildren();
+        foreach (Node widget in widgets)
         {
-            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
-            foreach (Node widget in widgets)
-                (widget as CanvasItem).Visible = false;
-        }
-        else
-        {
-            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
-            foreach (Node widget in widgets)
-                (widget as CanvasItem).Visible = true;
+            (widget as CanvasItem).Visible = isVisible;
         }
 
-        if (!Runner.Attempt.Settings.AltComboCounter)
-        {
-            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
-            foreach (Node widget in widgets)
-                if ((widget as CanvasItem).Name == "ComboCount")
-                {
-                    (widget as CanvasItem).Visible = false;
-                }
-        }
-
+        altCombo.Visible = isVisible && Runner.Attempt.Settings.AltComboCounter;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -73,7 +59,6 @@ public partial class PanelLeft : UIComponent
         score.Text = Util.String.PadMagnitude(attempt.Score.ToString());
         multiplier.Text = $"{attempt.ComboMultiplier}x";
         altCombo.Text = $"{attempt.Combo}";
-
 
         targetMultiplierProgress = (float)attempt.ComboMultiplierProgress / attempt.ComboMultiplierIncrement;
 

@@ -1,8 +1,8 @@
 [gd_scene format=4 uid="uid://bjvwg8rpogjo2"]
 
 [ext_resource type="Script" uid="uid://dhxblx0bm60g6" path="res://scripts/spaces/Galaxy.cs" id="1_6wq32"]
-[ext_resource type="Texture2D" uid="uid://drj0rof0q81b5" path="res://textures/galaxy_skybox.png" id="2_6wq32"]
-[ext_resource type="Texture2D" uid="uid://d4n3duxjt288o" path="res://textures/galaxy_rainbow.png" id="3_tgxn1"]
+[ext_resource type="Texture2D" uid="uid://drj0rof0q81b5" path="res://textures/Galaxy/galaxy_skybox.png" id="2_6wq32"]
+[ext_resource type="Texture2D" uid="uid://d4n3duxjt288o" path="res://textures/Galaxy/galaxy_rainbow.png" id="3_tgxn1"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_rhgfa"]
 panorama = ExtResource("2_6wq32")

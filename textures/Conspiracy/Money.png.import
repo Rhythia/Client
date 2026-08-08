@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://frwrbwqgan5x"
-path.s3tc="res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.s3tc.ctex"
-path.etc2="res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.etc2.ctex"
+uid="uid://b5wk51axojb11"
+path.s3tc="res://.godot/imported/Money.png-866fd336c4cfcf56c757aebc7f9e9979.s3tc.ctex"
+path.etc2="res://.godot/imported/Money.png-866fd336c4cfcf56c757aebc7f9e9979.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/tunnel_neonroad.png"
-dest_files=["res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.s3tc.ctex", "res://.godot/imported/tunnel_neonroad.png-d20bc35a74f7193fbf270b8bead3a317.etc2.ctex"]
+source_file="res://textures/Conspiracy/Money.png"
+dest_files=["res://.godot/imported/Money.png-866fd336c4cfcf56c757aebc7f9e9979.s3tc.ctex", "res://.godot/imported/Money.png-866fd336c4cfcf56c757aebc7f9e9979.etc2.ctex"]
 
 [params]
 

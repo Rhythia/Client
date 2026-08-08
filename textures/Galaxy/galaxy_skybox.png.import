@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkitmwuvjiuqb"
-path.s3tc="res://.godot/imported/back.png-6859234932b2cac5f7ac5e0f098d670c.s3tc.ctex"
-path.etc2="res://.godot/imported/back.png-6859234932b2cac5f7ac5e0f098d670c.etc2.ctex"
+uid="uid://drj0rof0q81b5"
+path.s3tc="res://.godot/imported/galaxy_skybox.png-6d8f032879a59578f0bba0aaa1f7766b.s3tc.ctex"
+path.etc2="res://.godot/imported/galaxy_skybox.png-6d8f032879a59578f0bba0aaa1f7766b.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/back.png"
-dest_files=["res://.godot/imported/back.png-6859234932b2cac5f7ac5e0f098d670c.s3tc.ctex", "res://.godot/imported/back.png-6859234932b2cac5f7ac5e0f098d670c.etc2.ctex"]
+source_file="res://textures/Galaxy/galaxy_skybox.png"
+dest_files=["res://.godot/imported/galaxy_skybox.png-6d8f032879a59578f0bba0aaa1f7766b.s3tc.ctex", "res://.godot/imported/galaxy_skybox.png-6d8f032879a59578f0bba0aaa1f7766b.etc2.ctex"]
 
 [params]
 

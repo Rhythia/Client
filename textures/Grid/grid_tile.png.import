@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drdy0vqnqfkt0"
-path.s3tc="res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.s3tc.ctex"
-path.etc2="res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.etc2.ctex"
+uid="uid://cnqebcj2iorfr"
+path.s3tc="res://.godot/imported/grid_tile.png-e69a948924881edcd0e8d3a80a68ac58.s3tc.ctex"
+path.etc2="res://.godot/imported/grid_tile.png-e69a948924881edcd0e8d3a80a68ac58.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/Illuminati.png"
-dest_files=["res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.s3tc.ctex", "res://.godot/imported/Illuminati.png-0c7fb87f690094fc85687c1e5fed20bd.etc2.ctex"]
+source_file="res://textures/Grid/grid_tile.png"
+dest_files=["res://.godot/imported/grid_tile.png-e69a948924881edcd0e8d3a80a68ac58.s3tc.ctex", "res://.godot/imported/grid_tile.png-e69a948924881edcd0e8d3a80a68ac58.etc2.ctex"]
 
 [params]
 

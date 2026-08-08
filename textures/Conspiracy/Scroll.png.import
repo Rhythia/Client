@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://buhmtw5a1yrnq"
-path.s3tc="res://.godot/imported/Globe.png-3fcca5f8c039fce46dbac4655b5b6a95.s3tc.ctex"
-path.etc2="res://.godot/imported/Globe.png-3fcca5f8c039fce46dbac4655b5b6a95.etc2.ctex"
+uid="uid://bp8o83a0vokqg"
+path.s3tc="res://.godot/imported/Scroll.png-ad3693759cfefc3113d46cdfdc82f348.s3tc.ctex"
+path.etc2="res://.godot/imported/Scroll.png-ad3693759cfefc3113d46cdfdc82f348.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/Globe.png"
-dest_files=["res://.godot/imported/Globe.png-3fcca5f8c039fce46dbac4655b5b6a95.s3tc.ctex", "res://.godot/imported/Globe.png-3fcca5f8c039fce46dbac4655b5b6a95.etc2.ctex"]
+source_file="res://textures/Conspiracy/Scroll.png"
+dest_files=["res://.godot/imported/Scroll.png-ad3693759cfefc3113d46cdfdc82f348.s3tc.ctex", "res://.godot/imported/Scroll.png-ad3693759cfefc3113d46cdfdc82f348.etc2.ctex"]
 
 [params]
 
