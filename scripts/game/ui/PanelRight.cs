@@ -43,6 +43,8 @@ public partial class PanelRight : UIComponent
         {
             (widget as CanvasItem).Visible = isVisible;
         }
+
+        simpleMisses.Visible = !isVisible;
     }
 
     public override void _PhysicsProcess(double delta)

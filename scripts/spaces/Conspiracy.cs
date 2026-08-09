@@ -49,7 +49,7 @@ public partial class Conspiracy : BaseSpace
         }
         else
         {
-            scrollingText.Visible = false;
+            scrollingText.Visible = settings.SpaceEffects;
         }
     }
 }
