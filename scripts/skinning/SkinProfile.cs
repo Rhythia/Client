@@ -111,6 +111,8 @@ public partial class SkinProfile : RefCounted
 
     public ImageTexture ModNoFailImage { get; set; } = new();
 
+    public ImageTexture ModAutoplayImage { get; set; } = new();
+
     public ImageTexture ModGhostImage { get; set; } = new();
 
     public ImageTexture ModStrobeImage { get; set; } = new();

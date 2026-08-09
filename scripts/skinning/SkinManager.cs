@@ -119,6 +119,7 @@ public partial class SkinManager : Node
         skin.MapInfoCoverBackgroundImage = loadTexture("ui/play/mapinfo_cover_background.png");
 
         skin.ModNoFailImage = loadTexture("modifiers/nofail.png");
+        skin.ModAutoplayImage = loadTexture("modifiers/autoplay.png");
         skin.ModGhostImage = loadTexture("modifiers/ghost.png");
         skin.ModStrobeImage = loadTexture("modifiers/strobe.png");
         skin.ModChaosImage = loadTexture("modifiers/chaos.png");

@@ -181,6 +181,7 @@ public partial class Rhythia : Node
     {
         Modifiers = [
             new NoFailModifier(),
+            new AutoplayModifier(),
             new GhostModifier(),
             new StrobeModifier(),
             new ChaosModifier(),

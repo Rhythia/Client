@@ -129,6 +129,9 @@ public struct Replay
                     case "NoFail":
                         Modifiers.Add(new NoFailModifier());
                         break;
+                    case "Autoplay":
+                        Modifiers.Add(new AutoplayModifier());
+                        break;
                     case "Ghost":
                         Modifiers.Add(new GhostModifier());
                         break;

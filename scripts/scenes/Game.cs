@@ -141,7 +141,7 @@ public partial class Game : BaseScene
         {
             ReplayManager.CurrentMode = ReplayManager.Mode.PLAYBACK;
         }
-        else if (Runner.Attempt.Settings.RecordReplays)
+        else if (Runner.Attempt.Settings.RecordReplays && !Runner.Attempt.Modifiers.Exists(mod => mod is AutoplayModifier))
         {
             ReplayManager.NewReplay(Runner.Attempt);
             ReplayManager.CurrentMode = ReplayManager.Mode.RECORD;
