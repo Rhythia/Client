@@ -133,14 +133,10 @@ public partial class MapList : Panel, ISkinnable
                 Select(maps[0]);
             }
         };
-        MapManager.MapsInitialized += _ =>
-        {
-            UpdateMaps();
-        };
-        MapManager.MapUpdated += map =>
-        {
-            UpdateMaps();
-        };
+        MapManager.MapsInitialized += _ => UpdateMaps();
+
+        MapManager.MapUpdated += map => UpdateMaps();
+
         MapManager.MapDeleted += map =>
         {
             if (selectedMapID == map.Name)
