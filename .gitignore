@@ -14,11 +14,7 @@ Properties/
 
 # Godot 4+ specific ignores
 .godot/
-
-# Godot-specific ignores
 .import/
-export.cfg
-export_presets.cfg
 
 # Imported translations (automatically generated from CSV files)
 *.translation
@@ -32,5 +28,4 @@ mono_crash.*.json
 
 # Other
 nuget.config
-addons/ffmpeg/win64/~libgdffmpeg.windows.template_debug.x86_64.dll
 *.lscache

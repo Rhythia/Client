@@ -36,7 +36,7 @@ public partial class Runner : Node3D
     [Export] public Godot.Collections.Array<Renderer> Renderers;
     [Export] public MeshInstance3D Grid;
     [Export] public MeshInstance3D Cursor;
-    [Export] public VideoStreamPlayer VideoStreamPlayer;
+    // [Export] public VideoStreamPlayer VideoStreamPlayer;
 
     public override void _Ready()
     {
@@ -46,7 +46,7 @@ public partial class Runner : Node3D
         Camera ??= GetNode<Camera3D>("Camera3D");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
-        VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
+        // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
     }
 
     public override void _Process(double delta)
@@ -240,16 +240,16 @@ public partial class Runner : Node3D
             }
         }
 
-        foreach (var renderer in Renderers)
-        {
-            renderer.Setup(Attempt.Settings, SkinManager.Instance.Skin);
-        }
-
         settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
         Camera.Fov = (float)settings.FoV;
 
         // temp until skinning support
         (Renderers[0] as NoteRenderer).NoteMultiMesh.Multimesh.Mesh = SkinManager.Instance.Skin.NoteMesh;
+
+        foreach (var renderer in Renderers)
+        {
+            renderer.Setup(Attempt.Settings, SkinManager.Instance.Skin);
+        }
 
         SoundManager.BeginGameplayScope(Attempt.Map);
         SoundManager.UpdateVolume();
@@ -580,7 +580,7 @@ public partial class Runner : Node3D
             }
 
             SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
-            VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
+            // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
         }
     }
 }

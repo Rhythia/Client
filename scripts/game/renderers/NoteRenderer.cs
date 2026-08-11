@@ -22,15 +22,6 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
             {
                 UseColors = true,
                 TransformFormat = MultiMesh.TransformFormatEnum.Transform3D
-            },
-            MaterialOverride = new StandardMaterial3D()
-            {
-                Transparency = BaseMaterial3D.TransparencyEnum.AlphaDepthPrePass,
-                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-                SpecularMode = BaseMaterial3D.SpecularModeEnum.Disabled,
-                DisableFog = true,
-                VertexColorUseAsAlbedo = true,
-                VertexColorIsSrgb = true
             }
         };
 
@@ -43,6 +34,21 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
 
         NoteMultiMesh.Multimesh.InstanceCount = 0;
         NoteMultiMesh.Multimesh.VisibleInstanceCount = -1;
+
+        var mesh = NoteMultiMesh.Multimesh.Mesh;
+
+        for (int i = 0; i < mesh.GetSurfaceCount(); i++)
+        {
+            if (mesh.SurfaceGetMaterial(i) is not StandardMaterial3D mat) continue;
+
+            mat.Transparency = BaseMaterial3D.TransparencyEnum.AlphaDepthPrePass;
+            mat.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
+            mat.DisableFog = true;
+            mat.DisableAmbientLight = true;
+            mat.DisableSpecularOcclusion = true;
+            mat.VertexColorUseAsAlbedo = true;
+            mat.VertexColorIsSrgb = true;
+        }
     }
 
     private bool doRender(Note note, float time, float approachTime, float speed)

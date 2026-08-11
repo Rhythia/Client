@@ -15,7 +15,6 @@
 [ext_resource type="Script" uid="uid://dbyc4etv31aub" path="res://scripts/game/ui/ProgressBar.cs" id="7_gxtfn"]
 [ext_resource type="Texture2D" uid="uid://4x2vfpyjkri6" path="res://user/skins/default/game/health.png" id="7_wjg6i"]
 [ext_resource type="Texture2D" uid="uid://dmc5f6ajp8xv1" path="res://user/skins/default/game/progress_background.png" id="8_eu3ux"]
-[ext_resource type="Shader" uid="uid://dsysoy6w8ndnk" path="res://scripts/shaders/video_background.gdshader" id="8_ocxsu"]
 [ext_resource type="Script" uid="uid://dv0gni2j4t686" path="res://scripts/game/ui/PanelLeft.cs" id="8_qnb83"]
 [ext_resource type="Texture2D" uid="uid://d3s17ehomjscd" path="res://user/skins/default/game/progress.png" id="9_nde5v"]
 [ext_resource type="FontFile" uid="uid://cmjos3o0k2f6t" path="res://fonts/Comfortaa-Medium.ttf" id="11_o37lt"]
@@ -209,9 +208,6 @@ texture_repeat = false
 [sub_resource type="QuadMesh" id="QuadMesh_3p7x2"]
 size = Vector2(258.3, 210)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4qlgx"]
-shader = ExtResource("8_ocxsu")
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d5aou"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_r7xjp"]
@@ -288,14 +284,13 @@ Runner = NodePath("../Runner")
 ReplayViewer = NodePath("../ReplayViewer")
 CursorManager = NodePath("../CursorManager")
 
-[node name="Runner" type="Node3D" parent="." unique_id=580620214 node_paths=PackedStringArray("HudManager", "Camera", "Renderers", "Grid", "Cursor", "VideoStreamPlayer")]
+[node name="Runner" type="Node3D" parent="." unique_id=580620214 node_paths=PackedStringArray("HudManager", "Camera", "Renderers", "Grid", "Cursor")]
 script = ExtResource("2_qnb83")
 HudManager = NodePath("HUD")
 Camera = NodePath("Camera3D")
 Renderers = [NodePath("Renderers/Notes")]
 Grid = NodePath("HUD/Grid")
 Cursor = NodePath("HUD/Grid/Cursor")
-VideoStreamPlayer = NodePath("Video/VideoViewport/VideoStreamPlayer")
 
 [node name="HUD" type="Node3D" parent="Runner" unique_id=1234434255 node_paths=PackedStringArray("Runner")]
 script = ExtResource("3_sww3w")
@@ -697,16 +692,6 @@ skeleton = NodePath("../..")
 transparent_bg = true
 canvas_item_default_texture_filter = 2
 size = Vector2i(1920, 1080)
-
-[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Runner/Video/VideoViewport" unique_id=61327167]
-material = SubResource("ShaderMaterial_4qlgx")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-volume_db = -80.0
-expand = true
 
 [node name="QuitOverlay" type="Panel" parent="." unique_id=316579954]
 visible = false

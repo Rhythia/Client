@@ -166,8 +166,12 @@ public partial class SkinManager : Node
         skin.MenuSpace = loadSpace($"res://prefabs/spaces/{(settings.MenuSpace == "skin" ? skin.Config.MenuSpace : settings.MenuSpace)}.tscn");
 
         /////
+
         if (!SettingsManager.HideNotifications)
+        {
             ToastNotification.Notify($"Loaded skin [{settings.Skin.Value}]");
+        }
+
         Logger.Log($"Loaded skin {settings.Skin.Value}");
 
         Instance.EmitSignal(SignalName.Loaded, skin);
@@ -195,7 +199,7 @@ public partial class SkinManager : Node
             fullPath = fallbackPath;
         }
 
-        Image image = Image.LoadFromFile(fullPath);
+        var image = Image.LoadFromFile(fullPath);
         return image != null ? ImageTexture.CreateFromImage(image) : null;
     }
 
@@ -225,15 +229,22 @@ public partial class SkinManager : Node
 
     private static ArrayMesh loadMesh(string path)
     {
-        bool exists = ResourceLoader.Exists(path) || Godot.FileAccess.FileExists(path);
+        string mtlPath = path.TrimSuffix(".obj") + ".mtl";
 
-        return exists ? Util.Misc.OBJParser.Call("load_obj", path).As<ArrayMesh>() : GD.Load<ArrayMesh>("res://user/meshes/squircle.obj");
+        return resourceExists(path)
+            ? Util.Misc.OBJParser.Call("load_obj", path, resourceExists(mtlPath) ? mtlPath : null).As<ArrayMesh>()
+            : GD.Load<ArrayMesh>("res://user/meshes/squircle.obj");
     }
 
     private static BaseSpace loadSpace(string path)
     {
-        bool exists = ResourceLoader.Exists(path) || Godot.FileAccess.FileExists(path);
+        return GD.Load<PackedScene>(
+            resourceExists(path) ? path : "res://prefabs/spaces/void.tscn"
+        ).Instantiate<Node3D>() as BaseSpace;
+    }
 
-        return GD.Load<PackedScene>(exists ? path : "res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;
+    private static bool resourceExists(string path)
+    {
+        return ResourceLoader.Exists(path) || Godot.FileAccess.FileExists(path);
     }
 }
