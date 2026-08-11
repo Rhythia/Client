@@ -33,6 +33,14 @@ public partial class BaseSpace : Node3D
         }
     }
 
+    public override void _ExitTree()
+    {
+        if (Game.Instance?.Runner != null)
+        {
+            Game.Instance.Runner.HitResultChanged -= onHitResultChanged;
+        }
+    }
+
     public override void _Process(double delta)
     {
         base._Process(delta);
