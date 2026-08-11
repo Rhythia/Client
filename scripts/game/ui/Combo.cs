@@ -14,10 +14,10 @@ public partial class Combo : UIComponent
     public override void Init()
     {
         label = GetNode<Label3D>("Label");
-        label.Visible = Runner.Attempt.Settings.SuperSimpleHUD ? false : true;
+        label.Visible = !Runner.Attempt.Settings.SuperSimpleHUD;
         if (!Runner.Attempt.Settings.SuperSimpleHUD)
         {
-            label.Visible = Runner.Attempt.Settings.AltComboCounter ? false : true;
+            label.Visible = !Runner.Attempt.Settings.AltComboCounter;
         }
 
         Runner.AttemptStatsUpdated += OnStatsUpdated;
