@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.IO.Compression;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Godot;
@@ -294,7 +293,7 @@ public partial class MapParser : Node
                 audio.Close();
             }
 
-            map = new(path, "", "", "", notes, null, "", name, audioBuffer: audioBuffer);
+            map = new(path, notes, null, "", name, audioBuffer: audioBuffer);
         }
         catch (Exception exception)
         {
@@ -462,7 +461,7 @@ public partial class MapParser : Node
                 notes[i].Index = i;
             }
 
-            map = new(path ?? $"{Constants.USER_FOLDER}/maps/{song}_temp.sspm", "", "", "", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
+            map = new(path ?? $"{Constants.USER_FOLDER}/maps/{song}_temp.sspm", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
         }
         catch (Exception exception)
         {
@@ -616,7 +615,7 @@ public partial class MapParser : Node
                 notes[i].Index = i;
             }
 
-            map = new(path, "", "", "", notes, id, artist, song, 0, mappers, difficulty, difficultyName, (int)mapLength, audioBuffer, coverBuffer);
+            map = new(path, notes, id, artist, song, 0, mappers, difficulty, difficultyName, (int)mapLength, audioBuffer, coverBuffer);
         }
         catch (Exception exception)
         {
@@ -644,8 +643,6 @@ public partial class MapParser : Node
             byte[] coverBuffer = null;
             byte[] videoBuffer = null;
 
-            // FileParser objects = new(objectsBuffer);
-
             if ((bool)metadata["HasAudio"])
             {
                 audioBuffer = File.ReadAllBytes($"{path}/audio.{metadata["AudioExt"]}");
@@ -667,8 +664,6 @@ public partial class MapParser : Node
             metadata.TryGetValue("ArtistLink", out Variant artistLink);
             metadata.TryGetValue("ArtistPlatform", out Variant artistPlatform);
 
-
-
             byte[] hash = Misc.HashFiles([Path.Combine(path, "metadata.json"), Path.Combine(path, "objects.phxmo")]);
 
             DateTime metadataModified = File.GetLastWriteTime(Path.Combine(path, "metadata.json"));
@@ -677,9 +672,6 @@ public partial class MapParser : Node
 
             map = new(
                 path,
-                BitConverter.ToString(hash).Replace("-", "").ToLower(),
-                metadataModified.ToString(),
-                objectsModified.ToString(),
                 notes,
                 (string)metadata["ID"],
                 (string)metadata["Artist"],
@@ -696,6 +688,9 @@ public partial class MapParser : Node
                 (string)artistLink ?? "",
                 (string)artistPlatform ?? ""
             );
+            map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
+            map.LastModifiedMetadata = metadataModified.ToString();
+            map.LastModifiedNotes = objectsModified.ToString();
         }
         catch (Exception exception)
         {
@@ -712,74 +707,12 @@ public partial class MapParser : Node
 
         string mapDirectory = $"{Constants.USER_FOLDER}/maps";
 
-        // try
-        // {
-        //     var file = ZipFile.OpenRead(path);
-
-        //     byte[] metaBuffer = getZipEntryBuffer(file, "metadata.json");
-        //     byte[] objectsBuffer = getZipEntryBuffer(file, "objects.phxmo");
-        //     byte[] audioBuffer = null;
-        //     byte[] coverBuffer = null;
-        //     byte[] videoBuffer = null;
-
-        //     var metadata = (Dictionary)Json.ParseString(Encoding.UTF8.GetString(metaBuffer));
-        //     FileParser objects = new(objectsBuffer);
-
-        //     if ((bool)metadata["HasAudio"])
-        //     {
-        //         audioBuffer = getZipEntryBuffer(file, $"audio.{metadata["AudioExt"]}");
-        //     }
-
-        //     if ((bool)metadata["HasCover"])
-        //     {
-        //         coverBuffer = getZipEntryBuffer(file, "cover.png");
-        //     }
-
-        //     if ((bool)metadata["HasVideo"])
-        //     {
-        //         videoBuffer = getZipEntryBuffer(file, "video.mp4");
-        //     }
-
-        //     var notes = DecodePHXMO(objectsBuffer);
-
-        //     file.Dispose();
-
-        //     // temp
-        //     metadata.TryGetValue("ArtistLink", out Variant artistLink);
-        //     metadata.TryGetValue("ArtistPlatform", out Variant artistPlatform);
-
-        //     map = new(
-        //         path,
-        //         notes,
-        //         (string)metadata["ID"],
-        //         (string)metadata["Artist"],
-        //         (string)metadata["Title"],
-        //         0,
-        //         (string[])metadata["Mappers"],
-        //         (int)metadata["Difficulty"],
-        //         (string)metadata["DifficultyName"],
-        //         (int)metadata["Length"],
-        //         audioBuffer,
-        //         coverBuffer,
-        //         videoBuffer,
-        //         false,
-        //         (string)artistLink ?? "",
-        //         (string)artistPlatform ?? ""
-        //     );
-        // }
-        // catch (Exception exception)
-        // {
-        //     ToastNotification.Notify($"PHXM file corrupted", 2);
-        //     Logger.Error(exception);
-        //     throw;
-        // }
-
         string extractedFolderName = Path.GetFileNameWithoutExtension(path);
         string extractedFolderPath = Path.Combine(mapDirectory, extractedFolderName);
 
         if (Directory.Exists(extractedFolderPath))
         {
-            Directory.Delete(extractedFolderPath, true); // true = recursive
+            Directory.Delete(extractedFolderPath, true);
             Map existingMap = DatabaseService.Connection.Table<Map>().FirstOrDefault(x => x.FolderPath == extractedFolderPath);
             MapCache.RemoveMap(existingMap);
         }
@@ -877,9 +810,6 @@ public partial class MapParser : Node
 
             map = new(
                 path,
-                "",
-                "",
-                "",
                 notes,
                 null,
                 artist ?? "",

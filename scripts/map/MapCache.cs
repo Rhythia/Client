@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Godot;
-using Octokit;
 using Util;
 
 public static class MapCache
@@ -31,21 +26,10 @@ public static class MapCache
 
         try
         {
-            // string[] files = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories);
-
-            // List<string> mapsList = Directory
-            //     .GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
-            //     .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
-            //     .ToList();
-
-            // Map files go first since they will be encoded to folders after they get parsed in MapParser.cs
+            // Map files go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
             List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
                     .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
                     .ToList();
-
-            // List<string> mapsList = Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories)
-            //     .Concat(Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories))
-            //     .ToList();
 
             string[] toParseMaps = mapsList.ToArray();
 
@@ -86,29 +70,25 @@ public static class MapCache
 
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
-            // Checks if the map is actually inside the maps folder
             if (mapsHashSet.Contains(mapPath))
             {
                 DateTime metadataModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "metadata.json"));
                 DateTime objectModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "objects.phxmo"));
 
-                // i have to convert to string since sqlite doesnt support DateTime c# conversion
-                // PLUS, theres like seconds or something and it doesnt catch that soooooo
+                // Time must be converted to string because the SQLite library doesn't support DateTime types -fog
                 string metadataResult = metadataModifiedDate.ToString();
                 string notesResult = objectModifiedDate.ToString();
 
                 bool metadataCheck = map.LastModifiedMetadata == metadataResult;
                 bool objectsCheck = map.LastModifiedNotes == notesResult;
 
-                // last modified is faster and lowkey more important -fog
+                // Last modified comes before checksum since it is faster -fog
                 if (metadataCheck || objectsCheck)
                 {
                     FilesSynced.Value++;
                     continue;
                 }
 
-                // we will do checksum checking after if last modified dates dont match
-                // this code shouldn't be reached unless the dates dont match
                 string checksum = GetMd5Checksum(mapPath);
                 if (map.MetadataObjectHash == checksum)
                 {
@@ -146,7 +126,6 @@ public static class MapCache
                 newMap.MetadataObjectHash = checksum;
 
                 DatabaseService.Connection.Update(newMap);
-                // InsertIntoMapCacheFolder(map);
                 Logger.Log($"Updated cached map: {newMap.Name}");
                 FilesSynced.Value++;
                 continue;
@@ -183,8 +162,6 @@ public static class MapCache
             {
                 continue;
             }
-
-            // FilesToSync.Value += 1;
 
             try
             {
@@ -319,30 +296,6 @@ public static class MapCache
 
         MapManager.Maps = sortedMaps;
     }
-
-    // public static List<MapSet> ConvertToMapSets(IEnumerable<Map> maps)
-    // {
-    //     var groupedMaps = maps
-    //         .GroupBy(u => u.Collection)
-    //         .Select(x => x.ToList())
-    //         .ToList();
-
-    //     var mapSets = new List<MapSet>();
-
-    //     foreach (var mapSet in groupedMaps)
-    //     {
-    //         var set = new MapSet()
-    //         {
-    //             Directory = mapSet.First().Collection,
-    //             Maps = mapSet
-    //         };
-
-    //         set.Maps.ForEach(x => x.MapSet = set);
-    //         mapSets.Add(set);
-    //     }
-
-    //     return mapSets;
-    // }
 
     public static string GetMd5Checksum(string path)
     {
