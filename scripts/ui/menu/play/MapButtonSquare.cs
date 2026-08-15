@@ -4,10 +4,12 @@ using Godot;
 public partial class MapButtonSquare : MapButton
 {
     private Color idleColor = Color.Color8(13, 13, 13);
-    private Color hoverColor = Color.Color8(50, 50, 50);
+    private Color hoverColor = Color.Color8(26, 26, 26);
     private Color selectColor = Color.Color8(201, 0, 69);
 
     private Label difficulty;
+    private Label author;
+    private Label length;
     private TextureRect coverBackground;
 
     public override void _Ready()
@@ -16,6 +18,10 @@ public partial class MapButtonSquare : MapButton
 
         difficulty = Holder.GetNode<Label>("Difficulty");
         difficulty.LabelSettings = difficulty.LabelSettings.Duplicate() as LabelSettings;
+        author = Holder.GetNode<Label>("Author");
+        author.LabelSettings = difficulty.LabelSettings.Duplicate() as LabelSettings;
+        length = Holder.GetNode<Label>("Length");
+        length.LabelSettings = difficulty.LabelSettings.Duplicate() as LabelSettings;
         coverBackground = Holder.GetNode<TextureRect>("CoverBackground");
 
         UpdateSkin();
@@ -56,6 +62,8 @@ public partial class MapButtonSquare : MapButton
         var color = Constants.DIFFICULTY_COLORS[map.Difficulty];
 
         difficulty.Text = map.DifficultyName;
+        author.Text = map.PrettyMappers;
+        length.Text = Util.String.FormatTime(map.Length / 1000);
         difficulty.LabelSettings.FontColor = color;
         coverBackground.SelfModulate = color;
     }
@@ -71,7 +79,7 @@ public partial class MapButtonSquare : MapButton
 
     private void updateFocus()
     {
-        Cover.Modulate = Color.Color8(255, 255, 255, (byte)(Hovered || Selected ? 255 : 128));
+        Cover.Modulate = Color.Color8(255, 255, 255, (byte)(Hovered || Selected ? 200 : 128));
         OutlineShader.SetShaderParameter("outline_color", Selected ? selectColor : Hovered ? hoverColor : idleColor);
     }
 }
