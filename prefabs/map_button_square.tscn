@@ -39,7 +39,7 @@ corner_radius_bottom_left = 2
 
 [sub_resource type="LabelSettings" id="LabelSettings_pbhva"]
 line_spacing = 1.0
-font_size = 14
+font_size = 12
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
@@ -47,7 +47,6 @@ shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_hc3kw"]
 font_size = 12
-font_color = Color(1, 1, 1, 0.5882353)
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
@@ -133,6 +132,19 @@ pivot_offset = Vector2(8, 8)
 texture = ExtResource("2_ywqiq")
 expand_mode = 1
 
+[node name="Separator2" type="ColorRect" parent="Holder" unique_id=972899073]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.671
+anchor_right = 0.5
+anchor_bottom = 0.671
+offset_left = -54.0
+offset_top = 0.05999756
+offset_right = 54.0
+offset_bottom = 1.0599976
+color = Color(1, 1, 1, 0.23529412)
+
 [node name="Title" type="Label" parent="Holder" unique_id=803816264]
 layout_mode = 1
 anchors_preset = -1
@@ -141,10 +153,11 @@ anchor_bottom = 0.9
 offset_left = 8.0
 offset_top = 4.0
 offset_right = -8.0
+offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3_xysv8")
-text = "Long Artist Name - Kind Of Really Long Song Title Compared To Most Songs I Think"
+text = "Long Artist Name - Kind Of Really Long Song Title Compared To Most Songs I Think And I Am Small Too"
 label_settings = SubResource("LabelSettings_pbhva")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -156,16 +169,36 @@ text_overrun_behavior = 3
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.8
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = 8.0
-offset_right = -8.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("3_xysv8")
 text = "Difficulty"
 label_settings = SubResource("LabelSettings_hc3kw")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+
+[node name="Length" type="Label" parent="Holder" unique_id=1138715202]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.657
+anchor_right = 0.721
+anchor_bottom = 0.88900006
+offset_left = 39.0
+offset_top = 3.0199966
+offset_right = 0.05999756
+offset_bottom = -8.460007
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("3_xysv8")
+text = "0:00"
+label_settings = SubResource("LabelSettings_hc3kw")
+horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
@@ -181,3 +214,38 @@ focus_mode = 0
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 flat = true
+
+[node name="Author" type="Label" parent="Holder" unique_id=1908138830]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.52900004
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 0.9710001
+offset_left = -0.060005188
+offset_right = -4.0
+offset_bottom = 0.0599823
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("3_xysv8")
+text = "Author"
+label_settings = SubResource("LabelSettings_hc3kw")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Separator1" type="ColorRect" parent="Holder" unique_id=2011952245]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.49600002
+anchor_top = 0.883
+anchor_right = 0.49600002
+anchor_bottom = 0.883
+offset_left = 0.55999756
+offset_top = -7.6200027
+offset_right = 15.703194
+offset_bottom = -6.6200027
+rotation = 1.5707964
+color = Color(1, 1, 1, 0.23529412)
