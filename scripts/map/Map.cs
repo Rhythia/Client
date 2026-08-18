@@ -16,6 +16,7 @@ public partial class Map : RefCounted
     public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
+    public int? CacheVersion { get; set; }
     public string LastModifiedMetadata { get; set; }
     public string LastModifiedNotes { get; set; }
 
@@ -121,6 +122,8 @@ public partial class Map : RefCounted
 
     public Map(string folderPath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")
     {
+        CacheVersion = 2;
+        
         FolderPath = folderPath;
         Ephemeral = ephemeral;
         MetadataObjectHash = "";

@@ -11,6 +11,8 @@ public static class MapCache
     public static Bindable<int> FilesToSync = new(0);
     public static Bindable<int> FilesSynced = new(0);
     public static event Action<int> OnFilesSyncFinished;
+    public static bool OldCacheFormat = false;
+    public static List<string> MapsToBeFavorited = new();
 
     public static void Initialize()
     {
@@ -54,6 +56,12 @@ public static class MapCache
     private static void syncFiles(string[] toParseMaps)
     {
         var maps = FetchAll();
+        
+        if (maps[0].CacheVersion is null || maps[0].CacheVersion <= 1)
+        {
+            OldCacheFormat = true;
+            Logger.Log("Old map cache detected! Re-converting...");
+        }
 
         FilesToSync.Value = maps.Count;
         FilesSynced.Value = 0;
@@ -64,12 +72,24 @@ public static class MapCache
         }
 
         var mapsHashSet = toParseMaps.ToHashSet();
-        int deletedMapInt = 0;
 
+        // Debug Variables that will be printed in case of problems
+        int deletedMapInt = 0;
+        int convertedMaps = 0;
+
+        // The new cache re-writes it from scratch with a new format, so we will need to store these
         foreach (var map in maps)
         {
-
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
+
+            // Store it in a public list to add it later when we re-parse the maps
+            if (OldCacheFormat)
+            {
+                if (map.Favorite == true)
+                {
+                    MapsToBeFavorited.Add(map.Name);
+                }
+            }
 
             if (mapsHashSet.Contains(mapPath))
             {
@@ -133,11 +153,11 @@ public static class MapCache
             }
             else
             {
-                if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
-                {
-                    Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
-                }
-
+                // if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
+                // {
+                //     Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
+                // }
+                
                 DatabaseService.Connection.Delete(map);
                 deletedMapInt++;
                 // Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
@@ -149,6 +169,10 @@ public static class MapCache
         if (deletedMapInt > 0)
         {
             Logger.Log($"Removed {deletedMapInt} maps from the cache.");
+        }
+        if (convertedMaps > 0)
+        {
+            Logger.Log($"Converted {convertedMaps} maps from the old cache.");
         }
     }
 
@@ -177,6 +201,15 @@ public static class MapCache
                 var map = MapParser.Decode(toParseMap);
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
+
+                if (OldCacheFormat)
+                {
+                    if (MapsToBeFavorited.Contains(map.Name))
+                    {
+                        map.Favorite = true;
+                    }
+                }
+                
                 InsertMap(map);
             }
             catch
