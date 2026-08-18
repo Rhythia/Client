@@ -73,6 +73,8 @@ public partial class MapParser : Node
         The reason we re-decode it is because the cut down map cache's map list does not
         have the buffers to save time and memory. So if we decode it, we can get the
         buffers without having to deal with other annoying shit
+
+            -fog
         */
         Map decodedMap = Decode(map.FolderPath);
         
