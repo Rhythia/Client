@@ -69,8 +69,15 @@ public partial class MapParser : Node
 
     public static void ExportEncode(Map map)
     {
+        /*
+        The reason we re-decode it is because the cut down map cache's map list does not
+        have the buffers to save time and memory. So if we decode it, we can get the
+        buffers without having to deal with other annoying shit
+        */
+        Map decodedMap = Decode(map.FolderPath);
+        
         string exportPath = $"{Constants.USER_FOLDER}/export/";
-        string exportFilePath = Path.Combine(exportPath, $"{map.Name}.phxm");
+        string exportFilePath = Path.Combine(exportPath, $"{decodedMap.Name}.phxm");
 
         if (!Directory.Exists(exportPath)) Directory.CreateDirectory(exportPath);
 
@@ -79,14 +86,14 @@ public partial class MapParser : Node
         {
             var metadata = archive.CreateEntry("metadata.json", CompressionLevel.NoCompression);
             using (var writer = new StreamWriter(metadata.Open()))
-                writer.Write(map.EncodeMeta());
+                writer.Write(decodedMap.EncodeMeta());
             var objects = archive.CreateEntry("objects.phxmo", CompressionLevel.NoCompression);
             using (var objs = objects.Open())
             {
                 using BinaryWriter bw = new BinaryWriter(objs);
                 bw.Write((uint)12);
-                bw.Write((uint)map.Notes.Length);
-                foreach (var note in map.Notes)
+                bw.Write((uint)decodedMap.Notes.Length);
+                foreach (var note in decodedMap.Notes)
                 {
                     bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
                     bw.Write((uint)note.Millisecond);
@@ -122,9 +129,9 @@ public partial class MapParser : Node
                 stream.Write(buffer, 0, buffer.Length);
             }
 
-            if (map.AudioBuffer != null) addAsset($"audio.{map.AudioExt}", map.AudioBuffer);
-            if (map.CoverBuffer != null) addAsset($"cover.png", map.CoverBuffer);
-            if (map.VideoBuffer != null) addAsset($"video.mp4", map.VideoBuffer);
+            if (decodedMap.AudioBuffer != null) addAsset($"audio.{decodedMap.AudioExt}", decodedMap.AudioBuffer);
+            if (decodedMap.CoverBuffer != null) addAsset($"cover.png", decodedMap.CoverBuffer);
+            if (decodedMap.VideoBuffer != null) addAsset($"video.mp4", decodedMap.VideoBuffer);
         }
 
         File.WriteAllBytes(exportFilePath, ms.ToArray());
@@ -211,7 +218,6 @@ public partial class MapParser : Node
         map.LastModifiedNotes = objectsModified.ToString();
 
         map.FolderPath = mapFolderPath;
-        // need to do map caching stuff here
 
         MapCache.InsertMap(map);
 
@@ -710,6 +716,7 @@ public partial class MapParser : Node
         string extractedFolderName = Path.GetFileNameWithoutExtension(path);
         string extractedFolderPath = Path.Combine(mapDirectory, extractedFolderName);
 
+        // If the map you are extacting already exists
         if (Directory.Exists(extractedFolderPath))
         {
             Directory.Delete(extractedFolderPath, true);
@@ -718,7 +725,10 @@ public partial class MapParser : Node
         }
 
         ZipFile.ExtractToDirectory(path, extractedFolderPath);
-        File.Delete(path);
+        if (Path.GetDirectoryName(Path.GetFullPath(path)) == Path.GetFullPath(mapDirectory))
+        {
+            File.Delete(path);
+        }
 
         return PHXMFolder(extractedFolderPath);
     }

@@ -152,6 +152,7 @@ public partial class Map : RefCounted
 
     public string EncodeMeta()
     {
+        string path = $"{MapUtil.MapsFolder}/{Name}";
         return Json.Stringify(new Godot.Collections.Dictionary()
         {
             ["ID"] = Name,
@@ -164,9 +165,9 @@ public partial class Map : RefCounted
             ["Difficulty"] = Difficulty,
             ["DifficultyName"] = DifficultyName,
             ["Length"] = Length,
-            ["HasAudio"] = AudioBuffer != null,
-            ["HasCover"] = CoverBuffer != null,
-            ["HasVideo"] = VideoBuffer != null,
+            ["HasAudio"] = AudioBuffer != null && File.Exists($"{path}/audio.{AudioExt}"),
+            ["HasCover"] = CoverBuffer != null && File.Exists($"{path}/cover.png"),
+            ["HasVideo"] = VideoBuffer != null && File.Exists($"{path}/video.mp4"),
             ["AudioExt"] = AudioExt
         }, "\t");
     }
