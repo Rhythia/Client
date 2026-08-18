@@ -70,7 +70,6 @@ public partial class ReplayManager : Node
         }
 
         string serializedMods = string.Join("_", mods);
-        // string mapName = attempt.Map.FilePath.GetFile().GetBaseName();
         string mapName = Path.GetFileName(attempt.Map.FolderPath);
         string player = "You";
 

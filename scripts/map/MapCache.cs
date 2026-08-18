@@ -26,7 +26,7 @@ public static class MapCache
 
         try
         {
-            // Map files go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
+            // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
             List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
                     .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
                     .ToList();
@@ -64,6 +64,7 @@ public static class MapCache
         }
 
         var mapsHashSet = toParseMaps.ToHashSet();
+        int deletedMapInt = 0;
 
         foreach (var map in maps)
         {
@@ -138,10 +139,16 @@ public static class MapCache
                 }
 
                 DatabaseService.Connection.Delete(map);
-                Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
+                deletedMapInt++;
+                // Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
 
                 FilesSynced.Value++;
             }
+        }
+
+        if (deletedMapInt > 0)
+        {
+            Logger.Log($"Removed {deletedMapInt} maps from the cache.");
         }
     }
 
@@ -156,6 +163,8 @@ public static class MapCache
         FilesToSync.Value = toParseMaps.Count() - maps.Count();
         FilesSynced.Value = 0;
 
+        Logger.Log($"Decoding {toParseMaps.Length} maps\nFiles To Sync: {FilesToSync.Value}");
+
         foreach (string toParseMap in toParseMaps)
         {
             if (hashSet.Contains(BackSlashToForwardSlash(toParseMap)))
@@ -165,7 +174,6 @@ public static class MapCache
 
             try
             {
-                GD.Print($"decoding: {toParseMap}\nfilestosync: {FilesToSync.Value}, filessynced: {FilesSynced.Value}");
                 var map = MapParser.Decode(toParseMap);
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
@@ -179,6 +187,8 @@ public static class MapCache
 
             FilesSynced.Value++;
         }
+
+        Logger.Log($"Files Synced: {FilesSynced.Value}");
     }
 
     public static int InsertMap(Map map)
