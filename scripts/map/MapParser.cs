@@ -695,14 +695,19 @@ public partial class MapParser : Node
                 false,
                 (string)artistLink ?? "",
                 (string)artistPlatform ?? ""
-            );
-            map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
-            map.LastModifiedMetadata = metadataModified.ToString();
-            map.LastModifiedNotes = objectsModified.ToString();
+            )
+            {
+                MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower(),
+                LastModifiedMetadata = metadataModified.ToString(),
+                LastModifiedNotes = objectsModified.ToString()
+            };
+            // map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
+            // map.LastModifiedMetadata = metadataModified.ToString();
+            // map.LastModifiedNotes = objectsModified.ToString();
         }
         catch (Exception exception)
         {
-            _ = ToastNotification.Notify($"PHXM folder corrupted", 2);
+            _ = ToastNotification.Notify($"{Path.GetFileNameWithoutExtension(path)} is not the proper format!", 2);
             Logger.Error(exception);
             throw;
         }
