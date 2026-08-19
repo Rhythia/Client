@@ -30,6 +30,7 @@
   - [Linux](#linux)
   - [Linux Troubleshooting](#linux-troubleshooting)
 - [User Folder](#user-folder)
+- [Getting Maps](#getting-maps)
 - [Development](#development)
   - [Prerequisites](#prerequisites)
   - [Project Structure](#project-structure)
@@ -149,6 +150,12 @@ Your maps, replays, skins, and settings are stored separately from the game inst
 | **Linux** | `~/.local/share/Rhythia` |
 
 You can also access the user folder from within the game via **Settings → User Folder**.
+
+---
+
+## Getting Maps
+
+Maps aren't included in the game by default; they must be downloaded and imported into the client. Maps can be found in the Discord server linked above.
 
 ---
 
