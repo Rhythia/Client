@@ -211,7 +211,12 @@ public static class MapCache
             try
             {
                 var map = MapParser.Decode(toParseMap);
-                if (map is null) continue;
+                if (map is null)
+                {
+                    // Directory.Delete(toParseMap, true);
+                    Logger.Log($"Failed to add map non-cached map {toParseMap}");
+                    continue;
+                }
                 
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
@@ -226,10 +231,11 @@ public static class MapCache
                 
                 InsertMap(map);
             }
-            catch
+            catch (Exception exception)
             {
-                Directory.Delete(toParseMap, true);
+                // Directory.Delete(toParseMap, true);
                 Logger.Log($"Failed to add map non-cached map {toParseMap}");
+                Logger.Error(exception);
             }
 
             FilesSynced.Value++;
