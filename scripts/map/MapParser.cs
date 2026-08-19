@@ -738,7 +738,11 @@ public partial class MapParser : Node
         }
 
         ZipFile.ExtractToDirectory(path, extractedFolderPath);
-        if (Path.GetDirectoryName(Path.GetFullPath(path)) == Path.GetFullPath(mapDirectory))
+
+        string fullPath = Path.GetFullPath(path);
+        string fullMapDirectory = Path.GetFullPath(mapDirectory);
+        string relativePath = Path.GetRelativePath(fullMapDirectory, fullPath);
+        if (!relativePath.StartsWith("..") && !Path.IsPathRooted(relativePath))
         {
             File.Delete(path);
         }
