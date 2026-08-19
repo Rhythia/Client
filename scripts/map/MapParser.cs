@@ -638,6 +638,12 @@ public partial class MapParser : Node
     public static Map PHXMFolder(string path)
     {
 
+        // First check if this is a proper phxm map
+        if (!File.Exists($"{path}/metadata.json") || !File.Exists($"{path}/objects.phxmo"))
+        {
+            return null;
+        }
+
         Map map;
 
         try

@@ -56,11 +56,14 @@ public static class MapCache
     private static void syncFiles(string[] toParseMaps)
     {
         var maps = FetchAll();
-        
-        if (maps[0].CacheVersion is null || maps[0].CacheVersion <= 1)
+
+        if (maps.Count > 0)
         {
-            OldCacheFormat = true;
-            Logger.Log("Old map cache detected! Re-converting...");
+            if (maps[0].CacheVersion is null || maps[0].CacheVersion <= 1)
+            {
+                OldCacheFormat = true;
+                Logger.Log("Old map cache detected! Re-converting...");
+            }
         }
 
         FilesToSync.Value = maps.Count;
@@ -77,16 +80,15 @@ public static class MapCache
         int deletedMapInt = 0;
         int convertedMaps = 0;
 
-        // The new cache re-writes it from scratch with a new format, so we will need to store these
         foreach (var map in maps)
         {
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
-            // Store it in a public list to add it later when we re-parse the maps
             if (OldCacheFormat)
             {
                 if (map.Favorite == true)
                 {
+                    // The new cache re-writes it from scratch with a new format, so we will need to store these for later
                     MapsToBeFavorited.Add(map.Name);
                 }
             }
@@ -153,10 +155,14 @@ public static class MapCache
             }
             else
             {
-                // if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
-                // {
-                //     Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
-                // }
+                if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
+                {
+                    // Check if valid map
+                    if (!File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json") || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo"))
+                    {
+                        Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
+                    }
+                }
                 
                 DatabaseService.Connection.Delete(map);
                 deletedMapInt++;
@@ -187,10 +193,16 @@ public static class MapCache
         FilesToSync.Value = toParseMaps.Count() - maps.Count();
         FilesSynced.Value = 0;
 
+        if (toParseMaps.Contains($"{Constants.USER_FOLDER}/maps/default"))
+        {
+            FilesToSync.Value--;
+        }
+
         Logger.Log($"Decoding {toParseMaps.Length} maps\nFiles To Sync: {FilesToSync.Value}");
 
         foreach (string toParseMap in toParseMaps)
         {
+            // If the map path already exists in the map cache, skip it
             if (hashSet.Contains(BackSlashToForwardSlash(toParseMap)))
             {
                 continue;
@@ -199,6 +211,8 @@ public static class MapCache
             try
             {
                 var map = MapParser.Decode(toParseMap);
+                if (map is null) continue;
+                
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
 
@@ -215,7 +229,7 @@ public static class MapCache
             catch
             {
                 Directory.Delete(toParseMap, true);
-                Logger.Log($"Failed to add map non-cached map");
+                Logger.Log($"Failed to add map non-cached map {toParseMap}");
             }
 
             FilesSynced.Value++;
