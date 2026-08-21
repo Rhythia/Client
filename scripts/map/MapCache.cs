@@ -29,7 +29,7 @@ public static class MapCache
         try
         {
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
-            List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder,$"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
+            List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
                     .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
                     .ToList();
 
@@ -45,7 +45,7 @@ public static class MapCache
                 {
                     Directory.Delete($"{Constants.USER_FOLDER}/cache/maps", true);
                 }
-                
+
                 OnFilesSyncFinished?.Invoke(FilesSynced.Value);
                 FilesToSync.Value = 0;
                 FilesSynced.Value = 0;
@@ -166,7 +166,7 @@ public static class MapCache
                         Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
                     }
                 }
-                
+
                 DatabaseService.Connection.Delete(map);
                 deletedMapInt++;
                 // Logger.Log($"Removed {mapPath} from the cache, as it no longer exists.");
@@ -221,7 +221,7 @@ public static class MapCache
                     Logger.Log($"Failed to add map non-cached map {toParseMap}");
                     continue;
                 }
-                
+
                 map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
 
@@ -232,7 +232,7 @@ public static class MapCache
                         map.Favorite = true;
                     }
                 }
-                
+
                 InsertMap(map);
             }
             catch (Exception exception)

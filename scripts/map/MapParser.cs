@@ -77,7 +77,7 @@ public partial class MapParser : Node
             -fog
         */
         Map decodedMap = Decode(map.FolderPath);
-        
+
         string exportPath = $"{Constants.USER_FOLDER}/export/";
         string exportFilePath = Path.Combine(exportPath, $"{decodedMap.Name}.phxm");
 
@@ -262,7 +262,7 @@ public partial class MapParser : Node
             if (save) Encode(map);
 
             return map;
-        } 
+        }
         else if (Directory.Exists(path))
         {
             return PHXMFolder(path);
@@ -717,7 +717,7 @@ public partial class MapParser : Node
             Logger.Error(exception);
             throw;
         }
-        
+
         return map;
     }
 
