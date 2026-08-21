@@ -74,7 +74,7 @@ public partial class Loading : BaseScene
             .TweenMethod(Callable.From((float shift) =>
             {
                 splashMaterial.SetShaderParameter("shift", shift);
-            }), 0.2, 1.0, 2.5);
+            }), 0.2, 1.0, 1.5);
 
         return inTween;
     }
@@ -82,7 +82,7 @@ public partial class Loading : BaseScene
     private void exit()
     {
         var outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
-        outTween.TweenProperty(background, "color", Color.Color8(0, 0, 0), 0.5);
+        outTween.TweenProperty(background, "color", Color.Color8(0, 0, 0), 0.25);
         outTween.Chain().TweenCallback(Callable.From(() => { SceneManager.Load("res://scenes/main_menu.tscn"); }));
     }
 

@@ -5,11 +5,34 @@
 
 [sub_resource type="Environment" id="87"]
 background_mode = 1
-glow_enabled = true
 glow_intensity = 0.0
 glow_bloom = 0.9
 glow_blend_mode = 0
 glow_hdr_scale = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_dyp4q"]
+size = Vector3(2, 2, 0)
+
+[sub_resource type="Gradient" id="Gradient_dyp4q"]
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_haq2w"]
+gradient = SubResource("Gradient_dyp4q")
+fill_from = Vector2(0.530303, 0.540404)
+fill_to = Vector2(0.5252525, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_haq2w"]
+transparency = 1
+cull_mode = 2
+albedo_texture = SubResource("GradientTexture2D_haq2w")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ybwb5"]
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("GradientTexture2D_haq2w")
+
+[sub_resource type="BoxMesh" id="103"]
+size = Vector3(2, 2, 0)
 
 [sub_resource type="Gradient" id="99"]
 offsets = PackedFloat32Array(0, 0.5, 1)
@@ -50,30 +73,6 @@ distance_fade_max_distance = 3.25
 material = SubResource("109")
 radial_segments = 4
 rings = 4
-
-[sub_resource type="BoxMesh" id="BoxMesh_dyp4q"]
-size = Vector3(2, 2, 0)
-
-[sub_resource type="Gradient" id="Gradient_dyp4q"]
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_haq2w"]
-gradient = SubResource("Gradient_dyp4q")
-fill_from = Vector2(0.530303, 0.540404)
-fill_to = Vector2(0.5252525, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_haq2w"]
-transparency = 1
-cull_mode = 2
-albedo_texture = SubResource("GradientTexture2D_haq2w")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ybwb5"]
-transparency = 1
-shading_mode = 0
-albedo_texture = SubResource("GradientTexture2D_haq2w")
-
-[sub_resource type="BoxMesh" id="103"]
-size = Vector3(2, 2, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5nlfu"]
 transparency = 1
@@ -209,17 +208,6 @@ script = ExtResource("1_dyp4q")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=839114113]
 environment = SubResource("87")
-
-[node name="Aura" type="GPUParticles3D" parent="." unique_id=308200453]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0570873)
-amount = 512
-lifetime = 4.0
-randomness = 0.3
-fract_delta = false
-visibility_aabb = AABB(-3.795, -2.38, -5.865, 12, 12, 12)
-trail_lifetime = 2.8699999999999997
-process_material = SubResource("101")
-draw_pass_1 = SubResource("102")
 
 [node name="Structures" type="Node3D" parent="." unique_id=1590467259]
 
@@ -389,10 +377,20 @@ mesh = SubResource("103")
 skeleton = NodePath("../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_ybwb5")
 
-[node name="Particles" type="Node3D" parent="Structures/Front" unique_id=430346035]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 30)
+[node name="Particles" type="Node3D" parent="." unique_id=430346035]
 
-[node name="Left" type="GPUParticles3D" parent="Structures/Front/Particles" unique_id=393957993]
+[node name="Aura" type="GPUParticles3D" parent="Particles" unique_id=308200453]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0570873)
+amount = 512
+lifetime = 4.0
+randomness = 0.3
+fract_delta = false
+visibility_aabb = AABB(-3.795, -2.38, -5.865, 12, 12, 12)
+trail_lifetime = 2.8699999999999997
+process_material = SubResource("101")
+draw_pass_1 = SubResource("102")
+
+[node name="Left" type="GPUParticles3D" parent="Particles" unique_id=393957993]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.9036, 3.63416, -53.099064)
 material_override = SubResource("StandardMaterial3D_5nlfu")
 transparency = 0.75
@@ -403,7 +401,7 @@ randomness = 0.1
 process_material = SubResource("ParticleProcessMaterial_ywech")
 draw_pass_1 = SubResource("ArrayMesh_haq2w")
 
-[node name="Right" type="GPUParticles3D" parent="Structures/Front/Particles" unique_id=1423380688]
+[node name="Right" type="GPUParticles3D" parent="Particles" unique_id=1423380688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.0899, 3.63416, -54.89727)
 material_override = SubResource("StandardMaterial3D_5nlfu")
 transparency = 0.75

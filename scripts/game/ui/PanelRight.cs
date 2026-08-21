@@ -36,13 +36,15 @@ public partial class PanelRight : UIComponent
         Runner.AttemptStatsUpdated += OnStatsUpdated;
         Runner.HitResultChanged += OnHitStateChanged;
 
-        if (Runner.Attempt.Settings.SimpleHUD || Runner.Attempt.Settings.SuperSimpleHUD)
+        bool isVisible = !Runner.Attempt.Settings.SimpleHUD && !Runner.Attempt.Settings.SuperSimpleHUD;
+
+        Godot.Collections.Array<Node> widgets = viewport.GetChildren();
+        foreach (Node widget in widgets)
         {
-            Godot.Collections.Array<Node> widgets = viewport.GetChildren();
-            foreach (Node widget in widgets)
-                (widget as CanvasItem).Visible = false;
-            simpleMisses.Visible = true;
+            (widget as CanvasItem).Visible = isVisible;
         }
+
+        simpleMisses.Visible = !isVisible;
     }
 
     public override void _PhysicsProcess(double delta)

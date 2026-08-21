@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://deift37sj4byw"]
 
 [ext_resource type="Script" uid="uid://dppxcyrky5dtp" path="res://scripts/spaces/Tunnel.cs" id="1_hk1of"]
-[ext_resource type="Texture2D" uid="uid://rvoiaddddovf" path="res://textures/tunnel_ring_b.png" id="2_5m0re"]
-[ext_resource type="Texture2D" uid="uid://dj66qsxt3lvm5" path="res://textures/tunnel_space_a.png" id="3_frc3x"]
-[ext_resource type="Texture2D" uid="uid://frwrbwqgan5x" path="res://textures/tunnel_neonroad.png" id="4_5ioxn"]
+[ext_resource type="Texture2D" uid="uid://rvoiaddddovf" path="res://textures/spaces/tunnel/tunnel_ring_b.png" id="2_5m0re"]
+[ext_resource type="Texture2D" uid="uid://dj66qsxt3lvm5" path="res://textures/spaces/tunnel/tunnel_space_a.png" id="3_frc3x"]
+[ext_resource type="Texture2D" uid="uid://frwrbwqgan5x" path="res://textures/spaces/tunnel/tunnel_neonroad.png" id="4_5ioxn"]
 
 [sub_resource type="Environment" id="Environment_i2qd1"]
 ambient_light_source = 1

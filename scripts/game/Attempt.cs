@@ -26,7 +26,7 @@ public partial class Attempt : RefCounted
     public double Progress { get; set; }
     public double Speed;
     public double StartFrom;
-    public double MapLength;
+    public double Length;
 
     public double Accuracy = 100;
     public double Health = 100;
@@ -72,7 +72,7 @@ public partial class Attempt : RefCounted
         Map = map;
         Speed = speed;
         StartFrom = startFrom;
-        MapLength = Math.Max(SoundManager.Song.Stream.GetLength() * 1000, Map.Length + 1000);
+        Length = Math.Max(1000 * (SoundManager.Song?.Stream?.GetLength() ?? 0), Map.Length + 1000);
         Players = players ?? [];
         Progress = Speed * -1000 - Settings.ApproachTime * 1000 + StartFrom;
         ComboMultiplierIncrement = Math.Max(2, (uint)Map.Notes.Length / 200);

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dtkff13bgd1u4"]
 
 [ext_resource type="Script" uid="uid://bxx72dwqlrh2o" path="res://scripts/spaces/Grid.cs" id="1_wac2s"]
-[ext_resource type="Texture2D" uid="uid://cnqebcj2iorfr" path="res://textures/grid_tile.png" id="2_83vuq"]
+[ext_resource type="Texture2D" uid="uid://cnqebcj2iorfr" path="res://textures/spaces/grid/grid_tile.png" id="2_83vuq"]
 
 [sub_resource type="Environment" id="Environment_ge866"]
 ambient_light_source = 1

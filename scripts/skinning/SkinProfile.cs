@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 
 [GlobalClass]
 public partial class SkinProfile : RefCounted
@@ -8,6 +8,8 @@ public partial class SkinProfile : RefCounted
     public ImageTexture CursorImage { get; set; } = new();
 
     public ImageTexture GridImage { get; set; } = new();
+
+    public ImageTexture GridGuidesImage { get; set; } = new();
 
     public ImageTexture PanelLeftBackgroundImage { get; set; } = new();
 

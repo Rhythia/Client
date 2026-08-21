@@ -36,7 +36,7 @@ public partial class Runner : Node3D
     [Export] public Godot.Collections.Array<Renderer> Renderers;
     [Export] public MeshInstance3D Grid;
     [Export] public MeshInstance3D Cursor;
-    [Export] public VideoStreamPlayer VideoStreamPlayer;
+    // [Export] public VideoStreamPlayer VideoStreamPlayer;
 
     public override void _Ready()
     {
@@ -46,7 +46,7 @@ public partial class Runner : Node3D
         Camera ??= GetNode<Camera3D>("Camera3D");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
-        VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
+        // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
     }
 
     public override void _Process(double delta)
@@ -63,7 +63,7 @@ public partial class Runner : Node3D
 
         // De-sync corrector
 
-        if (Attempt.Progress > 0 && Attempt.Progress < Attempt.MapLength && !Attempt.Stopped)
+        if (Attempt.Progress > 0 && Attempt.Progress < Attempt.Length && !Attempt.Stopped)
         {
             double audioDelay = Attempt.Progress - settings.LocalOffset - (1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix()));
 
@@ -141,7 +141,7 @@ public partial class Runner : Node3D
         ProcessObjects();
         RenderObjects(delta);
 
-        if (StopQueued || Attempt.Progress >= Attempt.MapLength && !Attempt.IsReplay)
+        if (StopQueued || Attempt.Progress >= Attempt.Length && !Attempt.IsReplay)
         {
             StopQueued = false;
             Stop();
@@ -240,16 +240,16 @@ public partial class Runner : Node3D
             }
         }
 
-        foreach (var renderer in Renderers)
-        {
-            renderer.Setup(Attempt.Settings, SkinManager.Instance.Skin);
-        }
-
         settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
         Camera.Fov = (float)settings.FoV;
 
         // temp until skinning support
         (Renderers[0] as NoteRenderer).NoteMultiMesh.Multimesh.Mesh = SkinManager.Instance.Skin.NoteMesh;
+
+        foreach (var renderer in Renderers)
+        {
+            renderer.Setup(Attempt.Settings, SkinManager.Instance.Skin);
+        }
 
         SoundManager.BeginGameplayScope(Attempt.Map);
         SoundManager.UpdateVolume();
@@ -282,7 +282,7 @@ public partial class Runner : Node3D
 
         if (Playing)
         {
-            Seek(Attempt.Progress);
+            syncSongPosition();
         }
     }
 
@@ -318,18 +318,9 @@ public partial class Runner : Node3D
         ProcessObjects();
         RenderObjects(0);
 
+        syncSongPosition();
+
         // Discord.Client.UpdateEndTime(DateTime.UtcNow.AddSeconds((Time.GetUnixTimeFromSystem() + (Attempt.Map.Length - Attempt.Progress) / 1000 / Speed)));
-
-        if (Attempt.Map.AudioBuffer != null)
-        {
-            if (!SoundManager.Song.Playing && Playing)
-            {
-                SoundManager.Song.Play();
-            }
-
-            SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
-            VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
-        }
     }
 
     public void Fail()
@@ -577,5 +568,19 @@ public partial class Runner : Node3D
         }
 
         return fail ?? defaultFail;
+    }
+
+    private void syncSongPosition()
+    {
+        if (Attempt.Map.AudioBuffer != null)
+        {
+            if (!SoundManager.Song.Playing && Playing)
+            {
+                SoundManager.Song.Play();
+            }
+
+            SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
+            // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
+        }
     }
 }

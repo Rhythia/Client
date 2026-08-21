@@ -9,7 +9,7 @@ public class VortexModifier : Modifier, IObjectRenderModifier<Note>
 
     public override bool Rankable => true;
 
-    public override double ScoreMultiplier => 1.01;
+    public override double ScoreMultiplier => 1.02;
 
     public void ModifyRenderObject(Note note, Attempt attempt)
     {
@@ -24,6 +24,11 @@ public class VortexModifier : Modifier, IObjectRenderModifier<Note>
             rotation *= (float)(Math.Sign(sine) * Math.Pow(Math.Abs(sine), 0.75));
 
             note.Transform = note.Transform.Rotated(Vector3.Back, rotation);
+
+            Vector3 offset = new(note.Transform.Origin.X, note.Transform.Origin.Y, 0);
+            float pull = (float)Math.Pow(depth * 0.85, 3) * offset.DistanceTo(Vector3.Zero);
+
+            note.Transform.Origin -= offset * pull;
         }
     }
 }

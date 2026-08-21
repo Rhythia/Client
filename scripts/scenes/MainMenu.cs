@@ -37,16 +37,21 @@ public partial class MainMenu : BaseScene
 
         Input.MouseMode = SettingsManager.Instance.Settings.UseCursorInMenus ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
 
-        List<Node> menuButtons = [.. HomeMenu.GetNode("Buttons").GetChildren()];
+        List<Node> menuButtons = [];
         menuButtons.AddRange(topBarButtonsContainer.GetChildren());
+
+        foreach (var container in HomeMenu.GetNode("Buttons").GetChildren())
+        {
+            menuButtons.Add(container.GetChild<Button>(0));
+        }
 
         foreach (Button button in menuButtons)
         {
-            Panel menu = (Panel)menuHolder.FindChild(button.Name, false);
+            var menu = (Panel)menuHolder.FindChild(button.Name, false);
 
             if (menu != null)
             {
-                button.Pressed += () => { Transition(menu); };
+                button.Pressed += () => Transition(menu);
             }
         }
     }

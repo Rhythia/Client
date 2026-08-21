@@ -1,0 +1,170 @@
+[gd_scene format=3 uid="uid://b63r17aoq4ulj"]
+
+[ext_resource type="Script" uid="uid://x0340t34h0g0" path="res://scripts/spaces/Conspiracy.cs" id="1_f3k8h"]
+[ext_resource type="Texture2D" uid="uid://drdy0vqnqfkt0" path="res://textures/spaces/conspiracy/Illuminati.png" id="2_v26q4"]
+[ext_resource type="Texture2D" uid="uid://bp8o83a0vokqg" path="res://textures/spaces/conspiracy/Scroll.png" id="3_em4na"]
+[ext_resource type="Texture2D" uid="uid://b5wk51axojb11" path="res://textures/spaces/conspiracy/Money.png" id="3_mirhg"]
+[ext_resource type="Texture2D" uid="uid://buhmtw5a1yrnq" path="res://textures/spaces/conspiracy/Globe.png" id="3_ycx0p"]
+[ext_resource type="Texture2D" uid="uid://k2srca1qh3b2" path="res://textures/spaces/conspiracy/Front.png" id="4_xo752"]
+[ext_resource type="Texture2D" uid="uid://bkitmwuvjiuqb" path="res://textures/spaces/conspiracy/back.png" id="5_iimi0"]
+
+[sub_resource type="Environment" id="Environment_n6lso"]
+background_mode = 1
+background_color = Color(0.06053035, 0.06053035, 0.060530342, 1)
+glow_intensity = 1.5
+glow_bloom = 0.15
+fog_enabled = true
+fog_light_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
+fog_light_energy = 0.1
+fog_density = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fp3uj"]
+render_priority = 1
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+albedo_texture = ExtResource("2_v26q4")
+stencil_flags = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gdxgs"]
+lightmap_size_hint = Vector2i(12, 12)
+material = SubResource("StandardMaterial3D_fp3uj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_617tn"]
+render_priority = 1
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+albedo_texture = ExtResource("3_mirhg")
+stencil_flags = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cc1be"]
+lightmap_size_hint = Vector2i(12, 12)
+material = SubResource("StandardMaterial3D_617tn")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mbtdg"]
+render_priority = 1
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+albedo_texture = ExtResource("3_ycx0p")
+stencil_flags = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fhhd8"]
+lightmap_size_hint = Vector2i(12, 12)
+material = SubResource("StandardMaterial3D_mbtdg")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rc4du"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+diffuse_mode = 1
+disable_fog = true
+albedo_texture = ExtResource("3_em4na")
+uv1_scale = Vector3(1, 10, 0)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fp3uj"]
+material = SubResource("StandardMaterial3D_rc4du")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ay2bh"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("4_xo752")
+uv1_scale = Vector3(1, 20, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rc4du"]
+material = SubResource("StandardMaterial3D_ay2bh")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qdw3y"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("5_iimi0")
+uv1_scale = Vector3(1, 20, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xig5v"]
+lightmap_size_hint = Vector2i(12, 12)
+material = SubResource("StandardMaterial3D_qdw3y")
+
+[node name="Conspiracy" type="Node3D" unique_id=1958332010]
+script = ExtResource("1_f3k8h")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=495103429]
+environment = SubResource("Environment_n6lso")
+
+[node name="Icons" type="Node3D" parent="." unique_id=256731023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.954605)
+
+[node name="RIllu" type="MeshInstance3D" parent="Icons" unique_id=1690814416]
+transform = Transform3D(5.8470845, -4.6656594, -0.541502, 0.3267105, 1.2665545, -7.3850555, 4.6856003, 5.733887, 1.1906635, 32.59851, -11.157616, -31.747986)
+transparency = 0.5
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_gdxgs")
+skeleton = NodePath("")
+
+[node name="RMoney" type="MeshInstance3D" parent="Icons" unique_id=992529906]
+transform = Transform3D(2.9223795, -2.7311902, -0.017496193, -0.50015396, -0.5099538, -3.935709, 2.6850605, 2.8775966, -0.7140733, 26.030668, 4.7692785, -20.048704)
+transparency = 0.5
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_cc1be")
+skeleton = NodePath("")
+
+[node name="RGlobe" type="MeshInstance3D" parent="Icons" unique_id=504987486]
+transform = Transform3D(3.4610326, -1.969467, 0.37743923, -0.488691, -1.5585567, -3.6513133, 1.9448497, 3.1132152, -1.5891691, 20, 16, -24)
+transparency = 0.5
+cast_shadow = 0
+custom_aabb = AABB(0, 0, 0, 0, 10, 0)
+mesh = SubResource("PlaneMesh_fhhd8")
+skeleton = NodePath("")
+
+[node name="LIllu" type="MeshInstance3D" parent="Icons" unique_id=2057192540]
+transform = Transform3D(5.621934, 4.7847614, -1.3228353, 0.40752319, -2.4366205, -7.081439, -4.947502, 5.236306, -2.0864563, -32, 15, -30)
+transparency = 0.5
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_gdxgs")
+
+[node name="LMoney" type="MeshInstance3D" parent="Icons" unique_id=1366443893]
+transform = Transform3D(2.8191392, 2.7699506, 0.6163019, 0.4957598, 0.37461472, -3.9514437, -2.7940428, 2.8613024, -0.07928384, -26.6644, -3.938541, -20.045391)
+transparency = 0.5
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_cc1be")
+skeleton = NodePath("")
+
+[node name="LGlobe" type="MeshInstance3D" parent="Icons" unique_id=797287533]
+transform = Transform3D(3.384025, 1.9644992, 0.8301336, -0.0761631, 1.6672957, -3.6351528, -2.1313324, 3.0595553, 1.4479486, -19.999998, -16, -23.999996)
+transparency = 0.5
+cast_shadow = 0
+custom_aabb = AABB(0, 0, 0, 0, 10, 0)
+mesh = SubResource("PlaneMesh_fhhd8")
+skeleton = NodePath("")
+
+[node name="ScrollingQuestionMarks" type="Node3D" parent="." unique_id=402794691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.954605)
+
+[node name="Left" type="MeshInstance3D" parent="ScrollingQuestionMarks" unique_id=2139618599]
+transform = Transform3D(7.3954983, 6.7292447, 1.5452654, 0.013135073, 0.21514565, -99.97681, -6.7310066, 7.393984, 1.5027192, -36, 13, -36)
+transparency = 0.95
+mesh = SubResource("PlaneMesh_fp3uj")
+skeleton = NodePath("../../Icons")
+
+[node name="Right" type="MeshInstance3D" parent="ScrollingQuestionMarks" unique_id=1278742386]
+transform = Transform3D(7.3962126, -6.7285557, -1.5013845, -0.012785042, 0.20903364, -99.97806, 6.7302165, 7.3947835, 1.4600326, 36, 13, -36)
+transparency = 0.95
+mesh = SubResource("PlaneMesh_fp3uj")
+
+[node name="ScrollingText" type="Node3D" parent="." unique_id=76553647]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, -50)
+
+[node name="Top" type="MeshInstance3D" parent="ScrollingText" unique_id=2040982941]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 80, 0, -3.262, 0)
+transparency = 0.9
+visibility_range_fade_mode = 1
+mesh = SubResource("PlaneMesh_rc4du")
+
+[node name="Bottom" type="MeshInstance3D" parent="ScrollingText" unique_id=622556042]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 80, -0.6745815, -4.4326196, 0)
+transparency = 0.95
+visibility_range_fade_mode = 1
+mesh = SubResource("PlaneMesh_xig5v")

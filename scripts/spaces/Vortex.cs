@@ -11,7 +11,7 @@ public partial class Vortex : BaseSpace
     private Node3D squircles;
     private StandardMaterial3D[] squircleMaterials;
     private Color[] lastHitColors;
-    private Color squircleColorReset = new(0xffffff);
+    private Color squircleColorReset = new("ffffff");
 
     public override void _Ready()
     {
@@ -64,7 +64,10 @@ public partial class Vortex : BaseSpace
         //
 
         // Rotation
-        squircles.Rotation = Vector3.Forward * (Time.GetTicksMsec() / 8000f);
+        if (settings.SpaceEffects)
+        {
+            squircles.Rotation = Vector3.Forward * (Time.GetTicksMsec() / 8000f);
+        }
 
         // Hit FX
         for (int i = 0; i < squircleMaterials.Length; i++)

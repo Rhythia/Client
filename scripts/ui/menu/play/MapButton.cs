@@ -91,6 +91,8 @@ public partial class MapButton : Control, ISkinnable
 
     public virtual void Hover(bool hover)
     {
+        if (Hovered == hover) return;
+
         Hovered = hover;
         SizeOffset = computeSizeOffset();
 
@@ -101,6 +103,8 @@ public partial class MapButton : Control, ISkinnable
 
     public virtual void Select(bool select = true)
     {
+        if (Selected == select) return;
+
         Selected = select;
         SizeOffset = computeSizeOffset();
 

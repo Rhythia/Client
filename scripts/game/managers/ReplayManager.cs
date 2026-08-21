@@ -164,7 +164,7 @@ public partial class ReplayManager : Node
 
         seekerTimeline.DragEnded += _ =>
         {
-            resetToSeekedPosition((float)seekerTimeline.Value);
+            seek((float)seekerTimeline.Value);
             seekerTimeline.ReleaseFocus();
         };
 
@@ -192,6 +192,102 @@ public partial class ReplayManager : Node
             }
         }
 
+        updateCursors();
+    }
+
+    public void ShowReplayViewer(Attempt attempt, bool? show = null)
+    {
+        ViewerVisible = show ?? !ViewerVisible;
+        bool visible = ViewerVisible && attempt.IsReplay;
+
+        ReplayViewer.Visible = visible;
+
+        if (attempt.IsReplay)
+        {
+            Input.MouseMode = visible
+                ? Input.MouseModeEnum.Visible
+                : Input.MouseModeEnum.Hidden;
+        }
+    }
+
+    public void TogglePause()
+    {
+        Runner.Pause();
+
+        string texturePath = Runner.Playing
+            ? "res://textures/ui/pause.png"
+            : "res://textures/ui/play.png";
+
+        SeekerPause.TextureNormal = GD.Load<Texture2D>(texturePath);
+    }
+
+    private void seek(float seekedTime)
+    {
+        seekedTime *= ReplayLength;
+
+        var att = Runner.Attempt;
+
+        att.Hits = 0;
+        att.Misses = 0;
+        att.Sum = 0;
+        att.Accuracy = 100;
+        att.Score = 0;
+        att.Combo = 0;
+        att.ComboMultiplier = 1;
+        att.ComboMultiplierProgress = 0;
+        att.Health = 100;
+        att.HealthStep = 15;
+        att.Alive = true;
+        att.Qualifies = true;
+
+        for (int i = 0; i < att.Map.Notes.Length; i++)
+        {
+            var note = att.Map.Notes[i];
+
+            note.Hittable = false;
+            note.LastResult = HitResult.None;
+
+            if (note.Millisecond > Math.Max(att.Progress, seekedTime))
+            {
+                break;
+            }
+            else if (note.Millisecond < seekedTime && note.Index >= (int)att.FirstNote)
+            {
+                bool missed = att.Replays[0].Notes[i] == -1;
+
+                if (missed)
+                {
+                    note.Miss(Runner, false);
+                }
+                else
+                {
+                    note.Hit(Runner, false);
+                }
+            }
+        }
+
+        if (att.Progress > ReplayLength && seekedTime <= ReplayLength && !Runner.Playing)
+        {
+            TogglePause();
+        }
+
+        Runner.Seek(seekedTime);
+        Runner.EmitSignal(Runner.SignalName.AttemptStatsUpdated, att);
+
+        for (int i = 0; i < att.Replays[0].Frames.Length; i++)
+        {
+            if (att.Progress < att.Replays[0].Frames[i].Progress)
+            {
+                att.Replays[0].FrameIndex = Math.Max(0, i - 1);
+                break;
+            }
+        }
+
+        updateCursors();
+    }
+
+    private void updateCursors()
+    {
         for (int i = 0; i < Runner.Attempt.Replays.Length; i++)
         {
             var replay = Runner.Attempt.Replays[i];
@@ -231,92 +327,6 @@ public partial class ReplayManager : Node
 
             CursorManager.UpdateCursor(CursorPosition, i);
             CursorManager.ShowCursor(i);
-        }
-    }
-
-    public void ShowReplayViewer(Attempt attempt, bool? show = null)
-    {
-        ViewerVisible = show ?? !ViewerVisible;
-        bool visible = ViewerVisible && attempt.IsReplay;
-
-        ReplayViewer.Visible = visible;
-
-        if (attempt.IsReplay)
-        {
-            Input.MouseMode = visible
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Hidden;
-        }
-    }
-
-    public void TogglePause()
-    {
-        Runner.Pause();
-
-        string texturePath = Runner.Playing
-            ? "res://textures/ui/pause.png"
-            : "res://textures/ui/play.png";
-
-        SeekerPause.TextureNormal = GD.Load<Texture2D>(texturePath);
-    }
-
-    private void resetToSeekedPosition(float seekedTime)
-    {
-        seekedTime *= ReplayLength;
-
-        var att = Runner.Attempt;
-
-        att.Hits = 0;
-        att.Misses = 0;
-        att.Sum = 0;
-        att.Accuracy = 100;
-        att.Score = 0;
-        att.Combo = 0;
-        att.ComboMultiplier = 1;
-        att.ComboMultiplierProgress = 0;
-        att.Health = 100;
-        att.HealthStep = 15;
-
-        for (int i = 0; i < att.Map.Notes.Length; i++)
-        {
-            var note = att.Map.Notes[i];
-
-            note.LastResult = HitResult.None;
-
-            if (note.Millisecond > Math.Max(att.Progress, seekedTime))
-            {
-                break;
-            }
-            else if (note.Millisecond < seekedTime && note.Index >= (int)att.FirstNote)
-            {
-                bool missed = att.Replays[0].Notes[i] == -1;
-
-                if (missed)
-                {
-                    note.Miss(Runner, false);
-                }
-                else
-                {
-                    note.Hit(Runner, false);
-                }
-            }
-        }
-
-        if (att.Progress > ReplayLength && seekedTime <= ReplayLength && !Runner.Playing)
-        {
-            TogglePause();
-        }
-
-        Runner.Seek(seekedTime);
-        Runner.EmitSignal(Runner.SignalName.AttemptStatsUpdated, att);
-
-        for (int i = 0; i < att.Replays[0].Frames.Length; i++)
-        {
-            if (att.Progress < att.Replays[0].Frames[i].Progress)
-            {
-                att.Replays[0].FrameIndex = Math.Max(0, i - 1);
-                break;
-            }
         }
     }
 }

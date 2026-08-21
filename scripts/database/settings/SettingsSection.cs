@@ -1,4 +1,4 @@
-﻿public enum SettingsSection
+public enum SettingsSection
 {
     None,
     Gameplay,

@@ -9,10 +9,6 @@ public partial class Title : UIComponent
     {
         label = GetNode<Label3D>("Label");
         label.Text = Runner.Attempt.Map.PrettyTitle;
-
-        if (Runner.Attempt.Settings.SuperSimpleHUD)
-        {
-            label.Visible = false;
-        }
+        label.Visible = !Runner.Attempt.Settings.SuperSimpleHUD;
     }
 }

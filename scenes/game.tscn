@@ -15,12 +15,12 @@
 [ext_resource type="Script" uid="uid://dbyc4etv31aub" path="res://scripts/game/ui/ProgressBar.cs" id="7_gxtfn"]
 [ext_resource type="Texture2D" uid="uid://4x2vfpyjkri6" path="res://user/skins/default/game/health.png" id="7_wjg6i"]
 [ext_resource type="Texture2D" uid="uid://dmc5f6ajp8xv1" path="res://user/skins/default/game/progress_background.png" id="8_eu3ux"]
-[ext_resource type="Shader" uid="uid://dsysoy6w8ndnk" path="res://scripts/shaders/video_background.gdshader" id="8_ocxsu"]
 [ext_resource type="Script" uid="uid://dv0gni2j4t686" path="res://scripts/game/ui/PanelLeft.cs" id="8_qnb83"]
 [ext_resource type="Texture2D" uid="uid://d3s17ehomjscd" path="res://user/skins/default/game/progress.png" id="9_nde5v"]
 [ext_resource type="FontFile" uid="uid://cmjos3o0k2f6t" path="res://fonts/Comfortaa-Medium.ttf" id="11_o37lt"]
 [ext_resource type="Texture2D" uid="uid://80bitp5weqrb" path="res://user/skins/default/game/panel_left_background.png" id="11_sdncv"]
 [ext_resource type="FontFile" uid="uid://b6hgjef6s6oly" path="res://fonts/Comfortaa-Bold.ttf" id="12_axsek"]
+[ext_resource type="Texture2D" uid="uid://ccdaf14yq65jf" path="res://user/skins/default/game/grid_guides.png" id="12_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://diba7c3s8as4s" path="res://user/skins/default/game/panel_right_background.png" id="12_whe6p"]
 [ext_resource type="Texture2D" uid="uid://dw2gxd3m24h4m" path="res://user/skins/default/game/hits.png" id="13_6rhgc"]
 [ext_resource type="Script" uid="uid://c3gf0hgrqqqx5" path="res://scripts/game/ui/PanelRight.cs" id="13_sww3w"]
@@ -83,6 +83,17 @@ transform_format = 1
 use_colors = true
 mesh = SubResource("QuadMesh_5p2n8")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05nbr"]
+resource_name = "Material"
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("12_pr1ej")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_0sl42"]
+material = SubResource("StandardMaterial3D_05nbr")
+size = Vector2(4, 4)
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_pl11u"]
 viewport_path = NodePath("Runner/HUD/Health/HealthViewport")
 
@@ -131,11 +142,7 @@ font_size = 50
 
 [sub_resource type="LabelSettings" id="LabelSettings_pause_counter_title"]
 font = ExtResource("12_axsek")
-font_size = 20
-
-[sub_resource type="LabelSettings" id="LabelSettings_pause_counter_value"]
-font = ExtResource("12_axsek")
-font_size = 42
+font_size = 50
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_suyxu"]
 viewport_path = NodePath("Runner/HUD/PanelRight/PanelRightViewport")
@@ -200,9 +207,6 @@ texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_3p7x2"]
 size = Vector2(258.3, 210)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4qlgx"]
-shader = ExtResource("8_ocxsu")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d5aou"]
 
@@ -280,14 +284,13 @@ Runner = NodePath("../Runner")
 ReplayViewer = NodePath("../ReplayViewer")
 CursorManager = NodePath("../CursorManager")
 
-[node name="Runner" type="Node3D" parent="." unique_id=580620214 node_paths=PackedStringArray("HudManager", "Camera", "Renderers", "Grid", "Cursor", "VideoStreamPlayer")]
+[node name="Runner" type="Node3D" parent="." unique_id=580620214 node_paths=PackedStringArray("HudManager", "Camera", "Renderers", "Grid", "Cursor")]
 script = ExtResource("2_qnb83")
 HudManager = NodePath("HUD")
 Camera = NodePath("Camera3D")
 Renderers = [NodePath("Renderers/Notes")]
 Grid = NodePath("HUD/Grid")
 Cursor = NodePath("HUD/Grid/Cursor")
-VideoStreamPlayer = NodePath("Video/VideoViewport/VideoStreamPlayer")
 
 [node name="HUD" type="Node3D" parent="Runner" unique_id=1234434255 node_paths=PackedStringArray("Runner")]
 script = ExtResource("3_sww3w")
@@ -305,6 +308,12 @@ skeleton = NodePath("../../../..")
 [node name="CursorTrail" type="MultiMeshInstance3D" parent="Runner/HUD/Grid" unique_id=913051903]
 material_override = SubResource("StandardMaterial3D_ssr8x")
 multimesh = SubResource("MultiMesh_e28va")
+
+[node name="GridGuides" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=2145859938]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, -0.2)
+visible = false
+mesh = SubResource("QuadMesh_0sl42")
+skeleton = NodePath("../../../..")
 
 [node name="Health" type="MeshInstance3D" parent="Runner/HUD" unique_id=449857227]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -6.3, -10)
@@ -405,7 +414,7 @@ text = "1x"
 label_settings = SubResource("LabelSettings_usmyc")
 horizontal_alignment = 1
 
-[node name="PauseTitle" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
+[node name="ComboCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
 visible = false
 anchors_preset = -1
 anchor_left = 0.5
@@ -418,25 +427,8 @@ offset_right = 90.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "PAUSES"
-label_settings = SubResource("LabelSettings_pause_counter_title")
-horizontal_alignment = 1
-
-[node name="PauseCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1695472366]
-visible = false
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.93
-anchor_right = 0.5
-anchor_bottom = 0.93
-offset_left = -90.0
-offset_top = -26.0
-offset_right = 90.0
-offset_bottom = 26.0
-grow_horizontal = 2
-grow_vertical = 2
 text = "0"
-label_settings = SubResource("LabelSettings_pause_counter_value")
+label_settings = SubResource("LabelSettings_pause_counter_title")
 horizontal_alignment = 1
 
 [node name="PanelRight" type="MeshInstance3D" parent="Runner/HUD" unique_id=1993445313]
@@ -701,16 +693,6 @@ transparent_bg = true
 canvas_item_default_texture_filter = 2
 size = Vector2i(1920, 1080)
 
-[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Runner/Video/VideoViewport" unique_id=61327167]
-material = SubResource("ShaderMaterial_4qlgx")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-volume_db = -80.0
-expand = true
-
 [node name="QuitOverlay" type="Panel" parent="." unique_id=316579954]
 visible = false
 modulate = Color(1, 1, 1, 0)
@@ -793,7 +775,7 @@ layout_mode = 1
 anchors_preset = -1
 offset_right = 40.0
 grow_vertical = 0
-text = "Press F1 to toggle"
+text = "Press F2 to toggle"
 label_settings = SubResource("LabelSettings_a70tm")
 
 [node name="Time" type="Label" parent="ReplayViewer" unique_id=1277133470]

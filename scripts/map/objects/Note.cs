@@ -10,6 +10,7 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
 
     public float X { get; set; }
     public float Y { get; set; }
+    public int HitWindow { get; set; } = 55;
     public bool Hittable { get; set; } = false;
     public HitResult LastResult { get; set; } = HitResult.None;
 
@@ -69,13 +70,15 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
             }
         }
 
-        // too late
-        if (Millisecond < attempt.Progress - Constants.HIT_WINDOW * runner.Speed
-            && (!attempt.IsReplay || attempt.Replays.Length == 1 && attempt.Replays[0].Notes[Index] == -1))
+        bool late = isPastWindow(runner, HitWindow);
+        float replayLateness = attempt.IsReplay && attempt.Replays.Length == 1 ? attempt.Replays[0].Notes[Index] : 0;
+
+        if (late && (!attempt.IsReplay || replayLateness == -1))
         {
             Miss(runner);
         }
-        else if (CheckHitResult(attempt) == HitResult.Hit)
+        else if (!attempt.IsReplay && CheckHitResult(attempt) == HitResult.Hit
+            || attempt.IsReplay && replayLateness != -1 && isPastWindow(runner, replayLateness))
         {
             Hit(runner);
         }
@@ -102,5 +105,10 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
     public int CompareTo(ITimelineObject other)
     {
         throw new NotImplementedException();
+    }
+
+    private bool isPastWindow(Runner runner, float hitWindow)
+    {
+        return Millisecond < runner.Attempt.Progress - hitWindow * runner.Speed;
     }
 }

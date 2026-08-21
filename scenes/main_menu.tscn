@@ -7,6 +7,7 @@
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto-Bold.ttf" id="5_hl5e0"]
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="6_engjn"]
 [ext_resource type="FontFile" uid="uid://bopde8iqsld1o" path="res://fonts/Ubuntu-Regular.ttf" id="7_6h3lr"]
+[ext_resource type="Script" uid="uid://bkdcrkq1x7sig" path="res://scripts/ui/menu/ReleaseNotesButton.cs" id="8_akqfu"]
 [ext_resource type="Script" uid="uid://bnead3awk7yr4" path="res://scripts/ui/menu/SettingsMenuButton.cs" id="8_yxnar"]
 [ext_resource type="Script" uid="uid://byighsqkmf2c4" path="res://scripts/ui/menu/QuitButton.cs" id="9_yxnar"]
 [ext_resource type="Script" uid="uid://cqprxe41p0qov" path="res://scripts/ui/menu/Background.cs" id="10_eku7s"]
@@ -471,22 +472,30 @@ offset_right = 400.0
 offset_bottom = -80.0
 alignment = 1
 
-[node name="Play" type="Button" parent="Menus/Home/Buttons" unique_id=621731251]
+[node name="MarginContainer" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=1192566578]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="Menus/Home/Buttons/MarginContainer" unique_id=621731251]
 layout_mode = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_m671i")
+theme_override_font_sizes/font_size = 36
 theme_override_styles/normal = SubResource("StyleBoxFlat_764ux")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_b4jiv")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
 text = "PLAY"
 alignment = 0
 
-[node name="Settings" type="Button" parent="Menus/Home/Buttons" unique_id=1066091631]
+[node name="MarginContainer2" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=677178319]
+layout_mode = 2
+
+[node name="Settings" type="Button" parent="Menus/Home/Buttons/MarginContainer2" unique_id=1066091631]
 layout_mode = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_m671i")
+theme_override_font_sizes/font_size = 36
 theme_override_styles/normal = SubResource("StyleBoxFlat_764ux")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_b4jiv")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
@@ -494,22 +503,50 @@ text = "SETTINGS"
 alignment = 0
 script = ExtResource("8_yxnar")
 
-[node name="Extras" type="Button" parent="Menus/Home/Buttons" unique_id=728550159]
+[node name="MarginContainer3" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=348929571]
+layout_mode = 2
+theme_override_constants/margin_right = 100
+
+[node name="Extras" type="Button" parent="Menus/Home/Buttons/MarginContainer3" unique_id=728550159]
 layout_mode = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_m671i")
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_764ux")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_b4jiv")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
 text = "EXTRAS"
 alignment = 0
 
-[node name="Quit" type="Button" parent="Menus/Home/Buttons" unique_id=87671349]
+[node name="MarginContainer4" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=559769508]
+layout_mode = 2
+theme_override_constants/margin_right = 100
+
+[node name="ReleaseNotes" type="Button" parent="Menus/Home/Buttons/MarginContainer4" unique_id=645519198]
 layout_mode = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_m671i")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_764ux")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_b4jiv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
+text = "RELEASE NOTES"
+alignment = 0
+script = ExtResource("8_akqfu")
+Link = "https://github.com/Rhythia/Client/releases/tag/{0}"
+
+[node name="MarginContainer5" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=2078578335]
+layout_mode = 2
+theme_override_constants/margin_right = 100
+
+[node name="Quit" type="Button" parent="Menus/Home/Buttons/MarginContainer5" unique_id=87671349]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = SubResource("Theme_m671i")
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_764ux")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_b4jiv")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
@@ -1617,8 +1654,9 @@ anchor_left = 0.5
 anchor_right = 0.75
 anchor_bottom = 1.0
 offset_left = 150.0
-offset_top = 200.0
-offset_bottom = -200.0
+offset_top = 160.0
+offset_right = 230.0
+offset_bottom = -160.0
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qw82i")
@@ -1664,26 +1702,9 @@ theme_override_constants/separation = 12
 [node name="nyuwaea" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=424408434]
 modulate = Color(0.8156863, 0.7411765, 1, 1)
 layout_mode = 2
+mouse_filter = 1
 bbcode_enabled = true
 text = "[font_size=20]nyuwaea
-[color=ffffffbb][font_size=16]Developer"
-fit_content = true
-horizontal_alignment = 1
-
-[node name="lulusuki" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1649530311]
-modulate = Color(1, 0.7411765, 1, 1)
-layout_mode = 2
-bbcode_enabled = true
-text = "[font_size=20]lulusuki
-[color=ffffffbb][font_size=16]Developer"
-fit_content = true
-horizontal_alignment = 1
-
-[node name="kiwie" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=699076624]
-modulate = Color(1, 0.8156863, 0.53333336, 1)
-layout_mode = 2
-bbcode_enabled = true
-text = "[font_size=20]kiwie
 [color=ffffffbb][font_size=16]Developer"
 fit_content = true
 horizontal_alignment = 1
@@ -1691,26 +1712,49 @@ horizontal_alignment = 1
 [node name="fog" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=670577229]
 modulate = Color(0.73922217, 0.46258998, 0.9705774, 1)
 layout_mode = 2
+mouse_filter = 1
 bbcode_enabled = true
 text = "[font_size=20]fog
 [color=ffffffbb][font_size=16]Developer"
 fit_content = true
 horizontal_alignment = 1
 
+[node name="xwalfie" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=427847284]
+modulate = Color(0.2627451, 1, 0.9529412, 1)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "[font_size=20]xwalfie
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="lulusuki" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1649530311]
+modulate = Color(1, 0.7411765, 1, 1)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "[font_size=20]lulusuki
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
 [node name="cake" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1336553338]
 modulate = Color(0.49546552, 0.9457299, 0.77711904, 1)
 layout_mode = 2
+mouse_filter = 1
 bbcode_enabled = true
 text = "[font_size=20]cake
 [color=ffffffbb][font_size=16]Contributor"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="snuz" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1573219614]
-modulate = Color(0.59607846, 0.9843137, 0.59607846, 1)
+[node name="noobour" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1684835200]
+modulate = Color(0.05882353, 0.5058824, 0.7176471, 1)
 layout_mode = 2
+mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]snuz
+text = "[font_size=20]noobour
 [color=ffffffbb][font_size=16]Contributor"
 fit_content = true
 horizontal_alignment = 1
@@ -1718,17 +1762,56 @@ horizontal_alignment = 1
 [node name="allusionist" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=2118833467]
 modulate = Color(0.9814784, 0.7174443, 0.6400969, 1)
 layout_mode = 2
+mouse_filter = 1
 bbcode_enabled = true
 text = "[font_size=20]allusionist
-[color=ffffffbb][font_size=16]Button icons"
+[color=ffffffbb][font_size=16]Contributor"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="noobour" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1684835200]
+[node name="kiwie" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=699076624]
+modulate = Color(1, 0.8156863, 0.53333336, 1)
 layout_mode = 2
+mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]noobour
-[color=0f81b7][font_size=16]Contributor"
+text = "[font_size=20]kiwie
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="snuz" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1573219614]
+modulate = Color(0.59607846, 0.9843137, 0.59607846, 1)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "[font_size=20]snuz
+[color=ffffffbb][font_size=16]Contributor"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="jonyro" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=478363351]
+modulate = Color(0.9607843, 0.60784316, 0.6784314, 1)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "[font_size=20][u]jonyro / jrolly
+[color=ffffffbb][font_size=16]\"Redshift\" (Menu theme) artist"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer/jonyro" unique_id=1840543780]
+show_behind_parent = true
+clip_contents = true
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 33.0
+offset_bottom = 12.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+flat = true
+script = ExtResource("44_ybca7")
+Link = "https://soundcloud.com/jonyro"
 
 [node name="Outline" type="Panel" parent="Menus/Extras/Credits" unique_id=239136532]
 material = SubResource("ShaderMaterial_yxnar")
@@ -1783,7 +1866,7 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]runner-rewrite"
+text = "Rhythia [font_size=12][color=ffffffa0]0.2-rc1"
 shortcut_keys_enabled = false
 vertical_alignment = 1
 
