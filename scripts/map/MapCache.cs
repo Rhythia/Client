@@ -40,6 +40,12 @@ public static class MapCache
                 syncFiles(toParseMaps);
                 addNonCachedFiles(toParseMaps);
 
+                // Old caching format used to just extract .phxm files, essentially doubling your game size
+                if (OldCacheFormat && Directory.Exists($"{Constants.USER_FOLDER}/cache/maps"))
+                {
+                    Directory.Delete($"{Constants.USER_FOLDER}/cache/maps", true);
+                }
+                
                 OnFilesSyncFinished?.Invoke(FilesSynced.Value);
                 FilesToSync.Value = 0;
                 FilesSynced.Value = 0;
@@ -84,13 +90,10 @@ public static class MapCache
         {
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
-            if (OldCacheFormat)
+            if (OldCacheFormat && map.Favorite)
             {
-                if (map.Favorite == true)
-                {
-                    // The new cache re-writes it from scratch with a new format, so we will need to store these for later
-                    MapsToBeFavorited.Add(map.Name);
-                }
+                // The new cache re-writes it from scratch with a new format, so we will need to store these for later
+                MapsToBeFavorited.Add(map.Name);
             }
 
             if (mapsHashSet.Contains(mapPath))
@@ -193,6 +196,7 @@ public static class MapCache
         FilesToSync.Value = toParseMaps.Count() - maps.Count();
         FilesSynced.Value = 0;
 
+        // For Old Cache version
         if (toParseMaps.Contains($"{Constants.USER_FOLDER}/maps/default"))
         {
             FilesToSync.Value--;
