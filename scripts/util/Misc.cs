@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
@@ -159,5 +160,26 @@ public class Misc
         }
 
         return fallback;
+    }
+
+    public static int BinarySearch<T>(IReadOnlyList<T> notes, double time) where T : ITimelineObject
+    {
+        int left = 0, right = notes.Count;
+
+        while (left < right)
+        {
+            int middle = (left + right) / 2;
+
+            if (time < notes[middle].Millisecond)
+            {
+                right = middle;
+            }
+            else
+            {
+                left = middle + 1;
+            }
+        }
+
+        return left - 1;
     }
 }

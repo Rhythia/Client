@@ -206,7 +206,7 @@ public partial class Runner : Node3D
 
         foreach (var entry in Attempt.Objects)
         {
-            ObjectIndicesStart[entry.Key] = 0;
+            ObjectIndicesStart[entry.Key] = (int)Attempt.FirstNote;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
 
@@ -311,7 +311,7 @@ public partial class Runner : Node3D
 
         foreach (var entry in Attempt.Objects)
         {
-            ObjectIndicesStart[entry.Key] = 0;
+            ObjectIndicesStart[entry.Key] = Util.Misc.BinarySearch(entry.Value, ms) + 1;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
 
