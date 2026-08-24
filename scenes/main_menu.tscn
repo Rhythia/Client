@@ -803,7 +803,7 @@ theme = SubResource("Theme_nlclj")
 ok_button_text = "Open"
 file_mode = 1
 access = 2
-filters = PackedStringArray("*.sspm", "*.phxm", "*.txt")
+filters = PackedStringArray("*.sspm", "*.phxm", "*.txt", "*.rhm")
 use_native_dialog = true
 script = ExtResource("2_yxnar")
 
