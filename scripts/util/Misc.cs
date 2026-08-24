@@ -162,15 +162,15 @@ public class Misc
         return fallback;
     }
 
-    public static int BinarySearch<T>(IReadOnlyList<T> notes, double time) where T : ITimelineObject
+    public static int BinarySearch(double[] values, double time)
     {
-        int left = 0, right = notes.Count;
+        int left = 0, right = values.Length;
 
         while (left < right)
         {
             int middle = (left + right) / 2;
 
-            if (time < notes[middle].Millisecond)
+            if (time < values[middle])
             {
                 right = middle;
             }

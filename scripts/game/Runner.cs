@@ -27,6 +27,7 @@ public partial class Runner : Node3D
     private double lastFrame = Time.GetTicksUsec();
     private bool firstFrame = true;
     private bool eventsConnected = false;
+    private double[] noteTimestamps;
 
     [ExportCategory("Settings")]
     [Export] public bool NotesOnly = false;
@@ -209,6 +210,7 @@ public partial class Runner : Node3D
             ObjectIndicesStart[entry.Key] = (int)Attempt.FirstNote;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
+        noteTimestamps = Attempt.Objects[typeof(Note)].Select(note => (double)note.Millisecond).ToArray();
 
         if (!NotesOnly)
         {
@@ -311,7 +313,7 @@ public partial class Runner : Node3D
 
         foreach (var entry in Attempt.Objects)
         {
-            ObjectIndicesStart[entry.Key] = Util.Misc.BinarySearch(entry.Value, ms) + 1;
+            ObjectIndicesStart[entry.Key] = Util.Misc.BinarySearch(noteTimestamps, ms) + 1;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
 
