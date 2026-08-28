@@ -425,8 +425,19 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         Lobby.SetStartFrom(0);
 
-        preview.Setup(map, true);
+        LoadLeaderboard(map);
 
+        preview.Setup(map, true);
+    }
+
+    public void Refresh()
+    {
+        Setup(Map);
+        LoadLeaderboard(Map);
+    }
+
+    public void LoadLeaderboard(Map map)
+    {
         // Leaderboard
 
         Leaderboard = new();
@@ -454,11 +465,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             panel.Button.Pressed += () => { toggleLeaderboard(false); };
         }
-    }
-
-    public void Refresh()
-    {
-        Setup(Map);
     }
 
     public Tween Transition(bool show)
