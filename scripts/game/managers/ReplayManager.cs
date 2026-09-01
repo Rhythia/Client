@@ -19,10 +19,14 @@ public partial class ReplayManager : Node
     [Export] public CursorManager CursorManager { get; private set; }
 
     public bool ViewerVisible;
+    public bool CanShow;
 
     // only public variable because of Game
     public static TextureButton SeekerPause;
+    private static Panel orthogonalPanel;
     private static Label seekerTime;
+    private static Label tip;
+    private static Panel background;
     private static HSlider seekerTimeline;
     private static bool seekerHovered;
     public float ReplayLength;
@@ -148,8 +152,11 @@ public partial class ReplayManager : Node
         base._Ready();
 
         // this entire code lowkey sucks, so i am just copy and pasting it because i am lazy -fog
+        orthogonalPanel = ReplayViewer.GetNode<Panel>("OrthogonalPanel");
         SeekerPause = ReplayViewer.GetNode<TextureButton>("Pause");
         seekerTime = ReplayViewer.GetNode<Label>("Time");
+        tip = ReplayViewer.GetNode<Label>("Tip");
+        background = ReplayViewer.GetNode<Panel>("Background");
         seekerTimeline = ReplayViewer.GetNode<HSlider>("Seek");
         CursorManager ??= GetNode<CursorManager>("CursorManager");
 
@@ -200,7 +207,11 @@ public partial class ReplayManager : Node
         ViewerVisible = show ?? !ViewerVisible;
         bool visible = ViewerVisible && attempt.IsReplay;
 
-        ReplayViewer.Visible = visible;
+        SeekerPause.Visible = visible;
+        seekerTime.Visible = visible;
+        seekerTimeline.Visible = visible;
+        tip.Visible = visible;
+        background.Visible = visible;
 
         if (attempt.IsReplay)
         {
@@ -208,6 +219,14 @@ public partial class ReplayManager : Node
                 ? Input.MouseModeEnum.Visible
                 : Input.MouseModeEnum.Hidden;
         }
+    }
+
+    public void ShowOrthonogalCamera(Attempt attempt, bool? show = null)
+    {
+        CanShow = show ?? !CanShow;
+        bool visible = CanShow && attempt.IsReplay;
+
+        orthogonalPanel.Visible = visible && attempt.IsReplay;
     }
 
     public void TogglePause()

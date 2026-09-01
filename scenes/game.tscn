@@ -216,7 +216,16 @@ font_size = 18
 font_color = Color(1, 1, 1, 0.8)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sijr0"]
-bg_color = Color(0.1072, 0.0896, 0.16, 0.25098)
+bg_color = Color(0, 0, 0, 0.8784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [sub_resource type="LabelSettings" id="LabelSettings_a70tm"]
 font_color = Color(1, 1, 1, 0.25098)
@@ -756,7 +765,7 @@ size = Vector2i(1280, 720)
 render_target_update_mode = 0
 
 [node name="ReplayViewer" type="Panel" parent="." unique_id=1117476839]
-visible = false
+self_modulate = Color(1, 1, 1, 0)
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -770,12 +779,56 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sijr0")
 
-[node name="Label" type="Label" parent="ReplayViewer" unique_id=919285545]
+[node name="OrthogonalPanel" type="Panel" parent="ReplayViewer" unique_id=816223519]
+light_mask = 512
+visibility_layer = 512
+z_index = -1
+z_as_relative = false
+layout_mode = 1
+offset_left = -5.0
+offset_top = -283.0
+offset_right = 259.0
+offset_bottom = -19.0
+offset_transform_enabled = true
+offset_transform_pivot_ratio = Vector2(1, 1)
+offset_transform_visual_only = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sijr0")
+
+[node name="OrthogonalCamera" type="SubViewportContainer" parent="ReplayViewer/OrthogonalPanel" unique_id=468959325]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+
+[node name="SubViewport" type="SubViewport" parent="ReplayViewer/OrthogonalPanel/OrthogonalCamera" unique_id=559747074]
+transparent_bg = true
+handle_input_locally = false
+scaling_3d_mode = 5
+size = Vector2i(256, 256)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="ReplayViewer/OrthogonalPanel/OrthogonalCamera/SubViewport" unique_id=1970241273]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.44182658)
+top_level = true
+projection = 1
+size = 3.1727066
+
+[node name="Tip" type="Label" parent="ReplayViewer" unique_id=919285545]
 layout_mode = 1
 anchors_preset = -1
 offset_right = 40.0
 grow_vertical = 0
-text = "Press F2 to toggle"
+text = "Press F2 to hide replay UI, F3 to hide orthogonal camera"
 label_settings = SubResource("LabelSettings_a70tm")
 
 [node name="Time" type="Label" parent="ReplayViewer" unique_id=1277133470]
@@ -817,6 +870,21 @@ theme = ExtResource("4_rvp5o")
 max_value = 1.0
 step = 0.0
 ticks_position = 3
+
+[node name="Background" type="Panel" parent="ReplayViewer" unique_id=375982619]
+light_mask = 512
+visibility_layer = 512
+z_index = -1
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -52.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sijr0")
 
 [node name="NotificationHolder" type="VBoxContainer" parent="." unique_id=1425635507]
 anchors_preset = 3
@@ -961,6 +1029,7 @@ theme_override_font_sizes/font_size = 28
 text = "GIVE UP"
 
 [node name="Transition" type="ColorRect" parent="." unique_id=784178581]
+visible = false
 self_modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0

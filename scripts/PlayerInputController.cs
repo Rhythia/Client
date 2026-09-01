@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Godot;
 
 public partial class PlayerInputController : Node
@@ -18,6 +18,7 @@ public partial class PlayerInputController : Node
     public event Action OnTogglePaused;
     public event Action OnRestartPressed;
     public event Action OnToggleReplayViewerVisibility;
+    public event Action OnToggleShowOrthonogalCamera;
     public event Action OnPauseOrSkipPressed;
     public event Action OnPauseOrSkipReleased;
     public event Action OnToggleFade;
@@ -42,6 +43,7 @@ public partial class PlayerInputController : Node
                 break;
             case InputEventKey { PhysicalKeycode: Key.Escape }:
             case InputEventKey { PhysicalKeycode: Key.F2 }:
+            case InputEventKey { PhysicalKeycode: Key.F3 }:
             case InputEventKey { PhysicalKeycode: Key.Space }:
             case InputEventKey { PhysicalKeycode: Key.F }:
             case InputEventKey { PhysicalKeycode: Key.P }:
@@ -100,6 +102,9 @@ public partial class PlayerInputController : Node
                 break;
             case { PhysicalKeycode: Key.F2 }:
                 OnToggleReplayViewerVisibility?.Invoke();
+                break;
+            case { PhysicalKeycode: Key.F3 }:
+                OnToggleShowOrthonogalCamera?.Invoke();
                 break;
             case { PhysicalKeycode: Key.F }:
                 OnToggleFade?.Invoke();

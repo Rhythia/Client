@@ -82,6 +82,14 @@ public partial class Game : BaseScene
             }
         };
 
+        PlayerInputController.OnToggleShowOrthonogalCamera += () =>
+        {
+            if (Attempt.IsReplay)
+            {
+                ReplayManager.ShowOrthonogalCamera(Attempt);
+            }
+        };
+
         PlayerInputController.OnPauseOrSkipPressed += () =>
         {
             if (Attempt.IsReplay)
@@ -134,6 +142,7 @@ public partial class Game : BaseScene
         Runner.Attempt = Attempt;
         ReplayManager.InitReplayLength();
         ReplayManager.ShowReplayViewer(Runner.Attempt, Runner.Attempt.IsReplay);
+        ReplayManager.ShowOrthonogalCamera(Runner.Attempt, Runner.Attempt.IsReplay);
 
         Menu.HideMenu(true);
 
