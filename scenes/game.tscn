@@ -1029,7 +1029,6 @@ theme_override_font_sizes/font_size = 28
 text = "GIVE UP"
 
 [node name="Transition" type="ColorRect" parent="." unique_id=784178581]
-visible = false
 self_modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
