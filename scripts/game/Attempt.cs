@@ -82,6 +82,14 @@ public partial class Attempt : RefCounted
         Objects[typeof(Note)] = [.. map.Notes];
         HitsInfo = IsReplay ? Replays[0].Notes : new float[Map.Notes.Length];
 
+        if (Modifiers.Count >= 1)
+        {
+            foreach (Modifier modifier in Modifiers)
+            {
+                ModsMultiplier += modifier.ScoreMultiplier - 1;
+            }
+        }
+
         if (IsReplay)
         {
             foreach (var replay in Replays)
