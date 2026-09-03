@@ -43,6 +43,7 @@ public partial class Attempt : RefCounted
     public uint ComboMultiplier = 1;
     public uint ComboMultiplierProgress = 0;
     public uint ComboMultiplierIncrement = 0;
+    public uint MaxComboMultiplier = 0;
     public double ModsMultiplier = 1;
     public float[] HitsInfo = [];
     public Color LastHitColour = new();
@@ -77,19 +78,20 @@ public partial class Attempt : RefCounted
         Length = Math.Max(1000 * (SoundManager.Song?.Stream?.GetLength() ?? 0), Map.Length + 1000);
         Players = players ?? [];
         Progress = Speed * -1000 - Settings.ApproachTime * 1000 + StartFrom;
-        ComboMultiplierIncrement = Math.Max(2, (uint)Map.Notes.Length / 200);
+        ComboMultiplierIncrement = Map.Notes.Length <= 8 ? 1 : Math.Max(2, (uint)Map.Notes.Length / 200);
         CameraMode = cameraMode;
         Modifiers = mods;
         HasHealthModifier = Modifiers.Any(mod => mod is IHealthModifier);
         Objects[typeof(Note)] = [.. map.Notes];
         HitsInfo = IsReplay ? Replays[0].Notes : new float[Map.Notes.Length];
+        MaxComboMultiplier = (uint)Math.Clamp(Math.Floor((double)Map.Notes.Length / ComboMultiplierIncrement), 1, 7);
 
-        for (uint i = 1; i <= 7; i++)
+        for (uint i = 1; i <= MaxComboMultiplier; i++)
         {
             NoteWeight += ComboMultiplierIncrement * i;
         }
 
-        NoteWeight += ((uint)Map.Notes.Length - ComboMultiplierIncrement * 7) * 8;
+        NoteWeight += ((uint)Map.Notes.Length - ComboMultiplierIncrement * MaxComboMultiplier) * (MaxComboMultiplier + 1);
 
         if (Modifiers.Count >= 1)
         {
