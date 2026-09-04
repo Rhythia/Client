@@ -679,7 +679,6 @@ font = ExtResource("21_05nbr")
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -8.5, -10)
 visible = false
 modulate = Color(1, 1, 1, 0.376471)
-pixel_size = 0.015
 double_sided = false
 no_depth_test = true
 texture = ExtResource("34_8ool0")
