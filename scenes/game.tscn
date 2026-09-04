@@ -836,7 +836,7 @@ layout_mode = 1
 anchors_preset = -1
 offset_right = 40.0
 grow_vertical = 0
-text = "Press F2 to hide replay UI, F3 to hide orthogonal camera, F to toggle note fade, P to toggle note pushback"
+text = "Press F2 to hide replay UI, F3 to hide orthogonal camera, F to toggle fade out, P to toggle note pushback"
 label_settings = SubResource("LabelSettings_a70tm")
 
 [node name="Time" type="Label" parent="ReplayViewer" unique_id=1277133470]
