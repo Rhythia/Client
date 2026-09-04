@@ -679,6 +679,7 @@ font = ExtResource("21_05nbr")
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -8.5, -10)
 visible = false
 modulate = Color(1, 1, 1, 0.376471)
+pixel_size = 0.015
 double_sided = false
 no_depth_test = true
 texture = ExtResource("34_8ool0")
@@ -793,9 +794,9 @@ z_index = -1
 z_as_relative = false
 layout_mode = 1
 offset_left = -5.0
-offset_top = -283.0
+offset_top = -310.0
 offset_right = 259.0
-offset_bottom = -19.0
+offset_bottom = -46.0
 offset_transform_enabled = true
 offset_transform_pivot_ratio = Vector2(1, 1)
 offset_transform_visual_only = false
@@ -809,12 +810,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -128.0
-offset_top = -128.0
-offset_right = 128.0
-offset_bottom = 128.0
+offset_left = -152.0
+offset_top = -152.0
+offset_right = 104.0
+offset_bottom = 104.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.2, 1.2)
 offset_transform_enabled = true
 
 [node name="SubViewport" type="SubViewport" parent="ReplayViewer/OrthogonalPanel/OrthogonalCamera" unique_id=559747074]
@@ -828,14 +830,14 @@ render_target_update_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.44182658)
 top_level = true
 projection = 1
-size = 3.1727066
+size = 4.5
 
 [node name="Tip" type="Label" parent="ReplayViewer" unique_id=919285545]
 layout_mode = 1
 anchors_preset = -1
 offset_right = 40.0
 grow_vertical = 0
-text = "Press F2 to hide replay UI, F3 to hide orthogonal camera"
+text = "Press F2 to hide replay UI, F3 to hide orthogonal camera, F to toggle note fade, P to toggle note pushback"
 label_settings = SubResource("LabelSettings_a70tm")
 
 [node name="Time" type="Label" parent="ReplayViewer" unique_id=1277133470]

@@ -27,15 +27,6 @@ point_size = 23.8
 material = SubResource("StandardMaterial3D_n0yhb")
 size = Vector2(120, 120)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_31ska"]
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ytxqq"]
-material = SubResource("StandardMaterial3D_31ska")
-flip_faces = true
-size = Vector3(120, 21, 120)
-
 [node name="Grid" type="Node3D" unique_id=2134769153]
 script = ExtResource("1_wac2s")
 
@@ -49,9 +40,6 @@ mesh = SubResource("PlaneMesh_yclqf")
 [node name="Top" type="MeshInstance3D" parent="." unique_id=1325224979]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 10, 0)
 mesh = SubResource("PlaneMesh_yclqf")
-
-[node name="Shell" type="MeshInstance3D" parent="." unique_id=1123784198]
-mesh = SubResource("BoxMesh_ytxqq")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1660955999]
 fov = 70.0
