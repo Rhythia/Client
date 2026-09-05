@@ -85,12 +85,7 @@ public partial class Attempt : RefCounted
         HitsInfo = IsReplay ? Replays[0].Notes : new float[Map.Notes.Length];
 
         uint noteWeightIterations = (uint)Math.Clamp(Math.Floor((double)Map.Notes.Length / ComboMultiplierIncrement), 1, 7);
-
-        for (uint i = 1; i <= noteWeightIterations; i++)
-        {
-            NoteWeight += Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * i;
-        }
-
+        NoteWeight += Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * (1 + noteWeightIterations) * noteWeightIterations / 2;
         NoteWeight += ((uint)Map.Notes.Length - Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * noteWeightIterations) * (noteWeightIterations + 1);
 
         if (Modifiers.Count >= 1)
