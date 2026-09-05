@@ -285,7 +285,9 @@ public partial class SoundManager : Node, ISkinnable
 
         if (setRichPresence)
         {
-            string title = map.PrettyTitle.Substr(0, 115);
+            // RPC state has a length limit of 115
+            string title = map.PrettyTitle.Substr(0, 112);
+            title += "...";
 
             Discord.Client.UpdateState($"Listening to {title}");
         }
