@@ -45,6 +45,7 @@ public partial class Runner : Node3D
 
         HudManager ??= GetNode<HudManager>("HUD");
         Camera ??= GetNode<Camera3D>("Camera3D");
+        Renderers ??= GetNode<Godot.Collections.Array<Renderer>>("Renderers");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
