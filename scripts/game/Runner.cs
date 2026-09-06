@@ -394,11 +394,11 @@ public partial class Runner : Node3D
 
             if (Attempt.StartFrom == 0)
             {
-                if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}"))
+                if (!File.Exists($"{SettingsManager.UserFolder}/pbs/{Attempt.Map.Name}"))
                 {
                     List<byte> bytes = [0, 0, 0, 0];
                     bytes.AddRange(SHA256.HashData([0, 0, 0, 0]));
-                    File.WriteAllBytes($"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}", [.. bytes]);
+                    File.WriteAllBytes($"{SettingsManager.UserFolder}/pbs/{Attempt.Map.Name}", [.. bytes]);
                 }
 
                 Dictionary<string, bool> mods = [];
@@ -408,7 +408,7 @@ public partial class Runner : Node3D
                     mods[mod.Name] = true;
                 }
 
-                Leaderboard leaderboard = new(Attempt.Map.Name, $"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}");
+                Leaderboard leaderboard = new(Attempt.Map.Name, $"{SettingsManager.UserFolder}/pbs/{Attempt.Map.Name}");
 
                 leaderboard.Add(new(Attempt.ID, "You", Attempt.Qualifies, Attempt.Score, Attempt.Accuracy, Time.GetUnixTimeFromSystem(), Attempt.Progress, Attempt.Map.Length, Speed, mods));
                 leaderboard.Save();

@@ -168,7 +168,7 @@ public struct Replay
             MapID = FileBuffer.GetString((int)FileBuffer.GetUInt32());
 
             MapNoteCount = FileBuffer.GetUInt64();
-            MapFilePath = $"{Constants.USER_FOLDER}/maps/{MapID}";
+            MapFilePath = $"{SettingsManager.UserFolder}/maps/{MapID}";
             if (Path.GetExtension(MapFilePath).Equals(".phxm", StringComparison.OrdinalIgnoreCase))
             {
                 Logger.Log($"Legacy Replay detected: {MapFilePath}");

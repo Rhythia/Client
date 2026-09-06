@@ -147,5 +147,5 @@ public partial class MapManager : Node
         }
     }
 
-    public static string MapsFolder => $"{Constants.USER_FOLDER}/maps";
+    public static string MapsFolder => $"{SettingsManager.UserFolder}/maps";
 }

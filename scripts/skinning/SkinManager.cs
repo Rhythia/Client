@@ -27,7 +27,7 @@ public partial class SkinManager : Node
 
         if (Toml.TryFromModel(skin.Config, out string toml, out _))
         {
-            File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml", toml);
+            File.WriteAllText($"{SettingsManager.UserFolder}/skins/{settings.Skin.Value}/config.toml", toml);
         }
 
         Logger.Log($"Saved skin {settings.Skin.Value}");
@@ -44,7 +44,7 @@ public partial class SkinManager : Node
 
         skin.Config = new();
 
-        string configFile = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml";
+        string configFile = $"{SettingsManager.UserFolder}/skins/{settings.Skin.Value}/config.toml";
 
         if (File.Exists(configFile) && Toml.TryToModel(File.ReadAllText(configFile), out SkinConfig config, out _))
         {
@@ -52,7 +52,7 @@ public partial class SkinManager : Node
         }
         else if (Toml.TryFromModel(skin.Config, out string toml, out _))
         {
-            File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml", toml);
+            File.WriteAllText($"{SettingsManager.UserFolder}/skins/{settings.Skin.Value}/config.toml", toml);
         }
 
         // Textures
@@ -141,11 +141,11 @@ public partial class SkinManager : Node
 
         // Meshes
 
-        skin.NoteMesh = loadMesh($"{Constants.USER_FOLDER}/meshes/{(settings.NoteMesh == "skin" ? skin.Config.NoteMesh : settings.NoteMesh)}.obj");
+        skin.NoteMesh = loadMesh($"{SettingsManager.UserFolder}/meshes/{(settings.NoteMesh == "skin" ? skin.Config.NoteMesh : settings.NoteMesh)}.obj");
 
         // Colors
 
-        string colorsetPath = $"{Constants.USER_FOLDER}/colorsets/{(settings.NoteColors == "skin" ? skin.Config.NoteColors : settings.NoteColors)}.txt";
+        string colorsetPath = $"{SettingsManager.UserFolder}/colorsets/{(settings.NoteColors == "skin" ? skin.Config.NoteColors : settings.NoteColors)}.txt";
 
         if (File.Exists(colorsetPath))
         {
@@ -186,11 +186,11 @@ public partial class SkinManager : Node
     private static ImageTexture loadTexture(string skinPath)
     {
         var settings = SettingsManager.Instance.Settings;
-        string fullPath = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}";
+        string fullPath = $"{SettingsManager.UserFolder}/skins/{settings.Skin.Value}/{skinPath}";
 
         if (!File.Exists(fullPath))
         {
-            string fallbackPath = $"{Constants.USER_FOLDER}/skins/default/{skinPath}";
+            string fallbackPath = $"{SettingsManager.UserFolder}/skins/default/{skinPath}";
             if (!File.Exists(fallbackPath))
             {
                 return null;
@@ -206,7 +206,7 @@ public partial class SkinManager : Node
     private static byte[] loadSound(string skinPath)
     {
         var settings = SettingsManager.Instance.Settings;
-        string path = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}";
+        string path = $"{SettingsManager.UserFolder}/skins/{settings.Skin.Value}/{skinPath}";
         byte[] buffer = [];
 
         if (File.Exists(path))
@@ -222,7 +222,7 @@ public partial class SkinManager : Node
     private static Shader loadShader(string skinPath)
     {
         var settings = SettingsManager.Instance.Settings;
-        string shader = File.ReadAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}");
+        string shader = File.ReadAllText($"{SettingsManager.UserFolder}/skins/{settings.Skin.Value}/{skinPath}");
 
         return new() { Code = shader };
     }

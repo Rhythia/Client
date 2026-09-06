@@ -42,7 +42,7 @@ public partial class ReplayManager : Node
 
         if (!settings.RecordReplays || Rhythia.TempMode) return;
 
-        ReplayPath = $"{Constants.USER_FOLDER}/replays/{attempt.ID}.phxr";
+        ReplayPath = $"{SettingsManager.UserFolder}/replays/{attempt.ID}.phxr";
 
         file = Godot.FileAccess.Open(ReplayPath, Godot.FileAccess.ModeFlags.Write);
 
@@ -131,7 +131,7 @@ public partial class ReplayManager : Node
         file.Close();
 
         // open replay to store hash
-        file = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/replays/{attempt.ID}.phxr", Godot.FileAccess.ModeFlags.ReadWrite);
+        file = Godot.FileAccess.Open($"{SettingsManager.UserFolder}/replays/{attempt.ID}.phxr", Godot.FileAccess.ModeFlags.ReadWrite);
         ulong length = file.GetLength();
         byte[] hash = SHA256.HashData(file.GetBuffer((long)length));
         file.StoreBuffer(hash);

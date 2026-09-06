@@ -128,7 +128,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         exportButton.Pressed += () =>
         {
-            string exportPath = $"{Constants.USER_FOLDER}/export/";
+            string exportPath = $"{SettingsManager.UserFolder}/export/";
             string exportFilePath = Path.Combine(exportPath, $"{Map.Name}.phxm");
 
             _ = ToastNotification.Notify($"Exporting to {exportFilePath}", 1);
@@ -442,9 +442,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         Leaderboard = new();
 
-        if (File.Exists($"{Constants.USER_FOLDER}/pbs/{map.Name}"))
+        if (File.Exists($"{SettingsManager.UserFolder}/pbs/{map.Name}"))
         {
-            Leaderboard = new(map.Name, $"{Constants.USER_FOLDER}/pbs/{map.Name}");
+            Leaderboard = new(map.Name, $"{SettingsManager.UserFolder}/pbs/{map.Name}");
         }
 
         leaderboard.Visible = Leaderboard.Valid && Leaderboard.ScoreCount > 0;

@@ -9,6 +9,7 @@ public partial class Constants : Node
     public static readonly string ROOT_FOLDER = Directory.GetCurrentDirectory();
 
     public static readonly string USER_FOLDER = OS.GetUserDataDir();
+    public static readonly string USER_FOLDER_POINTER = $"{USER_FOLDER}/user_folder_path.txt";
 
     public static readonly string NIGHTLY_FOLDER = $"{Path.GetDirectoryName(USER_FOLDER)}/SoundSpacePlus";
 

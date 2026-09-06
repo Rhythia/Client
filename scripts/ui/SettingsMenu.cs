@@ -260,7 +260,7 @@ public partial class SettingsMenu : ColorRect
         }
 
         string current = SettingsManager.GetCurrentProfile();
-        string[] profiles = Directory.GetFiles($"{Constants.USER_FOLDER}/profiles");
+        string[] profiles = Directory.GetFiles($"{SettingsManager.UserFolder}/profiles");
 
         // add custom profiles to item list
         for (int i = 0; i < profiles.Length; i++)

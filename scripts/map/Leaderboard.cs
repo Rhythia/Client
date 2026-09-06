@@ -19,7 +19,7 @@ public struct Leaderboard
     {
         MapID = mapID;
 
-        Path ??= $"{Constants.USER_FOLDER}/pbs/{MapID}";
+        Path ??= $"{SettingsManager.UserFolder}/pbs/{MapID}";
 
         byte[] bytes = [];
 

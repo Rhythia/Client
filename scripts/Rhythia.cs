@@ -36,7 +36,7 @@ public partial class Rhythia : Node
 
         // Settings
 
-        if (!File.Exists($"{Constants.USER_FOLDER}/profiles/default.json"))
+        if (!File.Exists($"{SettingsManager.UserFolder}/profiles/default.json"))
         {
             SettingsManager.Save("default");
         }
@@ -56,7 +56,7 @@ public partial class Rhythia : Node
         Stats.Instance.GamesOpened++;
 
         // Map import
-        var nonConvertedMaps = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f =>
+        var nonConvertedMaps = Directory.EnumerateFiles($"{SettingsManager.UserFolder}/maps", $"*.*", SearchOption.AllDirectories).Where(f =>
             f.GetExtension().ToLower() != Constants.DEFAULT_MAP_EXT
             && MapParser.IsValidExt(f.GetExtension().ToLower())
         );
