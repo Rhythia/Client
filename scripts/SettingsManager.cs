@@ -128,11 +128,33 @@ public partial class SettingsManager : Node
             File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.USER_FOLDER);
         }
 
-        return File.ReadAllText(Constants.USER_FOLDER_POINTER);
+        string path = File.ReadAllText(Constants.USER_FOLDER_POINTER).Trim();
+        
+        try
+        {
+            var _ = Directory.EnumerateFileSystemEntries(path);
+        }
+        catch
+        {
+            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.USER_FOLDER);
+            return Constants.USER_FOLDER;
+        }
+
+        return path;
     }
 
     public static void SetUserFolder(string path)
     {
+        try
+        {
+            var _ = Directory.EnumerateFileSystemEntries(path);
+        }
+        catch
+        {
+            ToastNotification.Notify("Invalid User Path. Setting has not been changed.", 2);
+            return;
+        }
+
         UserFolder = path;
         File.WriteAllText(Constants.USER_FOLDER_POINTER, path); // set user folder in .txt file and use this function in settings profile.cs
     }

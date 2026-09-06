@@ -24,6 +24,8 @@ public partial class SettingsMenu : ColorRect
 
     [Export] public FileDialog ImportNightlyDialog;
 
+    [Export] public FileDialog UserFolderDialog;
+
     public override void _Ready()
     {
         Instance = this;
@@ -192,6 +194,7 @@ public partial class SettingsMenu : ColorRect
 
         hideButton.Pressed += HideMenu;
         ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
+        UserFolderDialog.DirSelected += SettingsProfile.ConfigureSetUserFolderPath;
     }
     // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
     public override void _Input(InputEvent @event)
@@ -357,6 +360,8 @@ public partial class SettingsMenu : ColorRect
 
             if ((string)setting.GetVariant() != value) { setting.SetVariant(value); }
         }
+
+        if (setting.Placeholder != "") { lineEdit.PlaceholderText = setting.Placeholder; }
 
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) => { applyLineEdit(); };

@@ -130,7 +130,7 @@ handle_input_locally = false
 size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
-[node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog")]
+[node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog", "UserFolderDialog")]
 visible = false
 z_index = 1
 anchors_preset = 15
@@ -142,6 +142,7 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0.501961)
 script = ExtResource("2_o6xl0")
 ImportNightlyDialog = NodePath("ImportNightlyDialog")
+UserFolderDialog = NodePath("UserFolderDialog")
 
 [node name="Hide" type="Button" parent="Settings" unique_id=1153372742]
 self_modulate = Color(1, 1, 1, 0)
@@ -435,6 +436,12 @@ title = "Open a File"
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.json")
+use_native_dialog = true
+
+[node name="UserFolderDialog" type="FileDialog" parent="Settings" unique_id=1587875798]
+title = "Open a Directory"
+file_mode = 2
+access = 2
 use_native_dialog = true
 
 [node name="Volume" type="Panel" parent="." unique_id=1219254705]

@@ -22,6 +22,8 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 
     public string Description { get; set; } = "";
 
+    public string Placeholder { get; set; } = "";
+
     public T DefaultValue { get; private set; } = default;
 
     public List<SettingsButton> Buttons { get; set; } = new();
