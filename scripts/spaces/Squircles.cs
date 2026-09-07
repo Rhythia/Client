@@ -29,13 +29,6 @@ public partial class Squircles : BaseSpace
         {
             updateColor(NoteHitColor);
         }
-        else
-        {
-            Viewport viewport = GetViewport();
-            Vector2 centerOffset = viewport.GetMousePosition() - viewport.GetVisibleRect().Size / 2;
-
-            Camera.Position = new Vector3(centerOffset.X, centerOffset.Y, 0) / 40000;
-        }
     }
 
     public override void UpdateMap(Map map)
