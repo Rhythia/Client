@@ -155,6 +155,18 @@ public partial class SettingsManager : Node
         }
 
         File.WriteAllText(Constants.USER_FOLDER_POINTER, path);
+
+        var popup = new OptionPopup("Restart required.", "Would you like to restart the game?");
+
+        popup.AddOption("Restart", Callable.From(() => {
+            string executablePath = OS.GetExecutablePath();
+            OS.CreateProcess(executablePath, []);  // may misbehave on macos
+            Instance.GetTree().Quit();
+        }));
+        popup.AddOption("Cancel", Callable.From(popup.Hide));
+
+        SettingsMenu.Instance.Hide();
+        popup.Show();
     }
 
     // the HideNotifications bool exists to prevent a lot of toasts that inform the user of changing the skin to "default",
