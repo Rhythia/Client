@@ -20,8 +20,6 @@ public partial class SettingsManager : Node
 
     public SettingsProfile Settings = new SettingsProfile();
 
-    public static string UserFolder { get => field ??= GetUserFolder(); set => field = value; }
-
     [Signal]
     public delegate void SavedEventHandler();
 
@@ -41,7 +39,7 @@ public partial class SettingsManager : Node
 
         string data = SettingsProfileConverter.Serialize(Instance.Settings);
 
-        File.WriteAllText($"{UserFolder}/profiles/{profile}.json", data);
+        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profile}.json", data);
 
         Logger.Log($"Saved settings {profile}");
 
@@ -52,12 +50,11 @@ public partial class SettingsManager : Node
 
     public static void Load(string profile = null)
     {
-        UserFolder = GetUserFolder();
         profile ??= GetCurrentProfile();
 
         try
         {
-            SettingsProfileConverter.Deserialize($"{UserFolder}/profiles/{profile}.json", Instance.Settings);
+            SettingsProfileConverter.Deserialize($"{Constants.USER_FOLDER}/profiles/{profile}.json", Instance.Settings);
 
             ToastNotification.Notify($"Loaded profile [{profile}]");
         }
@@ -67,7 +64,7 @@ public partial class SettingsManager : Node
             Logger.Error(exception);
         }
 
-        if (!Directory.Exists($"{UserFolder}/skins/{Instance.Settings.Skin.Value}"))
+        if (!Directory.Exists($"{Constants.USER_FOLDER}/skins/{Instance.Settings.Skin.Value}"))
         {
             Instance.Settings.Skin.Value = new("default");
             ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin.Value}", 1);
@@ -86,8 +83,8 @@ public partial class SettingsManager : Node
             }
         }
 
-        addUserContentToSettingsList(Instance.Settings.Skin, Directory.GetDirectories($"{UserFolder}/skins"));
-        addUserContentToSettingsList(Instance.Settings.NoteColors, Directory.GetFiles($"{UserFolder}/colorsets"));
+        addUserContentToSettingsList(Instance.Settings.Skin, Directory.GetDirectories($"{Constants.USER_FOLDER}/skins"));
+        addUserContentToSettingsList(Instance.Settings.NoteColors, Directory.GetFiles($"{Constants.USER_FOLDER}/colorsets"));
 
         Logger.Log($"Loaded settings {profile}");
 
@@ -106,12 +103,12 @@ public partial class SettingsManager : Node
     {
         profile ??= GetCurrentProfile();
 
-        File.WriteAllText($"{UserFolder}/current_profile.txt", profile);
+        File.WriteAllText($"{Constants.USER_FOLDER}/current_profile.txt", profile);
     }
 
     public static string GetCurrentProfile()
     {
-        string file = $"{UserFolder}/current_profile.txt";
+        string file = $"{Constants.USER_FOLDER}/current_profile.txt";
 
         if (File.Exists(file))
         {
