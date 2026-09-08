@@ -34,7 +34,7 @@ public partial class ScorePanel : Panel
 
         void tweenHover(bool show)
         {
-            string replayPath = $"{SettingsManager.UserFolder}/replays/{Score.AttemptID}.phxr";
+            string replayPath = $"{Constants.USER_FOLDER}/replays/{Score.AttemptID}.phxr";
 
             buttonLabel.Text = File.Exists(replayPath) ? "VIEW" : "REPLAY NOT FOUND";
 
@@ -80,7 +80,7 @@ public partial class ScorePanel : Panel
 
     public void Replay()
     {
-        string replayPath = $"{SettingsManager.UserFolder}/replays/{Score.AttemptID}.phxr";
+        string replayPath = $"{Constants.USER_FOLDER}/replays/{Score.AttemptID}.phxr";
 
         if (File.Exists(replayPath))
         {

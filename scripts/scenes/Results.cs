@@ -99,7 +99,7 @@ public partial class Results : BaseScene
 
             if (attempt.IsReplay)
             {
-                path = $"{SettingsManager.UserFolder}/replays/{attempt.Replays[0].ID}.phxr";
+                path = $"{Constants.USER_FOLDER}/replays/{attempt.Replays[0].ID}.phxr";
             }
             else
             {

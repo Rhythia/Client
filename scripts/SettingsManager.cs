@@ -125,7 +125,7 @@ public partial class SettingsManager : Node
     {
         if (!File.Exists(Constants.USER_FOLDER_POINTER) || string.IsNullOrWhiteSpace(File.ReadAllText(Constants.USER_FOLDER_POINTER)))
         {
-            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.USER_FOLDER);
+            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.DEFAULT_USER_FOLDER);
         }
 
         string path = File.ReadAllText(Constants.USER_FOLDER_POINTER).Trim();
@@ -134,10 +134,11 @@ public partial class SettingsManager : Node
         {
             var _ = Directory.EnumerateFileSystemEntries(path);
         }
-        catch
+        catch (Exception exception)
         {
-            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.USER_FOLDER);
-            return Constants.USER_FOLDER;
+            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.DEFAULT_USER_FOLDER);
+            Logger.Error(exception);
+            return Constants.DEFAULT_USER_FOLDER;
         }
 
         return path;
@@ -149,14 +150,14 @@ public partial class SettingsManager : Node
         {
             var _ = Directory.EnumerateFileSystemEntries(path);
         }
-        catch
+        catch (Exception exception)
         {
             ToastNotification.Notify("Invalid User Path. Setting has not been changed.", 2);
+            Logger.Error(exception);
             return;
         }
 
-        UserFolder = path;
-        File.WriteAllText(Constants.USER_FOLDER_POINTER, path); // set user folder in .txt file and use this function in settings profile.cs
+        File.WriteAllText(Constants.USER_FOLDER_POINTER, path);
     }
 
     // the HideNotifications bool exists to prevent a lot of toasts that inform the user of changing the skin to "default",

@@ -41,9 +41,9 @@ public static class MapCache
                 addNonCachedFiles(toParseMaps);
 
                 // Old caching format used to just extract .phxm files, essentially doubling your game size
-                if (OldCacheFormat && Directory.Exists($"{SettingsManager.UserFolder}/cache/maps"))
+                if (OldCacheFormat && Directory.Exists($"{Constants.USER_FOLDER}/cache/maps"))
                 {
-                    Directory.Delete($"{SettingsManager.UserFolder}/cache/maps", true);
+                    Directory.Delete($"{Constants.USER_FOLDER}/cache/maps", true);
                 }
 
                 OnFilesSyncFinished?.Invoke(FilesSynced.Value);
@@ -197,7 +197,7 @@ public static class MapCache
         FilesSynced.Value = 0;
 
         // For Old Cache version
-        if (toParseMaps.Contains($"{SettingsManager.UserFolder}/maps/default"))
+        if (toParseMaps.Contains($"{Constants.USER_FOLDER}/maps/default"))
         {
             FilesToSync.Value--;
         }
@@ -222,7 +222,7 @@ public static class MapCache
                     continue;
                 }
 
-                map.FolderPath = $"{SettingsManager.UserFolder}/maps/{map.Name}";
+                map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
 
                 if (OldCacheFormat)

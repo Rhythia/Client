@@ -615,7 +615,7 @@ public partial class SettingsProfile
             UpdateAction = (_, init) => { if (!init) { SkinManager.Load(); } },
             Buttons =
             [
-                new() { Title = "Skin Folder", Description = "Open the skin folder", OnPressed = () => { OS.ShellOpen($"{SettingsManager.UserFolder}/skins/{SettingsManager.Instance.Settings.Skin}"); } }
+                new() { Title = "Skin Folder", Description = "Open the skin folder", OnPressed = () => { OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}"); } }
             ],
             List = new("default")
             {
@@ -1182,13 +1182,13 @@ public partial class SettingsProfile
             SaveToDisk = false,
         };
 
-        SetUserFolderPath = new(SettingsManager.UserFolder)
+        SetUserFolderPath = new(Constants.USER_FOLDER)
         {
             Id = "SetUserFolderPath",
             Title = "Path To User Folder",
             Description = "Set the path where Rhythia stores it's files",
             Section = SettingsSection.Other,
-            Placeholder = Constants.USER_FOLDER,
+            Placeholder = Constants.DEFAULT_USER_FOLDER,
             UpdateAction = (value, _) => {
                 SettingsManager.SetUserFolder(value);
             },
@@ -1308,7 +1308,7 @@ public partial class SettingsProfile
     private static List<string> getAvailableMeshes()
     {
         List<string> meshes = ["skin"];
-        string meshDir = $"{SettingsManager.UserFolder}/meshes";
+        string meshDir = $"{Constants.USER_FOLDER}/meshes";
 
         if (Directory.Exists(meshDir))
         {
@@ -1426,7 +1426,7 @@ public partial class SettingsProfile
         // prevents overriding existing 'nightly' profile
         string getProfileName(string baseName)
         {
-            string profilesDir = $"{SettingsManager.UserFolder}/profiles";
+            string profilesDir = $"{Constants.USER_FOLDER}/profiles";
             Directory.CreateDirectory(profilesDir);
 
             string name = baseName;
@@ -1443,7 +1443,7 @@ public partial class SettingsProfile
 
         string profileName = getProfileName("nightly");
         string profileJson = SettingsProfileConverter.Serialize(nightlyProfile);
-        File.WriteAllText($"{SettingsManager.UserFolder}/profiles/{profileName}.json", profileJson);
+        File.WriteAllText($"{Constants.USER_FOLDER}/profiles/{profileName}.json", profileJson);
 
         SettingsManager.SetCurrentProfile(profileName);
         SettingsManager.Load();
@@ -1460,7 +1460,7 @@ public partial class SettingsProfile
     private static void importColorsetsFromNightly()
     {
         string nightlyColorsetsDir = $"{Constants.NIGHTLY_FOLDER}/colorsets";
-        string colorsetsDir = $"{SettingsManager.UserFolder}/colorsets";
+        string colorsetsDir = $"{Constants.USER_FOLDER}/colorsets";
         int importedCount = 0;
 
         if (!Directory.Exists(nightlyColorsetsDir))
@@ -1489,7 +1489,7 @@ public partial class SettingsProfile
     private static void importMeshesFromNightly()
     {
         string nightlyMeshesDir = $"{Constants.NIGHTLY_FOLDER}/meshes";
-        string meshesDir = $"{SettingsManager.UserFolder}/meshes";
+        string meshesDir = $"{Constants.USER_FOLDER}/meshes";
         int importedCount = 0;
 
         if (!Directory.Exists(nightlyMeshesDir))

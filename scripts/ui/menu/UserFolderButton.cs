@@ -5,6 +5,6 @@ public partial class UserFolderButton : Button
 {
     public override void _Pressed()
     {
-        OS.ShellShowInFileManager(SettingsManager.UserFolder);
+        OS.ShellShowInFileManager(Constants.USER_FOLDER);
     }
 }

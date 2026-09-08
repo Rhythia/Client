@@ -6,7 +6,7 @@ using SQLitePCL;
 
 public partial class DatabaseService : Node
 {
-    public static readonly string DATABASE_PATH = SettingsManager.UserFolder + "/data.db";
+    public static readonly string DATABASE_PATH = Constants.USER_FOLDER + "/data.db";
 
     public static SQLiteConnection Connection { get; set; }
 

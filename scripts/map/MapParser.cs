@@ -78,7 +78,7 @@ public partial class MapParser : Node
 		*/
         Map decodedMap = Decode(map.FolderPath);
 
-        string exportPath = $"{SettingsManager.UserFolder}/export/";
+        string exportPath = $"{Constants.USER_FOLDER}/export/";
         string exportFilePath = Path.Combine(exportPath, $"{decodedMap.Name}.phxm");
 
         if (!Directory.Exists(exportPath)) Directory.CreateDirectory(exportPath);
@@ -143,7 +143,7 @@ public partial class MapParser : Node
     {
         double start = Time.GetTicksUsec();
 
-        string mapDirectory = $"{SettingsManager.UserFolder}/maps";
+        string mapDirectory = $"{Constants.USER_FOLDER}/maps";
         string mapFolderPath = Path.Combine(mapDirectory, $"{map.Name}");
         // string mapFilePath = Path.Combine(mapDirectory, $"{map.Name}.{Constants.DEFAULT_MAP_EXT}");
 
@@ -470,7 +470,7 @@ public partial class MapParser : Node
                 notes[i].Index = i;
             }
 
-            map = new(path ?? $"{SettingsManager.UserFolder}/maps/{song}_temp.sspm", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
+            map = new(path ?? $"{Constants.USER_FOLDER}/maps/{song}_temp.sspm", notes, id, artist, song, 0, mappers, difficulty, null, (int)mapLength, audioBuffer, coverBuffer);
         }
         catch (Exception exception)
         {
@@ -725,7 +725,7 @@ public partial class MapParser : Node
     public static Map PHXM(string path)
     {
 
-        string mapDirectory = $"{SettingsManager.UserFolder}/maps";
+        string mapDirectory = $"{Constants.USER_FOLDER}/maps";
 
         string extractedFolderName = Path.GetFileNameWithoutExtension(path);
         string extractedFolderPath = Path.Combine(mapDirectory, extractedFolderName);

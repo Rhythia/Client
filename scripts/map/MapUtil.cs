@@ -1,7 +1,7 @@
 ﻿internal static class MapUtil
 {
-    public static string MapsFolder => $"{SettingsManager.UserFolder}/maps";
+    public static string MapsFolder => $"{Constants.USER_FOLDER}/maps";
 
-    public static string MapsCacheFolder => $"{SettingsManager.UserFolder}/cache/maps";
+    public static string MapsCacheFolder => $"{Constants.USER_FOLDER}/cache/maps";
 
 }

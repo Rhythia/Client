@@ -15,9 +15,9 @@ public partial class FileInitializer : Node
         objExporter.SetScript(script);
 
         // Temporary for 0.1.2 as the mesh's faces were fixed
-        if (File.Exists($"{SettingsManager.UserFolder}/meshes/squircle.obj"))
+        if (File.Exists($"{Constants.USER_FOLDER}/meshes/squircle.obj"))
         {
-            File.Delete($"{SettingsManager.UserFolder}/meshes/squircle.obj");
+            File.Delete($"{Constants.USER_FOLDER}/meshes/squircle.obj");
         }
 
         deepCopy();
@@ -25,7 +25,7 @@ public partial class FileInitializer : Node
 
     private void deepCopy(string resDir = "")
     {
-        string userDir = $"{SettingsManager.UserFolder}{resDir}";
+        string userDir = $"{Constants.USER_FOLDER}{resDir}";
 
         if (!Directory.Exists(userDir))
         {
