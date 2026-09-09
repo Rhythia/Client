@@ -15,9 +15,6 @@ transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("2_cmhau")
-proximity_fade_distance = 10.7
-distance_fade_mode = 1
-distance_fade_max_distance = 150.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_cmhau"]
 material = SubResource("StandardMaterial3D_v8td3")
@@ -32,19 +29,6 @@ _limits = [-1.0, 1.0, 0.0, 1.0]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmhau"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("2_cmhau")
-proximity_fade_distance = 10.7
-distance_fade_mode = 1
-distance_fade_max_distance = 250.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_2iqmx"]
-material = SubResource("StandardMaterial3D_cmhau")
-size = Vector2(0.5, 0.5)
-
 [node name="Squircles" type="Node3D" unique_id=1958332010]
 script = ExtResource("1_cmhau")
 
@@ -52,28 +36,32 @@ script = ExtResource("1_cmhau")
 environment = SubResource("Environment_n6lso")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1770879942]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
 fov = 50.0
 size = 1.25
 
 [node name="ParticlesNear" type="CPUParticles3D" parent="." unique_id=1334373449]
-transform = Transform3D(20, 0, 0, 0, -4.371139e-09, -20, 0, 0.1, -8.742278e-07, -0.49786568, -26.777794, -34.75636)
+transform = Transform3D(20, 0, 0, 0, -4.371139e-09, -20, 0, 0.1, -8.742278e-07, 0, 0, -15)
 sorting_offset = -1000.0
-cast_shadow = 0
-amount = 14
-lifetime = 15.0
+amount = 12
+lifetime = 20.0
 preprocess = 5.0
 local_coords = true
 mesh = SubResource("PlaneMesh_cmhau")
 emission_shape = 3
-emission_box_extents = Vector3(2.75, 0.5, 1)
+emission_box_extents = Vector3(1, 1, 1)
 particle_flag_rotate_y = true
-direction = Vector3(1, 0, -9.8)
+direction = Vector3(0, 0, 0)
+spread = 180.0
+flatness = 1.0
 gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.04
 initial_velocity_max = 0.06
 angular_velocity_min = -20.0
 angular_velocity_max = 20.0
+radial_accel_min = 0.01
+radial_accel_max = 0.01
+angle_min = -180.0
+angle_max = 180.0
 scale_amount_min = 0.6
 color = Color(0.27058825, 0.47058824, 1, 0.4509804)
 color_ramp = SubResource("Gradient_2iqmx")
@@ -82,22 +70,28 @@ hue_variation_max = 0.04
 hue_variation_curve = SubResource("Curve_kepi0")
 
 [node name="ParticlesFar" type="CPUParticles3D" parent="." unique_id=756519999]
-transform = Transform3D(20, 0, 0, 0, -4.371139e-09, -20, 0, 0.1, -8.742278e-07, 0.047932625, 44.71601, -37.667274)
+transform = Transform3D(20, 0, 0, 0, -4.371139e-09, -20, 0, 0.1, -8.742278e-07, 0, 0, -30)
 sorting_offset = -1000.0
-amount = 16
-lifetime = 15.0
+amount = 10
+lifetime = 20.0
 preprocess = 5.0
 local_coords = true
-mesh = SubResource("PlaneMesh_2iqmx")
+mesh = SubResource("PlaneMesh_cmhau")
 emission_shape = 3
-emission_box_extents = Vector3(3, 1, 1)
+emission_box_extents = Vector3(1, 1, 1)
 particle_flag_rotate_y = true
-direction = Vector3(1, 0, 9.8)
+direction = Vector3(0, 0, 0)
+spread = 180.0
+flatness = 1.0
 gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.04
 initial_velocity_max = 0.06
 angular_velocity_min = -20.0
 angular_velocity_max = 20.0
+radial_accel_min = 0.01
+radial_accel_max = 0.01
+angle_min = -180.0
+angle_max = 180.0
 scale_amount_max = 1.4
 color = Color(0.27058825, 0.47058824, 1, 0.4509804)
 color_ramp = SubResource("Gradient_2iqmx")
