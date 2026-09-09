@@ -123,6 +123,7 @@ public partial class SettingsManager : Node
         if (!File.Exists(Constants.USER_FOLDER_POINTER) || string.IsNullOrWhiteSpace(File.ReadAllText(Constants.USER_FOLDER_POINTER)))
         {
             File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.DEFAULT_USER_FOLDER);
+            return Constants.DEFAULT_USER_FOLDER;
         }
 
         string path = File.ReadAllText(Constants.USER_FOLDER_POINTER).Trim();
