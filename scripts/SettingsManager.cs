@@ -159,10 +159,10 @@ public partial class SettingsManager : Node
 
         var popup = new OptionPopup("Restart required.", "Would you like to restart the game?");
 
-        popup.AddOption("Restart", Callable.From(() => {
-            string executablePath = OS.GetExecutablePath();
-            OS.CreateProcess(executablePath, []);  // may misbehave on macos
-            Instance.GetTree().Quit();
+        popup.AddOption("Restart", Callable.From(restartGame));
+        popup.AddOption("Restart And Copy", Callable.From(() => {
+            popup.Hide();
+            showUserFolderConfirmationPopup(path);
         }));
         popup.AddOption("Cancel", Callable.From(popup.Hide));
 
@@ -192,5 +192,25 @@ public partial class SettingsManager : Node
         HideNotifications = false;
 
         ToastNotification.Notify("Settings reset to default successfully!");
+    }
+    private static void restartGame()
+    {
+        string executablePath = OS.GetExecutablePath();
+        OS.CreateProcess(executablePath, []);  // may misbehave on macos
+        Instance.GetTree().Quit();
+    }
+
+    private static void showUserFolderConfirmationPopup(string destinationPath)
+    {
+        var popup = new OptionPopup("Are you sure?", "This will overwrite the contents of the new folder.");
+
+        popup.AddOption("Restart And Copy", Callable.From(() => {
+            FileOperations.CopyDir(Constants.USER_FOLDER, destinationPath, true);
+            if (Path.GetFullPath(destinationPath) != Constants.DEFAULT_USER_FOLDER) { File.Delete(Path.Combine(destinationPath, "user_folder_path.txt")); }
+            restartGame();
+        }));
+        popup.AddOption("Cancel", Callable.From(popup.Hide));
+
+        popup.Show();
     }
 }
