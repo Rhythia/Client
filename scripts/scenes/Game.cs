@@ -15,17 +15,7 @@ public partial class Game : BaseScene
     public static Game Instance;
     public static Attempt Attempt;
     public static bool StartQueued = false;
-    private static double noteFadeBeforeToggle = 0;
-
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-
-        if (Attempt.Settings.FadeOut.Value > 0)
-        {
-            noteFadeBeforeToggle = Attempt.Settings.FadeOut.Value;
-        }
-    }
+    private static double fadeoutToggleValue = -1;
 
     public override void _Ready()
     {
@@ -128,7 +118,23 @@ public partial class Game : BaseScene
         // {
 
         // };
-        PlayerInputController.OnToggleFade += () => Attempt.Settings.FadeOut.Value = Attempt.Settings.FadeOut > 0 ? 0 : noteFadeBeforeToggle;
+        PlayerInputController.OnToggleFade += () =>
+        {
+            double val;
+
+            if (Attempt.Settings.FadeOut.Value > 0)
+            {
+                fadeoutToggleValue = Attempt.Settings.FadeOut.Value;
+                val = 0;
+            }
+            else
+            {
+                val = fadeoutToggleValue == -1 ? 100 : fadeoutToggleValue;
+            }
+
+            Attempt.Settings.FadeOut.Value = val;
+        };
+
         PlayerInputController.OnTogglePushback += () => Attempt.Settings.Pushback.Value = !Attempt.Settings.Pushback;
         PlayerInputController.OnRestartPressed += Restart;
     }
