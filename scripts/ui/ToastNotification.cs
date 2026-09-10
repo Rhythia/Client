@@ -19,9 +19,10 @@ public partial class ToastNotification : Node
     {
         if (SceneManager.Scene == null) { return; }
 
-        ColorRect notification = template.Instantiate<ColorRect>();
+        PanelContainer notification = template.Instantiate<PanelContainer>();
         SceneManager.Scene.AddChild(notification);
         Color color = new();
+        notification.Visible = true;
 
         switch (Math.Clamp(severity, 0, 2))
         {
@@ -36,9 +37,9 @@ public partial class ToastNotification : Node
                 break;
         }
 
-        notification.GetNode<Label>("Label").Text = message;
-        notification.GetNode<ColorRect>("Severity").Color = color;
-        notification.Visible = true;
+        notification.GetNode<Label>("HBoxContainer/Label").Text = message;
+        notification.GetNode<ColorRect>("HBoxContainer/Severity").Color = color;
+        notification.ResetSize();
         notification.Position += Vector2.Up * activeNotifications * (notification.Size.Y + 8);
 
         Tween inTween = notification.CreateTween();
