@@ -8,7 +8,7 @@ public partial class ToastNotification : Node
 
     private static readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/notification.tscn");
 
-    private static int activeNotifications = 0;
+    private static float totalNotificationSize = 0f;
 
     public override void _Ready()
     {
@@ -23,7 +23,7 @@ public partial class ToastNotification : Node
         }
 
         PanelContainer notification = template.Instantiate<PanelContainer>();
-        SceneManager.Scene.AddChild(notification);
+        SceneManager.Instance.AddChild(notification);
         Color color = new();
         notification.Visible = true;
 
@@ -43,7 +43,10 @@ public partial class ToastNotification : Node
         notification.GetNode<Label>("HBoxContainer/Label").Text = message;
         notification.GetNode<ColorRect>("HBoxContainer/Severity").Color = color;
         notification.ResetSize();
-        notification.Position += Vector2.Up * activeNotifications * (notification.Size.Y + 8);
+
+        float positionY = totalNotificationSize + notification.Size.Y + 8;
+        notification.Position += Vector2.Up * positionY;
+        totalNotificationSize += notification.Size.Y + 8;
 
         Tween inTween = notification.CreateTween();
         inTween
@@ -51,8 +54,6 @@ public partial class ToastNotification : Node
             .SetTrans(Tween.TransitionType.Quad)
             .SetEase(Tween.EaseType.Out);
         inTween.Play();
-
-        activeNotifications++;
 
         await Instance.ToSignal(Instance.GetTree().CreateTimer(4), "timeout");
 
@@ -64,7 +65,7 @@ public partial class ToastNotification : Node
         outTween.TweenCallback(
             Callable.From(() =>
             {
-                activeNotifications--;
+                totalNotificationSize -= notification.Size.Y + 8;
                 notification.QueueFree();
             })
         );
