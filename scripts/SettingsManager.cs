@@ -174,6 +174,8 @@ public partial class SettingsManager : Node
     // this bool is only used inside of SkinManager - line 164.
     public static void ResetToDefaults()
     {
+        string[] excludeFromReset = ["SetUserFolderPath", "SetUserFolderDialog"];
+
         HideNotifications = true;
 
         SettingsProfile defaults = new SettingsProfile();
@@ -181,6 +183,7 @@ public partial class SettingsManager : Node
         foreach (var property in typeof(SettingsProfile).GetProperties())
         {
             if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType)) continue;
+            if (excludeFromReset.Contains(property.Name)) continue;
 
             ISettingsItem current = (ISettingsItem)property.GetValue(Instance.Settings);
             ISettingsItem defs = (ISettingsItem)property.GetValue(defaults);
