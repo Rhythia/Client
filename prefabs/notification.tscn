@@ -3,11 +3,19 @@
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="1_3cmdo"]
 [ext_resource type="FontFile" uid="uid://bopde8iqsld1o" path="res://fonts/Ubuntu/Ubuntu-Regular.ttf" id="2_bcotu"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chelt"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.49803922)
+corner_detail = 5
+
 [sub_resource type="LabelSettings" id="LabelSettings_jovrf"]
 font = ExtResource("2_bcotu")
 font_size = 14
 
-[node name="NotificationTemplate" type="ColorRect"]
+[node name="NotificationTemplate" type="PanelContainer" unique_id=1672628379]
 visible = false
 z_index = 10
 custom_minimum_size = Vector2(270, 25)
@@ -17,28 +25,27 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -33.0
-offset_right = 270.0
+offset_right = 275.0
 offset_bottom = -8.0
 grow_horizontal = 0
 grow_vertical = 0
 theme = ExtResource("1_3cmdo")
-color = Color(0, 0, 0, 0.498039)
+theme_override_styles/panel = SubResource("StyleBoxFlat_chelt")
 
-[node name="Severity" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 2.0
-grow_vertical = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=374732989]
+layout_mode = 2
+
+[node name="Severity" type="ColorRect" parent="HBoxContainer" unique_id=1120152739]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_horizontal = 0
 color = Color(0, 1, 0, 1)
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 5.0
-offset_right = 270.0
-offset_bottom = 25.0
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=893023024]
+custom_minimum_size = Vector2(270, 25)
+layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("1_3cmdo")
 text = "Map file corrupted aaaaa"
 label_settings = SubResource("LabelSettings_jovrf")
 vertical_alignment = 1
-clip_text = true
