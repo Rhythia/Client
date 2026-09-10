@@ -8,7 +8,7 @@ public partial class ToastNotification : Node
 
     private static readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/notification.tscn");
 
-    private static int activeNotifications = 0;
+    private static float totalNotificationSize = 0f;
 
     public override void _Ready()
     {
@@ -20,7 +20,7 @@ public partial class ToastNotification : Node
         if (SceneManager.Scene == null) { return; }
 
         PanelContainer notification = template.Instantiate<PanelContainer>();
-        SceneManager.Scene.AddChild(notification);
+        SceneManager.Instance.AddChild(notification);
         Color color = new();
         notification.Visible = true;
 
@@ -40,13 +40,14 @@ public partial class ToastNotification : Node
         notification.GetNode<Label>("HBoxContainer/Label").Text = message;
         notification.GetNode<ColorRect>("HBoxContainer/Severity").Color = color;
         notification.ResetSize();
-        notification.Position += Vector2.Up * activeNotifications * (notification.Size.Y + 8);
+
+        float positionY = totalNotificationSize + notification.Size.Y + 8;
+        notification.Position += Vector2.Up * positionY;
+        totalNotificationSize += notification.Size.Y + 8;
 
         Tween inTween = notification.CreateTween();
         inTween.TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
         inTween.Play();
-
-        activeNotifications++;
 
         await Instance.ToSignal(Instance.GetTree().CreateTimer(4), "timeout");
 
@@ -54,7 +55,7 @@ public partial class ToastNotification : Node
         outTween.TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
         outTween.TweenCallback(Callable.From(() =>
         {
-            activeNotifications--;
+            totalNotificationSize -= notification.Size.Y + 8;
             notification.QueueFree();
         }));
         outTween.Play();
