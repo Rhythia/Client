@@ -127,7 +127,21 @@ public partial class Game : BaseScene
     {
         base.Load();
 
+        if (VRNode.IsVrEnabled && Menu.GetParent() != SceneManager.OverlayContainer)
+        {
+            Menu.GetParent().RemoveChild(Menu);
+            SceneManager.OverlayContainer.AddChild(Menu);
+
+            Menu.Position = Vector2.Zero;
+            Menu.Size = Menu.GetViewport().GetVisibleRect().Size;
+        }
+
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
+
+        if (VRNode.IsVrEnabled)
+        {
+            Runner.Camera.Current = false;
+        }
 
         MenuCursor.Instance.UpdateVisible(false, false);
         SceneManager.Space.UpdateState(true);
@@ -178,6 +192,17 @@ public partial class Game : BaseScene
             PlaytestOverlay.Runner = Runner;
             PlaytestOverlay.UpdatePlaytestOverlay(true);
         }
+    }
+
+    public override void Unload()
+    {
+        if (VRNode.IsVrEnabled && Menu.GetParent() == SceneManager.OverlayContainer)
+        {
+            SceneManager.OverlayContainer.RemoveChild(Menu);
+            AddChild(Menu);
+        }
+
+        base.Unload();
     }
 
     public static void Play(Map map, double speed, double startFrom, CameraMode cameraMode, List<Modifier> mods, string[] players = null, Replay[] replays = null)

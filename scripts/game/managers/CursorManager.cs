@@ -115,6 +115,14 @@ public partial class CursorManager : Node
         attempt.CameraMode.Process(attempt, replayManager, camera, cursors[cursorIndex], inputDelta, sensitivity);
     }
 
+    public void SetCursorPosition(Vector2 position, int cursorIndex = 0)
+    {
+        var attempt = runner.Attempt;
+        attempt.RawCursorPosition = position;
+        attempt.CursorPosition = position.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
+        cursors[cursorIndex].Position = new Vector3(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
+    }
+
     // Reset everything to zero so it doesn't have infinite sensitivity
     private void repositionAbsolute()
     {

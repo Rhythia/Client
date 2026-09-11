@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://camunfion1ow6"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_na54n"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h2n1x"]
+size = Vector3(0.03, 0.03, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ray"]
+shading_mode = 0
+albedo_color = Color(1, 0.1, 0.1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ray"]
+top_radius = 0.001
+bottom_radius = 0.001
+height = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_43f0v"]
+size = Vector3(0.03, 0.03, 0.1)
+
+[node name="VRMain" type="Node3D" unique_id=668969647]
+
+[node name="XROrigin3D" type="XROrigin3D" parent="." unique_id=1782200775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 3.75)
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=1420598988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+current = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRCamera3D" unique_id=1265093658]
+mesh = SubResource("BoxMesh_na54n")
+
+[node name="XRLeftHand" type="XRController3D" parent="XROrigin3D" unique_id=528876839]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.7, 0)
+tracker = &"left_hand"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRLeftHand" unique_id=1044545121]
+mesh = SubResource("BoxMesh_h2n1x")
+
+[node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/XRLeftHand" unique_id=1044545122]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 2
+
+[node name="RayBeam" type="MeshInstance3D" parent="XROrigin3D/XRLeftHand/RayCast3D" unique_id=1044545123]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_ray")
+mesh = SubResource("CylinderMesh_ray")
+
+[node name="XRRightHand" type="XRController3D" parent="XROrigin3D" unique_id=664280143]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.7, 0)
+tracker = &"right_hand"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRRightHand" unique_id=1127231442]
+mesh = SubResource("BoxMesh_43f0v")
+
+[node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/XRRightHand" unique_id=181095970]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 2
+
+[node name="RayBeam" type="MeshInstance3D" parent="XROrigin3D/XRRightHand/RayCast3D" unique_id=1582603756]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_ray")
+mesh = SubResource("CylinderMesh_ray")

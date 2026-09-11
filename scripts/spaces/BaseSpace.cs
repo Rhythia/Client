@@ -73,7 +73,7 @@ public partial class BaseSpace : Node3D
     public virtual void UpdateState(bool playing)
     {
         Playing = playing;
-        Camera.Current = !Playing;
+        Camera.Current = !Playing && !VRNode.IsVrEnabled;
 
         if (Playing && Game.Instance?.Runner != null)
         {

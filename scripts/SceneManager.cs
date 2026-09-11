@@ -7,11 +7,19 @@ public partial class SceneManager : Node
 
     private static SubViewport backgroundViewport;
 
+    private static SubViewport vrViewport;
+
+    private static Node vrSceneContainer;
+
+    private static Node sceneContainer;
+
     private static string activeScenePath;
 
     public static SceneManager Instance { get; private set; }
 
     public static Window Root;
+
+    public static Node OverlayContainer;
 
     public static Dictionary<string, BaseScene> Scenes = [];
 
@@ -33,9 +41,45 @@ public partial class SceneManager : Node
         backgroundContainer = GetNode<SubViewportContainer>("Background");
         backgroundViewport = backgroundContainer.GetNode<SubViewport>("SubViewport");
 
+        sceneContainer = this;
+        OverlayContainer = this;
+
+        if (VRNode.IsVrEnabled)
+        {
+            var vrMain = ResourceLoader.Load<PackedScene>("res://scenes/vr_main.tscn").Instantiate();
+            AddChild(vrMain);
+
+            var vrScreen = ResourceLoader.Load<PackedScene>("res://scenes/vr_screen.tscn").Instantiate();
+            vrMain.GetNode("XROrigin3D").AddChild(vrScreen);
+
+            vrSceneContainer = vrMain.GetNode("XROrigin3D");
+            vrViewport = vrMain.GetNode<SubViewport>("XROrigin3D/VRScreen/Sprite3D/SubViewport");
+            vrViewport.GuiEmbedSubwindows = true;
+            sceneContainer = vrViewport;
+            OverlayContainer = vrViewport;
+
+            reparentOverlay("Settings");
+            reparentOverlay("Volume");
+            reparentOverlay("Cursor");
+            reparentOverlay("FPSCounter");
+        }
+
         if (!Rhythia.TempMode)
         {
             Load("res://scenes/loading.tscn");
+        }
+    }
+
+    private void reparentOverlay(string nodeName)
+    {
+        Node overlay = GetNode(nodeName);
+        RemoveChild(overlay);
+        OverlayContainer.AddChild(overlay);
+
+        if (overlay is Control control && nodeName == "Cursor")
+        {
+            control.ZAsRelative = false;
+            control.ZIndex = 1000;
         }
     }
 
@@ -68,6 +112,7 @@ public partial class SceneManager : Node
 
             activeScenePath = path;
             Scene = newScene;
+            sceneContainer = !VRNode.IsVrEnabled ? Instance : newScene is Game ? vrSceneContainer : vrViewport;
 
             addScene(newScene);
 
@@ -78,23 +123,23 @@ public partial class SceneManager : Node
 
     private static void addScene(BaseScene scene, bool updateSpace = true)
     {
-        if (scene == null || scene.GetParent() == Instance) { return; }
+        if (scene == null || scene.GetParent() == sceneContainer) { return; }
 
         if (updateSpace)
         {
             addSpace(scene.GetSpace(), scene.AddSpaceAsChild);
         }
 
-        Instance.AddChild(scene);
+        sceneContainer.AddChild(scene);
         scene.Load();
     }
 
     private static void removeScene(BaseScene scene, bool updateSpace = true)
     {
-        if (scene == null || scene.GetParent() != Instance) { return; }
+        if (scene == null || scene.GetParent() == null) { return; }
 
         scene.Unload();
-        Instance.RemoveChild(scene);
+        scene.GetParent().RemoveChild(scene);
 
         // also temp
         if (scene.Name == "SceneResults")
@@ -110,7 +155,9 @@ public partial class SceneManager : Node
 
     private static void addSpace(BaseSpace space, bool addToScene = false)
     {
-        if (space == null || space.GetParent() == backgroundViewport) { return; }
+        Node spaceContainer = VRNode.IsVrEnabled ? vrSceneContainer : backgroundViewport;
+
+        if (space == null || space.GetParent() == spaceContainer) { return; }
 
         if (addToScene)
         {
@@ -119,12 +166,12 @@ public partial class SceneManager : Node
         }
         else
         {
-            backgroundViewport.AddChild(space);
+            spaceContainer.AddChild(space);
         }
 
         space.Load();
 
-        backgroundContainer.Visible = !addToScene;
+        backgroundContainer.Visible = !addToScene && !VRNode.IsVrEnabled;
         Space = space;
     }
 

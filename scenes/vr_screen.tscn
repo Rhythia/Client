@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://c1qkve10vrbdy"]
+
+[ext_resource type="Script" uid="uid://cc6jrnqn5lhg7" path="res://scripts/VRController.cs" id="1_rrq62"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_5qps4"]
+viewport_path = NodePath("Sprite3D/SubViewport")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_screen"]
+size = Vector3(19.2, 10.8, 0.05)
+
+[node name="VRScreen" type="Node" unique_id=1311744818]
+script = ExtResource("1_rrq62")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1837074313]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+texture = SubResource("ViewportTexture_5qps4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sprite3D" unique_id=1851427404]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sprite3D/StaticBody3D" unique_id=1851427405]
+shape = SubResource("BoxShape3D_screen")
+
+[node name="SubViewport" type="SubViewport" parent="Sprite3D" unique_id=1794506366]
+own_world_3d = true
+transparent_bg = true
+gui_embed_subwindows = true
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="Cursor" type="Sprite2D" parent="Sprite3D/SubViewport" unique_id=1851427406]
+z_index = 100
+
+[node name="SceneMenu" parent="Sprite3D/SubViewport" unique_id=22657833 instance_placeholder="res://scenes/main_menu.tscn"]

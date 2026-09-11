@@ -38,7 +38,7 @@ public partial class OptionPopup : Control
         Info = info;
         Name = $"OptionPopup{new Regex("[^a-zA-Z0-9_-]").Replace(Header, "")}";
 
-        SceneManager.Root.CallDeferred("add_child", this);
+        (SceneManager.OverlayContainer ?? SceneManager.Root).CallDeferred("add_child", this);
     }
 
     public override void _Ready()
