@@ -33,7 +33,10 @@ public partial class Grid : MeshInstance3D, IUIComponent
         VisibilityAssist ??= GetNode<MeshInstance3D>("VisibilityAssist");
 
         VisibilityAssist.Visible = Runner.Attempt.Settings.VisibilityAssist;
-        (VisibilityAssist.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.VisibilityAssistImage;
+        (VisibilityAssist.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager
+            .Instance
+            .Skin
+            .VisibilityAssistImage;
 
         GridGuides ??= GetNode<MeshInstance3D>("GridGuides");
 
