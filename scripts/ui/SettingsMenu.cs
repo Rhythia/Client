@@ -319,7 +319,7 @@ public partial class SettingsMenu : ColorRect
         if (setting is SettingsItem<double>) { placeholder = (setting as SettingsItem<double>).DefaultValue; }
         else if (setting is SettingsItem<int>) { placeholder = (setting as SettingsItem<int>).DefaultValue; }
 
-        lineEdit.PlaceholderText = placeholder.ToString("F4");
+        lineEdit.PlaceholderText = placeholder.ToString("F4", System.Globalization.CultureInfo.InvariantCulture);
         slider.Step = setting.Slider.Step;
         slider.MinValue = setting.Slider.MinValue;
         slider.MaxValue = setting.Slider.MaxValue;
