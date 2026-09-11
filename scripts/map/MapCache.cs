@@ -245,7 +245,7 @@ public static class MapCache
                     continue;
                 }
 
-                map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
+                map.FolderPath = BackSlashToForwardSlash(toParseMap);
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
 
                 if (OldCacheFormat)
