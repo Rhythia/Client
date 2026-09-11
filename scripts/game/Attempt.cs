@@ -36,7 +36,9 @@ public partial class Attempt : RefCounted
     public uint Hits = 0;
     public uint Misses = 0;
     public uint Sum = 0;
-    public uint Score = 0;
+    public double Score = 0;
+    public double UnitHitScore = 0;
+    public uint NoteWeight;
     public uint Combo = 0;
     public uint ComboMultiplier = 1;
     public uint ComboMultiplierProgress = 0;
@@ -81,6 +83,20 @@ public partial class Attempt : RefCounted
         HasHealthModifier = Modifiers.Any(mod => mod is IHealthModifier);
         Objects[typeof(Note)] = [.. map.Notes];
         HitsInfo = IsReplay ? Replays[0].Notes : new float[Map.Notes.Length];
+
+        uint noteWeightIterations = (uint)Math.Clamp(Math.Floor((double)Map.Notes.Length / ComboMultiplierIncrement), 1, 7);
+        NoteWeight += Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * (1 + noteWeightIterations) * noteWeightIterations / 2;
+        NoteWeight += ((uint)Map.Notes.Length - Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * noteWeightIterations) * (noteWeightIterations + 1);
+
+        if (Modifiers.Count >= 1)
+        {
+            foreach (Modifier modifier in Modifiers)
+            {
+                ModsMultiplier += modifier.ScoreMultiplier - 1;
+            }
+        }
+
+        UnitHitScore = 1000000f * ModsMultiplier * ((Speed - 1) / 2.5 + 1) / NoteWeight;
 
         if (IsReplay)
         {
