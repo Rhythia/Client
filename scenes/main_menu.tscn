@@ -7,6 +7,7 @@
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto/Roboto-Bold.ttf" id="5_hl5e0"]
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="6_engjn"]
 [ext_resource type="FontFile" uid="uid://bopde8iqsld1o" path="res://fonts/Ubuntu/Ubuntu-Regular.ttf" id="7_6h3lr"]
+[ext_resource type="Script" uid="uid://dir38y22w62d5" path="res://scripts/ui/menu/EnterVr.cs" id="7_mb34c"]
 [ext_resource type="Script" uid="uid://bkdcrkq1x7sig" path="res://scripts/ui/menu/ReleaseNotesButton.cs" id="8_akqfu"]
 [ext_resource type="Script" uid="uid://bnead3awk7yr4" path="res://scripts/ui/menu/SettingsMenuButton.cs" id="8_yxnar"]
 [ext_resource type="Script" uid="uid://byighsqkmf2c4" path="res://scripts/ui/menu/QuitButton.cs" id="9_yxnar"]
@@ -502,6 +503,23 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
 text = "SETTINGS"
 alignment = 0
 script = ExtResource("8_yxnar")
+
+[node name="VRButtonMargin" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=225789979]
+layout_mode = 2
+theme_override_constants/margin_right = 100
+
+[node name="EnterVR" type="Button" parent="Menus/Home/Buttons/VRButtonMargin" unique_id=672695232]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = SubResource("Theme_m671i")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_764ux")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_b4jiv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vanrq")
+text = "ENTER VR"
+alignment = 0
+script = ExtResource("7_mb34c")
 
 [node name="MarginContainer3" type="MarginContainer" parent="Menus/Home/Buttons" unique_id=348929571]
 layout_mode = 2

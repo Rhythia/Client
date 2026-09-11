@@ -43,6 +43,7 @@ Lobby="*res://scripts/multiplayer/Lobby.cs"
 SoundManager="*res://scripts/SoundManager.cs"
 ToastNotification="*res://scripts/ui/ToastNotification.cs"
 MapParser="*res://scripts/map/MapParser.cs"
+VRNode="*res://scripts/VRNode.cs"
 
 [debug]
 
@@ -88,3 +89,7 @@ common/physics_ticks_per_second=120
 textures/vram_compression/import_etc2_astc=true
 textures/lossless_compression/force_png=true
 environment/defaults/default_clear_color=Color(0.0885599, 0.08855992, 0.08855987, 1)
+
+[xr]
+
+shaders/enabled=true
