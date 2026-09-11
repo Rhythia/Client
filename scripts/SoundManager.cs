@@ -77,7 +77,7 @@ public partial class SoundManager : Node, ISkinnable
                     }
                     break;
                 case "SceneResults":
-                    PlayJukebox(JukeboxIndex);  // play skinnable results song here in the future
+                    PlayJukebox(JukeboxIndex); // play skinnable results song here in the future
                     break;
                 default:
                     break;
@@ -85,7 +85,10 @@ public partial class SoundManager : Node, ISkinnable
         };
 
         SettingsManager.Instance.Loaded += UpdateVolume;
-        Lobby.Instance.SpeedChanged += (speed) => { SoundManager.Song.PitchScale = (float)speed; };
+        Lobby.Instance.SpeedChanged += (speed) =>
+        {
+            SoundManager.Song.PitchScale = (float)speed;
+        };
         MapManager.Selected.ValueChanged += (_, _) => RefreshMenuMusicPlayback();
 
         MapManager.MapDeleted += (map) =>
@@ -153,9 +156,22 @@ public partial class SoundManager : Node, ISkinnable
         {
             volumePopupShown = false;
 
-            Tween tween = SceneManager.VolumePanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
-            tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
-            tween.TweenProperty(SceneManager.VolumePanel.GetNode<Label>("Label"), "anchor_bottom", 1, 0.35);
+            Tween tween = SceneManager
+                .VolumePanel.CreateTween()
+                .SetTrans(Tween.TransitionType.Quad)
+                .SetParallel();
+            tween.TweenProperty(
+                SceneManager.VolumePanel,
+                "modulate",
+                Color.FromHtml("ffffff00"),
+                0.25
+            );
+            tween.TweenProperty(
+                SceneManager.VolumePanel.GetNode<Label>("Label"),
+                "anchor_bottom",
+                1,
+                0.35
+            );
         }
     }
 
@@ -165,24 +181,45 @@ public partial class SoundManager : Node, ISkinnable
 
         if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {
-            if ((eventMouseButton.CtrlPressed || eventMouseButton.AltPressed) && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown))
+            if (
+                (eventMouseButton.CtrlPressed || eventMouseButton.AltPressed)
+                && (
+                    eventMouseButton.ButtonIndex == MouseButton.WheelUp
+                    || eventMouseButton.ButtonIndex == MouseButton.WheelDown
+                )
+            )
             {
                 switch (eventMouseButton.ButtonIndex)
                 {
                     case MouseButton.WheelUp:
-                        settings.VolumeMaster.Value = (float)Mathf.Min(100, Math.Round(settings.VolumeMaster) + 5);
+                        settings.VolumeMaster.Value = (float)
+                            Mathf.Min(100, Math.Round(settings.VolumeMaster) + 5);
                         break;
                     case MouseButton.WheelDown:
-                        settings.VolumeMaster.Value = (float)Mathf.Max(0, Math.Round(settings.VolumeMaster) - 5);
+                        settings.VolumeMaster.Value = (float)
+                            Mathf.Max(0, Math.Round(settings.VolumeMaster) - 5);
                         break;
                 }
 
                 Label label = SceneManager.VolumePanel.GetNode<Label>("Label");
                 label.Text = settings.VolumeMaster.Value.ToString(CultureInfo.CurrentCulture);
 
-                Tween tween = SceneManager.VolumePanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
-                tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffffff"), 0.25);
-                tween.TweenProperty(SceneManager.VolumePanel.GetNode<ColorRect>("Main"), "anchor_right", settings.VolumeMaster.Value / 100, 0.15);
+                Tween tween = SceneManager
+                    .VolumePanel.CreateTween()
+                    .SetTrans(Tween.TransitionType.Quad)
+                    .SetParallel();
+                tween.TweenProperty(
+                    SceneManager.VolumePanel,
+                    "modulate",
+                    Color.FromHtml("ffffffff"),
+                    0.25
+                );
+                tween.TweenProperty(
+                    SceneManager.VolumePanel.GetNode<ColorRect>("Main"),
+                    "anchor_right",
+                    settings.VolumeMaster.Value / 100,
+                    0.15
+                );
                 tween.TweenProperty(label, "anchor_bottom", 0, 0.15);
 
                 volumePopupShown = true;
@@ -220,7 +257,9 @@ public partial class SoundManager : Node, ISkinnable
 
         JukeboxIndex = MapManager.Maps.FindIndex(x => x.Id == map.Id);
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = Util.Audio.LoadFromFile(
+            $"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}"
+        );
         Song.Play();
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -279,7 +318,9 @@ public partial class SoundManager : Node, ISkinnable
             }
         }
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = Util.Audio.LoadFromFile(
+            $"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}"
+        );
         Song.Play(0);
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -378,25 +419,52 @@ public partial class SoundManager : Node, ISkinnable
 
     public static float ComputeVolumeDb(float volume, float master, float range)
     {
-        if (volume <= 0 || master <= 0) return float.NegativeInfinity;
+        if (volume <= 0 || master <= 0)
+            return float.NegativeInfinity;
         return (float)(-80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1));
     }
 
     public static float ComputeVolumeFromDb(float db, float master, float range)
     {
-        if (float.IsNegativeInfinity(db) || master <= 0) return 0;
-        return (float)Math.Clamp(100 * Math.Pow((db + 80) / (range * Math.Pow(master / 100, 0.1)), 10), 0, 100);
+        if (float.IsNegativeInfinity(db) || master <= 0)
+            return 0;
+        return (float)
+            Math.Clamp(
+                100 * Math.Pow((db + 80) / (range * Math.Pow(master / 100, 0.1)), 10),
+                0,
+                100
+            );
     }
 
     public static void UpdateVolume()
     {
         var settings = SettingsManager.Instance.Settings;
 
-        Song.VolumeDb = ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
-        MenuMusic.VolumeDb = ComputeVolumeDb((float)settings.VolumeMenuMusic.Value, (float)settings.VolumeMaster.Value, 70);
-        HitSound.VolumeDb = ComputeVolumeDb((float)settings.VolumeHitSound.Value, (float)settings.VolumeMaster.Value, 80);
-        MissSound.VolumeDb = ComputeVolumeDb((float)settings.VolumeMissSound.Value, (float)settings.VolumeMaster.Value, 80);
-        FailSound.VolumeDb = ComputeVolumeDb((float)settings.VolumeSFX.Value, (float)settings.VolumeMaster.Value, 80);
+        Song.VolumeDb = ComputeVolumeDb(
+            (float)settings.VolumeMusic.Value,
+            (float)settings.VolumeMaster.Value,
+            70
+        );
+        MenuMusic.VolumeDb = ComputeVolumeDb(
+            (float)settings.VolumeMenuMusic.Value,
+            (float)settings.VolumeMaster.Value,
+            70
+        );
+        HitSound.VolumeDb = ComputeVolumeDb(
+            (float)settings.VolumeHitSound.Value,
+            (float)settings.VolumeMaster.Value,
+            80
+        );
+        MissSound.VolumeDb = ComputeVolumeDb(
+            (float)settings.VolumeMissSound.Value,
+            (float)settings.VolumeMaster.Value,
+            80
+        );
+        FailSound.VolumeDb = ComputeVolumeDb(
+            (float)settings.VolumeSFX.Value,
+            (float)settings.VolumeMaster.Value,
+            80
+        );
     }
 
     public static void PlayHitSound()

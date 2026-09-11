@@ -20,7 +20,8 @@ public class VortexModifier : Modifier, IObjectRenderModifier<Note>
             depth /= (float)(double)attempt.Settings.ApproachDistance;
 
             float rotation = (float)Math.Pow(depth * 15, 1.5) / 60;
-            float sine = (float)Math.Sin(attempt.Progress / attempt.Speed / 1000 * attempt.Settings.ApproachTime);
+            float sine = (float)
+                Math.Sin(attempt.Progress / attempt.Speed / 1000 * attempt.Settings.ApproachTime);
             rotation *= (float)(Math.Sign(sine) * Math.Pow(Math.Abs(sine), 0.75));
 
             note.Transform = note.Transform.Rotated(Vector3.Back, rotation);

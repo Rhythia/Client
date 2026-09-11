@@ -26,17 +26,23 @@ public partial class Lobby : Node
 
     public static List<Modifier> Modifiers = [];
 
-    [Signal] public delegate void AllReadyEventHandler();
+    [Signal]
+    public delegate void AllReadyEventHandler();
 
-    [Signal] public delegate void MapChangedEventHandler(Map map);
+    [Signal]
+    public delegate void MapChangedEventHandler(Map map);
 
-    [Signal] public delegate void SpeedChangedEventHandler(double speed);
+    [Signal]
+    public delegate void SpeedChangedEventHandler(double speed);
 
-    [Signal] public delegate void StartFromChangedEventHandler(double startFrom);
+    [Signal]
+    public delegate void StartFromChangedEventHandler(double startFrom);
 
-    [Signal] public delegate void CameraModeChangedEventHandler(string cameraMode);
+    [Signal]
+    public delegate void CameraModeChangedEventHandler(string cameraMode);
 
-    [Signal] public delegate void ModifiersChangedEventHandler(string[] mods);
+    [Signal]
+    public delegate void ModifiersChangedEventHandler(string[] mods);
 
     public override void _Ready()
     {
@@ -123,7 +129,8 @@ public partial class Lobby : Node
 
     public static void SetCameraMode(CameraMode camMode)
     {
-        if (CameraMode.Name == camMode.Name) return;
+        if (CameraMode.Name == camMode.Name)
+            return;
 
         CameraMode = camMode;
 
@@ -132,7 +139,8 @@ public partial class Lobby : Node
 
     public static void SetModifier(Modifier mod, bool active)
     {
-        if (active == Modifiers.Select(mod => mod.Name).Contains(mod.Name)) return;
+        if (active == Modifiers.Select(mod => mod.Name).Contains(mod.Name))
+            return;
 
         if (active)
         {
@@ -143,6 +151,9 @@ public partial class Lobby : Node
             Modifiers.Remove(Modifiers.Find(x => x.Name == mod.Name));
         }
 
-        Instance.EmitSignal(SignalName.ModifiersChanged, Modifiers.Select(mod => mod.Name).ToArray());
+        Instance.EmitSignal(
+            SignalName.ModifiersChanged,
+            Modifiers.Select(mod => mod.Name).ToArray()
+        );
     }
 }

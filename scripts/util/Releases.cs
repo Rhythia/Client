@@ -7,9 +7,14 @@ using Updatum;
 
 public class Releases
 {
-    public static Version GetCurrentVersion => Version.Parse((string)ProjectSettings.GetSetting("application/config/version"));
+    public static Version GetCurrentVersion =>
+        Version.Parse((string)ProjectSettings.GetSetting("application/config/version"));
 
-    public static readonly UpdatumManager MANAGER = new("Rhythia", "Client", currentVersion: GetCurrentVersion)
+    public static readonly UpdatumManager MANAGER = new(
+        "Rhythia",
+        "Client",
+        currentVersion: GetCurrentVersion
+    )
     {
         AssetRegexPattern = $"{OS.GetName()}",
     };

@@ -9,7 +9,8 @@ namespace Util;
 
 public class Misc
 {
-    public static GodotObject OBJParser = (GodotObject)GD.Load<GDScript>("res://scripts/util/OBJParser.gd").New();
+    public static GodotObject OBJParser = (GodotObject)
+        GD.Load<GDScript>("res://scripts/util/OBJParser.gd").New();
 
     public static Texture2D GetModIcon(string mod)
     {
@@ -103,7 +104,8 @@ public class Misc
             return img;
         }
 
-        bool isJpeg = buffer.Length >= 3 && buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF;
+        bool isJpeg =
+            buffer.Length >= 3 && buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF;
         if (isJpeg && img.LoadJpgFromBuffer(buffer) == Error.Ok)
         {
             return img;
@@ -115,31 +117,52 @@ public class Misc
             return img;
         }
 
-        bool isWebp = buffer.Length >= 12
-            && buffer[0] == 0x52 && buffer[1] == 0x49 && buffer[2] == 0x46 && buffer[3] == 0x46
-            && buffer[8] == 0x57 && buffer[9] == 0x45 && buffer[10] == 0x42 && buffer[11] == 0x50;
+        bool isWebp =
+            buffer.Length >= 12
+            && buffer[0] == 0x52
+            && buffer[1] == 0x49
+            && buffer[2] == 0x46
+            && buffer[3] == 0x46
+            && buffer[8] == 0x57
+            && buffer[9] == 0x45
+            && buffer[10] == 0x42
+            && buffer[11] == 0x50;
         if (isWebp && img.LoadWebpFromBuffer(buffer) == Error.Ok)
         {
             return img;
         }
 
-        Logger.Log($"""
-        Couldn't load image from buffer
-            Type: {(isPng ? "PNG" : isJpeg ? "JPG" : isBmp ? "BMP" : isWebp ? "WEBP" : "Unknown")};
-            Size: {buffer.Length}
-        """);
+        Logger.Log(
+            $"""
+            Couldn't load image from buffer
+                Type: {(
+                isPng ? "PNG"
+                : isJpeg ? "JPG"
+                : isBmp ? "BMP"
+                : isWebp ? "WEBP"
+                : "Unknown"
+            )};
+                Size: {buffer.Length}
+            """
+        );
 
         return null;
     }
 
     public static Color ParseColor(string hex, Color fallback)
     {
-        if (string.IsNullOrWhiteSpace(hex)) { return fallback; }
+        if (string.IsNullOrWhiteSpace(hex))
+        {
+            return fallback;
+        }
 
         try
         {
             hex = hex.Trim();
-            if (!hex.StartsWith('#')) { hex = "#" + hex; }
+            if (!hex.StartsWith('#'))
+            {
+                hex = "#" + hex;
+            }
             return Color.FromHtml(hex);
         }
         catch
@@ -151,10 +174,20 @@ public class Misc
 
     public static float ParseFloatInput(string input, float fallback = 0f)
     {
-        if (string.IsNullOrWhiteSpace(input)) { return fallback; }
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return fallback;
+        }
 
         string normalized = input.Replace(',', '.');
-        if (float.TryParse(normalized, NumberStyles.Any, CultureInfo.InvariantCulture, out float result))
+        if (
+            float.TryParse(
+                normalized,
+                NumberStyles.Any,
+                CultureInfo.InvariantCulture,
+                out float result
+            )
+        )
         {
             return result;
         }
@@ -164,7 +197,8 @@ public class Misc
 
     public static int BinarySearch(double[] values, double time)
     {
-        int left = 0, right = values.Length;
+        int left = 0,
+            right = values.Length;
 
         while (left < right)
         {

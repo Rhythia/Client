@@ -54,7 +54,10 @@ public partial class SettingsManager : Node
 
         try
         {
-            SettingsProfileConverter.Deserialize($"{Constants.USER_FOLDER}/profiles/{profile}.json", Instance.Settings);
+            SettingsProfileConverter.Deserialize(
+                $"{Constants.USER_FOLDER}/profiles/{profile}.json",
+                Instance.Settings
+            );
 
             ToastNotification.Notify($"Loaded profile [{profile}]");
         }
@@ -70,7 +73,10 @@ public partial class SettingsManager : Node
             ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin.Value}", 1);
         }
 
-        static void addUserContentToSettingsList(SettingsItem<string> settingsItem, IEnumerable<string> options)
+        static void addUserContentToSettingsList(
+            SettingsItem<string> settingsItem,
+            IEnumerable<string> options
+        )
         {
             foreach (string option in options)
             {
@@ -83,8 +89,14 @@ public partial class SettingsManager : Node
             }
         }
 
-        addUserContentToSettingsList(Instance.Settings.Skin, Directory.GetDirectories($"{Constants.USER_FOLDER}/skins"));
-        addUserContentToSettingsList(Instance.Settings.NoteColors, Directory.GetFiles($"{Constants.USER_FOLDER}/colorsets"));
+        addUserContentToSettingsList(
+            Instance.Settings.Skin,
+            Directory.GetDirectories($"{Constants.USER_FOLDER}/skins")
+        );
+        addUserContentToSettingsList(
+            Instance.Settings.NoteColors,
+            Directory.GetFiles($"{Constants.USER_FOLDER}/colorsets")
+        );
 
         Logger.Log($"Loaded settings {profile}");
 
@@ -128,7 +140,8 @@ public partial class SettingsManager : Node
 
         foreach (var property in typeof(SettingsProfile).GetProperties())
         {
-            if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType)) continue;
+            if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType))
+                continue;
 
             ISettingsItem current = (ISettingsItem)property.GetValue(Instance.Settings);
             ISettingsItem defs = (ISettingsItem)property.GetValue(defaults);

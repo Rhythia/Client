@@ -17,7 +17,8 @@ public partial class CircularTunnel : BaseSpace
         settings = SettingsManager.Instance.Settings;
         rings = GetNode<Node3D>("Rings");
 
-        ringMaterial = (rings.GetChild<MeshInstance3D>(0).Mesh as PlaneMesh).Material as StandardMaterial3D;
+        ringMaterial =
+            (rings.GetChild<MeshInstance3D>(0).Mesh as PlaneMesh).Material as StandardMaterial3D;
     }
 
     public override void _Process(double delta)
@@ -27,7 +28,10 @@ public partial class CircularTunnel : BaseSpace
         // Ring movement
         if (settings.SpaceEffects)
         {
-            rings.Position = Vector3.Back * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2) % ring_loop_end;
+            rings.Position =
+                Vector3.Back
+                * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2)
+                % ring_loop_end;
         }
 
         // Hit FX

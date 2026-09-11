@@ -8,7 +8,8 @@ public partial class Combo : UIComponent
 
     public override void OnExitTree()
     {
-        if (Runner.Attempt == null) return;
+        if (Runner.Attempt == null)
+            return;
         Runner.AttemptStatsUpdated -= OnStatsUpdated;
     }
 

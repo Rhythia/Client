@@ -63,9 +63,21 @@ public partial class Attempt : RefCounted
     public uint ReplayFrameCountOffset = 0;
     public uint ReplayAttemptStatusOffset = 0;
 
-    public Attempt(Map map, double speed, double startFrom, CameraMode cameraMode, List<Modifier> mods, string[] players = null, Replay[] replays = null)
+    public Attempt(
+        Map map,
+        double speed,
+        double startFrom,
+        CameraMode cameraMode,
+        List<Modifier> mods,
+        string[] players = null,
+        Replay[] replays = null
+    )
     {
-        ID = $"{map.Name}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(":", "_");
+        ID =
+            $"{map.Name}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(
+                ":",
+                "_"
+            );
         Settings = SettingsManager.Instance.Settings;
         Replays = replays;
         IsReplay = Replays != null;

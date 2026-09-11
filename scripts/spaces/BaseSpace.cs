@@ -49,14 +49,15 @@ public partial class BaseSpace : Node3D
         {
             if (SettingsManager.Instance.Settings.SpaceHitEffects)
             {
-                NoteHitColor = NoteHitColor.Lerp(Game.Attempt.LastHitColour, Math.Min(1, (float)delta * 8));
+                NoteHitColor = NoteHitColor.Lerp(
+                    Game.Attempt.LastHitColour,
+                    Math.Min(1, (float)delta * 8)
+                );
             }
         }
     }
 
-    public virtual void OnHit(uint combo)
-    {
-    }
+    public virtual void OnHit(uint combo) { }
 
     public virtual void Load()
     {

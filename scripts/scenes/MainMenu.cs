@@ -35,7 +35,9 @@ public partial class MainMenu : BaseScene
 
         CurrentMenu = HomeMenu;
 
-        Input.MouseMode = SettingsManager.Instance.Settings.UseCursorInMenus ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
+        Input.MouseMode = SettingsManager.Instance.Settings.UseCursorInMenus
+            ? Input.MouseModeEnum.Hidden
+            : Input.MouseModeEnum.Visible;
 
         List<Node> menuButtons = [];
         menuButtons.AddRange(topBarButtonsContainer.GetChildren());
@@ -89,7 +91,11 @@ public partial class MainMenu : BaseScene
     {
         base.Load();
 
-        DisplayServer.WindowSetVsyncMode(SettingsManager.Instance.Settings.VSyncMenus ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
+        DisplayServer.WindowSetVsyncMode(
+            SettingsManager.Instance.Settings.VSyncMenus
+                ? DisplayServer.VSyncMode.Adaptive
+                : DisplayServer.VSyncMode.Disabled
+        );
 
         // Apply any map selection that was deferred while menu was off-tree (e.g. import from another scene)
         MapInfo.ApplyPendingSelection();
@@ -106,7 +112,11 @@ public partial class MainMenu : BaseScene
 
         SoundManager.RefreshMenuMusicPlayback();
 
-        if (SettingsManager.Instance.Settings.AutoplayJukebox.Value && !SoundManager.Song.Playing && SoundManager.Map != null)
+        if (
+            SettingsManager.Instance.Settings.AutoplayJukebox.Value
+            && !SoundManager.Song.Playing
+            && SoundManager.Map != null
+        )
         {
             SoundManager.PlayJukebox(SoundManager.JukeboxIndex);
         }
@@ -116,13 +126,20 @@ public partial class MainMenu : BaseScene
     {
         if (Rhythia.Quitting && SoundManager.Song.VolumeDb > float.NegativeInfinity)
         {
-            SoundManager.Song.VolumeDb = Mathf.Lerp(SoundManager.Song.VolumeDb, -80f, (float)delta * 2);
+            SoundManager.Song.VolumeDb = Mathf.Lerp(
+                SoundManager.Song.VolumeDb,
+                -80f,
+                (float)delta * 2
+            );
         }
     }
 
     public void Transition(Panel menu, bool instant = false)
     {
-        if (CurrentMenu == menu) { return; }
+        if (CurrentMenu == menu)
+        {
+            return;
+        }
 
         LastMenu = CurrentMenu;
         CurrentMenu = menu;
@@ -132,9 +149,16 @@ public partial class MainMenu : BaseScene
 
         double tweenTime = instant ? 0 : 0.15;
 
-        Tween outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+        Tween outTween = CreateTween()
+            .SetTrans(Tween.TransitionType.Quad)
+            .SetEase(Tween.EaseType.In);
         outTween.TweenProperty(LastMenu, "modulate", Color.Color8(255, 255, 255, 0), tweenTime);
-        outTween.TweenCallback(Callable.From(() => { LastMenu.Visible = false; }));
+        outTween.TweenCallback(
+            Callable.From(() =>
+            {
+                LastMenu.Visible = false;
+            })
+        );
 
         CurrentMenu.Visible = true;
 

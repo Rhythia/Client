@@ -14,7 +14,14 @@ public partial class KeybindsManager : Node
             string.Format(CultureInfo.CurrentCulture, LinkPopupButton.InfoTemplate, wikiLink)
         );
 
-        wikiPopup.AddOption("Open", Callable.From(() => { OS.ShellOpen(wikiLink); }), wikiLink);
+        wikiPopup.AddOption(
+            "Open",
+            Callable.From(() =>
+            {
+                OS.ShellOpen(wikiLink);
+            }),
+            wikiLink
+        );
         wikiPopup.AddOption("Cancel", Callable.From(wikiPopup.Hide));
     }
 
@@ -36,9 +43,16 @@ public partial class KeybindsManager : Node
                 }
                 default:
                 {
-                    if (eventKey.Keycode == Key.F11 || (eventKey.AltPressed && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)))
+                    if (
+                        eventKey.Keycode == Key.F11
+                        || (
+                            eventKey.AltPressed
+                            && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)
+                        )
+                    )
                     {
-                        bool value = DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed;
+                        bool value =
+                            DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed;
 
                         settings.Fullscreen.Value = value;
                     }

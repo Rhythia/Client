@@ -28,7 +28,8 @@ public partial class PlayerInputController : Node
 
     public override void _Input(InputEvent @event)
     {
-        if (!IsEnabled) return;
+        if (!IsEnabled)
+            return;
 
         handleInput(@event);
     }
@@ -60,7 +61,8 @@ public partial class PlayerInputController : Node
 
         if (@event is InputEventMouseButton mouseButton)
         {
-            if (!mouseButton.Pressed || mouseButton.DoubleClick) return;
+            if (!mouseButton.Pressed || mouseButton.DoubleClick)
+                return;
 
             OnLeftMouseButton?.Invoke(mouseButton.Pressed);
         }
@@ -72,7 +74,8 @@ public partial class PlayerInputController : Node
 
         // Functionality with pressing and releasing
 
-        if (key.Echo) return;
+        if (key.Echo)
+            return;
 
         switch (key)
         {
@@ -90,7 +93,8 @@ public partial class PlayerInputController : Node
 
         // Functionality with only pressing
 
-        if (!key.Pressed || key.Echo) return;
+        if (!key.Pressed || key.Echo)
+            return;
 
         switch (key)
         {

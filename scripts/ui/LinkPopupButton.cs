@@ -3,7 +3,8 @@ using Godot;
 
 public partial class LinkPopupButton : Button
 {
-    public static string InfoTemplate = "[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{0}[/u][/i]\n\n[color=dddddd]Are you sure?";
+    public static string InfoTemplate =
+        "[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{0}[/u][/i]\n\n[color=dddddd]Are you sure?";
 
     [Export]
     public string Link;
@@ -18,7 +19,14 @@ public partial class LinkPopupButton : Button
 
         UpdateLink(Link);
 
-        popup.AddOption("Open", Callable.From(() => { OS.ShellOpen(Link); }), Link);
+        popup.AddOption(
+            "Open",
+            Callable.From(() =>
+            {
+                OS.ShellOpen(Link);
+            }),
+            Link
+        );
         popup.AddOption("Cancel", Callable.From(popup.Hide));
     }
 

@@ -24,22 +24,26 @@ public partial class Note(int index, int millisecond, float x, float y)
 
     public void Hit(Runner runner, bool playSound = true)
     {
-        if (LastResult != HitResult.None) return;
+        if (LastResult != HitResult.None)
+            return;
 
         LastResult = HitResult.Hit;
         runner.EmitSignal(Runner.SignalName.HitResultChanged, Index, (int)LastResult);
 
-        if (playSound) SoundManager.PlayHitSound();
+        if (playSound)
+            SoundManager.PlayHitSound();
     }
 
     public void Miss(Runner runner, bool playSound = true)
     {
-        if (LastResult != HitResult.None) return;
+        if (LastResult != HitResult.None)
+            return;
 
         LastResult = HitResult.Miss;
         runner.EmitSignal(Runner.SignalName.HitResultChanged, Index, (int)LastResult);
 
-        if (playSound) SoundManager.PlayMissSound();
+        if (playSound)
+            SoundManager.PlayMissSound();
     }
 
     public bool DoProcess(Runner runner)
@@ -66,14 +70,17 @@ public partial class Note(int index, int millisecond, float x, float y)
         }
 
         bool late = isPastWindow(runner, HitWindow);
-        float replayLateness = attempt.IsReplay && attempt.Replays.Length == 1 ? attempt.Replays[0].Notes[Index] : 0;
+        float replayLateness =
+            attempt.IsReplay && attempt.Replays.Length == 1 ? attempt.Replays[0].Notes[Index] : 0;
 
         if (late && (!attempt.IsReplay || replayLateness == -1))
         {
             Miss(runner);
         }
-        else if (!attempt.IsReplay && CheckHitResult(attempt) == HitResult.Hit
-            || attempt.IsReplay && replayLateness != -1 && isPastWindow(runner, replayLateness))
+        else if (
+            !attempt.IsReplay && CheckHitResult(attempt) == HitResult.Hit
+            || attempt.IsReplay && replayLateness != -1 && isPastWindow(runner, replayLateness)
+        )
         {
             Hit(runner);
         }
@@ -81,10 +88,12 @@ public partial class Note(int index, int millisecond, float x, float y)
 
     public HitResult CheckHitResult(Attempt attempt)
     {
-        if (attempt.CursorPosition.X + Constants.HIT_BOX_SIZE >= X - 0.5f
+        if (
+            attempt.CursorPosition.X + Constants.HIT_BOX_SIZE >= X - 0.5f
             && attempt.CursorPosition.X - Constants.HIT_BOX_SIZE <= X + 0.5f
             && attempt.CursorPosition.Y + Constants.HIT_BOX_SIZE >= Y - 0.5f
-            && attempt.CursorPosition.Y - Constants.HIT_BOX_SIZE <= Y + 0.5f)
+            && attempt.CursorPosition.Y - Constants.HIT_BOX_SIZE <= Y + 0.5f
+        )
         {
             return HitResult.Hit;
         }

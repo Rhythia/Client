@@ -80,6 +80,11 @@ public partial class MapButtonSquare : MapButton
     private void updateFocus()
     {
         Cover.Modulate = Color.Color8(255, 255, 255, (byte)(Hovered || Selected ? 200 : 128));
-        OutlineShader.SetShaderParameter("outline_color", Selected ? selectColor : Hovered ? hoverColor : idleColor);
+        OutlineShader.SetShaderParameter(
+            "outline_color",
+            Selected ? selectColor
+                : Hovered ? hoverColor
+                : idleColor
+        );
     }
 }

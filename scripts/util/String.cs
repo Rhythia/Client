@@ -20,7 +20,10 @@ public class String
     public static string FormatUnixTimePretty(double now, double time)
     {
         string formatted;
-        double seconds, minutes, hours, days;
+        double seconds,
+            minutes,
+            hours,
+            days;
         double difference = now - time;
         string prefix = difference < 0 ? "in " : "";
         string suffix = difference > 0 ? " ago" : "";

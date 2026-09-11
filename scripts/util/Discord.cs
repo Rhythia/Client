@@ -8,19 +8,12 @@ public class Discord
     static Discord()
     {
         // TODO: Add logging here
-        Client = new DiscordRpcClient(appId)
-        {
-
-        };
+        Client = new DiscordRpcClient(appId) { };
 
         Client.Initialize();
 
-        Client.SetPresence(new RichPresence()
-        {
-            Assets = new Assets()
-            {
-                LargeImageKey = "short"
-            },
-        });
+        Client.SetPresence(
+            new RichPresence() { Assets = new Assets() { LargeImageKey = "short" } }
+        );
     }
 }

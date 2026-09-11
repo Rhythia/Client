@@ -12,7 +12,10 @@ public partial class QuitButton : Button
         popup.AddOption("Quit", Callable.From(quit));
         popup.AddOption("Cancel", Callable.From(popup.Hide));
 
-        Pressed += () => { popup.Show(); };
+        Pressed += () =>
+        {
+            popup.Show();
+        };
     }
 
     public override void _Input(InputEvent @event)
@@ -22,7 +25,10 @@ public partial class QuitButton : Button
             switch (eventKey.Keycode)
             {
                 case Key.Escape:
-                    if (SceneManager.Scene is MainMenu mainMenu && mainMenu.CurrentMenu == mainMenu.HomeMenu)
+                    if (
+                        SceneManager.Scene is MainMenu mainMenu
+                        && mainMenu.CurrentMenu == mainMenu.HomeMenu
+                    )
                     {
                         popup.Show();
                     }

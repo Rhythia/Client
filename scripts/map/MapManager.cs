@@ -102,7 +102,6 @@ public partial class MapManager : Node
                 {
                     Logger.Log($"{map.Title} has been deleted");
                 }
-
             }
             catch
             {
@@ -116,10 +115,12 @@ public partial class MapManager : Node
             MapCache.RemoveMap(map);
             Maps.RemoveAll(x => x.Id == map.Id);
 
-            Callable.From(() =>
-            {
-                _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
-            }).CallDeferred();
+            Callable
+                .From(() =>
+                {
+                    _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
+                })
+                .CallDeferred();
             Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();
         }
         catch (Exception e)
@@ -134,7 +135,10 @@ public partial class MapManager : Node
         string sanitizedMappers = Util.String.SanitizeZalgo(map.PrettyMappers);
         string sanitizedDiffName = Util.String.SanitizeZalgo(map.DifficultyName);
 
-        bool updated = sanitizedTitle != map.PrettyTitle || sanitizedMappers != map.PrettyMappers || sanitizedDiffName != map.DifficultyName;
+        bool updated =
+            sanitizedTitle != map.PrettyTitle
+            || sanitizedMappers != map.PrettyMappers
+            || sanitizedDiffName != map.DifficultyName;
 
         if (updated)
         {

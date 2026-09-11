@@ -5,14 +5,26 @@ public partial class PauseMenu : Panel
 {
     public bool Shown = false;
 
-    [Export] private Game game;
-    [Export] private Runner runner;
+    [Export]
+    private Game game;
 
-    [Export] private Button hide;
-    [Export] private Button resume;
-    [Export] private Button restart;
-    [Export] private Button settings;
-    [Export] private Button quit;
+    [Export]
+    private Runner runner;
+
+    [Export]
+    private Button hide;
+
+    [Export]
+    private Button resume;
+
+    [Export]
+    private Button restart;
+
+    [Export]
+    private Button settings;
+
+    [Export]
+    private Button quit;
 
     public override void _Ready()
     {
@@ -36,7 +48,9 @@ public partial class PauseMenu : Panel
         SoundManager.Song.PitchScale = (float)attempt.Speed;
         SoundManager.Song.StreamPaused = !runner.Playing;
 
-        MenuCursor.Instance.UpdateVisible(Shown && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
+        MenuCursor.Instance.UpdateVisible(
+            Shown && SettingsManager.Instance.Settings.UseCursorInMenus.Value
+        );
 
         if (Shown)
         {
@@ -61,17 +75,27 @@ public partial class PauseMenu : Panel
             // 	}
             // }
 
-            Input.MouseMode = attempt.IsReplay && game.ReplayManager.ViewerVisible ? Input.MouseModeEnum.Visible
+            Input.MouseMode =
+                attempt.IsReplay && game.ReplayManager.ViewerVisible ? Input.MouseModeEnum.Visible
                 : attempt.Settings.AbsoluteInput ? Input.MouseModeEnum.ConfinedHidden
                 : Input.MouseModeEnum.Captured;
         }
 
         Tween tween = CreateTween();
-        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0)), instant ? 0 : 0.25).SetTrans(Tween.TransitionType.Quad);
-        tween.TweenCallback(Callable.From(() =>
-        {
-            Visible = Shown;
-        }));
+        tween
+            .TweenProperty(
+                this,
+                "modulate",
+                Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0)),
+                instant ? 0 : 0.25
+            )
+            .SetTrans(Tween.TransitionType.Quad);
+        tween.TweenCallback(
+            Callable.From(() =>
+            {
+                Visible = Shown;
+            })
+        );
         tween.Play();
     }
 

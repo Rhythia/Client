@@ -35,14 +35,28 @@ public partial class JukeboxPanel : Panel, ISkinnable
         rewindButton.Pressed += rewind;
         selectButton.Pressed += select;
 
-        foreach (TextureButton button in new TextureButton[] { pauseButton, skipButton, rewindButton })
+        foreach (
+            TextureButton button in new TextureButton[] { pauseButton, skipButton, rewindButton }
+        )
         {
-            button.MouseEntered += () => { button.SelfModulate = Color.Color8(255, 255, 255); };
-            button.MouseExited += () => { button.SelfModulate = Color.Color8(255, 255, 255, 190); };
+            button.MouseEntered += () =>
+            {
+                button.SelfModulate = Color.Color8(255, 255, 255);
+            };
+            button.MouseExited += () =>
+            {
+                button.SelfModulate = Color.Color8(255, 255, 255, 190);
+            };
         }
 
-        selectButton.MouseEntered += () => { title.SelfModulate = Color.Color8(255, 255, 255); };
-        selectButton.MouseExited += () => { title.SelfModulate = Color.Color8(255, 255, 255, 190); };
+        selectButton.MouseEntered += () =>
+        {
+            title.SelfModulate = Color.Color8(255, 255, 255);
+        };
+        selectButton.MouseExited += () =>
+        {
+            title.SelfModulate = Color.Color8(255, 255, 255, 190);
+        };
 
         if (SettingsManager.Instance.Settings.AutoplayJukebox)
         {
@@ -67,14 +81,21 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
         if (SoundManager.Song.Stream != null)
         {
-            progress = SoundManager.Song.GetPlaybackPosition() / (float)SoundManager.Song.Stream.GetLength();
+            progress =
+                SoundManager.Song.GetPlaybackPosition()
+                / (float)SoundManager.Song.Stream.GetLength();
         }
 
         spectrumMaterial.SetShaderParameter("progress", progress);
-        spectrumMaterial.SetShaderParameter("margin", 1 - spectrum.Size.X / GetViewport().GetVisibleRect().Size.X);
+        spectrumMaterial.SetShaderParameter(
+            "margin",
+            1 - spectrum.Size.X / GetViewport().GetVisibleRect().Size.X
+        );
 
         var skin = SkinManager.Instance.Skin;
-        pauseButton.TextureNormal = SoundManager.IsJukeboxPaused() ? skin.JukeboxPlayImage : skin.JukeboxPauseImage;
+        pauseButton.TextureNormal = SoundManager.IsJukeboxPaused()
+            ? skin.JukeboxPlayImage
+            : skin.JukeboxPauseImage;
     }
 
     public override void _Input(InputEvent @event)
@@ -126,7 +147,9 @@ public partial class JukeboxPanel : Panel, ISkinnable
     {
         skin ??= SkinManager.Instance.Skin;
 
-        pauseButton.TextureNormal = SoundManager.IsJukeboxPaused() ? skin.JukeboxPlayImage : skin.JukeboxPauseImage;
+        pauseButton.TextureNormal = SoundManager.IsJukeboxPaused()
+            ? skin.JukeboxPlayImage
+            : skin.JukeboxPauseImage;
         skipButton.TextureNormal = skin.JukeboxSkipImage;
         rewindButton.TextureNormal = skin.JukeboxSkipImage;
     }
