@@ -26,8 +26,9 @@ public partial class Constants : Node
 
     public static readonly int BREAK_TIME = 4000;  // used for skipping breaks mid-map
 
-    // Motorcycle mode: how far the bike can steer from the centerline, in meters.
-    public static readonly float MOTORCYCLE_ROAD_HALF_WIDTH = 1.5f;
+    // Motorcycle mode: distance in meters between adjacent lanes (collapsed
+    // from the old 3x3 grid down to 3 lanes in a single row).
+    public static readonly float MOTORCYCLE_LANE_WIDTH = 1.2f;
 
     public static readonly string[] DIFFICULTIES = ["N/A", "Easy", "Medium", "Hard", "Insane", "Illogical"];
 

@@ -21,15 +21,16 @@ obstacle/gate charts, instead of re-deriving timing and scoring.
 
 | Rhythia concept | Motorcycle concept |
 |---|---|
-| Mouse cursor moving across a 3×3 grid (`Attempt.CursorPosition`) | Handlebar/steering input moving the bike across track lanes |
-| `Grid` (`scripts/game/ui/Grid.cs`) drawing the cursor | `MotorcycleController` (`scripts/game/ui/MotorcycleController.cs`) driving bike lane position + lean |
-| `CameraLock` (`scripts/game/camera/CameraLock.cs`) | `CameraChase` — a chase camera that follows behind/above the bike |
-| `Note` objects + `NoteRenderer` | Track gates/obstacles + `GateRenderer`, hit in time with the beat |
-| `HitJudgment` / `ScoreJudgment` / `HealthJudgment` | Unchanged — a "hit" becomes clearing a gate/obstacle on time instead of clicking a note |
+| Mouse cursor moving continuously across a 3×3 grid (`Attempt.CursorPosition`) | A/D keys moving the bike between 3 discrete lanes (`Attempt.BikeLane`) |
+| 3×3 grid (3 columns × 3 rows) | Collapsed to 3×1: a chart's note **X** (column, -1/0/1) becomes the lane, **Y** (row) is ignored, via `MotorcycleLanes.LaneFromNoteX` |
+| `Grid` (`scripts/game/ui/Grid.cs`) drawing the cursor | `MotorcycleController` (`scripts/game/ui/MotorcycleController.cs`) driving bike lane position, lean, and chase camera |
+| `Note` objects + `NoteRenderer` | Same `Note` objects (unchanged map format), reused as track gates and drawn by `GateRenderer` |
+| `HitJudgment` / `ScoreJudgment` / `HealthJudgment` (unimplemented stubs upstream) | `MotorcycleHitJudgment` — basic lane-vs-timing check that resolves each gate as the bike reaches it |
+| `GameComponent.Play()` | Now also loads `Attempt.Map.Notes` (decoded by the existing `MapParser`) into `Attempt.Objects[typeof(Note)]`, so old map files work unchanged |
 
 ## Status
 
-This is an early skeleton, matching the rest of the codebase's current stage
-(most rendering logic upstream is still pseudocode). The pieces above exist
-as starting points to build the motorcycle-specific gameplay on, not a
-finished mode.
+Basic playable loop: an old map's notes load in, the clock (`Attempt.Progress`)
+advances every frame, the bike moves between 3 lanes with A/D, and gates
+resolve as hit/missed when they reach the bike. Scoring, health, audio
+playback sync, and actual track/bike art are still not wired up.

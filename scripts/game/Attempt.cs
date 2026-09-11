@@ -36,8 +36,12 @@ public partial class Attempt : GodotObject
 
     public Replay? Replay { get; set; }
 
-    // Motorcycle mode: bike's horizontal lane offset, driven by steering input
-    // the same way CursorPosition drove the grid cursor.
+    // Motorcycle mode: which of the 3 lanes (-1, 0, 1) the bike currently
+    // occupies. Driven by A/D input in MotorcycleController.
+    public int BikeLane { get; set; }
+
+    // Motorcycle mode: smoothed world-space X position of the bike as it
+    // moves toward BikeLane's target position, used for rendering/camera.
     public float BikeLaneOffset { get; set; }
 
     // Motorcycle mode: bike lean angle in radians, purely cosmetic/feedback.

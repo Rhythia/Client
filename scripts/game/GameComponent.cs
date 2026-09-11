@@ -37,6 +37,13 @@ public partial class GameComponent : Node3D
 
         HealthProcessor.ApplyAttempt(attempt);
 
+        // Load the (old-format) map's notes into the attempt so renderers/
+        // judgments (e.g. GateRenderer for motorcycle mode) can read them.
+        attempt.Objects[typeof(Note)] = attempt.Map != null ? new List<object>(attempt.Map.Notes) : new List<object>();
+        attempt.Progress = 0;
+        attempt.BikeLane = 0;
+        attempt.BikeLaneOffset = 0;
+
         ApplySettings(attempt.Settings);
     }
 
@@ -54,6 +61,10 @@ public partial class GameComponent : Node3D
 
     public override void _Process(double delta)
     {
+        if (Playing && !CurrentAttempt.Paused)
+        {
+            CurrentAttempt.Progress += delta * 1000;
+        }
 
         //  Psuedocode logic for the attempt
         //  
