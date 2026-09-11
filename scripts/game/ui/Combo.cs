@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class Combo : UIComponent
@@ -25,6 +26,6 @@ public partial class Combo : UIComponent
 
     public void OnStatsUpdated(Attempt attempt)
     {
-        label.Text = attempt.Combo.ToString();
+        label.Text = attempt.Combo.ToString(CultureInfo.CurrentCulture);
     }
 }

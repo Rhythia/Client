@@ -57,7 +57,7 @@ public partial class ScorePanel : Panel
 
         if (score.Qualifies)
         {
-            scoreLabel.Text = Util.String.PadMagnitude(score.Value.ToString());
+            scoreLabel.Text = Util.String.PadMagnitude(score.Value);
         }
         else
         {

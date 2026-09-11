@@ -83,6 +83,6 @@ public partial class PanelRight : UIComponent
         hits.Text = $"{attempt.Hits}";
         misses.Text = $"{attempt.Misses}";
         simpleMisses.Text = $"{attempt.Misses}";
-        sum.Text = Util.String.PadMagnitude(attempt.Sum.ToString());
+        sum.Text = Util.String.PadMagnitude(attempt.Sum);
     }
 }

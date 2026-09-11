@@ -1,3 +1,4 @@
+using System.Globalization;
 using Godot;
 
 public partial class ReleaseNotesButton : LinkPopupButton
@@ -8,6 +9,6 @@ public partial class ReleaseNotesButton : LinkPopupButton
 
         string version = (string)ProjectSettings.GetSetting("application/config/version");
 
-        UpdateLink(string.Format(Link, version));
+        UpdateLink(string.Format(CultureInfo.CurrentCulture, Link, version));
     }
 }

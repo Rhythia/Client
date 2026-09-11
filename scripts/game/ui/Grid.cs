@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class Grid : MeshInstance3D, IUIComponent
@@ -111,7 +112,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
         Label3D popup = hit_feedback.Instantiate<Label3D>();
         AddChild(popup);
         popup.GlobalPosition = new Vector3(Runner.Attempt.Map.Notes[objIndex].X, -1.4f, 0);
-        popup.Text = hitScore.ToString();
+        popup.Text = hitScore.ToString(CultureInfo.CurrentCulture);
         Tween tween = popup.CreateTween();
         tween.TweenProperty(popup, "transparency", 1, 0.25f);
         tween

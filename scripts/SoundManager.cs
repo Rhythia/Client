@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Godot;
 
@@ -177,7 +178,7 @@ public partial class SoundManager : Node, ISkinnable
                 }
 
                 Label label = SceneManager.VolumePanel.GetNode<Label>("Label");
-                label.Text = settings.VolumeMaster.Value.ToString();
+                label.Text = settings.VolumeMaster.Value.ToString(CultureInfo.CurrentCulture);
 
                 Tween tween = SceneManager.VolumePanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
                 tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffffff"), 0.25);

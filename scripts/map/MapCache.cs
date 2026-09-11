@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,8 +113,11 @@ public static class MapCache
                 );
 
                 // Time must be converted to string because the SQLite library doesn't support DateTime types -fog
-                string metadataResult = metadataModifiedDate.ToString();
-                string notesResult = objectModifiedDate.ToString();
+                string metadataResult = metadataModifiedDate.ToString(
+                    "O",
+                    CultureInfo.InvariantCulture
+                );
+                string notesResult = objectModifiedDate.ToString("O", CultureInfo.InvariantCulture);
 
                 bool metadataCheck = map.LastModifiedMetadata == metadataResult;
                 bool objectsCheck = map.LastModifiedNotes == notesResult;
@@ -155,8 +159,14 @@ public static class MapCache
                     continue;
                 }
 
-                newMap.LastModifiedMetadata = metadataModifiedDate.ToString();
-                newMap.LastModifiedNotes = objectModifiedDate.ToString();
+                newMap.LastModifiedMetadata = metadataModifiedDate.ToString(
+                    "O",
+                    CultureInfo.InvariantCulture
+                );
+                newMap.LastModifiedNotes = objectModifiedDate.ToString(
+                    "O",
+                    CultureInfo.InvariantCulture
+                );
 
                 newMap.Id = map.Id;
                 newMap.MetadataObjectHash = checksum;

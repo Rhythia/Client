@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using Godot;
 
@@ -11,12 +12,13 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
     public Leaderboard Leaderboard = new();
 
-    private readonly PackedScene leaderboardScoreTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/score_panel.tscn");
+    private readonly PackedScene leaderboardScoreTemplate = ResourceLoader.Load<PackedScene>(
+        "res://prefabs/score_panel.tscn"
+    );
 
     // Info & main buttons
 
     [ExportCategory("Info")]
-
     [Export]
     private Control info;
 
@@ -68,7 +70,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
     // Actions panel
 
     [ExportCategory("Actions")]
-
     [Export]
     private Control actions;
 
@@ -99,7 +100,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
     // Leaderboard
 
     [ExportCategory("Leaderboards")]
-
     [Export]
     private Control leaderboard;
 
@@ -147,7 +147,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
             var skin = SkinManager.Instance.Skin;
 
             favoriteButton.TooltipText = Map.Favorite ? "Unfavorite" : "Favorite";
-            favoriteButton.Icon = Map.Favorite ? skin.UnfavoriteButtonImage : skin.FavoriteButtonImage;
+            favoriteButton.Icon = Map.Favorite
+                ? skin.UnfavoriteButtonImage
+                : skin.FavoriteButtonImage;
         };
 
         //videoButton.Pressed += () =>
@@ -176,7 +178,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
             MapManager.Delete(Map);
         };
 
-        void updateOffset() { infoSubholder.OffsetLeft = coverBackground.Size.X + 8; }
+        void updateOffset()
+        {
+            infoSubholder.OffsetLeft = coverBackground.Size.X + 8;
+        }
 
         coverBackground.Connect("resized", Callable.From(updateOffset));
 
@@ -189,7 +194,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void displaySpeed(double speed)
         {
-            if (!IsInstanceValid(speedSlider)) { return; }
+            if (!IsInstanceValid(speedSlider))
+            {
+                return;
+            }
 
             speed *= 100;
 
@@ -201,7 +209,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             }
 
             speedSlider.SetValueNoSignal(speed);
-            speedEdit.Text = speed.ToString();
+            speedEdit.Text = speed.ToString(CultureInfo.InvariantCulture);
         }
 
         displaySpeed(Lobby.Speed);
@@ -210,7 +218,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void applySpeed()
         {
-            if (!double.TryParse(speedEdit.Text, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            if (!double.TryParse(speedEdit.Text, CultureInfo.InvariantCulture, out double value))
             {
                 value = 100;
             }
@@ -226,10 +234,13 @@ public partial class MapInfoContainer : Panel, ISkinnable
         }
 
         speedEdit.FocusExited += applySpeed;
-        speedEdit.TextSubmitted += (_) => { applySpeed(); };
+        speedEdit.TextSubmitted += (_) =>
+        {
+            applySpeed();
+        };
         speedSlider.ValueChanged += (value) =>
         {
-            speedEdit.Text = value.ToString();
+            speedEdit.Text = value.ToString(CultureInfo.InvariantCulture);
             applySpeed();
         };
 
@@ -240,7 +251,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void displayStartFrom(double startFrom)
         {
-            if (!IsInstanceValid(startFromSlider)) { return; }
+            if (!IsInstanceValid(startFromSlider))
+            {
+                return;
+            }
 
             int length = Map != null ? Map.Length : 1;
 
@@ -265,7 +279,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
                 value += 60 * split[1].ToFloat();
             }
 
-            if (double.TryParse(split[0], System.Globalization.CultureInfo.InvariantCulture, out double inputValue))
+            if (double.TryParse(split[0], CultureInfo.InvariantCulture, out double inputValue))
             {
                 if (inputValue < 1)
                 {
@@ -291,15 +305,30 @@ public partial class MapInfoContainer : Panel, ISkinnable
             }
         }
 
-        startFromEdit.FocusExited += () => { applyStartFrom(); };
-        startFromEdit.TextSubmitted += (_) => { applyStartFrom(); };
+        startFromEdit.FocusExited += () =>
+        {
+            applyStartFrom();
+        };
+        startFromEdit.TextSubmitted += (_) =>
+        {
+            applyStartFrom();
+        };
         startFromSlider.ValueChanged += value =>
         {
-            applyStartFrom((Math.Round(value * Map.Length) / 1000).ToString("F2", new System.Globalization.CultureInfo("en-US")), false);
+            applyStartFrom(
+                (Math.Round(value * Map.Length) / 1000).ToString(
+                    "F2",
+                    CultureInfo.InvariantCulture
+                ),
+                false
+            );
         };
         startFromSlider.DragEnded += changed =>
         {
-            if (changed) { applyStartFrom(); }
+            if (changed)
+            {
+                applyStartFrom();
+            }
         };
 
         //
@@ -315,13 +344,33 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void tweenExpandHover(bool show)
         {
-            CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).TweenProperty(lbExpandHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
+            CreateTween()
+                .SetEase(Tween.EaseType.Out)
+                .SetTrans(Tween.TransitionType.Quart)
+                .TweenProperty(
+                    lbExpandHover,
+                    "modulate",
+                    Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
+                    0.25
+                );
         }
 
-        lbExpand.MouseEntered += () => { tweenExpandHover(true); };
-        lbExpand.MouseExited += () => { tweenExpandHover(false); };
-        lbExpand.Pressed += () => { toggleLeaderboard(true); };
-        lbHide.Pressed += () => { toggleLeaderboard(false); };
+        lbExpand.MouseEntered += () =>
+        {
+            tweenExpandHover(true);
+        };
+        lbExpand.MouseExited += () =>
+        {
+            tweenExpandHover(false);
+        };
+        lbExpand.Pressed += () =>
+        {
+            toggleLeaderboard(true);
+        };
+        lbHide.Pressed += () =>
+        {
+            toggleLeaderboard(false);
+        };
 
         //
 
@@ -341,7 +390,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             switch (mouseButton.ButtonIndex)
             {
-                case MouseButton.Right: toggleLeaderboard(false); break;
+                case MouseButton.Right:
+                    toggleLeaderboard(false);
+                    break;
             }
         }
     }
@@ -352,14 +403,17 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             switch (mouseButton.ButtonIndex)
             {
-                case MouseButton.Left: toggleLeaderboard(false); break;
+                case MouseButton.Left:
+                    toggleLeaderboard(false);
+                    break;
             }
         }
     }
 
     public void Setup(Map map)
     {
-        if (map == null) return;
+        if (map == null)
+            return;
 
         if (Name == map.Name)
         {
@@ -386,7 +440,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
         inTween.TweenProperty(info, "offset_right", 0, 0.5);
         inTween.SetTrans(Tween.TransitionType.Quart).TweenProperty(actions, "offset_left", 0, 0.6);
         inTween.TweenProperty(actions, "offset_right", 0, 0.6);
-        inTween.SetTrans(Tween.TransitionType.Cubic).TweenProperty(leaderboard, "offset_left", 0, 0.7);
+        inTween
+            .SetTrans(Tween.TransitionType.Cubic)
+            .TweenProperty(leaderboard, "offset_left", 0, 0.7);
         inTween.TweenProperty(leaderboard, "offset_right", 0, 0.7);
 
         OffsetRight = 0;
@@ -394,9 +450,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Info
 
-        var difficultyColor = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
+        var difficultyColor = Constants.DIFFICULTY_COLORS[
+            Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)
+        ];
 
         mainLabel.Text = string.Format(
+            CultureInfo.CurrentCulture,
             mainLabelFormat,
             Util.String.SanitizeBBCode(map.PrettyTitle),
             difficultyColor.ToHtml(),
@@ -405,6 +464,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         );
 
         extraLabel.Text = string.Format(
+            CultureInfo.CurrentCulture,
             extraLabelFormat,
             Util.String.FormatTime(map.Length / 1000),
             map.Notes.Length,
@@ -414,10 +474,16 @@ public partial class MapInfoContainer : Panel, ISkinnable
         coverBackground.SelfModulate = difficultyColor;
         cover.Texture = map.Cover;
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
-        favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;
+        favoriteButton.Icon = map.Favorite
+            ? SkinManager.Instance.Skin.UnfavoriteButtonImage
+            : SkinManager.Instance.Skin.FavoriteButtonImage;
 
         artistLink.Visible = map.ArtistLink != "";
-        artistLink.Text = string.Format(artistLinkFormat, map.ArtistPlatform);
+        artistLink.Text = string.Format(
+            CultureInfo.CurrentCulture,
+            artistLinkFormat,
+            map.ArtistPlatform
+        );
 
         artistLink.UpdateLink(map.ArtistLink);
 
@@ -461,20 +527,36 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             lbContainer.AddChild(panel);
             panel.Setup(Leaderboard.Scores[i]);
-            panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 * 8));
+            panel.GetNode<ColorRect>("Background").Color = Color.Color8(
+                255,
+                255,
+                255,
+                (byte)(i % 2 * 8)
+            );
 
-            panel.Button.Pressed += () => { toggleLeaderboard(false); };
+            panel.Button.Pressed += () =>
+            {
+                toggleLeaderboard(false);
+            };
         }
     }
 
     public Tween Transition(bool show)
     {
-        Tween tween = CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Cubic).SetParallel();
+        Tween tween = CreateTween()
+            .SetEase(Tween.EaseType.Out)
+            .SetTrans(Tween.TransitionType.Cubic)
+            .SetParallel();
         float time = show ? 0.4f : 0.3f;
 
         PivotOffset = Size / 2;
 
-        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), time);
+        tween.TweenProperty(
+            this,
+            "modulate",
+            Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
+            time
+        );
         tween.TweenProperty(this, "position", show ? Vector2.Zero : Vector2.Down * 24, time);
         tween.TweenProperty(this, "scale", Vector2.One * (show ? 1f : 0.9f), time);
         tween.Chain();
@@ -487,18 +569,25 @@ public partial class MapInfoContainer : Panel, ISkinnable
         skin ??= SkinManager.Instance.Skin;
 
         coverBackground.Texture = skin.MapInfoCoverBackgroundImage;
-        speedPresets.GetNode("MinusMinus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMinusMinusButtonImage;
-        speedPresets.GetNode("Minus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMinusButtonImage;
-        speedPresets.GetNode("Middle").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMiddleButtonImage;
-        speedPresets.GetNode("Plus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetPlusButtonImage;
-        speedPresets.GetNode("PlusPlus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetPlusPlusButtonImage;
+        speedPresets.GetNode("MinusMinus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
+            skin.SpeedPresetMinusMinusButtonImage;
+        speedPresets.GetNode("Minus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
+            skin.SpeedPresetMinusButtonImage;
+        speedPresets.GetNode("Middle").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
+            skin.SpeedPresetMiddleButtonImage;
+        speedPresets.GetNode("Plus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
+            skin.SpeedPresetPlusButtonImage;
+        speedPresets.GetNode("PlusPlus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
+            skin.SpeedPresetPlusPlusButtonImage;
     }
 
     private void toggleLeaderboard(bool show)
     {
         lbExpand.Visible = !show;
         lbHide.Visible = show;
-        lbScrollContainer.VerticalScrollMode = show ? ScrollContainer.ScrollMode.Auto : ScrollContainer.ScrollMode.ShowNever;
+        lbScrollContainer.VerticalScrollMode = show
+            ? ScrollContainer.ScrollMode.Auto
+            : ScrollContainer.ScrollMode.ShowNever;
 
         foreach (Node node in lbContainer.GetChildren())
         {
@@ -508,9 +597,17 @@ public partial class MapInfoContainer : Panel, ISkinnable
             }
         }
 
-        Tween tween = CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).SetParallel();
+        Tween tween = CreateTween()
+            .SetEase(Tween.EaseType.Out)
+            .SetTrans(Tween.TransitionType.Quart)
+            .SetParallel();
 
-        tween.TweenProperty(leaderboard, "offset_top", -100 * (show ? Math.Min(4, Leaderboard.ScoreCount) : 1), 0.25);
+        tween.TweenProperty(
+            leaderboard,
+            "offset_top",
+            -100 * (show ? Math.Min(4, Leaderboard.ScoreCount) : 1),
+            0.25
+        );
         tween.TweenProperty(dim, "color", Color.Color8(0, 0, 0, (byte)(show ? 128 : 0)), 0.25);
 
         if (!show)

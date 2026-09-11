@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class FlatPreview : Panel
@@ -21,8 +22,8 @@ public partial class FlatPreview : Panel
         {
             ColorRect tile = new()
             {
-                Name = i.ToString(),
-                Color = transparent
+                Name = i.ToString(CultureInfo.CurrentCulture),
+                Color = transparent,
             };
 
             AddChild(tile);
@@ -42,7 +43,8 @@ public partial class FlatPreview : Panel
 
     public override void _Process(double delta)
     {
-        if (Map == null) return;
+        if (Map == null)
+            return;
 
         float alpha = (float)Math.Min(1, delta * 6);
 
@@ -73,13 +75,20 @@ public partial class FlatPreview : Panel
             lastPassedNote = Util.Misc.BinarySearch(noteTimestamps, Time);
         }
 
-        for (int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1)); i < Map.Notes.Length; i++)
+        for (
+            int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1));
+            i < Map.Notes.Length;
+            i++
+        )
         {
             var note = Map.Notes[i];
 
             if (Time >= note.Millisecond)
             {
-                Vector2I pos = new(Math.Clamp((int)Math.Floor(note.X + 1.5), 0, 2), Math.Clamp((int)Math.Floor(-note.Y + 1.5), 0, 2));
+                Vector2I pos = new(
+                    Math.Clamp((int)Math.Floor(note.X + 1.5), 0, 2),
+                    Math.Clamp((int)Math.Floor(-note.Y + 1.5), 0, 2)
+                );
                 ColorRect tile = tiles[pos.X + 3 * pos.Y];
 
                 tile.Color = bright;
@@ -94,7 +103,8 @@ public partial class FlatPreview : Panel
 
     public void Setup(Map map, bool useSoundManagerStreamPlayer = false)
     {
-        if (Map != null && Map.Name == map.Name) return;
+        if (Map != null && Map.Name == map.Name)
+            return;
 
         Map = map;
         UseSoundManagerStreamPlayer = useSoundManagerStreamPlayer;
@@ -104,7 +114,8 @@ public partial class FlatPreview : Panel
 
     public void Seek(double seek)
     {
-        if (Map == null) return;
+        if (Map == null)
+            return;
 
         Time = seek;
 
