@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using Godot;
 
 public partial class MapInfoContainer : Panel, ISkinnable
@@ -501,9 +500,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
         lbHide.Visible = show;
         lbScrollContainer.VerticalScrollMode = show ? ScrollContainer.ScrollMode.Auto : ScrollContainer.ScrollMode.ShowNever;
 
-        foreach (ScorePanel panel in lbContainer.GetChildren().Cast<ScorePanel>())
+        foreach (Node node in lbContainer.GetChildren())
         {
-            panel.Button.Visible = show;
+            if (node is ScorePanel panel)
+            {
+                panel.Button.Visible = show;
+            }
         }
 
         Tween tween = CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).SetParallel();
