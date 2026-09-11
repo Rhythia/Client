@@ -67,5 +67,9 @@ jobs:
         cache: true
     - name: Restore dependencies
       run: dotnet restore --locked-mode
-    - name: Format
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: Check CSharpier
+      run: dotnet csharpier check .
+    - name: Check dotnet format
       run: dotnet format --verify-no-changes Rhythia.csproj
