@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 public partial class SortMenuButton : Button, ISkinnable
@@ -25,7 +26,7 @@ public partial class SortMenuButton : Button, ISkinnable
 
         previousButton = buttons.GetNode<Button>("Alphabetical");
 
-        foreach (Button button in buttons.GetChildren())
+        foreach (Button button in buttons.GetChildren().Cast<Button>())
         {
             button.Pressed += () => selectSort(button);
         }

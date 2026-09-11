@@ -1243,9 +1243,9 @@ public partial class SettingsProfile
     {
         var dictionary = new Dictionary<SettingsSection, List<ISettingsItem>>();
 
-        foreach (SettingsSection section in Enum.GetValues(typeof(SettingsSection)))
+        foreach (SettingsSection section in Enum.GetValues<SettingsSection>())
         {
-            dictionary.Add(section, new List<ISettingsItem>());
+            dictionary.Add(section, []);
         }
 
         var items = typeof(SettingsProfile).GetProperties()

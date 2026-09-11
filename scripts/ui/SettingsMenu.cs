@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Godot;
 
 public partial class SettingsMenu : ColorRect
@@ -285,7 +286,7 @@ public partial class SettingsMenu : ColorRect
         }
     }
 
-    private void setupToggle(ISettingsItem setting, CheckButton button)
+    private static void setupToggle(ISettingsItem setting, CheckButton button)
     {
         button.Toggled += value =>
         {
@@ -297,7 +298,7 @@ public partial class SettingsMenu : ColorRect
         updateToggle(button, (bool)setting.GetVariant());
     }
 
-    private void updateToggle(CheckButton button, bool value)
+    private static void updateToggle(CheckButton button, bool value)
     {
         button.ButtonPressed = value;
     }
@@ -336,7 +337,7 @@ public partial class SettingsMenu : ColorRect
         updateSlider(slider, lineEdit, (double)setting.GetVariant());
     }
 
-    private void updateSlider(HSlider slider, LineEdit lineEdit, double value)
+    private static void updateSlider(HSlider slider, LineEdit lineEdit, double value)
     {
         value = Math.Round(value * 1000) / 1000;
         lineEdit.Text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -366,7 +367,7 @@ public partial class SettingsMenu : ColorRect
         updateInput(lineEdit, (string)setting.GetVariant());
     }
 
-    private void updateInput(LineEdit lineEdit, string input)
+    private static void updateInput(LineEdit lineEdit, string input)
     {
         lineEdit.Text = input;
 
@@ -376,7 +377,7 @@ public partial class SettingsMenu : ColorRect
         }
     }
 
-    private void setupList(ISettingsItem setting, OptionButton optionButton)
+    private static void setupList(ISettingsItem setting, OptionButton optionButton)
     {
         foreach (Variant item in setting.List.Values)
         {
@@ -395,7 +396,7 @@ public partial class SettingsMenu : ColorRect
         {
             int index = 0;
 
-            foreach (string value in setting.List.Values)
+            foreach (string value in setting.List.Values.Select(v => (string)v))
             {
                 if (value == (string)setting.List.SelectedValue)
                 {
@@ -413,12 +414,12 @@ public partial class SettingsMenu : ColorRect
         updateList(optionButton, getIndex());
     }
 
-    private void updateList(OptionButton optionButton, int index)
+    private static void updateList(OptionButton optionButton, int index)
     {
         optionButton.Selected = index;
     }
 
-    private void setupButton(SettingsButton setting, Button button)
+    private static void setupButton(SettingsButton setting, Button button)
     {
         button.Text = setting.Title;
         button.TooltipText = setting.Description;

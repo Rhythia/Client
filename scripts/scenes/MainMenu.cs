@@ -45,7 +45,7 @@ public partial class MainMenu : BaseScene
             menuButtons.Add(container.GetChild<Button>(0));
         }
 
-        foreach (Button button in menuButtons)
+        foreach (Button button in menuButtons.Cast<Button>())
         {
             var menu = (Panel)menuHolder.FindChild(button.Name, false);
 

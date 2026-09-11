@@ -212,7 +212,7 @@ public partial class MapParser : Node
 
         byte[] hash = Misc.HashFiles([Path.Combine(mapFolderPath, "metadata.json"), Path.Combine(mapFolderPath, "objects.phxmo")]);
 
-        map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
+        map.MetadataObjectHash = Convert.ToHexStringLower(hash);
 
 
         DateTime metadataModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "metadata.json"));
@@ -704,7 +704,7 @@ public partial class MapParser : Node
                 (string)artistPlatform ?? ""
             )
             {
-                MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower(),
+                MetadataObjectHash = Convert.ToHexStringLower(hash),
                 LastModifiedMetadata = metadataModified.ToString(),
                 LastModifiedNotes = objectsModified.ToString()
             };

@@ -29,7 +29,7 @@ public class CameraSpin : CameraMode
         var pivot = camera.Basis.Z / 4f;
 
         // Proper Parallax Support
-        camera.Position = origin + cursorLock * (float)settings.CameraParallax + pivot;
+        camera.Position = origin + cursorLock * (float)(double)settings.CameraParallax + pivot;
 
         var lookVector = camera.Basis.Z;
         var cameraVector2 = new Vector2(camera.Position.X, camera.Position.Y);

@@ -27,7 +27,7 @@ public class CameraLock : CameraMode
         }
 
         var origin = new Vector3(0, 0, 3.75f);
-        float parallax = (float)settings.CameraParallax;
+        float parallax = (float)(double)settings.CameraParallax;
 
         // camera should manage parallax on its own
         camera.Position = origin + (attempt.IsReplay && attempt.Replays.Length > 1

@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-public record struct CursorTrailData
+public readonly record struct CursorTrailData
 {
     public readonly ulong Time;
     public readonly float Rotation;

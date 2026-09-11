@@ -56,10 +56,13 @@ public partial class Rhythia : Node
         Stats.Instance.GamesOpened++;
 
         // Map import
-        var nonConvertedMaps = Directory.EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories).Where(f =>
-            f.GetExtension().ToLower() != Constants.DEFAULT_MAP_EXT
-            && MapParser.IsValidExt(f.GetExtension().ToLower())
-        );
+        var nonConvertedMaps = Directory
+            .EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories)
+            .Where(f =>
+                !f.GetExtension()
+                    .Equals(Constants.DEFAULT_MAP_EXT, StringComparison.CurrentCultureIgnoreCase)
+                && MapParser.IsValidExt(f.GetExtension().ToLower())
+            );
 
         await MapParser.BulkImport([.. nonConvertedMaps], notify: true);
 
@@ -106,80 +109,92 @@ public partial class Rhythia : Node
         RegisterCameraModes();
         RegisterModifiers();
 
-        GetViewport().Connect("files_dropped", Callable.From((string[] files) =>
-        {
-            EmitSignal(SignalName.FilesDropped, files);
-
-            List<string> maps = [];
-            List<Replay> replays = [];
-
-            foreach (string file in files)
-            {
-                string ext = file.GetExtension();
-
-                if (MapParser.IsValidExt(ext))
-                {
-                    maps.Add(file);
-                }
-                else
-                {
-                    switch (ext)
+        GetViewport()
+            .Connect(
+                "files_dropped",
+                Callable.From(
+                    (string[] files) =>
                     {
-                        case "phxr":
-                            Replay replay = new(file);
+                        EmitSignal(SignalName.FilesDropped, files);
 
-                            if (!replay.Valid)
+                        List<string> maps = [];
+                        List<Replay> replays = [];
+
+                        foreach (string file in files)
+                        {
+                            string ext = file.GetExtension();
+
+                            if (MapParser.IsValidExt(ext))
                             {
-                                continue;
+                                maps.Add(file);
+                            }
+                            else
+                            {
+                                switch (ext)
+                                {
+                                    case "phxr":
+                                        Replay replay = new(file);
+
+                                        if (!replay.Valid)
+                                        {
+                                            continue;
+                                        }
+
+                                        replays.Add(replay);
+                                        break;
+                                }
+                            }
+                        }
+
+                        if (maps.Count > 0)
+                        {
+                            MapParser.BulkImport([.. maps]);
+
+                            if (SceneManager.Scene is MainMenu)
+                            {
+                                var menu = SceneManager.Scene as MainMenu;
+                                menu.Transition(menu.PlayMenu);
+                            }
+                        }
+
+                        if (replays.Count > 0)
+                        {
+                            List<Replay> matching = [];
+
+                            foreach (Replay replay in replays)
+                            {
+                                if (replay == replays[0])
+                                {
+                                    matching.Add(replay);
+                                }
                             }
 
-                            replays.Add(replay);
-                            break;
+                            Game.Play(
+                                MapParser.Decode(matching[0].MapFilePath),
+                                matching[0].Speed,
+                                matching[0].StartFrom,
+                                matching[0].CameraMode,
+                                matching[0].Modifiers,
+                                null,
+                                [.. matching]
+                            );
+                        }
                     }
-                }
-            }
-
-            if (maps.Count > 0)
-            {
-                MapParser.BulkImport([.. maps]);
-
-                if (SceneManager.Scene is MainMenu)
-                {
-                    var menu = SceneManager.Scene as MainMenu;
-                    menu.Transition(menu.PlayMenu);
-                }
-            }
-
-            if (replays.Count > 0)
-            {
-                List<Replay> matching = [];
-
-                foreach (Replay replay in replays)
-                {
-                    if (replay == replays[0])
-                    {
-                        matching.Add(replay);
-                    }
-                }
-
-                Game.Play(MapParser.Decode(matching[0].MapFilePath), matching[0].Speed, matching[0].StartFrom, matching[0].CameraMode, matching[0].Modifiers, null, [.. matching]);
-            }
-        }));
+                )
+            );
 
         loaded = true;
     }
 
     public static void RegisterCameraModes()
     {
-        CameraModes = [
-            new CameraLock(),
-            new CameraSpin()
-        ];
+        CameraModes = [new CameraLock(), new CameraSpin()];
     }
 
     public static void RegisterModifiers()
     {
-        Modifiers = [
+        Modifiers =
+        [
             new NoFailModifier(),
             new GhostModifier(),
             new StrobeModifier(),
@@ -187,7 +202,7 @@ public partial class Rhythia : Node
             new VortexModifier(),
             new EarthquakeModifier(),
             new HorizontalFlipModifier(),
-            new VerticalFlipModifier()
+            new VerticalFlipModifier(),
         ];
     }
 
@@ -202,7 +217,8 @@ public partial class Rhythia : Node
 
         Logger.Log("Attempting to quit...");
 
-        bool playing = (Game.Instance?.Runner?.Playing ?? false) && (!Game.Attempt?.IsReplay ?? false);
+        bool playing =
+            (Game.Instance?.Runner?.Playing ?? false) && (!Game.Attempt?.IsReplay ?? false);
 
         if (playing)
         {
@@ -214,17 +230,21 @@ public partial class Rhythia : Node
         if (loaded)
         {
             SettingsManager.Save();
-            Stats.Instance.Save();
+            Stats.Save();
         }
 
         Discord.Client.Dispose();
 
         var quitTween = Instance.CreateTween();
-        quitTween.TweenCallback(Callable.From(() =>
-        {
-            Logger.Log("Quitting");
-            Instance.GetTree().Quit();
-        })).SetDelay(0.5);
+        quitTween
+            .TweenCallback(
+                Callable.From(() =>
+                {
+                    Logger.Log("Quitting");
+                    Instance.GetTree().Quit();
+                })
+            )
+            .SetDelay(0.5);
     }
 
     public override void _Notification(int what)

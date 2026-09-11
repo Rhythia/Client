@@ -78,7 +78,7 @@ public struct Leaderboard
         ScoreCount = (uint)Scores.Count;
     }
 
-    public void Save()
+    public readonly void Save()
     {
         Godot.FileAccess file = Godot.FileAccess.Open(Path, Godot.FileAccess.ModeFlags.Write);
 
@@ -200,7 +200,7 @@ public struct Leaderboard
 
     public struct ScoreComparer : IComparer<Score>
     {
-        public int Compare(Score a, Score b)
+        public readonly int Compare(Score a, Score b)
         {
             return b.Value.CompareTo(a.Value);
         }

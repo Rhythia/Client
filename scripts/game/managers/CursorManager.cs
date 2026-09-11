@@ -7,11 +7,20 @@ using Godot;
 /// </summary>
 public partial class CursorManager : Node
 {
-    [Export] private Runner runner;
-    [Export] private PlayerInputController playerInputController;
-    [Export] private ReplayManager replayManager;
-    [Export] private MeshInstance3D cursorMesh;
-    [Export] private Camera3D camera;
+    [Export]
+    private Runner runner;
+
+    [Export]
+    private PlayerInputController playerInputController;
+
+    [Export]
+    private ReplayManager replayManager;
+
+    [Export]
+    private MeshInstance3D cursorMesh;
+
+    [Export]
+    private Camera3D camera;
 
     private SettingsProfile settings;
     private float sensitivity;
@@ -19,9 +28,7 @@ public partial class CursorManager : Node
     private Transform3D defaultCameraTransform = Transform3D.Identity;
 
     [Signal]
-    public delegate void OnCursorUpdatedEventHandler(
-        Vector2 position
-    );
+    public delegate void OnCursorUpdatedEventHandler(Vector2 position);
 
     public override void _Ready()
     {
@@ -70,7 +77,8 @@ public partial class CursorManager : Node
 
     public override void _Process(double delta)
     {
-        if (!runner.Playing) return;
+        if (!runner.Playing)
+            return;
 
         updateCursorRotation(delta);
     }
@@ -79,7 +87,7 @@ public partial class CursorManager : Node
     {
         if (instant)
         {
-            cursors[cursorIndex].Transparency = 1 - (float)settings.CursorOpacity;
+            cursors[cursorIndex].Transparency = 1 - (float)(double)settings.CursorOpacity;
         }
         else
         {
@@ -96,14 +104,14 @@ public partial class CursorManager : Node
     {
         EmitSignalOnCursorUpdated(inputDelta);
 
-        sensitivity = (float)settings.Sensitivity;
+        sensitivity = (float)(double)settings.Sensitivity;
 
         if (settings.AbsoluteInput && !runner.Attempt.IsReplay)
         {
-            sensitivity = (float)settings.AbsoluteSensitivity;
+            sensitivity = (float)(double)settings.AbsoluteSensitivity;
         }
 
-        sensitivity *= (float)settings.FoV / 70f;
+        sensitivity *= (float)(double)settings.FoV / 70f;
 
         if (settings.AbsoluteInput || runner.Attempt.IsReplay)
         {
@@ -112,7 +120,14 @@ public partial class CursorManager : Node
 
         var attempt = runner.Attempt;
 
-        attempt.CameraMode.Process(attempt, replayManager, camera, cursors[cursorIndex], inputDelta, sensitivity);
+        attempt.CameraMode.Process(
+            attempt,
+            replayManager,
+            camera,
+            cursors[cursorIndex],
+            inputDelta,
+            sensitivity
+        );
     }
 
     // Reset everything to zero so it doesn't have infinite sensitivity
@@ -123,5 +138,7 @@ public partial class CursorManager : Node
         runner.Attempt.CursorPosition = Vector2.Zero;
     }
 
-    private void updateCursorRotation(double delta) => cursorMesh.RotationDegrees += Vector3.Back * (float)settings.CursorRotation * (float)delta;
+    private void updateCursorRotation(double delta) =>
+        cursorMesh.RotationDegrees +=
+            Vector3.Back * (float)(double)settings.CursorRotation * (float)delta;
 }

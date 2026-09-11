@@ -61,9 +61,9 @@ public partial class HudManager : Node
         }
     }
 
-    private List<IUIComponent> findAllComponents(Node root)
+    private static List<IUIComponent> findAllComponents(Node root)
     {
-        List<IUIComponent> comps = new();
+        List<IUIComponent> comps = [];
 
         foreach (Node child in root.GetChildren())
         {

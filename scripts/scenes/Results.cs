@@ -169,7 +169,7 @@ public partial class Results : BaseScene
         SoundManager.Song.VolumeDb = -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
     }
 
-    public void Replay()
+    public static void Replay()
     {
         var attempt = Game.Attempt;
 
@@ -180,7 +180,7 @@ public partial class Results : BaseScene
         Game.Play(map, attempt.Speed, attempt.StartFrom, attempt.CameraMode, attempt.Modifiers);
     }
 
-    public void Stop()
+    public static void Stop()
     {
         if (Rhythia.TempMode)
         {

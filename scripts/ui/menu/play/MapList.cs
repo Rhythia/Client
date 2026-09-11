@@ -8,17 +8,20 @@ public partial class MapList : Panel, ISkinnable
 {
     public static MapList Instance;
 
-    public enum ListLayout { List, Grid }
+    public enum ListLayout
+    {
+        List,
+        Grid,
+    }
 
     public enum SortType
     {
         Alphabetical,
         Difficulty,
-        Mappers
+        Mappers,
     }
 
     [ExportGroup("Layout")]
-
     [Export]
     public ListLayout Layout = ListLayout.List;
 
@@ -26,7 +29,6 @@ public partial class MapList : Panel, ISkinnable
     public float Spacing = 10;
 
     [ExportGroup("Button Sizing")]
-
     [Export]
     public float WideButtonMinimumSize = 90;
 
@@ -46,7 +48,6 @@ public partial class MapList : Panel, ISkinnable
     public float SquareButtonSelectedSize = 10;
 
     [ExportGroup("Scrolling")]
-
     [Export]
     public float ScrollStep = 1500;
 
@@ -85,9 +86,15 @@ public partial class MapList : Panel, ISkinnable
     private TextureRect scrollBarBackgroundMiddle;
     private TextureRect scrollBarBackgroundBottom;
 
-    private readonly PackedScene mapButtonContainerTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/map_button_container.tscn");
-    private readonly PackedScene mapButtonWideTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/map_button_wide.tscn");
-    private readonly PackedScene mapButtonSquareTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/map_button_square.tscn");
+    private readonly PackedScene mapButtonContainerTemplate = ResourceLoader.Load<PackedScene>(
+        "res://prefabs/map_button_container.tscn"
+    );
+    private readonly PackedScene mapButtonWideTemplate = ResourceLoader.Load<PackedScene>(
+        "res://prefabs/map_button_wide.tscn"
+    );
+    private readonly PackedScene mapButtonSquareTemplate = ResourceLoader.Load<PackedScene>(
+        "res://prefabs/map_button_square.tscn"
+    );
 
     private Dictionary<int, HBoxContainer> containers = [];
     private Stack<HBoxContainer> containerCache = [];
@@ -121,7 +128,10 @@ public partial class MapList : Panel, ISkinnable
         Sorting.ValueChanged += (_, _) => Sort();
         Ascending.ValueChanged += (_, _) => Sort();
 
-        MouseExited += () => { toggleSelectionCursor(false); };
+        MouseExited += () =>
+        {
+            toggleSelectionCursor(false);
+        };
         Resized += clear;
         SkinManager.Instance.Loaded += UpdateSkin;
         MapParser.Instance.MapsImportFinished += maps =>
@@ -148,11 +158,13 @@ public partial class MapList : Panel, ISkinnable
                 }
             }
 
-            Callable.From(() =>
-            {
-                clear();
-                UpdateMaps();
-            }).CallDeferred();
+            Callable
+                .From(() =>
+                {
+                    clear();
+                    UpdateMaps();
+                })
+                .CallDeferred();
         };
 
         Task.Run(() => UpdateMaps());
@@ -163,16 +175,26 @@ public partial class MapList : Panel, ISkinnable
 
     public override void _Process(double delta)
     {
-        buttonsPerContainer = Layout == ListLayout.List ? 1 : (int)(Size.X / (buttonMinSize + Spacing));
+        buttonsPerContainer =
+            Layout == ListLayout.List ? 1 : (int)(Size.X / (buttonMinSize + Spacing));
 
         float scrollElasticOffset = 0;
 
-        if ((TargetScroll <= 0 && ScrollMomentum < 0) || (TargetScroll >= ScrollLength && ScrollMomentum > 0))
+        if (
+            (TargetScroll <= 0 && ScrollMomentum < 0)
+            || (TargetScroll >= ScrollLength && ScrollMomentum > 0)
+        )
         {
             scrollElasticOffset = (float)(ScrollMomentum * ScrollElasticity);
         }
 
-        ScrollLength = Math.Max(0, Maps.Count / buttonsPerContainer * (buttonMinSize + Spacing) - Spacing - Size.Y) + buttonHoverSize + buttonSelectSize;
+        ScrollLength =
+            Math.Max(
+                0,
+                Maps.Count / buttonsPerContainer * (buttonMinSize + Spacing) - Spacing - Size.Y
+            )
+            + buttonHoverSize
+            + buttonSelectSize;
         ScrollMomentum = Mathf.Lerp(ScrollMomentum, 0.0, Math.Min(1, ScrollFriction * delta));
 
         if (Layout == ListLayout.Grid)
@@ -194,18 +216,30 @@ public partial class MapList : Panel, ISkinnable
 
         if (MouseScroll)
         {
-            float t = Mathf.InverseLerp(Position.Y + scrollBarMain.Size.Y / 2, Position.Y + Size.Y - scrollBarMain.Size.Y / 2, GetViewport().GetMousePosition().Y);
-            TargetScroll = Mathf.Lerp(TargetScroll, ScrollLength * Math.Clamp(t, 0, 1), Math.Min(1, 24 * delta));
+            float t = Mathf.InverseLerp(
+                Position.Y + scrollBarMain.Size.Y / 2,
+                Position.Y + Size.Y - scrollBarMain.Size.Y / 2,
+                GetViewport().GetMousePosition().Y
+            );
+            TargetScroll = Mathf.Lerp(
+                TargetScroll,
+                ScrollLength * Math.Clamp(t, 0, 1),
+                Math.Min(1, 24 * delta)
+            );
         }
         else
         {
-            TargetScroll = Math.Clamp(TargetScroll + ScrollMomentum * delta, 0, ScrollLength) + scrollElasticOffset;
+            TargetScroll =
+                Math.Clamp(TargetScroll + ScrollMomentum * delta, 0, ScrollLength)
+                + scrollElasticOffset;
         }
 
         Scroll = Mathf.Lerp(Scroll, TargetScroll, Math.Min(1, 12 * delta));
 
-        scrollBarMain.AnchorTop = (float)Math.Max(0, (TargetScroll - scrollElasticOffset) / (ScrollLength + Size.Y));
-        scrollBarMain.AnchorBottom = (float)Math.Min(1, scrollBarMain.AnchorTop + Size.Y / (ScrollLength + Size.Y));
+        scrollBarMain.AnchorTop = (float)
+            Math.Max(0, (TargetScroll - scrollElasticOffset) / (ScrollLength + Size.Y));
+        scrollBarMain.AnchorBottom = (float)
+            Math.Min(1, scrollBarMain.AnchorTop + Size.Y / (ScrollLength + Size.Y));
 
         HBoxContainer lastContainer = null;
         List<HBoxContainer> drawnContainers = [];
@@ -231,7 +265,9 @@ public partial class MapList : Panel, ISkinnable
                 {
                     var parentContainer = button.Container;
 
-                    foreach (MapButton buttonSibling in parentContainer.GetChildren())
+                    foreach (
+                        MapButton buttonSibling in parentContainer.GetChildren().Cast<MapButton>()
+                    )
                     {
                         buttonSibling.Container = null;
 
@@ -263,7 +299,10 @@ public partial class MapList : Panel, ISkinnable
 
             if (!containers.TryGetValue(containerIndex, out HBoxContainer container))
             {
-                container = containerCache.Count > 0 ? containerCache.Pop() : mapButtonContainerTemplate.Instantiate<HBoxContainer>();
+                container =
+                    containerCache.Count > 0
+                        ? containerCache.Pop()
+                        : mapButtonContainerTemplate.Instantiate<HBoxContainer>();
 
                 container.AddThemeConstantOverride("separation", (int)Spacing);
                 containers[containerIndex] = container;
@@ -272,7 +311,14 @@ public partial class MapList : Panel, ISkinnable
 
             if (button == null)
             {
-                button = mapButtonCache.Count > 0 ? mapButtonCache.Pop() : setupButton(Layout == ListLayout.List ? mapButtonWideTemplate.Instantiate<MapButtonWide>() : mapButtonSquareTemplate.Instantiate<MapButtonSquare>());
+                button =
+                    mapButtonCache.Count > 0
+                        ? mapButtonCache.Pop()
+                        : setupButton(
+                            Layout == ListLayout.List
+                                ? mapButtonWideTemplate.Instantiate<MapButtonWide>()
+                                : mapButtonSquareTemplate.Instantiate<MapButtonSquare>()
+                        );
 
                 button.ListIndex = i;
                 button.Container = container;
@@ -305,11 +351,20 @@ public partial class MapList : Panel, ISkinnable
         {
             selectionCursorPos = new(
                 DisplaySelectionCursor ? hoveredButton.Holder.Position.X - 60 : -80,
-                Math.Clamp(hoveredButton.Container.Position.Y + hoveredButton.Size.Y / 2 - selectionCursor.Size.Y / 2, 0, Size.Y)
+                Math.Clamp(
+                    hoveredButton.Container.Position.Y
+                        + hoveredButton.Size.Y / 2
+                        - selectionCursor.Size.Y / 2,
+                    0,
+                    Size.Y
+                )
             );
         }
 
-        selectionCursor.Position = selectionCursor.Position.Lerp(selectionCursorPos, (float)Math.Min(1, 8 * delta));
+        selectionCursor.Position = selectionCursor.Position.Lerp(
+            selectionCursorPos,
+            (float)Math.Min(1, 8 * delta)
+        );
         selectionCursor.Rotation = -selectionCursor.Position.Y / 60;
 
         for (int i = 0; i < drawnContainers.Count; i++)
@@ -319,21 +374,29 @@ public partial class MapList : Panel, ISkinnable
 
             float sizeOffset = containerSizeOffsets[i];
             float indexOffset = index * (buttonMinSize + Spacing);
-            float top = indexOffset - (float)Scroll + (buttonMinSize + buttonHoverSize + buttonSelectSize) / 2;
+            float top =
+                indexOffset
+                - (float)Scroll
+                + (buttonMinSize + buttonHoverSize + buttonSelectSize) / 2;
 
             downOffset -= sizeOffset;
             top += (upOffset - downOffset) / 2;
             upOffset += sizeOffset;
 
-            container.ZIndex = index == 0 || index == Math.Ceiling(Maps.Count / (float)buttonsPerContainer) - 1 ? 1 : 0;
+            container.ZIndex =
+                index == 0 || index == Math.Ceiling(Maps.Count / (float)buttonsPerContainer) - 1
+                    ? 1
+                    : 0;
             container.Position = new(container.Position.X, top);
             container.OffsetBottom = container.OffsetTop;
             container.OffsetLeft = 0;
             container.OffsetRight = 0;
 
-            foreach (MapButton button in container.GetChildren())
+            foreach (MapButton button in container.GetChildren().Cast<MapButton>())
             {
-                button.LightPosition = DisplaySelectionCursor ? selectionCursor.GlobalPosition : new(-10000, Size.Y / 2);
+                button.LightPosition = DisplaySelectionCursor
+                    ? selectionCursor.GlobalPosition
+                    : new(-10000, Size.Y / 2);
             }
         }
     }
@@ -352,7 +415,13 @@ public partial class MapList : Panel, ISkinnable
 
                     if (Lobby.Map != null && IsVisibleInTree() && focused is not LineEdit)
                     {
-                        Game.Play(Lobby.Map, Lobby.Speed, Lobby.StartFrom, Lobby.CameraMode, Lobby.Modifiers);
+                        Game.Play(
+                            Lobby.Map,
+                            Lobby.Speed,
+                            Lobby.StartFrom,
+                            Lobby.CameraMode,
+                            Lobby.Modifiers
+                        );
                     }
                     break;
             }
@@ -361,14 +430,34 @@ public partial class MapList : Panel, ISkinnable
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event is InputEventMouseButton mouseButton && !mouseButton.CtrlPressed && !mouseButton.AltPressed)
+        if (
+            @event is InputEventMouseButton mouseButton
+            && !mouseButton.CtrlPressed
+            && !mouseButton.AltPressed
+        )
         {
             switch (mouseButton.ButtonIndex)
             {
-                case MouseButton.Left: DragScroll = mouseButton.Pressed; if (DragScroll) { dragDistance = 0; } break;
-                case MouseButton.Right: MouseScroll = mouseButton.Pressed; if (MouseScroll) { dragDistance = 0; } break;
-                case MouseButton.WheelDown: ScrollMomentum += ScrollStep; break;
-                case MouseButton.WheelUp: ScrollMomentum -= ScrollStep; break;
+                case MouseButton.Left:
+                    DragScroll = mouseButton.Pressed;
+                    if (DragScroll)
+                    {
+                        dragDistance = 0;
+                    }
+                    break;
+                case MouseButton.Right:
+                    MouseScroll = mouseButton.Pressed;
+                    if (MouseScroll)
+                    {
+                        dragDistance = 0;
+                    }
+                    break;
+                case MouseButton.WheelDown:
+                    ScrollMomentum += ScrollStep;
+                    break;
+                case MouseButton.WheelUp:
+                    ScrollMomentum -= ScrollStep;
+                    break;
             }
         }
     }
@@ -407,7 +496,12 @@ public partial class MapList : Panel, ISkinnable
 
     public void Focus(Map map)
     {
-        TargetScroll = Maps.FindIndex(otherMap => otherMap.Name == map.Name) / buttonsPerContainer * (buttonMinSize + Spacing) + buttonMinSize / 2 - Size.Y / 2;
+        TargetScroll =
+            Maps.FindIndex(otherMap => otherMap.Name == map.Name)
+                / buttonsPerContainer
+                * (buttonMinSize + Spacing)
+            + buttonMinSize / 2
+            - Size.Y / 2;
 
         if (SceneManager.Scene is MainMenu mainMenu)
         {
@@ -422,19 +516,23 @@ public partial class MapList : Panel, ISkinnable
         switch (Sorting.Value)
         {
             case SortType.Difficulty:
-                orderedMaps = Maps.OrderBy(map => map.Difficulty).ToList();
+                orderedMaps = [.. Maps.OrderBy(map => map.Difficulty)];
                 break;
 
             case SortType.Mappers:
-                orderedMaps = Maps.OrderBy(map =>
-                {
-                    string[] mappers = map.Mappers?.Length == 0 ? map.PrettyMappers.Split(", ") : map.Mappers;
-                    return mappers.Order().First();
-                }).ToList();
+                orderedMaps =
+                [
+                    .. Maps.OrderBy(map =>
+                    {
+                        string[] mappers =
+                            map.Mappers?.Length == 0 ? map.PrettyMappers.Split(", ") : map.Mappers;
+                        return mappers.Order().First();
+                    }),
+                ];
                 break;
 
             default:
-                orderedMaps = Maps.OrderBy(map => map.PrettyTitle).ToList();
+                orderedMaps = [.. Maps.OrderBy(map => map.PrettyTitle)];
                 break;
         }
 
@@ -443,7 +541,7 @@ public partial class MapList : Panel, ISkinnable
             orderedMaps.Reverse();
         }
 
-        Maps = orderedMaps.Where(map => map.Favorite).ToList();
+        Maps = [.. orderedMaps.Where(map => map.Favorite)];
         Maps.AddRange(orderedMaps.Where(map => !map.Favorite));
 
         clear();
@@ -461,7 +559,13 @@ public partial class MapList : Panel, ISkinnable
     {
         Maps.Clear();
 
-        List<Map> queried = [.. MapManager.Maps.Where(x => x.PrettyTitle.Contains(SearchQuery, StringComparison.CurrentCultureIgnoreCase) && x.PrettyMappers.Contains(AuthorQuery, StringComparison.CurrentCultureIgnoreCase))];
+        List<Map> queried =
+        [
+            .. MapManager.Maps.Where(x =>
+                x.PrettyTitle.Contains(SearchQuery, StringComparison.CurrentCultureIgnoreCase)
+                && x.PrettyMappers.Contains(AuthorQuery, StringComparison.CurrentCultureIgnoreCase)
+            ),
+        ];
         List<Map> unfavorited = [];
 
         foreach (Map map in queried)
@@ -488,8 +592,10 @@ public partial class MapList : Panel, ISkinnable
         }
 
         buttonMinSize = layout == ListLayout.List ? WideButtonMinimumSize : SquareButtonMinimumSize;
-        buttonHoverSize = layout == ListLayout.List ? WideButtonHoveredSize : SquareButtonHoveredSize;
-        buttonSelectSize = layout == ListLayout.List ? WideButtonSelectedSize : SquareButtonSelectedSize;
+        buttonHoverSize =
+            layout == ListLayout.List ? WideButtonHoveredSize : SquareButtonHoveredSize;
+        buttonSelectSize =
+            layout == ListLayout.List ? WideButtonSelectedSize : SquareButtonSelectedSize;
 
         clear();
     }
@@ -519,7 +625,10 @@ public partial class MapList : Panel, ISkinnable
             if (hovered)
             {
                 hoveredButton = button;
-                if (Layout == ListLayout.List) { toggleSelectionCursor(true); }
+                if (Layout == ListLayout.List)
+                {
+                    toggleSelectionCursor(true);
+                }
             }
 
             if (button.Map.Name != selectedMapID)
@@ -541,7 +650,10 @@ public partial class MapList : Panel, ISkinnable
 
     private void toggleSelectionCursor(bool display)
     {
-        if (DisplaySelectionCursor == display) { return; }
+        if (DisplaySelectionCursor == display)
+        {
+            return;
+        }
 
         DisplaySelectionCursor = display;
 
@@ -551,7 +663,12 @@ public partial class MapList : Panel, ISkinnable
         }
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
-        tween.TweenProperty(selectionCursor, "modulate", Color.Color8(255, 255, 255, (byte)(display ? 255 : 0)), 0.1);
+        tween.TweenProperty(
+            selectionCursor,
+            "modulate",
+            Color.Color8(255, 255, 255, (byte)(display ? 255 : 0)),
+            0.1
+        );
     }
 
     private void clear()

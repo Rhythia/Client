@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, IComparable<Note>
+public partial class Note(int index, int millisecond, float x, float y)
+    : IHitObject,
+        IAnimatableObject<NoteAnimation>,
+        IComparable<Note>
 {
     public int Id => (int)ObjectType.Note;
-    public int Index { get; set; } = -1;
-    public int Millisecond { get; set; }
+    public int Index { get; set; } = index;
+    public int Millisecond { get; set; } = millisecond;
 
-    public float X { get; set; }
-    public float Y { get; set; }
+    public float X { get; set; } = x;
+    public float Y { get; set; } = y;
     public int HitWindow { get; set; } = 55;
     public bool Hittable { get; set; } = false;
     public HitResult LastResult { get; set; } = HitResult.None;
@@ -18,14 +21,6 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
     public List<NoteAnimation> AnimationObjects { get; set; }
     public float Opacity { get; set; } = 1;
     public Transform3D Transform = Transform3D.Identity;
-
-    public Note(int index, int millisecond, float x, float y)
-    {
-        Index = index;
-        Millisecond = millisecond;
-        X = x;
-        Y = y;
-    }
 
     public void Hit(Runner runner, bool playSound = true)
     {

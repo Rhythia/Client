@@ -500,7 +500,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         lbHide.Visible = show;
         lbScrollContainer.VerticalScrollMode = show ? ScrollContainer.ScrollMode.Auto : ScrollContainer.ScrollMode.ShowNever;
 
-        foreach (ScorePanel panel in lbContainer.GetChildren())
+        foreach (ScorePanel panel in lbContainer.GetChildren().Cast<ScorePanel>())
         {
             panel.Button.Visible = show;
         }

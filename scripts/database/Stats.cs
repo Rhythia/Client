@@ -55,7 +55,7 @@ public class Stats
     /// </summary>
     public void ForceUpdate() => StatsUpdated?.Invoke(this);
 
-    public void Save()
+    public static void Save()
     {
         SQLiteConnection connection = DatabaseService.Connection;
         connection.InsertOrReplace(Instance);

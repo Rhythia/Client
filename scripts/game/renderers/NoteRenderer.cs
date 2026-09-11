@@ -11,7 +11,7 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
 
     private Color transparent = new(0xffffff00);
 
-    private StandardMaterial3D material = new StandardMaterial3D();
+    private StandardMaterial3D material = new();
 
     public override void _Ready()
     {
@@ -66,14 +66,17 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
     public void Render(double delta, double time, IList<Note> notes)
     {
         var attempt = runner.Attempt;
-        float ar = (float)Settings.ApproachRate;
-        float ad = (float)Settings.ApproachDistance;
-        float at = (float)Settings.ApproachTime;
-        float noteSize = (float)Settings.NoteSize;
-        float fadeIn = (float)Settings.FadeIn / 100;
-        float fadeOut = (float)Settings.FadeOut / 100;
-        float noteOpacity = (float)Settings.NoteOpacity;
-        float noteOpacityExponent = Math.Max(Mathf.Epsilon, (float)Settings.NoteOpacityExponent);
+        float ar = (float)(double)Settings.ApproachRate;
+        float ad = (float)(double)Settings.ApproachDistance;
+        float at = (float)(double)Settings.ApproachTime;
+        float noteSize = (float)(double)Settings.NoteSize;
+        float fadeIn = (float)(double)Settings.FadeIn / 100;
+        float fadeOut = (float)(double)Settings.FadeOut / 100;
+        float noteOpacity = (float)(double)Settings.NoteOpacity;
+        float noteOpacityExponent = Math.Max(
+            Mathf.Epsilon,
+            (float)(double)Settings.NoteOpacityExponent
+        );
         bool pushback = Settings.Pushback;
         float hitWindowDepth = pushback ? (float)Constants.HIT_WINDOW * ar / 1000 : 0;
         var transform = new Transform3D(new(noteSize / 2, 0, 0), new(0, noteSize / 2, 0), new(0, 0, noteSize / 2), Vector3.Zero);

@@ -21,10 +21,13 @@ public partial class OptionPopup : Control
 
     [Export]
     private Label headerLabel;
+
     [Export]
     private RichTextLabel infoLabel;
+
     [Export]
     private HBoxContainer buttonContainer;
+
     [Export]
     private Button buttonTemplate;
 
@@ -36,7 +39,7 @@ public partial class OptionPopup : Control
 
         Header = header;
         Info = info;
-        Name = $"OptionPopup{new Regex("[^a-zA-Z0-9_-]").Replace(Header, "")}";
+        Name = $"OptionPopup{MyRegex().Replace(Header, "")}";
 
         SceneManager.Root.CallDeferred("add_child", this);
     }
@@ -91,15 +94,28 @@ public partial class OptionPopup : Control
 
         MoveToFront();
 
-        if (show) { Visible = true; }
-        else { EmitSignal(SignalName.Canceled); }
+        if (show)
+        {
+            Visible = true;
+        }
+        else
+        {
+            EmitSignal(SignalName.Canceled);
+        }
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad);
-        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.1);
-        tween.TweenCallback(Callable.From(() =>
-        {
-            Visible = Shown;
-        }));
+        tween.TweenProperty(
+            this,
+            "modulate",
+            Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
+            0.1
+        );
+        tween.TweenCallback(
+            Callable.From(() =>
+            {
+                Visible = Shown;
+            })
+        );
     }
 
     public void Hide()
@@ -119,5 +135,6 @@ public partial class OptionPopup : Control
         infoLabel.Text = info;
     }
 
-
+    [GeneratedRegex("[^a-zA-Z0-9_-]")]
+    private static partial Regex MyRegex();
 }

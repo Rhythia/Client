@@ -12,7 +12,7 @@ public static class MapCache
     public static Bindable<int> FilesSynced = new(0);
     public static event Action<int> OnFilesSyncFinished;
     public static bool OldCacheFormat = false;
-    public static List<string> MapsToBeFavorited = new();
+    public static List<string> MapsToBeFavorited = [];
 
     public static void Initialize()
     {
@@ -29,11 +29,17 @@ public static class MapCache
         try
         {
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
-            List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
-                    .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
-                    .ToList();
+            List<string> mapsList =
+            [
+                .. Directory.GetFiles(
+                    MapUtil.MapsFolder,
+                    $"*.{Constants.DEFAULT_MAP_EXT}",
+                    SearchOption.AllDirectories
+                ),
+                .. Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories),
+            ];
 
-            string[] toParseMaps = mapsList.ToArray();
+            string[] toParseMaps = [.. mapsList];
 
             if (fullSync)
             {
@@ -98,8 +104,12 @@ public static class MapCache
 
             if (mapsHashSet.Contains(mapPath))
             {
-                DateTime metadataModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "metadata.json"));
-                DateTime objectModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "objects.phxmo"));
+                DateTime metadataModifiedDate = File.GetLastWriteTime(
+                    Path.Combine(mapPath, "metadata.json")
+                );
+                DateTime objectModifiedDate = File.GetLastWriteTime(
+                    Path.Combine(mapPath, "objects.phxmo")
+                );
 
                 // Time must be converted to string because the SQLite library doesn't support DateTime types -fog
                 string metadataResult = metadataModifiedDate.ToString();
@@ -161,7 +171,10 @@ public static class MapCache
                 if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
                 {
                     // Check if valid map
-                    if (!File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json") || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo"))
+                    if (
+                        !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json")
+                        || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo")
+                    )
                     {
                         Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
                     }
@@ -189,11 +202,11 @@ public static class MapCache
     {
         var maps = FetchAll();
 
-        HashSet<string> hashSet = new();
+        HashSet<string> hashSet = [];
         maps.ForEach(map => hashSet.Add(map.FolderPath));
 
         // Maps that need to be parsed - maps in database cache
-        FilesToSync.Value = toParseMaps.Count() - maps.Count();
+        FilesToSync.Value = toParseMaps.Length - maps.Count;
         FilesSynced.Value = 0;
 
         // For Old Cache version
@@ -250,7 +263,9 @@ public static class MapCache
 
     public static int InsertMap(Map map)
     {
-        var existing = DatabaseService.Connection.Find<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash);
+        var existing = DatabaseService.Connection.Find<Map>(x =>
+            x.MetadataObjectHash == map.MetadataObjectHash
+        );
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
 
         try
@@ -264,7 +279,9 @@ public static class MapCache
 
             DatabaseService.Connection.Insert(map);
 
-            return DatabaseService.Connection.Get<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash).Id;
+            return DatabaseService
+                .Connection.Get<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash)
+                .Id;
         }
         catch (Exception e)
         {
@@ -275,7 +292,10 @@ public static class MapCache
             }
 
             string newPath = Path.Combine(MapUtil.MapsFolder, map.Name);
-            string existingPath = Path.Combine(MapUtil.MapsFolder, existing?.FolderPath ?? updated.FolderPath);
+            string existingPath = Path.Combine(
+                MapUtil.MapsFolder,
+                existing?.FolderPath ?? updated.FolderPath
+            );
 
             if (existingPath != newPath)
             {
@@ -334,13 +354,15 @@ public static class MapCache
 
                     if (image != null)
                     {
-                        Callable.From(() =>
-                        {
-                            if (MapManager.Maps.Contains(map))
+                        Callable
+                            .From(() =>
                             {
-                                map.Cover = ImageTexture.CreateFromImage(image);
-                            }
-                        }).CallDeferred();
+                                if (MapManager.Maps.Contains(map))
+                                {
+                                    map.Cover = ImageTexture.CreateFromImage(image);
+                                }
+                            })
+                            .CallDeferred();
                     }
                 }
             }
@@ -370,10 +392,10 @@ public static class MapCache
         string objectsPath = Path.Combine(path, "objects.phxmo");
         byte[] hash = Misc.HashFiles([metadataPath, objectsPath]);
 
-        return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
+        return Convert.ToHexStringLower(hash);
     }
 
-    public static List<Map> FetchAll() => DatabaseService.Connection.Table<Map>().ToList();
+    public static List<Map> FetchAll() => [.. DatabaseService.Connection.Table<Map>()];
 
     public static string BackSlashToForwardSlash(string path) => path.Replace("\\", "/");
 }

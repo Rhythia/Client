@@ -19,7 +19,7 @@ public class GhostModifier : Modifier, IObjectRenderModifier<Note>
 
     public void ModifyRenderObject(Note note, Attempt attempt)
     {
-        float ad = (float)attempt.Settings.ApproachDistance;
+        float ad = (float)(double)attempt.Settings.ApproachDistance;
 
         note.Opacity -= Mathf.Min(1, (ad + note.Transform.Origin.Z) / (ad / 2));
     }
