@@ -178,10 +178,13 @@ csharp_style_prefer_range_operator = false:silent
 csharp_style_prefer_switch_expression = false:none
 
 csharp_style_namespace_declarations = file_scoped:warning
-dotnet_diagnostic.IDE0130.severity = none
 
 #Style - C# 12 features
 csharp_style_prefer_primary_constructors = false
+
+#Roslyn severities
+dotnet_diagnostic.IDE0130.severity = none
+dotnet_diagnostic.CA1305.severity = warning
 
 [*.{yaml,yml}]
 insert_final_newline = true
