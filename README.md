@@ -17,6 +17,9 @@
 > [!CAUTION]
 > **Rhythia is NOT affiliated with CAPO Games, Steam Rhythia, or rhythia.com in any way.** We cannot provide support or assistance for any issues related to those platforms. Please ensure you are downloading the correct client from the links below. We do, however, support any modification of our logos and content in the client source under our [license](LICENSE).
 
+> [!NOTE]
+> **This repository is Motorhytha, a fork of Rhythia.** We're reusing Rhythia's underlying Godot/C# game framework to build a new motorcycle rhythm game, not the original 3×3-grid game described below. See [`docs/MOTORCYCLE_FORK.md`](docs/MOTORCYCLE_FORK.md) for what's changing and why.
+
 ---
 
 ## Table of Contents

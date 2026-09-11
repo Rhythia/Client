@@ -26,6 +26,9 @@ public partial class Constants : Node
 
     public static readonly int BREAK_TIME = 4000;  // used for skipping breaks mid-map
 
+    // Motorcycle mode: how far the bike can steer from the centerline, in meters.
+    public static readonly float MOTORCYCLE_ROAD_HALF_WIDTH = 1.5f;
+
     public static readonly string[] DIFFICULTIES = ["N/A", "Easy", "Medium", "Hard", "Insane", "Illogical"];
 
     public static readonly Color[] DIFFICULTY_COLORS = [Color.FromHtml("ffffff"), Color.FromHtml("77f379"), Color.FromHtml("fff832"), Color.FromHtml("e24479"), Color.FromHtml("9d6eff"), Color.FromHtml("0094fc")];

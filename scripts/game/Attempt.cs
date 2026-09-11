@@ -35,4 +35,11 @@ public partial class Attempt : GodotObject
     public double DistanceMM { get; set; }
 
     public Replay? Replay { get; set; }
+
+    // Motorcycle mode: bike's horizontal lane offset, driven by steering input
+    // the same way CursorPosition drove the grid cursor.
+    public float BikeLaneOffset { get; set; }
+
+    // Motorcycle mode: bike lean angle in radians, purely cosmetic/feedback.
+    public float BikeLean { get; set; }
 }
