@@ -143,6 +143,7 @@ dotnet_style_prefer_auto_properties = true:warning
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
 dotnet_style_prefer_conditional_expression_over_return = true:silent
 dotnet_style_prefer_compound_assignment = true:warning
+resharper_arrange_object_creation_when_type_not_evident_highlighting = none
 
 #Style - null/type checks
 dotnet_style_coalesce_expression = true:warning
@@ -165,6 +166,7 @@ csharp_style_deconstructed_variable_declaration = false:silent
 #Style - other C# 7.x features
 dotnet_style_prefer_inferred_tuple_names = true:warning
 csharp_prefer_simple_default_expression = true:warning
+resharper_prefer_concrete_value_over_default_highlighting = none
 csharp_style_pattern_local_over_anonymous_function = true:warning
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:silent
 
@@ -176,9 +178,7 @@ csharp_style_prefer_range_operator = false:silent
 csharp_style_prefer_switch_expression = false:none
 
 csharp_style_namespace_declarations = file_scoped:warning
-
-#Style - C# 12 features
-csharp_style_prefer_primary_constructors = false
+dotnet_diagnostic.IDE0130.severity = none
 
 [*.{yaml,yml}]
 insert_final_newline = true
