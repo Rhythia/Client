@@ -9,6 +9,8 @@ public partial class ToastNotification : Node
 
     private static readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/notification.tscn");
 
+    private static float maxToastWidth = 500f;
+
     private static int toastNextId = 0;
 
     private static List<string> toasts = [];
@@ -20,7 +22,7 @@ public partial class ToastNotification : Node
         Instance = this;
     }
 
-    public static async Task Notify(string message, int severity = 0)
+    public static async Task Notify(string message, int severity = 0, bool multilineWrap = true)
     {
         if (SceneManager.Scene == null) { return; }
 
@@ -45,7 +47,9 @@ public partial class ToastNotification : Node
                 break;
         }
 
-        notification.GetNode<Label>("HBoxContainer/Label").Text = message;
+        Label label = notification.GetNode<Label>("HBoxContainer/Label");
+        label.Text = multilineWrap ? calculateMultilineWrap(maxToastWidth, message, label.GetThemeFont("font"), label.GetThemeFontSize("font_size")) : message;
+
         notification.GetNode<ColorRect>("HBoxContainer/Severity").Color = color;
         notification.ResetSize();
         notification.Position += Vector2.Up * (notification.Size.Y + 8);
@@ -101,5 +105,30 @@ public partial class ToastNotification : Node
         await toast.ToSignal(nextTween, Tween.SignalName.Finished);
 
         taskCompletionSource.SetResult();
+    }
+
+    private static string calculateMultilineWrap(float maxWidth, string text, Font font, int fontSize)
+    {
+        string[] words = text.Split(" ");
+        List<string> normalizedWords = [];
+
+        float lineWidth = 0f;
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            float wordWidth = font.GetStringSize(words[i], HorizontalAlignment.Left, -1, fontSize).X;
+
+            if ((lineWidth + wordWidth) > maxWidth)
+            {
+                normalizedWords[^1] = "\n";
+                lineWidth = 0f;
+            }
+
+            lineWidth += wordWidth;
+            normalizedWords.Add(words[i]);
+            normalizedWords.Add(" ");
+        }
+
+        return string.Join("", normalizedWords);
     }
 }
