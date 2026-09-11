@@ -237,6 +237,12 @@ public partial class SettingsProfile
     public SettingsItem<bool> AltComboCounter { get; private set; }
 
     /// <summary>
+    /// Enables a dark radial fade to help visibility
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> VisibilityAssist { get; private set; }
+
+    /// <summary>
     /// Toggles a popup on a hit
     /// </summary>
     [Order]
@@ -868,6 +874,14 @@ public partial class SettingsProfile
             Id = "AltComboCounter",
             Title = "Alt. Combo Counter",
             Description = "Moves the Combo Counter to the HUD",
+            Section = SettingsSection.Visual,
+        };
+
+        VisibilityAssist = new(false)
+        {
+            Id = "VisibilityAssist",
+            Title = "Visibility Assist",
+            Description = "Enables a dark radial fade to help with visibility",
             Section = SettingsSection.Visual,
         };
 

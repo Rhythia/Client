@@ -11,6 +11,8 @@ public partial class SkinProfile : RefCounted
 
     public ImageTexture GridGuidesImage { get; set; } = new();
 
+    public ImageTexture VisibilityAssistImage { get; set; } = new();
+
     public ImageTexture PanelLeftBackgroundImage { get; set; } = new();
 
     public ImageTexture PanelRightBackgroundImage { get; set; } = new();

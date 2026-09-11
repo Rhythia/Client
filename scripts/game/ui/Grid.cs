@@ -7,6 +7,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
     public MeshInstance3D Cursor { get; set; }
     public MultiMeshInstance3D CursorTrail { get; set; }
     public MeshInstance3D GridGuides { get; set; }
+    public MeshInstance3D VisibilityAssist { get; set; }
 
     private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
     private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
@@ -21,6 +22,11 @@ public partial class Grid : MeshInstance3D, IUIComponent
 
     public void Init()
     {
+        VisibilityAssist ??= GetNode<MeshInstance3D>("VisibilityAssist");
+
+        VisibilityAssist.Visible = Runner.Attempt.Settings.VisibilityAssist;
+        (VisibilityAssist.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.VisibilityAssistImage;
+
         GridGuides ??= GetNode<MeshInstance3D>("GridGuides");
 
         GridGuides.Visible = Runner.Attempt.Settings.GridGuides;
