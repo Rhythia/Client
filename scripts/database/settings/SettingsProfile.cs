@@ -370,6 +370,18 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
+    /// Sets a custom user folder
+    /// <summary>
+    public SettingsItem<string> SetUserFolderPath { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// File dialog for the user folder path selection
+    /// <summary>
+    public SettingsItem<Variant> SetUserFolderDialog { get; private set; }
+
+    [Order]
+    /// <summary>
     /// Toggles the framerate counter in the corner
     /// </summary>
     public SettingsItem<bool> DisplayFPS { get; private set; }
@@ -1184,6 +1196,47 @@ public partial class SettingsProfile
             SaveToDisk = false,
         };
 
+        SetUserFolderPath = new(Constants.USER_FOLDER)
+        {
+            Id = "SetUserFolderPath",
+            Title = "Path To User Folder",
+            Description = "Set the path where Rhythia stores it's files",
+            Section = SettingsSection.Other,
+            Placeholder = Constants.DEFAULT_USER_FOLDER,
+            UpdateAction = (value, _) => {
+                SettingsManager.SetUserFolder(value);
+            },
+            SaveToDisk = false
+        };
+
+        SetUserFolderDialog = new(default)
+        {
+            Id = "SetUserFolderDialog",
+            Title = "", // belongs to the field above
+            Description = "",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new() { Title = "Open Previous User Folder", Description = "Open the path to the previously used User Folder", OnPressed = () => {
+                    if (Constants.PREVIOUS_USER_FOLDER == "")
+                    {
+                        var popup = new OptionPopup("No Previous User Folder Found", "You have no previous user folder. Either you didn't change your User Folder (and that's fine) or the record of it got deleted.");
+
+                        popup.AddOption("Ok", Callable.From(() => {
+                            SettingsMenu.Instance.Show();
+                        }));
+
+                        SettingsMenu.Instance.Hide();
+                        popup.Show();
+                    }
+                    else { OS.ShellShowInFileManager(Constants.PREVIOUS_USER_FOLDER); }
+                }},
+                new() { Title = "Set User Folder Path", Description = "Choose the path to the User Folder", OnPressed = () => {
+                    SettingsMenu.Instance.UserFolderDialog.PopupCentered();
+                }}
+            ]
+        };
+
         DisplayFPS = new(true)
         {
             Id = "DisplayFPS",
@@ -1425,6 +1478,11 @@ public partial class SettingsProfile
         SettingsMenu.Instance.UpdateProfileSelection();
 
         ToastNotification.Notify($"Created profile '{profileName}'");
+    }
+
+    public static void ConfigureSetUserFolderPath(string userFolderPath)
+    {
+        SettingsManager.Instance.Settings.SetUserFolderPath.Value = userFolderPath;
     }
 
     private static void importColorsetsFromNightly()
