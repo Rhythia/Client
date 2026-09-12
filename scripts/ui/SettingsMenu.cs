@@ -79,7 +79,8 @@ public partial class SettingsMenu : ColorRect
         LineEdit sliderLineEditTemplate = settingTemplate.GetNode<LineEdit>("SliderLineEdit");
         LineEdit lineEditTemplate = settingTemplate.GetNode<LineEdit>("LineEdit");
         OptionButton optionButtonTemplate = settingTemplate.GetNode<OptionButton>("OptionButton");
-        Button buttonTemplate = settingTemplate.GetNode<Button>("Button");
+        HBoxContainer buttonHboxTemplate = settingTemplate.GetNode<HBoxContainer>("ButtonHBoxContainer");
+        Button buttonTemplate = buttonHboxTemplate.GetNode<Button>("Button");
 
         settingTemplate.Visible = false;
 
@@ -172,11 +173,14 @@ public partial class SettingsMenu : ColorRect
                     var item = setting as SettingsItem<Variant>;
                     if (item?.Buttons != null)
                     {
+                        HBoxContainer hbox = buttonHboxTemplate.Duplicate() as HBoxContainer;
+                        panel.AddChild(hbox);
+
                         foreach (var settingButton in item.Buttons)
                         {
                             Button button = buttonTemplate.Duplicate() as Button;
                             setupButton(settingButton, button);
-                            panel.AddChild(button);
+                            hbox.AddChild(button);
                         }
                     }
                 }
@@ -425,6 +429,7 @@ public partial class SettingsMenu : ColorRect
 
     private void setupButton(SettingsButton setting, Button button)
     {
+        button.Visible = true;
         button.Text = setting.Title;
         button.TooltipText = setting.Description;
         button.Visible = true;

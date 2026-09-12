@@ -294,16 +294,21 @@ theme = ExtResource("3_tipki")
 alignment = 1
 fit_to_longest_item = false
 
-[node name="Button" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1397608326]
+[node name="ButtonHBoxContainer" type="HBoxContainer" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=380660075]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.7
 anchor_right = 1.0
-anchor_bottom = 1.0
 offset_top = 4.0
 offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 0
+theme_override_constants/separation = 8
+
+[node name="Button" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate/ButtonHBoxContainer" unique_id=1397608326]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
