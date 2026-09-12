@@ -28,4 +28,7 @@ mono_crash.*.json
 
 # Other
 nuget.config
+
+# Local export output (see builds pushed as GitHub release assets instead)
+/builds/
 addons/ffmpeg/win64/~libgdffmpeg.windows.template_debug.x86_64.dll
