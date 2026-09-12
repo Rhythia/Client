@@ -14,6 +14,8 @@ public partial class Constants : Node
 
     public static readonly string USER_FOLDER = SettingsManager.GetUserFolder();
 
+    public static readonly string PREVIOUS_USER_FOLDER = SettingsManager.GetPreviousUserFolder();
+
     public static readonly string NIGHTLY_FOLDER = $"{Path.GetDirectoryName(DEFAULT_USER_FOLDER)}/SoundSpacePlus";
 
     public static readonly string DEFAULT_MAP_EXT = "phxm";

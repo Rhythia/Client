@@ -118,28 +118,71 @@ public partial class SettingsManager : Node
         return "default";
     }
 
-    public static string GetUserFolder()
+    public static string[] GetUserFolderPointerContent()
     {
+        string currentDir = "";
+        string previousDir = "";
+
         if (!File.Exists(Constants.USER_FOLDER_POINTER) || string.IsNullOrWhiteSpace(File.ReadAllText(Constants.USER_FOLDER_POINTER)))
         {
-            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.DEFAULT_USER_FOLDER);
-            return Constants.DEFAULT_USER_FOLDER;
+            currentDir = Constants.DEFAULT_USER_FOLDER;
+            File.WriteAllText(Constants.USER_FOLDER_POINTER, $"CurrentDir:{Constants.DEFAULT_USER_FOLDER}\nPreviousDir:");
+            return [currentDir, previousDir];
         }
 
-        string path = File.ReadAllText(Constants.USER_FOLDER_POINTER).Trim();
+        string pointerContent = File.ReadAllText(Constants.USER_FOLDER_POINTER).Trim();
+        string[] lines = pointerContent.Split("\n");
+        
+        foreach (string line in lines)
+        {
+            string normalLine = line.TrimEnd('\r');
+
+            if (normalLine.StartsWith("CurrentDir:")) { currentDir = normalLine.Substring("CurrentDir:".Length); }
+            else if (normalLine.StartsWith("PreviousDir:")) { previousDir = normalLine.Substring("PreviousDir:".Length); }
+            else { Logger.Error("Unexpected line in user pointer file."); }
+        }
+
+        return [currentDir, previousDir];
+    }
+
+    public static string GetUserFolder()
+    {
+        string[] paths = GetUserFolderPointerContent();
+        string currentDir = paths[0];
         
         try
         {
-            var _ = Directory.EnumerateFileSystemEntries(path);
+            var _ = Directory.EnumerateFileSystemEntries(currentDir);
         }
         catch (Exception exception)
         {
-            File.WriteAllText(Constants.USER_FOLDER_POINTER, Constants.DEFAULT_USER_FOLDER);
+            paths[0] = Constants.DEFAULT_USER_FOLDER;
+            File.WriteAllText(Constants.USER_FOLDER_POINTER, $"CurrentDir:{paths[0]}\nPreviousDir:{paths[1]}");
             Logger.Error(exception);
             return Constants.DEFAULT_USER_FOLDER;
         }
 
-        return path;
+        return currentDir;
+    }
+
+    public static string GetPreviousUserFolder()
+    {
+        string[] paths = GetUserFolderPointerContent();
+        string previousDir = paths[1];
+
+        if (string.IsNullOrWhiteSpace(previousDir)) { return ""; }
+
+        try
+        {
+            var _ = Directory.EnumerateFileSystemEntries(previousDir);
+        }
+        catch (Exception exception)
+        {
+            Logger.Error(exception);
+            return "";
+        }
+
+        return previousDir;
     }
 
     public static void SetUserFolder(string path)
@@ -155,7 +198,7 @@ public partial class SettingsManager : Node
             return;
         }
 
-        File.WriteAllText(Constants.USER_FOLDER_POINTER, path);
+        File.WriteAllText(Constants.USER_FOLDER_POINTER, $"CurrentDir:{path}\nPreviousDir:{Constants.USER_FOLDER}");
 
         var popup = new OptionPopup("Restart required.", "Would you like to restart the game?");
 
