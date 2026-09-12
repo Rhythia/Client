@@ -1,0 +1,422 @@
+[gd_scene format=3 uid="uid://c0bj5wxr28uup"]
+
+[ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="1_wvv2m"]
+[ext_resource type="Shader" uid="uid://7qsvgo4ubp13" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
+[ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="4_vofg3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvv2m"]
+bg_color = Color(0.0360807, 0.0300716, 0.0527505, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
+bg_color = Color(0.023529412, 0.019607844, 0.03529412, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_hrfuy"]
+font_size = 26
+
+[sub_resource type="LabelSettings" id="LabelSettings_s54e2"]
+font_size = 22
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ear6i"]
+bg_color = Color(0.03529412, 0.03137255, 0.050980393, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3usyh"]
+corner_radius_top_left = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjpuo"]
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hrfuy"]
+shader = ExtResource("3_s54e2")
+shader_parameter/offset = 16.00000076
+shader_parameter/strength = 2.600000076
+
+[sub_resource type="Gradient" id="Gradient_vofg3"]
+offsets = PackedFloat32Array(0, 0.77707005, 1)
+colors = PackedColorArray(0.6431373, 0.6431373, 0.6431373, 0, 0.14509805, 0.14509805, 0.14509805, 0.7254902, 0, 0, 0, 0.7882353)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ear6i"]
+gradient = SubResource("Gradient_vofg3")
+
+[sub_resource type="LabelSettings" id="LabelSettings_0pn3c"]
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.39215687)
+shadow_offset = Vector2(1, 1.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ear6i"]
+font_size = 13
+font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.39215687)
+shadow_offset = Vector2(1, 1.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3usyh"]
+font_color = Color(1, 0.19215687, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.39215687)
+shadow_offset = Vector2(1, 1.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_10mjv"]
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.39215687)
+shadow_offset = Vector2(1, 1.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vofg3"]
+font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.39215687)
+shadow_offset = Vector2(1, 1.5)
+
+[node name="Map Browser" type="Control" unique_id=273716231]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_wvv2m")
+
+[node name="Hide" type="Button" parent="." unique_id=1149646911]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+action_mode = 0
+button_mask = 3
+
+[node name="Holder" type="Panel" parent="." unique_id=1459067589]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme = ExtResource("1_wvv2m")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wvv2m")
+
+[node name="Layout" type="VBoxContainer" parent="Holder" unique_id=1430004882]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="PanelContainer" parent="Holder/Layout" unique_id=1068936515]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_a8y0u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Holder/Layout/Background" unique_id=1827421630]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Holder/Layout/Background/VBoxContainer" unique_id=56255056]
+layout_mode = 2
+theme = ExtResource("1_wvv2m")
+
+[node name="Title" type="Label" parent="Holder/Layout/Background/VBoxContainer/Header" unique_id=1928745732]
+layout_mode = 2
+theme = ExtResource("1_wvv2m")
+text = "Map Browser"
+label_settings = SubResource("LabelSettings_hrfuy")
+vertical_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Holder/Layout/Background/VBoxContainer/Header" unique_id=1549101855]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("1_wvv2m")
+text = "Browse community maps okay idk what to put here"
+label_settings = SubResource("LabelSettings_s54e2")
+vertical_alignment = 1
+
+[node name="SearchBar" type="HBoxContainer" parent="Holder/Layout/Background/VBoxContainer" unique_id=1326782548]
+layout_mode = 2
+
+[node name="Search" type="LineEdit" parent="Holder/Layout/Background/VBoxContainer/SearchBar" unique_id=1105201271]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search maps, mappers, or difficulty…"
+clear_button_enabled = true
+
+[node name="Sort" type="OptionButton" parent="Holder/Layout/Background/VBoxContainer/SearchBar" unique_id=2098712667]
+layout_mode = 2
+item_count = 2
+popup/item_0/text = "Newest"
+popup/item_0/id = 0
+popup/item_1/text = "Oldest"
+popup/item_1/id = 1
+
+[node name="Direction" type="Button" parent="Holder/Layout/Background/VBoxContainer/SearchBar" unique_id=1884251797]
+layout_mode = 2
+text = "↓ Descending"
+
+[node name="BrowseMode" type="OptionButton" parent="Holder/Layout/Background/VBoxContainer/SearchBar" unique_id=824117255]
+layout_mode = 2
+item_count = 1
+popup/item_0/id = 0
+
+[node name="Refresh" type="Button" parent="Holder/Layout/Background/VBoxContainer/SearchBar" unique_id=1745989520]
+layout_mode = 2
+text = "Refresh"
+
+[node name="Filters" type="HBoxContainer" parent="Holder/Layout/Background/VBoxContainer" unique_id=1421262505]
+layout_mode = 2
+
+[node name="Difficulty" type="MenuButton" parent="Holder/Layout/Background/VBoxContainer/Filters" unique_id=1695394737]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Difficulties"
+flat = false
+item_count = 5
+popup/item_0/text = "Easy"
+popup/item_0/checkable = 1
+popup/item_0/checked = true
+popup/item_0/id = 0
+popup/item_1/text = "Medium"
+popup/item_1/checkable = 1
+popup/item_1/checked = true
+popup/item_1/id = 1
+popup/item_2/text = "Hard"
+popup/item_2/checkable = 1
+popup/item_2/checked = true
+popup/item_2/id = 2
+popup/item_3/text = "Insane"
+popup/item_3/checkable = 1
+popup/item_3/checked = true
+popup/item_3/id = 3
+popup/item_4/text = "Illogical"
+popup/item_4/id = 4
+
+[node name="Ranking" type="OptionButton" parent="Holder/Layout/Background/VBoxContainer/Filters" unique_id=330241703]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+item_count = 3
+popup/item_0/text = "Unranked"
+popup/item_0/id = 0
+popup/item_1/text = "Ranked"
+popup/item_1/id = 1
+popup/item_2/text = "Both"
+popup/item_2/id = 2
+
+[node name="Installed" type="OptionButton" parent="Holder/Layout/Background/VBoxContainer/Filters" unique_id=1262770447]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+item_count = 1
+popup/item_0/text = "Installed"
+popup/item_0/id = 0
+
+[node name="ActiveFilters" type="HBoxContainer" parent="Holder/Layout/Background/VBoxContainer" unique_id=1401022026]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Holder/Layout/Background/VBoxContainer/ActiveFilters" unique_id=1844162903]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Holder/Layout/Background/VBoxContainer/ActiveFilters" unique_id=882056051]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Tags" type="HBoxContainer" parent="Holder/Layout/Background/VBoxContainer/ActiveFilters/Scroll" unique_id=403074119]
+layout_mode = 2
+
+[node name="Clear" type="Button" parent="Holder/Layout/Background/VBoxContainer/ActiveFilters" unique_id=1284947479]
+layout_mode = 2
+text = "Clear filters"
+
+[node name="DownloadStatus" type="HBoxContainer" parent="Holder/Layout/Background/VBoxContainer" unique_id=1484611059]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Holder/Layout/Background/VBoxContainer/DownloadStatus" unique_id=1525450065]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Retry" type="Button" parent="Holder/Layout/Background/VBoxContainer/DownloadStatus" unique_id=1000402623]
+layout_mode = 2
+text = "Retry failed"
+
+[node name="Results" type="ScrollContainer" parent="Holder/Layout" unique_id=716497821]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RowsMargin" type="MarginContainer" parent="Holder/Layout/Results" unique_id=252336536]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Rows" type="GridContainer" parent="Holder/Layout/Results/RowsMargin" unique_id=584001658]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 3
+
+[node name="MapCardTemplate" type="PanelContainer" parent="Holder/Layout/Results/RowsMargin/Rows" unique_id=2024057001]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_ear6i")
+
+[node name="Row" type="HBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate" unique_id=1621144170]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="CoverHolder" type="PanelContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row" unique_id=808732459]
+clip_children = 2
+custom_minimum_size = Vector2(120, 120)
+custom_maximum_size = Vector2(120, 120)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3usyh")
+
+[node name="Cover" type="TextureRect" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/CoverHolder" unique_id=477092110]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Map" type="Control" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row" unique_id=388758340]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="BlurCoverHolder" type="PanelContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map" unique_id=930004842]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vjpuo")
+
+[node name="BlurCover" type="TextureRect" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/BlurCoverHolder" unique_id=366161290]
+modulate = Color(0.5649617, 0.5649616, 0.5649616, 1)
+material = SubResource("ShaderMaterial_hrfuy")
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Gradient" type="TextureRect" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/BlurCoverHolder" unique_id=1360759695]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_ear6i")
+
+[node name="Content" type="MarginContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map" unique_id=152846069]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Info" type="VBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content" unique_id=1858565386]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Top" type="HBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=512602662]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Text" type="VBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top" unique_id=1944971274]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = -3
+
+[node name="Title" type="Label" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=108669646]
+layout_mode = 2
+text = "Artist - Title"
+label_settings = SubResource("LabelSettings_0pn3c")
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Mapper" type="Label" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=1889073238]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "mapped by Mapper"
+label_settings = SubResource("LabelSettings_ear6i")
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Difficulty" type="Label" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=2103154130]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Insane"
+label_settings = SubResource("LabelSettings_3usyh")
+text_overrun_behavior = 3
+
+[node name="Facts" type="HBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=973323829]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 2
+
+[node name="Bottom" type="HBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=51256571]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Ranking" type="VBoxContainer" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=630932107]
+layout_mode = 2
+theme_override_constants/separation = -3
+
+[node name="Notes" type="Label" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/Ranking" unique_id=200648501]
+layout_mode = 2
+size_flags_vertical = 10
+text = "1230 notes"
+label_settings = SubResource("LabelSettings_ear6i")
+
+[node name="Ranking" type="Label" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/Ranking" unique_id=1500989616]
+layout_mode = 2
+size_flags_vertical = 10
+text = "RANKED"
+label_settings = SubResource("LabelSettings_10mjv")
+
+[node name="Duration" type="Label" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1613545318]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+text = "0:58"
+label_settings = SubResource("LabelSettings_vofg3")
+
+[node name="Download" type="Button" parent="Holder/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1673526428]
+custom_minimum_size = Vector2(32, 32)
+custom_maximum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+icon = ExtResource("4_vofg3")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Pagination" type="HBoxContainer" parent="Holder/Layout" unique_id=49456061]
+layout_mode = 2
+alignment = 1
+
+[node name="Previous" type="Button" parent="Holder/Layout/Pagination" unique_id=1095552613]
+layout_mode = 2
+disabled = true
+text = "← Previous"
+
+[node name="Page" type="Label" parent="Holder/Layout/Pagination" unique_id=1430675161]
+layout_mode = 2
+text = "0-0 of 0"
+horizontal_alignment = 1
+
+[node name="Next" type="Button" parent="Holder/Layout/Pagination" unique_id=383652387]
+layout_mode = 2
+disabled = true
+text = "Next →"
