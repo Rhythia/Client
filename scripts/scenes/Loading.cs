@@ -47,10 +47,7 @@ public partial class Loading : BaseScene
 
         if (updateFound)
         {
-            var popup = new OptionPopup(
-                "Update Found",
-                "Would you like to download the new version?"
-            );
+            var popup = new OptionPopup("Update Found", "Would you like to download the new version?");
 
             popup.AddOption("Update", Callable.From(updateStep));
             popup.AddOption("Cancel", Callable.From(mapInitializeStep));
@@ -184,10 +181,7 @@ public partial class Loading : BaseScene
     {
         if (@event.PropertyName == nameof(UpdatumManager.DownloadedPercentage))
         {
-            CallDeferred(
-                "UpdateProgressLabel",
-                $"Downloading {Releases.MANAGER.DownloadedPercentage} %"
-            );
+            CallDeferred("UpdateProgressLabel", $"Downloading {Releases.MANAGER.DownloadedPercentage} %");
             float progress = (float)Releases.MANAGER.DownloadedPercentage / 100;
             CallDeferred("UpdateProgressBar", progress);
         }

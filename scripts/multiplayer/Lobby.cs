@@ -151,9 +151,6 @@ public partial class Lobby : Node
             Modifiers.Remove(Modifiers.Find(x => x.Name == mod.Name));
         }
 
-        Instance.EmitSignal(
-            SignalName.ModifiersChanged,
-            Modifiers.Select(mod => mod.Name).ToArray()
-        );
+        Instance.EmitSignal(SignalName.ModifiersChanged, Modifiers.Select(mod => mod.Name).ToArray());
     }
 }

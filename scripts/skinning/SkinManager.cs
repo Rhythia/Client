@@ -27,10 +27,7 @@ public partial class SkinManager : Node
 
         if (Toml.TryFromModel(skin.Config, out string toml, out _))
         {
-            File.WriteAllText(
-                $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml",
-                toml
-            );
+            File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml", toml);
         }
 
         Logger.Log($"Saved skin {settings.Skin.Value}");
@@ -49,19 +46,13 @@ public partial class SkinManager : Node
 
         string configFile = $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml";
 
-        if (
-            File.Exists(configFile)
-            && Toml.TryToModel(File.ReadAllText(configFile), out SkinConfig config, out _)
-        )
+        if (File.Exists(configFile) && Toml.TryToModel(File.ReadAllText(configFile), out SkinConfig config, out _))
         {
             skin.Config = config;
         }
         else if (Toml.TryFromModel(skin.Config, out string toml, out _))
         {
-            File.WriteAllText(
-                $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml",
-                toml
-            );
+            File.WriteAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/config.toml", toml);
         }
 
         // Textures
@@ -121,15 +112,9 @@ public partial class SkinManager : Node
         skin.MapListScrollBarTopImage = loadTexture("ui/play/scrollbar_top.png");
         skin.MapListScrollBarMiddleImage = loadTexture("ui/play/scrollbar_middle.png");
         skin.MapListScrollBarBottomImage = loadTexture("ui/play/scrollbar_bottom.png");
-        skin.MapListScrollBarBackgroundTopImage = loadTexture(
-            "ui/play/scrollbar_background_top.png"
-        );
-        skin.MapListScrollBarBackgroundMiddleImage = loadTexture(
-            "ui/play/scrollbar_background_middle.png"
-        );
-        skin.MapListScrollBarBackgroundBottomImage = loadTexture(
-            "ui/play/scrollbar_background_bottom.png"
-        );
+        skin.MapListScrollBarBackgroundTopImage = loadTexture("ui/play/scrollbar_background_top.png");
+        skin.MapListScrollBarBackgroundMiddleImage = loadTexture("ui/play/scrollbar_background_middle.png");
+        skin.MapListScrollBarBackgroundBottomImage = loadTexture("ui/play/scrollbar_background_bottom.png");
         skin.MapListGridCoverBackgroundImage = loadTexture("ui/play/grid_cover_background.png");
 
         skin.MapInfoCoverBackgroundImage = loadTexture("ui/play/mapinfo_cover_background.png");
@@ -157,9 +142,7 @@ public partial class SkinManager : Node
 
         // Meshes
 
-        skin.NoteMesh = loadMesh(
-            $"{Constants.USER_FOLDER}/meshes/{(settings.NoteMesh == "skin" ? skin.Config.NoteMesh : settings.NoteMesh)}.obj"
-        );
+        skin.NoteMesh = loadMesh($"{Constants.USER_FOLDER}/meshes/{(settings.NoteMesh == "skin" ? skin.Config.NoteMesh : settings.NoteMesh)}.obj");
 
         // Colors
 
@@ -168,10 +151,7 @@ public partial class SkinManager : Node
 
         if (File.Exists(colorsetPath))
         {
-            string[] split = File.ReadAllText(colorsetPath)
-                .StripEdges()
-                .ReplaceLineEndings(",")
-                .Split(",");
+            string[] split = File.ReadAllText(colorsetPath).StripEdges().ReplaceLineEndings(",").Split(",");
             Color[] colors = new Color[split.Length];
 
             for (int i = 0; i < split.Length; i++)
@@ -184,12 +164,8 @@ public partial class SkinManager : Node
 
         // Spaces
 
-        skin.GameSpace = loadSpace(
-            $"res://prefabs/spaces/{(settings.GameSpace == "skin" ? skin.Config.GameSpace : settings.GameSpace)}.tscn"
-        );
-        skin.MenuSpace = loadSpace(
-            $"res://prefabs/spaces/{(settings.MenuSpace == "skin" ? skin.Config.MenuSpace : settings.MenuSpace)}.tscn"
-        );
+        skin.GameSpace = loadSpace($"res://prefabs/spaces/{(settings.GameSpace == "skin" ? skin.Config.GameSpace : settings.GameSpace)}.tscn");
+        skin.MenuSpace = loadSpace($"res://prefabs/spaces/{(settings.MenuSpace == "skin" ? skin.Config.MenuSpace : settings.MenuSpace)}.tscn");
 
         /////
 
@@ -248,9 +224,7 @@ public partial class SkinManager : Node
     private static Shader loadShader(string skinPath)
     {
         var settings = SettingsManager.Instance.Settings;
-        string shader = File.ReadAllText(
-            $"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}"
-        );
+        string shader = File.ReadAllText($"{Constants.USER_FOLDER}/skins/{settings.Skin.Value}/{skinPath}");
 
         return new() { Code = shader };
     }
@@ -260,16 +234,13 @@ public partial class SkinManager : Node
         string mtlPath = path.TrimSuffix(".obj") + ".mtl";
 
         return resourceExists(path)
-            ? Util
-                .Misc.OBJParser.Call("load_obj", path, resourceExists(mtlPath) ? mtlPath : null)
-                .As<ArrayMesh>()
+            ? Util.Misc.OBJParser.Call("load_obj", path, resourceExists(mtlPath) ? mtlPath : null).As<ArrayMesh>()
             : GD.Load<ArrayMesh>("res://user/meshes/squircle.obj");
     }
 
     private static BaseSpace loadSpace(string path)
     {
-        return GD.Load<PackedScene>(resourceExists(path) ? path : "res://prefabs/spaces/void.tscn")
-                .Instantiate<Node3D>() as BaseSpace;
+        return GD.Load<PackedScene>(resourceExists(path) ? path : "res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;
     }
 
     private static bool resourceExists(string path)

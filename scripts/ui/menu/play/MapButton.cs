@@ -92,12 +92,7 @@ public partial class MapButton : Control, ISkinnable
         float now = Time.GetTicksMsec();
 
         Favorited.RotationDegrees = ListIndex * -10 + now / 20;
-        Favorited.Modulate = Color.Color8(
-            255,
-            255,
-            255,
-            (byte)(225 + 30 * Math.Sin(Math.PI * now / 2000 + ListIndex))
-        );
+        Favorited.Modulate = Color.Color8(255, 255, 255, (byte)(225 + 30 * Math.Sin(Math.PI * now / 2000 + ListIndex)));
 
         OutlineShader.SetShaderParameter("cursor_position", GetViewport().GetMousePosition());
         OutlineShader.SetShaderParameter("light_position", LightPosition);
@@ -115,12 +110,7 @@ public partial class MapButton : Control, ISkinnable
 
         CreateTween()
             .SetTrans(Tween.TransitionType.Quad)
-            .TweenProperty(
-                Holder,
-                "self_modulate",
-                Hovered ? Color.Color8(26, 6, 13, 224) : Color.Color8(0, 0, 0, 224),
-                0.15
-            );
+            .TweenProperty(Holder, "self_modulate", Hovered ? Color.Color8(26, 6, 13, 224) : Color.Color8(0, 0, 0, 224), 0.15);
     }
 
     public virtual void Select(bool select = true)
@@ -133,12 +123,7 @@ public partial class MapButton : Control, ISkinnable
 
         CreateTween()
             .SetTrans(Tween.TransitionType.Quad)
-            .TweenProperty(
-                Cover,
-                "modulate",
-                Color.Color8(255, 255, 255, (byte)(Selected ? 255 : 128)),
-                0.1
-            );
+            .TweenProperty(Cover, "modulate", Color.Color8(255, 255, 255, (byte)(Selected ? 255 : 128)), 0.1);
     }
 
     public void Deselect()
@@ -154,9 +139,7 @@ public partial class MapButton : Control, ISkinnable
         Title.Text = map.PrettyTitle;
         Favorited.Visible = map.Favorite;
         Cover.Texture = map.Cover;
-        Favorited.SelfModulate = Constants.DIFFICULTY_COLORS[
-            Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)
-        ];
+        Favorited.SelfModulate = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
 
         if (selected)
         {

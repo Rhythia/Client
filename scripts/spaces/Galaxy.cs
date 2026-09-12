@@ -17,8 +17,7 @@ public partial class Galaxy : BaseSpace
 
         settings = SettingsManager.Instance.Settings;
         environment = WorldEnvironment.Environment;
-        tileMaterial =
-            (GetNode<MeshInstance3D>("Road").Mesh as PlaneMesh).Material as StandardMaterial3D;
+        tileMaterial = (GetNode<MeshInstance3D>("Road").Mesh as PlaneMesh).Material as StandardMaterial3D;
 
         //planet = GetNode<Node3D>("Planet");
         //planetStartPos = planet.Position;

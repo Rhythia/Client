@@ -10,8 +10,7 @@ public partial class Grid : BaseSpace
     {
         base._Ready();
 
-        tileMaterial =
-            (GetNode<MeshInstance3D>("Top").Mesh as PlaneMesh).Material as StandardMaterial3D;
+        tileMaterial = (GetNode<MeshInstance3D>("Top").Mesh as PlaneMesh).Material as StandardMaterial3D;
     }
 
     public override void _Process(double delta)

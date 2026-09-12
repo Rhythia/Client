@@ -38,9 +38,7 @@ public class FileParser
     {
         if (Pointer + amount > Length)
         {
-            throw new EndOfStreamException(
-                $"Attempted to read {amount} bytes beyond stream length of {Length}."
-            );
+            throw new EndOfStreamException($"Attempted to read {amount} bytes beyond stream length of {Length}.");
         }
     }
 

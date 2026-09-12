@@ -41,12 +41,7 @@ public partial class ScorePanel : Panel
             CreateTween()
                 .SetEase(Tween.EaseType.Out)
                 .SetTrans(Tween.TransitionType.Quart)
-                .TweenProperty(
-                    buttonHover,
-                    "modulate",
-                    Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
-                    0.25
-                );
+                .TweenProperty(buttonHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
         }
 
         Button.MouseEntered += () => tweenHover(true);
@@ -69,8 +64,7 @@ public partial class ScorePanel : Panel
         }
         else
         {
-            scoreLabel.Text =
-                $"{Util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {Util.String.FormatTime(score.MapLength / 1000)}";
+            scoreLabel.Text = $"{Util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {Util.String.FormatTime(score.MapLength / 1000)}";
             scoreLabel.LabelSettings = scoreLabel.LabelSettings.Duplicate() as LabelSettings;
             scoreLabel.LabelSettings.FontColor = Color.Color8(160, 160, 160);
         }
@@ -96,15 +90,7 @@ public partial class ScorePanel : Panel
             Replay replay = new(replayPath);
             var map = MapParser.Decode(replay.MapFilePath);
 
-            Game.Play(
-                map,
-                replay.Speed,
-                replay.StartFrom,
-                replay.CameraMode,
-                replay.Modifiers,
-                null,
-                [replay]
-            );
+            Game.Play(map, replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
         }
     }
 }

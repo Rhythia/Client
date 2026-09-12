@@ -9,8 +9,7 @@ namespace Util;
 
 public class Misc
 {
-    public static GodotObject OBJParser = (GodotObject)
-        GD.Load<GDScript>("res://scripts/util/OBJParser.gd").New();
+    public static GodotObject OBJParser = (GodotObject)GD.Load<GDScript>("res://scripts/util/OBJParser.gd").New();
 
     public static Texture2D GetModIcon(string mod)
     {
@@ -104,8 +103,7 @@ public class Misc
             return img;
         }
 
-        bool isJpeg =
-            buffer.Length >= 3 && buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF;
+        bool isJpeg = buffer.Length >= 3 && buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF;
         if (isJpeg && img.LoadJpgFromBuffer(buffer) == Error.Ok)
         {
             return img;
@@ -180,14 +178,7 @@ public class Misc
         }
 
         string normalized = input.Replace(',', '.');
-        if (
-            float.TryParse(
-                normalized,
-                NumberStyles.Any,
-                CultureInfo.InvariantCulture,
-                out float result
-            )
-        )
+        if (float.TryParse(normalized, NumberStyles.Any, CultureInfo.InvariantCulture, out float result))
         {
             return result;
         }

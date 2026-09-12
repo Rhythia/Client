@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public partial class Note(int index, int millisecond, float x, float y)
-    : IHitObject,
-        IAnimatableObject<NoteAnimation>,
-        IComparable<Note>
+public partial class Note(int index, int millisecond, float x, float y) : IHitObject, IAnimatableObject<NoteAnimation>, IComparable<Note>
 {
     public int Id => (int)ObjectType.Note;
     public int Index { get; set; } = index;
@@ -50,9 +47,7 @@ public partial class Note(int index, int millisecond, float x, float y)
     {
         var attempt = runner.Attempt;
 
-        return Millisecond >= attempt.StartFrom
-            && Millisecond - attempt.Progress <= 0
-            && LastResult == HitResult.None;
+        return Millisecond >= attempt.StartFrom && Millisecond - attempt.Progress <= 0 && LastResult == HitResult.None;
     }
 
     public void Process(Runner runner)
@@ -70,8 +65,7 @@ public partial class Note(int index, int millisecond, float x, float y)
         }
 
         bool late = isPastWindow(runner, HitWindow);
-        float replayLateness =
-            attempt.IsReplay && attempt.Replays.Length == 1 ? attempt.Replays[0].Notes[Index] : 0;
+        float replayLateness = attempt.IsReplay && attempt.Replays.Length == 1 ? attempt.Replays[0].Notes[Index] : 0;
 
         if (late && (!attempt.IsReplay || replayLateness == -1))
         {

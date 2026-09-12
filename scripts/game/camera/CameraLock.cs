@@ -27,13 +27,8 @@ public class CameraLock : CameraMode
         }
         else
         {
-            attempt.RawCursorPosition = attempt.IsReplay
-                ? replayManager.CursorPosition
-                : attempt.RawCursorPosition + delta;
-            attempt.CursorPosition = attempt.RawCursorPosition.Clamp(
-                -Constants.BOUNDS,
-                Constants.BOUNDS
-            );
+            attempt.RawCursorPosition = attempt.IsReplay ? replayManager.CursorPosition : attempt.RawCursorPosition + delta;
+            attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
         }
 
         var origin = new Vector3(0, 0, 3.75f);

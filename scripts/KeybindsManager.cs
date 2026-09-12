@@ -9,10 +9,7 @@ public partial class KeybindsManager : Node
 
     public override void _Ready()
     {
-        wikiPopup = new(
-            "Open Wiki",
-            string.Format(CultureInfo.CurrentCulture, LinkPopupButton.InfoTemplate, wikiLink)
-        );
+        wikiPopup = new("Open Wiki", string.Format(CultureInfo.CurrentCulture, LinkPopupButton.InfoTemplate, wikiLink));
 
         wikiPopup.AddOption(
             "Open",
@@ -43,16 +40,9 @@ public partial class KeybindsManager : Node
                 }
                 default:
                 {
-                    if (
-                        eventKey.Keycode == Key.F11
-                        || (
-                            eventKey.AltPressed
-                            && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)
-                        )
-                    )
+                    if (eventKey.Keycode == Key.F11 || (eventKey.AltPressed && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)))
                     {
-                        bool value =
-                            DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed;
+                        bool value = DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed;
 
                         settings.Fullscreen.Value = value;
                     }

@@ -69,10 +69,7 @@ public partial class Game : BaseScene
 
         PlayerInputController.OnTogglePaused += () =>
         {
-            if (
-                Runner.ObjectIndicesStart[typeof(Note)] > 0
-                && Attempt.Progress < Attempt.Map.Notes[^1].Millisecond
-            )
+            if (Runner.ObjectIndicesStart[typeof(Note)] > 0 && Attempt.Progress < Attempt.Map.Notes[^1].Millisecond)
             {
                 Attempt.Qualifies = false;
             }
@@ -150,8 +147,7 @@ public partial class Game : BaseScene
             Attempt.Settings.FadeOut.Value = val;
         };
 
-        PlayerInputController.OnTogglePushback += () =>
-            Attempt.Settings.Pushback.Value = !Attempt.Settings.Pushback;
+        PlayerInputController.OnTogglePushback += () => Attempt.Settings.Pushback.Value = !Attempt.Settings.Pushback;
         PlayerInputController.OnRestartPressed += Restart;
     }
 
@@ -168,10 +164,7 @@ public partial class Game : BaseScene
         var focused = SceneManager.Root.GetViewport().GuiGetFocusOwner();
         focused?.ReleaseFocus();
 
-        Input.MouseMode =
-            Attempt.Settings.AbsoluteInput || Attempt.IsReplay
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Captured;
+        Input.MouseMode = Attempt.Settings.AbsoluteInput || Attempt.IsReplay ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
         Input.UseAccumulatedInput = false;
 
         Runner.Attempt = Attempt;

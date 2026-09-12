@@ -59,8 +59,7 @@ public partial class Rhythia : Node
         var nonConvertedMaps = Directory
             .EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories)
             .Where(f =>
-                !f.GetExtension()
-                    .Equals(Constants.DEFAULT_MAP_EXT, StringComparison.CurrentCultureIgnoreCase)
+                !f.GetExtension().Equals(Constants.DEFAULT_MAP_EXT, StringComparison.CurrentCultureIgnoreCase)
                 && MapParser.IsValidExt(f.GetExtension().ToLower())
             );
 
@@ -217,8 +216,7 @@ public partial class Rhythia : Node
 
         Logger.Log("Attempting to quit...");
 
-        bool playing =
-            (Game.Instance?.Runner?.Playing ?? false) && (!Game.Attempt?.IsReplay ?? false);
+        bool playing = (Game.Instance?.Runner?.Playing ?? false) && (!Game.Attempt?.IsReplay ?? false);
 
         if (playing)
         {

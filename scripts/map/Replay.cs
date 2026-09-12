@@ -119,10 +119,7 @@ public struct Replay
                 : status == 1 ? "DISQUALIFIED"
                 : "FAILED";
 
-            List<string> rawMods =
-            [
-                .. FileBuffer.GetString((int)FileBuffer.GetUInt32()).Split("_"),
-            ];
+            List<string> rawMods = [.. FileBuffer.GetString((int)FileBuffer.GetUInt32()).Split("_")];
 
             Modifiers = [];
             CameraMode = new CameraLock();
@@ -203,11 +200,7 @@ public struct Replay
 
             for (int i = 0; i < Frames.Length; i++)
             {
-                Frames[i] = new(
-                    FileBuffer.GetFloat(),
-                    FileBuffer.GetFloat(),
-                    FileBuffer.GetFloat()
-                );
+                Frames[i] = new(FileBuffer.GetFloat(), FileBuffer.GetFloat(), FileBuffer.GetFloat());
             }
 
             Length = Frames.Length > 0 ? Frames[^1].Progress : 0;

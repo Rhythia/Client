@@ -50,9 +50,7 @@ public partial class SortMenuButton : Button, ISkinnable
 
     public void UpdateSkin(SkinProfile skin)
     {
-        order.Icon = MapList.Instance.Ascending.Value
-            ? skin.SortAscendButtonImage
-            : skin.SortButtonImage;
+        order.Icon = MapList.Instance.Ascending.Value ? skin.SortAscendButtonImage : skin.SortButtonImage;
         Icon = order.Icon;
     }
 
@@ -63,10 +61,7 @@ public partial class SortMenuButton : Button, ISkinnable
 
     private void selectSort(Button button)
     {
-        if (
-            Enum.TryParse<MapList.SortType>(button.Name, true, out var result)
-            && MapList.Instance.Sorting.Value != result
-        )
+        if (Enum.TryParse<MapList.SortType>(button.Name, true, out var result) && MapList.Instance.Sorting.Value != result)
         {
             previousButton?.Disabled = false;
             button.Disabled = true;
@@ -82,9 +77,7 @@ public partial class SortMenuButton : Button, ISkinnable
 
         MapList.Instance.Ascending.Value = !MapList.Instance.Ascending.Value;
         orderLabel.Text = MapList.Instance.Ascending.Value ? "Ascending" : "Descending";
-        order.Icon = MapList.Instance.Ascending.Value
-            ? skin.SortAscendButtonImage
-            : skin.SortButtonImage;
+        order.Icon = MapList.Instance.Ascending.Value ? skin.SortAscendButtonImage : skin.SortButtonImage;
 
         Icon = order.Icon;
     }

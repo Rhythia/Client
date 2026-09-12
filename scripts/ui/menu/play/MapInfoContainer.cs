@@ -12,9 +12,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
     public Leaderboard Leaderboard = new();
 
-    private readonly PackedScene leaderboardScoreTemplate = ResourceLoader.Load<PackedScene>(
-        "res://prefabs/score_panel.tscn"
-    );
+    private readonly PackedScene leaderboardScoreTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/score_panel.tscn");
 
     // Info & main buttons
 
@@ -147,9 +145,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             var skin = SkinManager.Instance.Skin;
 
             favoriteButton.TooltipText = Map.Favorite ? "Unfavorite" : "Favorite";
-            favoriteButton.Icon = Map.Favorite
-                ? skin.UnfavoriteButtonImage
-                : skin.FavoriteButtonImage;
+            favoriteButton.Icon = Map.Favorite ? skin.UnfavoriteButtonImage : skin.FavoriteButtonImage;
         };
 
         //videoButton.Pressed += () =>
@@ -315,13 +311,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         };
         startFromSlider.ValueChanged += value =>
         {
-            applyStartFrom(
-                (Math.Round(value * Map.Length) / 1000).ToString(
-                    "F2",
-                    CultureInfo.InvariantCulture
-                ),
-                false
-            );
+            applyStartFrom((Math.Round(value * Map.Length) / 1000).ToString("F2", CultureInfo.InvariantCulture), false);
         };
         startFromSlider.DragEnded += changed =>
         {
@@ -347,12 +337,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             CreateTween()
                 .SetEase(Tween.EaseType.Out)
                 .SetTrans(Tween.TransitionType.Quart)
-                .TweenProperty(
-                    lbExpandHover,
-                    "modulate",
-                    Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
-                    0.25
-                );
+                .TweenProperty(lbExpandHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
         }
 
         lbExpand.MouseEntered += () =>
@@ -440,9 +425,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         inTween.TweenProperty(info, "offset_right", 0, 0.5);
         inTween.SetTrans(Tween.TransitionType.Quart).TweenProperty(actions, "offset_left", 0, 0.6);
         inTween.TweenProperty(actions, "offset_right", 0, 0.6);
-        inTween
-            .SetTrans(Tween.TransitionType.Cubic)
-            .TweenProperty(leaderboard, "offset_left", 0, 0.7);
+        inTween.SetTrans(Tween.TransitionType.Cubic).TweenProperty(leaderboard, "offset_left", 0, 0.7);
         inTween.TweenProperty(leaderboard, "offset_right", 0, 0.7);
 
         OffsetRight = 0;
@@ -450,9 +433,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Info
 
-        var difficultyColor = Constants.DIFFICULTY_COLORS[
-            Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)
-        ];
+        var difficultyColor = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
 
         mainLabel.Text = string.Format(
             CultureInfo.CurrentCulture,
@@ -474,16 +455,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
         coverBackground.SelfModulate = difficultyColor;
         cover.Texture = map.Cover;
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
-        favoriteButton.Icon = map.Favorite
-            ? SkinManager.Instance.Skin.UnfavoriteButtonImage
-            : SkinManager.Instance.Skin.FavoriteButtonImage;
+        favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;
 
         artistLink.Visible = map.ArtistLink != "";
-        artistLink.Text = string.Format(
-            CultureInfo.CurrentCulture,
-            artistLinkFormat,
-            map.ArtistPlatform
-        );
+        artistLink.Text = string.Format(CultureInfo.CurrentCulture, artistLinkFormat, map.ArtistPlatform);
 
         artistLink.UpdateLink(map.ArtistLink);
 
@@ -527,12 +502,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
             lbContainer.AddChild(panel);
             panel.Setup(Leaderboard.Scores[i]);
-            panel.GetNode<ColorRect>("Background").Color = Color.Color8(
-                255,
-                255,
-                255,
-                (byte)(i % 2 * 8)
-            );
+            panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 * 8));
 
             panel.Button.Pressed += () =>
             {
@@ -543,20 +513,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
     public Tween Transition(bool show)
     {
-        Tween tween = CreateTween()
-            .SetEase(Tween.EaseType.Out)
-            .SetTrans(Tween.TransitionType.Cubic)
-            .SetParallel();
+        Tween tween = CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Cubic).SetParallel();
         float time = show ? 0.4f : 0.3f;
 
         PivotOffset = Size / 2;
 
-        tween.TweenProperty(
-            this,
-            "modulate",
-            Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
-            time
-        );
+        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), time);
         tween.TweenProperty(this, "position", show ? Vector2.Zero : Vector2.Down * 24, time);
         tween.TweenProperty(this, "scale", Vector2.One * (show ? 1f : 0.9f), time);
         tween.Chain();
@@ -569,25 +531,18 @@ public partial class MapInfoContainer : Panel, ISkinnable
         skin ??= SkinManager.Instance.Skin;
 
         coverBackground.Texture = skin.MapInfoCoverBackgroundImage;
-        speedPresets.GetNode("MinusMinus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
-            skin.SpeedPresetMinusMinusButtonImage;
-        speedPresets.GetNode("Minus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
-            skin.SpeedPresetMinusButtonImage;
-        speedPresets.GetNode("Middle").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
-            skin.SpeedPresetMiddleButtonImage;
-        speedPresets.GetNode("Plus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
-            skin.SpeedPresetPlusButtonImage;
-        speedPresets.GetNode("PlusPlus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon =
-            skin.SpeedPresetPlusPlusButtonImage;
+        speedPresets.GetNode("MinusMinus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMinusMinusButtonImage;
+        speedPresets.GetNode("Minus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMinusButtonImage;
+        speedPresets.GetNode("Middle").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetMiddleButtonImage;
+        speedPresets.GetNode("Plus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetPlusButtonImage;
+        speedPresets.GetNode("PlusPlus").GetNode<SpeedPresetButton>("SpeedPresetButton").Icon = skin.SpeedPresetPlusPlusButtonImage;
     }
 
     private void toggleLeaderboard(bool show)
     {
         lbExpand.Visible = !show;
         lbHide.Visible = show;
-        lbScrollContainer.VerticalScrollMode = show
-            ? ScrollContainer.ScrollMode.Auto
-            : ScrollContainer.ScrollMode.ShowNever;
+        lbScrollContainer.VerticalScrollMode = show ? ScrollContainer.ScrollMode.Auto : ScrollContainer.ScrollMode.ShowNever;
 
         foreach (Node node in lbContainer.GetChildren())
         {
@@ -597,17 +552,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
             }
         }
 
-        Tween tween = CreateTween()
-            .SetEase(Tween.EaseType.Out)
-            .SetTrans(Tween.TransitionType.Quart)
-            .SetParallel();
+        Tween tween = CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).SetParallel();
 
-        tween.TweenProperty(
-            leaderboard,
-            "offset_top",
-            -100 * (show ? Math.Min(4, Leaderboard.ScoreCount) : 1),
-            0.25
-        );
+        tween.TweenProperty(leaderboard, "offset_top", -100 * (show ? Math.Min(4, Leaderboard.ScoreCount) : 1), 0.25);
         tween.TweenProperty(dim, "color", Color.Color8(0, 0, 0, (byte)(show ? 128 : 0)), 0.25);
 
         if (!show)

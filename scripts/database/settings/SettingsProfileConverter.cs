@@ -49,11 +49,7 @@ public class SettingsProfileConverter
             {
                 object value = property.GetValue(profile);
 
-                if (
-                    value is ISettingsItem item
-                    && item.SaveToDisk
-                    && data.ContainsKey(property.Name)
-                )
+                if (value is ISettingsItem item && item.SaveToDisk && data.ContainsKey(property.Name))
                 {
                     item.SetVariant(data[property.Name]);
                 }

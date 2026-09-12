@@ -25,10 +25,7 @@ public partial class PanelRight : UIComponent
     public override void Init()
     {
         viewport = GetNode<SubViewport>("PanelRightViewport");
-        viewport.GetNode<TextureRect>("Background").Texture = SkinManager
-            .Instance
-            .Skin
-            .PanelRightBackgroundImage;
+        viewport.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelRightBackgroundImage;
         viewport.GetNode<TextureRect>("HitsIcon").Texture = SkinManager.Instance.Skin.HitsImage;
         viewport.GetNode<TextureRect>("MissesIcon").Texture = SkinManager.Instance.Skin.MissesImage;
 
@@ -44,8 +41,7 @@ public partial class PanelRight : UIComponent
         Runner.AttemptStatsUpdated += OnStatsUpdated;
         Runner.HitResultChanged += OnHitStateChanged;
 
-        bool isVisible =
-            !Runner.Attempt.Settings.SimpleHUD && !Runner.Attempt.Settings.SuperSimpleHUD;
+        bool isVisible = !Runner.Attempt.Settings.SimpleHUD && !Runner.Attempt.Settings.SuperSimpleHUD;
 
         Godot.Collections.Array<Node> widgets = viewport.GetChildren();
         foreach (Node widget in widgets)
@@ -88,8 +84,7 @@ public partial class PanelRight : UIComponent
 
     public void OnStatsUpdated(Attempt attempt)
     {
-        accuracy.Text =
-            $"{(attempt.Hits + attempt.Misses == 0 ? "100.00" : $"{attempt.Accuracy:F2}")}%";
+        accuracy.Text = $"{(attempt.Hits + attempt.Misses == 0 ? "100.00" : $"{attempt.Accuracy:F2}")}%";
         hits.Text = $"{attempt.Hits}";
         misses.Text = $"{attempt.Misses}";
         simpleMisses.Text = $"{attempt.Misses}";

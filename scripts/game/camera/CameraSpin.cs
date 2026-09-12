@@ -20,19 +20,11 @@ public class CameraSpin : CameraMode
 
         if (!attempt.IsReplay)
         {
-            camera.Rotation += new Vector3(
-                -mouseDelta.Y / 120 * sensitivity / (float)Math.PI,
-                -mouseDelta.X / 120 * sensitivity / (float)Math.PI,
-                0
-            );
+            camera.Rotation += new Vector3(-mouseDelta.Y / 120 * sensitivity / (float)Math.PI, -mouseDelta.X / 120 * sensitivity / (float)Math.PI, 0);
         }
         else
         {
-            camera.Rotation += new Vector3(
-                mouseDelta.Y / (float)Math.PI,
-                -mouseDelta.X / (float)Math.PI,
-                0
-            );
+            camera.Rotation += new Vector3(mouseDelta.Y / (float)Math.PI, -mouseDelta.X / (float)Math.PI, 0);
         }
 
         camera.Rotation = new Vector3(
@@ -55,12 +47,8 @@ public class CameraSpin : CameraMode
         var lookVector2 = new Vector2(lookVector.X, lookVector.Y);
 
         // Project Cursor from Camera's "ray cast"
-        attempt.RawCursorPosition =
-            cameraVector2 - lookVector2 * Mathf.Abs(camera.Position.Z / lookVector.Z);
-        attempt.CursorPosition = attempt.RawCursorPosition.Clamp(
-            -Constants.BOUNDS,
-            Constants.BOUNDS
-        );
+        attempt.RawCursorPosition = cameraVector2 - lookVector2 * Mathf.Abs(camera.Position.Z / lookVector.Z);
+        attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 
         Vector3 cursorPos = new(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
 

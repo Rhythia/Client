@@ -77,9 +77,7 @@ public partial class SettingsMenu : ColorRect
 
         UpdateProfileSelection();
 
-        Panel settingTemplate = categoryTemplate
-            .GetNode("Container")
-            .GetNode<Panel>("SettingTemplate");
+        Panel settingTemplate = categoryTemplate.GetNode("Container").GetNode<Panel>("SettingTemplate");
         CheckButton checkButtonTemplate = settingTemplate.GetNode<CheckButton>("CheckButton");
         HSlider sliderTemplate = settingTemplate.GetNode<HSlider>("Slider");
         LineEdit sliderLineEditTemplate = settingTemplate.GetNode<LineEdit>("SliderLineEdit");
@@ -102,12 +100,7 @@ public partial class SettingsMenu : ColorRect
 
         double start = Time.GetTicksUsec();
 
-        foreach (
-            KeyValuePair<
-                SettingsSection,
-                List<ISettingsItem>
-            > section in SettingsManager.Instance.Settings.ToOrderedSectionList()
-        )
+        foreach (KeyValuePair<SettingsSection, List<ISettingsItem>> section in SettingsManager.Instance.Settings.ToOrderedSectionList())
         {
             if (section.Key == SettingsSection.None)
             {
@@ -255,16 +248,8 @@ public partial class SettingsMenu : ColorRect
             holder.OffsetBottom = 25;
         }
 
-        Tween tween = CreateTween()
-            .SetTrans(Tween.TransitionType.Quad)
-            .SetEase(Tween.EaseType.Out)
-            .SetParallel();
-        tween.TweenProperty(
-            this,
-            "modulate",
-            Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0b0)),
-            0.25
-        );
+        Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
+        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0b0)), 0.25);
         tween.TweenProperty(holder, "offset_top", Shown ? 0 : 25, 0.25);
         tween.TweenProperty(holder, "offset_bottom", Shown ? 0 : 25, 0.25);
         tween
@@ -286,24 +271,14 @@ public partial class SettingsMenu : ColorRect
     {
         if (selectedCategory != null)
         {
-            sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(
-                255,
-                255,
-                255,
-                0
-            );
+            sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 0);
             selectedCategory.Visible = false;
         }
 
         selectedCategory = category;
 
         selectedCategory.Visible = true;
-        sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(
-            255,
-            255,
-            255,
-            8
-        );
+        sidebar.GetNode<ColorRect>(new(selectedCategory.Name)).Color = Color.Color8(255, 255, 255, 8);
     }
 
     public void UpdateProfileSelection()
@@ -364,14 +339,7 @@ public partial class SettingsMenu : ColorRect
     {
         void applyLineEdit()
         {
-            if (
-                !double.TryParse(
-                    lineEdit.Text,
-                    NumberStyles.Any,
-                    CultureInfo.InvariantCulture,
-                    out double value
-                )
-            )
+            if (!double.TryParse(lineEdit.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double value))
             {
                 value = double.Parse(lineEdit.PlaceholderText, CultureInfo.InvariantCulture);
             }

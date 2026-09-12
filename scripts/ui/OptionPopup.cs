@@ -104,12 +104,7 @@ public partial class OptionPopup : Control
         }
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad);
-        tween.TweenProperty(
-            this,
-            "modulate",
-            Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)),
-            0.1
-        );
+        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.1);
         tween.TweenCallback(
             Callable.From(() =>
             {

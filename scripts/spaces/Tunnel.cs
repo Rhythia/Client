@@ -19,12 +19,9 @@ public partial class Tunnel : BaseSpace
         settings = SettingsManager.Instance.Settings;
         rings = GetNode<Node3D>("Rings");
 
-        tileMaterial =
-            (GetNode<MeshInstance3D>("Road").Mesh as PlaneMesh).Material as StandardMaterial3D;
-        ringMaterialA =
-            (rings.GetChild<MeshInstance3D>(0).Mesh as PlaneMesh).Material as StandardMaterial3D;
-        ringMaterialB =
-            (rings.GetChild<MeshInstance3D>(1).Mesh as PlaneMesh).Material as StandardMaterial3D;
+        tileMaterial = (GetNode<MeshInstance3D>("Road").Mesh as PlaneMesh).Material as StandardMaterial3D;
+        ringMaterialA = (rings.GetChild<MeshInstance3D>(0).Mesh as PlaneMesh).Material as StandardMaterial3D;
+        ringMaterialB = (rings.GetChild<MeshInstance3D>(1).Mesh as PlaneMesh).Material as StandardMaterial3D;
     }
 
     public override void _Process(double delta)
@@ -34,10 +31,7 @@ public partial class Tunnel : BaseSpace
         // Ring movement
         if (settings.SpaceEffects)
         {
-            rings.Position =
-                Vector3.Back
-                * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2)
-                % ring_loop_end;
+            rings.Position = Vector3.Back * (float)(Time.GetTicksMsec() / 1000f * settings.ApproachRate / 2) % ring_loop_end;
         }
 
         // Hit FX

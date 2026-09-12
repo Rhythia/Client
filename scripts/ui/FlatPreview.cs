@@ -20,11 +20,7 @@ public partial class FlatPreview : Panel
     {
         for (int i = 0; i < 9; i++)
         {
-            ColorRect tile = new()
-            {
-                Name = i.ToString(CultureInfo.CurrentCulture),
-                Color = transparent,
-            };
+            ColorRect tile = new() { Name = i.ToString(CultureInfo.CurrentCulture), Color = transparent };
 
             AddChild(tile);
 
@@ -75,20 +71,13 @@ public partial class FlatPreview : Panel
             lastPassedNote = Util.Misc.BinarySearch(noteTimestamps, Time);
         }
 
-        for (
-            int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1));
-            i < Map.Notes.Length;
-            i++
-        )
+        for (int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1)); i < Map.Notes.Length; i++)
         {
             var note = Map.Notes[i];
 
             if (Time >= note.Millisecond)
             {
-                Vector2I pos = new(
-                    Math.Clamp((int)Math.Floor(note.X + 1.5), 0, 2),
-                    Math.Clamp((int)Math.Floor(-note.Y + 1.5), 0, 2)
-                );
+                Vector2I pos = new(Math.Clamp((int)Math.Floor(note.X + 1.5), 0, 2), Math.Clamp((int)Math.Floor(-note.Y + 1.5), 0, 2));
                 ColorRect tile = tiles[pos.X + 3 * pos.Y];
 
                 tile.Color = bright;

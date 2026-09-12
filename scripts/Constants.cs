@@ -10,8 +10,7 @@ public partial class Constants : Node
 
     public static readonly string USER_FOLDER = OS.GetUserDataDir();
 
-    public static readonly string NIGHTLY_FOLDER =
-        $"{Path.GetDirectoryName(USER_FOLDER)}/SoundSpacePlus";
+    public static readonly string NIGHTLY_FOLDER = $"{Path.GetDirectoryName(USER_FOLDER)}/SoundSpacePlus";
 
     public static readonly string DEFAULT_MAP_EXT = "phxm";
 
@@ -21,10 +20,7 @@ public partial class Constants : Node
 
     public static readonly double GRID_SIZE = 3.0;
 
-    public static readonly Vector2 BOUNDS = new(
-        (float)(GRID_SIZE / 2 - CURSOR_SIZE / 2),
-        (float)(GRID_SIZE / 2 - CURSOR_SIZE / 2)
-    );
+    public static readonly Vector2 BOUNDS = new((float)(GRID_SIZE / 2 - CURSOR_SIZE / 2), (float)(GRID_SIZE / 2 - CURSOR_SIZE / 2));
 
     public static readonly double HIT_BOX_SIZE = 0.07;
 
@@ -32,15 +28,7 @@ public partial class Constants : Node
 
     public static readonly int BREAK_TIME = 4000; // used for skipping breaks mid-map
 
-    public static readonly string[] DIFFICULTIES =
-    [
-        "N/A",
-        "Easy",
-        "Medium",
-        "Hard",
-        "Insane",
-        "Illogical",
-    ];
+    public static readonly string[] DIFFICULTIES = ["N/A", "Easy", "Medium", "Hard", "Insane", "Illogical"];
 
     public static readonly Color[] DIFFICULTY_COLORS =
     [

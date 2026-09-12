@@ -32,11 +32,7 @@ public static class MapCache
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
             List<string> mapsList =
             [
-                .. Directory.GetFiles(
-                    MapUtil.MapsFolder,
-                    $"*.{Constants.DEFAULT_MAP_EXT}",
-                    SearchOption.AllDirectories
-                ),
+                .. Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories),
                 .. Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories),
             ];
 
@@ -105,18 +101,11 @@ public static class MapCache
 
             if (mapsHashSet.Contains(mapPath))
             {
-                DateTime metadataModifiedDate = File.GetLastWriteTime(
-                    Path.Combine(mapPath, "metadata.json")
-                );
-                DateTime objectModifiedDate = File.GetLastWriteTime(
-                    Path.Combine(mapPath, "objects.phxmo")
-                );
+                DateTime metadataModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "metadata.json"));
+                DateTime objectModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "objects.phxmo"));
 
                 // Time must be converted to string because the SQLite library doesn't support DateTime types -fog
-                string metadataResult = metadataModifiedDate.ToString(
-                    "O",
-                    CultureInfo.InvariantCulture
-                );
+                string metadataResult = metadataModifiedDate.ToString("O", CultureInfo.InvariantCulture);
                 string notesResult = objectModifiedDate.ToString("O", CultureInfo.InvariantCulture);
 
                 bool metadataCheck = map.LastModifiedMetadata == metadataResult;
@@ -159,14 +148,8 @@ public static class MapCache
                     continue;
                 }
 
-                newMap.LastModifiedMetadata = metadataModifiedDate.ToString(
-                    "O",
-                    CultureInfo.InvariantCulture
-                );
-                newMap.LastModifiedNotes = objectModifiedDate.ToString(
-                    "O",
-                    CultureInfo.InvariantCulture
-                );
+                newMap.LastModifiedMetadata = metadataModifiedDate.ToString("O", CultureInfo.InvariantCulture);
+                newMap.LastModifiedNotes = objectModifiedDate.ToString("O", CultureInfo.InvariantCulture);
 
                 newMap.Id = map.Id;
                 newMap.MetadataObjectHash = checksum;
@@ -273,9 +256,7 @@ public static class MapCache
 
     public static int InsertMap(Map map)
     {
-        var existing = DatabaseService.Connection.Find<Map>(x =>
-            x.MetadataObjectHash == map.MetadataObjectHash
-        );
+        var existing = DatabaseService.Connection.Find<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash);
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
 
         try
@@ -289,9 +270,7 @@ public static class MapCache
 
             DatabaseService.Connection.Insert(map);
 
-            return DatabaseService
-                .Connection.Get<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash)
-                .Id;
+            return DatabaseService.Connection.Get<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash).Id;
         }
         catch (Exception e)
         {
@@ -302,10 +281,7 @@ public static class MapCache
             }
 
             string newPath = Path.Combine(MapUtil.MapsFolder, map.Name);
-            string existingPath = Path.Combine(
-                MapUtil.MapsFolder,
-                existing?.FolderPath ?? updated.FolderPath
-            );
+            string existingPath = Path.Combine(MapUtil.MapsFolder, existing?.FolderPath ?? updated.FolderPath);
 
             if (existingPath != newPath)
             {

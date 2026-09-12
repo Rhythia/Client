@@ -21,9 +21,7 @@ public partial class Conspiracy : BaseSpace
         icons = GetNode<Node3D>("Icons");
         iconsStartPos = icons.Position;
         scrollingQuestionMarks = GetNode<Node3D>("ScrollingQuestionMarks");
-        scrollingQuestionMarkTexture =
-            (scrollingQuestionMarks.GetNode<MeshInstance3D>("Left").Mesh as PlaneMesh).Material
-            as StandardMaterial3D;
+        scrollingQuestionMarkTexture = (scrollingQuestionMarks.GetNode<MeshInstance3D>("Left").Mesh as PlaneMesh).Material as StandardMaterial3D;
         scrollingText = GetNode<Node3D>("ScrollingText");
         scrollingTextStartPos = scrollingText.Position;
 
@@ -38,8 +36,7 @@ public partial class Conspiracy : BaseSpace
         {
             scrollingQuestionMarkTexture.Uv1Offset += Vector3.Up * (float)delta / 10;
 
-            icons.Position =
-                iconsStartPos + Vector3.Up * (float)Mathf.Sin(Time.GetTicksMsec() / 1000f);
+            icons.Position = iconsStartPos + Vector3.Up * (float)Mathf.Sin(Time.GetTicksMsec() / 1000f);
 
             if (scrollingText.Position.Z < scrolling_text_loop_end)
             {

@@ -143,10 +143,7 @@ public partial class ReplayManager : Node
         file.Close();
 
         // open replay to store hash
-        file = Godot.FileAccess.Open(
-            $"{Constants.USER_FOLDER}/replays/{attempt.ID}.phxr",
-            Godot.FileAccess.ModeFlags.ReadWrite
-        );
+        file = Godot.FileAccess.Open($"{Constants.USER_FOLDER}/replays/{attempt.ID}.phxr", Godot.FileAccess.ModeFlags.ReadWrite);
         ulong length = file.GetLength();
         byte[] hash = SHA256.HashData(file.GetBuffer((long)length));
         file.StoreBuffer(hash);
@@ -248,9 +245,7 @@ public partial class ReplayManager : Node
     {
         Runner.Pause();
 
-        string texturePath = Runner.Playing
-            ? "res://textures/ui/pause.png"
-            : "res://textures/ui/play.png";
+        string texturePath = Runner.Playing ? "res://textures/ui/pause.png" : "res://textures/ui/play.png";
 
         SeekerPause.TextureNormal = GD.Load<Texture2D>(texturePath);
     }
@@ -330,10 +325,7 @@ public partial class ReplayManager : Node
                 continue;
 
             // advance frame forward deterministically making sure frames only advance when allowed
-            while (
-                replay.FrameIndex < replay.Frames.Length - 1
-                && Runner.Attempt.Progress >= replay.Frames[replay.FrameIndex + 1].Progress
-            )
+            while (replay.FrameIndex < replay.Frames.Length - 1 && Runner.Attempt.Progress >= replay.Frames[replay.FrameIndex + 1].Progress)
             {
                 replay.FrameIndex++;
 
@@ -349,16 +341,9 @@ public partial class ReplayManager : Node
             var currentFrame = replay.Frames[replay.FrameIndex];
             var nextFrame = replay.Frames[next];
 
-            double inverse = Mathf.InverseLerp(
-                currentFrame.Progress,
-                nextFrame.Progress,
-                Runner.Attempt.Progress
-            );
+            double inverse = Mathf.InverseLerp(currentFrame.Progress, nextFrame.Progress, Runner.Attempt.Progress);
 
-            Vector2 cursorPos = currentFrame.CursorPosition.Lerp(
-                nextFrame.CursorPosition,
-                (float)Math.Clamp(inverse, 0, 1)
-            );
+            Vector2 cursorPos = currentFrame.CursorPosition.Lerp(nextFrame.CursorPosition, (float)Math.Clamp(inverse, 0, 1));
 
             CursorPosition = cursorPos;
 

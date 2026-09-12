@@ -11,12 +11,8 @@ public partial class Grid : MeshInstance3D, IUIComponent
     public MeshInstance3D GridGuides { get; set; }
     public MeshInstance3D VisibilityAssist { get; set; }
 
-    private static readonly PackedScene hit_feedback = GD.Load<PackedScene>(
-        "res://prefabs/hit_popup.tscn"
-    );
-    private static readonly PackedScene miss_feedback = GD.Load<PackedScene>(
-        "res://prefabs/miss_icon.tscn"
-    );
+    private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
+    private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
     private int hitPopups,
         missPopups;
 
@@ -33,18 +29,12 @@ public partial class Grid : MeshInstance3D, IUIComponent
         VisibilityAssist ??= GetNode<MeshInstance3D>("VisibilityAssist");
 
         VisibilityAssist.Visible = Runner.Attempt.Settings.VisibilityAssist;
-        (VisibilityAssist.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager
-            .Instance
-            .Skin
-            .VisibilityAssistImage;
+        (VisibilityAssist.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.VisibilityAssistImage;
 
         GridGuides ??= GetNode<MeshInstance3D>("GridGuides");
 
         GridGuides.Visible = Runner.Attempt.Settings.GridGuides;
-        (GridGuides.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager
-            .Instance
-            .Skin
-            .GridGuidesImage;
+        (GridGuides.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridGuidesImage;
 
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         (Cursor.Mesh as QuadMesh).Size = new Vector2(
@@ -52,27 +42,18 @@ public partial class Grid : MeshInstance3D, IUIComponent
             (float)(Constants.CURSOR_SIZE * Runner.Attempt.Settings.CursorScale)
         );
 
-        (Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager
-            .Instance
-            .Skin
-            .CursorImage;
+        (Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
 
         // Cursor Transparency
         float alpha = Math.Clamp((float)(double)Runner.Attempt.Settings.CursorOpacity, 0, 1);
         Cursor.Transparency = 1f - alpha;
 
         CursorTrail ??= GetNode<MultiMeshInstance3D>("CursorTrail");
-        (CursorTrail.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager
-            .Instance
-            .Skin
-            .CursorImage;
+        (CursorTrail.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
 
         CursorTrail.Transparency = 1f - alpha;
 
-        (GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager
-            .Instance
-            .Skin
-            .GridImage;
+        (GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
 
         Runner.HitResultChanged += onHitResultChanged;
     }
@@ -81,18 +62,9 @@ public partial class Grid : MeshInstance3D, IUIComponent
     {
         float lateness = Runner.Attempt.IsReplay
             ? Runner.Attempt.HitsInfo[noteIndex]
-            : (float)(
-                ((int)Runner.Attempt.Progress - Runner.Attempt.Map.Notes[noteIndex].Millisecond)
-                / Runner.Speed
-            );
+            : (float)(((int)Runner.Attempt.Progress - Runner.Attempt.Map.Notes[noteIndex].Millisecond) / Runner.Speed);
         float factor = 1 - Math.Max(0, lateness - 25) / 150f;
-        uint hitScore = (uint)(
-            100
-            * Runner.Attempt.ComboMultiplier
-            * Runner.Attempt.ModsMultiplier
-            * factor
-            * ((Runner.Speed - 1) / 2.5 + 1)
-        );
+        uint hitScore = (uint)(100 * Runner.Attempt.ComboMultiplier * Runner.Attempt.ModsMultiplier * factor * ((Runner.Speed - 1) / 2.5 + 1));
 
         switch (result)
         {

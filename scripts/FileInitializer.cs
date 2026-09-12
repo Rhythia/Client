@@ -42,28 +42,18 @@ public partial class FileInitializer : Node
                 continue;
             }
 
-            var source = Godot.FileAccess.Open(
-                $"res://user{resDir}/{resFile}",
-                Godot.FileAccess.ModeFlags.Read
-            );
+            var source = Godot.FileAccess.Open($"res://user{resDir}/{resFile}", Godot.FileAccess.ModeFlags.Read);
             byte[] buffer = source.GetBuffer((long)source.GetLength());
             source.Close();
 
-            Godot.FileAccess copy = Godot.FileAccess.Open(
-                userFile,
-                Godot.FileAccess.ModeFlags.Write
-            );
+            Godot.FileAccess copy = Godot.FileAccess.Open(userFile, Godot.FileAccess.ModeFlags.Write);
             copy.StoreBuffer(buffer);
             copy.Close();
         }
 
         // Attempts to load files that have not been added as a resource.
 
-        foreach (
-            string resFile in ResourceLoader
-                .ListDirectory($"res://user{resDir}")
-                .Where(x => x.Last() != '/')
-        )
+        foreach (string resFile in ResourceLoader.ListDirectory($"res://user{resDir}").Where(x => x.Last() != '/'))
         {
             string userFile = $"{userDir}/{resFile}";
             string ext = resFile.GetExtension();
@@ -85,17 +75,10 @@ public partial class FileInitializer : Node
                     buffer = (resource as AudioStreamMP3).Data;
                     break;
                 case "ArrayMesh":
-                    objExporter.Call(
-                        "save_mesh_to_files",
-                        resource,
-                        userDir,
-                        resFile.Replace(".obj", "")
-                    );
+                    objExporter.Call("save_mesh_to_files", resource, userDir, resFile.Replace(".obj", ""));
                     continue;
                 default:
-                    Logger.Error(
-                        $"[{resFile}] {resource.GetType().Name} is not supported for the user folder."
-                    );
+                    Logger.Error($"[{resFile}] {resource.GetType().Name} is not supported for the user folder.");
                     continue;
             }
 

@@ -14,9 +14,7 @@ public partial class MapInfo : AspectRatioContainer
 
     private Map pendingSelection;
 
-    private readonly PackedScene infoContainerTemplate = ResourceLoader.Load<PackedScene>(
-        "res://prefabs/map_info_container.tscn"
-    );
+    private readonly PackedScene infoContainerTemplate = ResourceLoader.Load<PackedScene>("res://prefabs/map_info_container.tscn");
     private Stack<MapInfoContainer> infoContainerCache = [];
 
     public override void _Ready()
@@ -44,8 +42,7 @@ public partial class MapInfo : AspectRatioContainer
 
     public override void _Draw()
     {
-        float height =
-            (AnchorBottom - AnchorTop) * GetParent<Control>().Size.Y - OffsetTop + OffsetBottom;
+        float height = (AnchorBottom - AnchorTop) * GetParent<Control>().Size.Y - OffsetTop + OffsetBottom;
 
         holder.CustomMinimumSize = Vector2.One * Math.Min(850, height);
     }
@@ -96,10 +93,7 @@ public partial class MapInfo : AspectRatioContainer
                 })
             );
 
-        InfoContainer =
-            infoContainerCache.Count > 0
-                ? infoContainerCache.Pop()
-                : infoContainerTemplate.Instantiate<MapInfoContainer>();
+        InfoContainer = infoContainerCache.Count > 0 ? infoContainerCache.Pop() : infoContainerTemplate.Instantiate<MapInfoContainer>();
 
         holder.AddChild(InfoContainer);
         InfoContainer.Setup(map);

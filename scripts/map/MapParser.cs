@@ -27,8 +27,7 @@ public partial class MapParser : Node
         Instance = this;
     }
 
-    public static bool IsValidExt(string ext) =>
-        ext == "phxm" || ext == "sspm" || ext == "txt" || ext == "rhm";
+    public static bool IsValidExt(string ext) => ext == "phxm" || ext == "sspm" || ext == "txt" || ext == "rhm";
 
     public static async Task BulkImport(string[] files, bool notify = false)
     {
@@ -48,10 +47,7 @@ public partial class MapParser : Node
             Callable.From(() => Instance.EmitSignal(SignalName.MapsImportStarted)).CallDeferred();
             Parallel.ForEach(
                 files,
-                new ParallelOptions
-                {
-                    MaxDegreeOfParallelism = Math.Max(System.Environment.ProcessorCount / 4, 1),
-                },
+                new ParallelOptions { MaxDegreeOfParallelism = Math.Max(System.Environment.ProcessorCount / 4, 1) },
                 file =>
                 {
                     try
@@ -65,9 +61,7 @@ public partial class MapParser : Node
                         }
 
                         System.Threading.Interlocked.Increment(ref good);
-                        Callable
-                            .From(() => Instance.EmitSignal(SignalName.MapImported, map))
-                            .CallDeferred();
+                        Callable.From(() => Instance.EmitSignal(SignalName.MapImported, map)).CallDeferred();
                     }
                     catch
                     {
@@ -77,12 +71,8 @@ public partial class MapParser : Node
             );
 
             double duration = (Time.GetTicksUsec() - start) / 1000;
-            Logger.Log(
-                $"BULK IMPORT: {duration}ms; TOTAL: {good + corrupted}; CORRUPT: {corrupted}"
-            );
-            Callable
-                .From(() => Instance.EmitSignal(SignalName.MapsImportFinished, maps.ToArray()))
-                .CallDeferred();
+            Logger.Log($"BULK IMPORT: {duration}ms; TOTAL: {good + corrupted}; CORRUPT: {corrupted}");
+            Callable.From(() => Instance.EmitSignal(SignalName.MapsImportFinished, maps.ToArray())).CallDeferred();
         });
 
         SoundManager.UpdateJukeboxQueue();
@@ -121,13 +111,7 @@ public partial class MapParser : Node
                 bw.Write((uint)decodedMap.Notes.Length);
                 foreach (var note in decodedMap.Notes)
                 {
-                    bool quantum =
-                        (int)note.X != note.X
-                        || (int)note.Y != note.Y
-                        || note.X < -1
-                        || note.X > 1
-                        || note.Y < -1
-                        || note.Y > 1;
+                    bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
                     bw.Write((uint)note.Millisecond);
                     bw.Write(Convert.ToByte(quantum));
                     if (quantum)
@@ -200,13 +184,7 @@ public partial class MapParser : Node
             bw.Write((uint)map.Notes.Length);
             foreach (var note in map.Notes)
             {
-                bool quantum =
-                    (int)note.X != note.X
-                    || (int)note.Y != note.Y
-                    || note.X < -1
-                    || note.X > 1
-                    || note.Y < -1
-                    || note.Y > 1;
+                bool quantum = (int)note.X != note.X || (int)note.Y != note.Y || note.X < -1 || note.X > 1 || note.Y < -1 || note.Y > 1;
                 bw.Write((uint)note.Millisecond);
                 bw.Write(Convert.ToByte(quantum));
                 if (quantum)
@@ -253,19 +231,12 @@ public partial class MapParser : Node
 
         File.WriteAllText(Path.Combine(mapFolderPath, "metadata.json"), map.EncodeMeta());
 
-        byte[] hash = Misc.HashFiles([
-            Path.Combine(mapFolderPath, "metadata.json"),
-            Path.Combine(mapFolderPath, "objects.phxmo"),
-        ]);
+        byte[] hash = Misc.HashFiles([Path.Combine(mapFolderPath, "metadata.json"), Path.Combine(mapFolderPath, "objects.phxmo")]);
 
         map.MetadataObjectHash = Convert.ToHexStringLower(hash);
 
-        DateTime metadataModified = File.GetLastWriteTime(
-            Path.Combine(mapFolderPath, "metadata.json")
-        );
-        DateTime objectsModified = File.GetLastWriteTime(
-            Path.Combine(mapFolderPath, "objects.phxmo")
-        );
+        DateTime metadataModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "metadata.json"));
+        DateTime objectsModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "objects.phxmo"));
         map.LastModifiedMetadata = metadataModified.ToString("O", CultureInfo.InvariantCulture);
         map.LastModifiedNotes = objectsModified.ToString("O", CultureInfo.InvariantCulture);
 
@@ -275,18 +246,11 @@ public partial class MapParser : Node
 
         if (logBenchmark)
         {
-            Logger.Log(
-                $"ENCODING {Constants.DEFAULT_MAP_EXT.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms"
-            );
+            Logger.Log($"ENCODING {Constants.DEFAULT_MAP_EXT.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms");
         }
     }
 
-    public static Map Decode(
-        string path,
-        string audio = null,
-        bool logBenchmark = false,
-        bool save = false
-    )
+    public static Map Decode(string path, string audio = null, bool logBenchmark = false, bool save = false)
     {
         // if (!File.Exists(path))
         // {
@@ -349,12 +313,7 @@ public partial class MapParser : Node
             {
                 string[] subsplit = split[i].Split("|");
 
-                notes[i - 1] = new Note(
-                    i - 1,
-                    subsplit[2].ToInt(),
-                    -subsplit[0].ToFloat() + 1,
-                    subsplit[1].ToFloat() - 1
-                );
+                notes[i - 1] = new Note(i - 1, subsplit[2].ToInt(), -subsplit[0].ToFloat() + 1, subsplit[1].ToFloat() - 1);
             }
 
             if (audioPath != null)
@@ -700,20 +659,7 @@ public partial class MapParser : Node
                 notes[i].Index = i;
             }
 
-            map = new(
-                path,
-                notes,
-                id,
-                artist,
-                song,
-                0,
-                mappers,
-                difficulty,
-                difficultyName,
-                (int)mapLength,
-                audioBuffer,
-                coverBuffer
-            );
+            map = new(path, notes, id, artist, song, 0, mappers, difficulty, difficultyName, (int)mapLength, audioBuffer, coverBuffer);
         }
         catch (Exception exception)
         {
@@ -767,10 +713,7 @@ public partial class MapParser : Node
             metadata.TryGetValue("ArtistLink", out Variant artistLink);
             metadata.TryGetValue("ArtistPlatform", out Variant artistPlatform);
 
-            byte[] hash = Misc.HashFiles([
-                Path.Combine(path, "metadata.json"),
-                Path.Combine(path, "objects.phxmo"),
-            ]);
+            byte[] hash = Misc.HashFiles([Path.Combine(path, "metadata.json"), Path.Combine(path, "objects.phxmo")]);
 
             DateTime metadataModified = File.GetLastWriteTime(Path.Combine(path, "metadata.json"));
             DateTime objectsModified = File.GetLastWriteTime(Path.Combine(path, "objects.phxmo"));
@@ -804,10 +747,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            _ = ToastNotification.Notify(
-                $"{Path.GetFileNameWithoutExtension(path)} is not the proper format!",
-                2
-            );
+            _ = ToastNotification.Notify($"{Path.GetFileNameWithoutExtension(path)} is not the proper format!", 2);
             Logger.Error(exception);
             throw;
         }
@@ -826,9 +766,7 @@ public partial class MapParser : Node
         if (Directory.Exists(extractedFolderPath))
         {
             Directory.Delete(extractedFolderPath, true);
-            Map existingMap = DatabaseService
-                .Connection.Table<Map>()
-                .FirstOrDefault(x => x.FolderPath == extractedFolderPath);
+            Map existingMap = DatabaseService.Connection.Table<Map>().FirstOrDefault(x => x.FolderPath == extractedFolderPath);
             MapCache.RemoveMap(existingMap);
         }
 
@@ -958,8 +896,7 @@ public partial class MapParser : Node
 
     private static byte[] getZipEntryBuffer(ZipArchive file, string entryName)
     {
-        ZipArchiveEntry entry =
-            file.GetEntry(entryName) ?? throw new($"ZipArchiveEntry {entryName} is missing!");
+        ZipArchiveEntry entry = file.GetEntry(entryName) ?? throw new($"ZipArchiveEntry {entryName} is missing!");
         Stream stream = entry.Open();
         MemoryStream memoryStream = new();
 

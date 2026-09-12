@@ -464,8 +464,7 @@ public partial class SettingsProfile
         {
             Id = "ApproachRate",
             Title = "Approach Rate",
-            Description =
-                "(AR) Approach rate of hit objects, adjusts how fast hit objects come to the playfield (bigger # = faster)",
+            Description = "(AR) Approach rate of hit objects, adjusts how fast hit objects come to the playfield (bigger # = faster)",
             Section = SettingsSection.Gameplay,
             UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
@@ -480,8 +479,7 @@ public partial class SettingsProfile
         {
             Id = "ApproachDistance",
             Title = "Approach Distance",
-            Description =
-                "(AD) Approach distance of hit objects, adjusts how far away hit objects spawn (bigger # = further)",
+            Description = "(AD) Approach distance of hit objects, adjusts how far away hit objects spawn (bigger # = further)",
             Section = SettingsSection.Gameplay,
             UpdateAction = (_, _) => updateApproachTime(),
             Slider = new()
@@ -514,8 +512,7 @@ public partial class SettingsProfile
         {
             Id = "FadeIn",
             Title = "Fade In",
-            Description =
-                "Starting from when hit objects spawn in, the distance required to travel before becoming fully opaque",
+            Description = "Starting from when hit objects spawn in, the distance required to travel before becoming fully opaque",
             Section = SettingsSection.Gameplay,
             Slider = new()
             {
@@ -622,9 +619,7 @@ public partial class SettingsProfile
                     Description = "Open the skin folder",
                     OnPressed = () =>
                     {
-                        OS.ShellOpen(
-                            $"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}"
-                        );
+                        OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}");
                     },
                 },
             ],
@@ -749,8 +744,7 @@ public partial class SettingsProfile
         {
             Id = "NoteOpacityExponent",
             Title = "Note Opacity Exponent",
-            Description =
-                "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly",
+            Description = "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly",
             Section = SettingsSection.Visual,
             Slider = new()
             {
@@ -920,8 +914,7 @@ public partial class SettingsProfile
         {
             Id = "SimpleHUD",
             Title = "Simple HUD",
-            Description =
-                "Hides the regular left and right panels, and instead displays a simple miss counter on the right",
+            Description = "Hides the regular left and right panels, and instead displays a simple miss counter on the right",
             Section = SettingsSection.Visual,
         };
 
@@ -978,8 +971,7 @@ public partial class SettingsProfile
         {
             Id = "BorderlessFullscreen",
             Title = "Borderless Fullscreen",
-            Description =
-                "Alters the Fullscreen toggle to use Borderless fullscreen instead of Exclusive, may fix some issues with drawing tablets",
+            Description = "Alters the Fullscreen toggle to use Borderless fullscreen instead of Exclusive, may fix some issues with drawing tablets",
             Section = SettingsSection.Video,
             UpdateAction = (_, _) => updateWindowMode(),
         };
@@ -997,8 +989,7 @@ public partial class SettingsProfile
         {
             Id = "FPS",
             Title = "FPS",
-            Description =
-                "Adjusts maximum frames per second, we recommend this being 2x your refresh rate",
+            Description = "Adjusts maximum frames per second, we recommend this being 2x your refresh rate",
             Section = SettingsSection.Video,
             Slider = new()
             {
@@ -1019,9 +1010,7 @@ public partial class SettingsProfile
             {
                 if (SceneManager.Scene is not Game)
                 {
-                    DisplayServer.WindowSetVsyncMode(
-                        value ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled
-                    );
+                    DisplayServer.WindowSetVsyncMode(value ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
                 }
             },
         };
@@ -1281,11 +1270,8 @@ public partial class SettingsProfile
                     OnPressed = () =>
                     {
                         importMeshesFromNightly();
-                        SettingsManager.Instance.Settings.NoteMesh.List.Values =
-                            getAvailableMeshes();
-                        SettingsMenu.Instance.RefreshList(
-                            SettingsManager.Instance.Settings.NoteMesh
-                        );
+                        SettingsManager.Instance.Settings.NoteMesh.List.Values = getAvailableMeshes();
+                        SettingsMenu.Instance.RefreshList(SettingsManager.Instance.Settings.NoteMesh);
                     },
                 },
             ],
@@ -1308,9 +1294,7 @@ public partial class SettingsProfile
                     {
                         importColorsetsFromNightly();
                         SettingsManager.Load();
-                        SettingsMenu.Instance.RefreshList(
-                            SettingsManager.Instance.Settings.NoteColors
-                        );
+                        SettingsMenu.Instance.RefreshList(SettingsManager.Instance.Settings.NoteColors);
                     },
                 },
             ],
@@ -1337,8 +1321,7 @@ public partial class SettingsProfile
         {
             Id = "OptionalPlaytestParameters",
             Title = "Use Editor Playtest Settings",
-            Description =
-                "Takes \"Start From\" and \"Speed\" from external editors like the SSQE when using the \"Playtest\" button",
+            Description = "Takes \"Start From\" and \"Speed\" from external editors like the SSQE when using the \"Playtest\" button",
             Section = SettingsSection.Other,
         };
 
@@ -1387,11 +1370,7 @@ public partial class SettingsProfile
             .GetProperties()
             .Where(p => typeof(ISettingsItem).IsAssignableFrom(p.PropertyType))
             .Where(p => Attribute.IsDefined(p, typeof(OrderAttribute)))
-            .OrderBy(p =>
-                (
-                    (OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false).Single()
-                ).Order
-            )
+            .OrderBy(p => ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order)
             .Select(p => (ISettingsItem)p.GetValue(this))
             .ToList();
 
@@ -1411,11 +1390,7 @@ public partial class SettingsProfile
     private void updateWindowMode()
     {
         var windowMode = Fullscreen
-            ? (
-                !BorderlessFullscreen
-                    ? DisplayServer.WindowMode.ExclusiveFullscreen
-                    : DisplayServer.WindowMode.Fullscreen
-            )
+            ? (!BorderlessFullscreen ? DisplayServer.WindowMode.ExclusiveFullscreen : DisplayServer.WindowMode.Fullscreen)
             : DisplayServer.WindowMode.Windowed;
 
         DisplayServer.WindowSetMode(windowMode);
@@ -1444,9 +1419,7 @@ public partial class SettingsProfile
 
         if (nightlySettings == null)
         {
-            ToastNotification.Notify(
-                "Nightly settings not found, choose the settings file manually."
-            );
+            ToastNotification.Notify("Nightly settings not found, choose the settings file manually.");
             return;
         }
 
@@ -1495,62 +1468,41 @@ public partial class SettingsProfile
         Dictionary<string, Func<Variant>> conversions = new()
         {
             // sensitivity scales with fov but in nightly it doesnt
-            ["Sensitivity"] = () =>
-                getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70))
-                ?? nightlyProfile.Sensitivity,
-            ["AbsoluteSensitivity"] = () =>
-                getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity,
-            ["AbsoluteInput"] = () =>
-                getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput,
-            ["CursorDrift"] = () =>
-                getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift,
-            ["ApproachRate"] = () =>
-                getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate,
-            ["ApproachDistance"] = () =>
-                getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance,
+            ["Sensitivity"] = () => getSetting<double>("sensitivity") * 2.16 * (70 / (getSetting<double>("fov") ?? 70)) ?? nightlyProfile.Sensitivity,
+            ["AbsoluteSensitivity"] = () => getSetting<double>("absolute_scale") ?? nightlyProfile.AbsoluteSensitivity,
+            ["AbsoluteInput"] = () => getSetting<bool>("absolute_mode") ?? nightlyProfile.AbsoluteInput,
+            ["CursorDrift"] = () => getSetting<bool>("enable_drift_cursor") ?? nightlyProfile.CursorDrift,
+            ["ApproachRate"] = () => getSetting<double>("approach_rate") ?? nightlyProfile.ApproachRate,
+            ["ApproachDistance"] = () => getSetting<double>("spawn_distance") ?? nightlyProfile.ApproachDistance,
             ["Pushback"] = () => getSetting<bool>("do_note_pushback") ?? nightlyProfile.Pushback,
-            ["CameraParallax"] = () =>
-                getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax,
-            ["HUDParallax"] = () =>
-                getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax,
+            ["CameraParallax"] = () => getSetting<double>("parallax") * 0.025 ?? nightlyProfile.CameraParallax,
+            ["HUDParallax"] = () => getSetting<double>("ui_parallax") * 0.025 ?? nightlyProfile.HUDParallax,
             ["FoV"] = () => getSetting<double>("fov") ?? nightlyProfile.FoV,
             ["Colors"] = () => getStringSetting("selected_colorset") ?? nightlyProfile.NoteColors,
             ["NoteMesh"] = () => getStringSetting("selected_mesh") ?? nightlyProfile.NoteMesh,
             ["NoteSize"] = () => getSetting<double>("note_size") * 0.875 ?? nightlyProfile.NoteSize,
-            ["NoteOpacity"] = () =>
-                getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity,
-            ["CursorScale"] = () =>
-                getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale,
-            ["CursorRotation"] = () =>
-                getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation,
+            ["NoteOpacity"] = () => getSetting<double>("note_opacity") ?? nightlyProfile.NoteOpacity,
+            ["CursorScale"] = () => getSetting<double>("cursor_scale") ?? nightlyProfile.CursorScale,
+            ["CursorRotation"] = () => getSetting<double>("cursor_spin") ?? nightlyProfile.CursorRotation,
             ["CursorTrail"] = () => getSetting<bool>("cursor_trail") ?? nightlyProfile.CursorTrail,
             ["TrailTime"] = () => getSetting<double>("trail_time") ?? nightlyProfile.TrailTime,
-            ["TrailDetail"] = () =>
-                getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail,
+            ["TrailDetail"] = () => getSetting<double>("trail_detail") ?? nightlyProfile.TrailDetail,
             ["SimpleHUD"] = () => getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD,
             ["HitPopups"] = () => getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups,
-            ["MissPopups"] = () =>
-                getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups,
-            ["Fullscreen"] = () =>
-                getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen,
+            ["MissPopups"] = () => getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups,
+            ["Fullscreen"] = () => getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen,
             ["FPS"] = () => getSetting<int>("target_fps") ?? nightlyProfile.FPS,
             ["VolumeMaster"] = () => 100,
             ["VolumeMusic"] = () => importVolume("music_volume", 70),
             ["VolumeHitSound"] = () => importVolume("hit_volume", 80),
             ["VolumeMissSound"] = () => importVolume("miss_volume", 80),
             ["VolumeSFX"] = () => importVolume("fail_volume", 80),
-            ["EnableHitSound"] = () =>
-                getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound,
-            ["EnableMissSound"] = () =>
-                getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound,
-            ["EnableMenuMusic"] = () =>
-                getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic,
-            ["AutoplayJukebox"] = () =>
-                getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox,
-            ["LocalOffset"] = () =>
-                getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset,
-            ["RecordReplays"] = () =>
-                getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays,
+            ["EnableHitSound"] = () => getSetting<bool>("play_hit_snd") ?? nightlyProfile.EnableHitSound,
+            ["EnableMissSound"] = () => getSetting<bool>("play_miss_snd") ?? nightlyProfile.EnableMissSound,
+            ["EnableMenuMusic"] = () => getSetting<bool>("play_menu_music") ?? nightlyProfile.EnableMenuMusic,
+            ["AutoplayJukebox"] = () => getSetting<bool>("auto_preview_song") ?? nightlyProfile.AutoplayJukebox,
+            ["LocalOffset"] = () => getSetting<double>("music_offset") ?? nightlyProfile.LocalOffset,
+            ["RecordReplays"] = () => getSetting<bool>("record_replays") ?? nightlyProfile.RecordReplays,
         };
 
         var settingsById = typeof(SettingsProfile)

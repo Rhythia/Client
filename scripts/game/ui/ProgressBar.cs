@@ -24,10 +24,7 @@ public partial class ProgressBar : UIComponent
 
         lastProgress = (float)attempt.Progress;
 
-        Vector2 progressSize = new Vector2(
-            32 + (float)(Runner.Attempt.Progress / Runner.Attempt.Length) * 1024,
-            80
-        );
+        Vector2 progressSize = new Vector2(32 + (float)(Runner.Attempt.Progress / Runner.Attempt.Length) * 1024, 80);
 
         if ((int)progressSize.X != (int)progressBarTexture.Size.X)
         {

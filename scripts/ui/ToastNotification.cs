@@ -6,9 +6,7 @@ public partial class ToastNotification : Node
 {
     public static ToastNotification Instance;
 
-    private static readonly PackedScene template = GD.Load<PackedScene>(
-        "res://prefabs/notification.tscn"
-    );
+    private static readonly PackedScene template = GD.Load<PackedScene>("res://prefabs/notification.tscn");
 
     private static int activeNotifications = 0;
 
@@ -48,12 +46,7 @@ public partial class ToastNotification : Node
 
         Tween inTween = notification.CreateTween();
         inTween
-            .TweenProperty(
-                notification,
-                "position",
-                notification.Position + Vector2.Left * (notification.Size.X + 8),
-                0.8
-            )
+            .TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8)
             .SetTrans(Tween.TransitionType.Quad)
             .SetEase(Tween.EaseType.Out);
         inTween.Play();
@@ -64,12 +57,7 @@ public partial class ToastNotification : Node
 
         Tween outTween = notification.CreateTween();
         outTween
-            .TweenProperty(
-                notification,
-                "position",
-                notification.Position + Vector2.Right * (notification.Size.X + 8),
-                0.8
-            )
+            .TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8)
             .SetTrans(Tween.TransitionType.Quad)
             .SetEase(Tween.EaseType.In);
         outTween.TweenCallback(

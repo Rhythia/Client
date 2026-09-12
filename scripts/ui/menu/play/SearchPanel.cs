@@ -23,20 +23,11 @@ public partial class SearchPanel : Panel
 
     public override void _Input(InputEvent @event)
     {
-        if (
-            @event is InputEventKey eventKey
-            && eventKey.Pressed
-            && !eventKey.CtrlPressed
-            && !eventKey.AltPressed
-        )
+        if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.CtrlPressed && !eventKey.AltPressed)
         {
             Control focusOwner = GetViewport().GuiGetFocusOwner();
 
-            if (
-                focusOwner is not LineEdit
-                && eventKey.Keycode != Key.Space
-                && eventKey.Keycode != Key.Escape
-            )
+            if (focusOwner is not LineEdit && eventKey.Keycode != Key.Space && eventKey.Keycode != Key.Escape)
             {
                 lineEdit.GrabFocus();
             }

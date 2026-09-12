@@ -12,8 +12,6 @@ public class Discord
 
         Client.Initialize();
 
-        Client.SetPresence(
-            new RichPresence() { Assets = new Assets() { LargeImageKey = "short" } }
-        );
+        Client.SetPresence(new RichPresence() { Assets = new Assets() { LargeImageKey = "short" } });
     }
 }

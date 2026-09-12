@@ -10,8 +10,7 @@ public partial class AudioSpectrum : Panel
     {
         get;
         set =>
-            SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)
-                AudioServer.GetBusEffectInstance(Math.Clamp(value, 0, AudioServer.BusCount), 0);
+            SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(Math.Clamp(value, 0, AudioServer.BusCount), 0);
     } = 0;
 
     [Export]
@@ -57,8 +56,7 @@ public partial class AudioSpectrum : Panel
 
     public override void _Ready()
     {
-        SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)
-            AudioServer.GetBusEffectInstance(Bus, 0);
+        SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(Bus, 0);
     }
 
     public override void _Process(double delta)
@@ -77,15 +75,9 @@ public partial class AudioSpectrum : Panel
         {
             float freqLower = MinFreq + Math.Max(0, i * freqStep);
             float freqUpper = freqLower + freqStep;
-            float magnitude = SpectrumAnalyzer
-                .GetMagnitudeForFrequencyRange(freqLower, freqUpper)
-                .Length();
+            float magnitude = SpectrumAnalyzer.GetMagnitudeForFrequencyRange(freqLower, freqUpper).Length();
 
-            magnitudes[i] = Mathf.Lerp(
-                magnitudes[i],
-                magnitude,
-                (float)Math.Min(1, delta * Responsiveness)
-            );
+            magnitudes[i] = Mathf.Lerp(magnitudes[i], magnitude, (float)Math.Min(1, delta * Responsiveness));
 
             if (magnitudes[i] > maxMagnitude)
             {
@@ -93,9 +85,7 @@ public partial class AudioSpectrum : Panel
             }
         }
 
-        targetCeiling = NormalizeMagnitude
-            ? (maxMagnitude > 0.0015 ? maxMagnitude : targetCeiling)
-            : MagnitudeCeiling;
+        targetCeiling = NormalizeMagnitude ? (maxMagnitude > 0.0015 ? maxMagnitude : targetCeiling) : MagnitudeCeiling;
         ceiling = Mathf.Lerp(ceiling, targetCeiling, (float)Math.Min(1, delta * 6));
 
         QueueRedraw();
@@ -114,10 +104,7 @@ public partial class AudioSpectrum : Panel
         for (int i = 0; i < barCount; i++)
         {
             float scale = Math.Clamp(magnitudes[i] / ceiling, BarMinSize / size.Y, 1);
-            Vector2 start = new(
-                i / (barCount - 1f) * size.X + BarSize / 2,
-                Align * (1 - scale) * size.Y
-            );
+            Vector2 start = new(i / (barCount - 1f) * size.X + BarSize / 2, Align * (1 - scale) * size.Y);
             Vector2 end = start + Vector2.Down * scale * size.Y;
 
             points[i * 2] = start;

@@ -48,9 +48,7 @@ public partial class PauseMenu : Panel
         SoundManager.Song.PitchScale = (float)attempt.Speed;
         SoundManager.Song.StreamPaused = !runner.Playing;
 
-        MenuCursor.Instance.UpdateVisible(
-            Shown && SettingsManager.Instance.Settings.UseCursorInMenus.Value
-        );
+        MenuCursor.Instance.UpdateVisible(Shown && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
 
         if (Shown)
         {
@@ -83,12 +81,7 @@ public partial class PauseMenu : Panel
 
         Tween tween = CreateTween();
         tween
-            .TweenProperty(
-                this,
-                "modulate",
-                Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0)),
-                instant ? 0 : 0.25
-            )
+            .TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0)), instant ? 0 : 0.25)
             .SetTrans(Tween.TransitionType.Quad);
         tween.TweenCallback(
             Callable.From(() =>

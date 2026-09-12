@@ -73,11 +73,7 @@ public partial class Attempt : RefCounted
         Replay[] replays = null
     )
     {
-        ID =
-            $"{map.Name}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(
-                ":",
-                "_"
-            );
+        ID = $"{map.Name}_{OS.GetUniqueId()}_{Time.GetDatetimeStringFromUnixTime((long)Time.GetUnixTimeFromSystem())}".Replace(":", "_");
         Settings = SettingsManager.Instance.Settings;
         Replays = replays;
         IsReplay = Replays != null;

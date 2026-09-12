@@ -172,10 +172,7 @@ public partial class Map : RefCounted
         Notes = data ?? [];
         Length = length ?? Notes[^1].Millisecond;
         Name = Path.GetFileNameWithoutExtension(FolderPath);
-        AudioExt =
-            (AudioBuffer != null && Encoding.UTF8.GetString(AudioBuffer[0..4]) == "OggS")
-                ? "ogg"
-                : "mp3";
+        AudioExt = (AudioBuffer != null && Encoding.UTF8.GetString(AudioBuffer[0..4]) == "OggS") ? "ogg" : "mp3";
 
         MapManager.Sanitize(this);
     }

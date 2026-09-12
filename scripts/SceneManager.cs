@@ -47,9 +47,7 @@ public partial class SceneManager : Node
     public static void Load(string path, bool skipTransition = false)
     {
         bool isSceneLoaded = Scenes.TryGetValue(path, out BaseScene loadedScene);
-        var newScene = isSceneLoaded
-            ? loadedScene
-            : (BaseScene)ResourceLoader.Load<PackedScene>(path).Instantiate();
+        var newScene = isSceneLoaded ? loadedScene : (BaseScene)ResourceLoader.Load<PackedScene>(path).Instantiate();
 
         //         temp solution until these scenes are non-static
         if (!isSceneLoaded && newScene.Name != "SceneResults")
@@ -61,12 +59,7 @@ public partial class SceneManager : Node
 
         if (Scene != null)
         {
-            outTween.TweenProperty(
-                Scene.Transition,
-                "self_modulate",
-                Color.FromHtml("ffffffff"),
-                skipTransition ? 0 : 0.25
-            );
+            outTween.TweenProperty(Scene.Transition, "self_modulate", Color.FromHtml("ffffffff"), skipTransition ? 0 : 0.25);
         }
 
         outTween.TweenCallback(
@@ -83,12 +76,7 @@ public partial class SceneManager : Node
                 Instance
                     .CreateTween()
                     .SetTrans(Tween.TransitionType.Quad)
-                    .TweenProperty(
-                        newScene.Transition,
-                        "self_modulate",
-                        Color.FromHtml("ffffff00"),
-                        skipTransition ? 0 : 0.25
-                    );
+                    .TweenProperty(newScene.Transition, "self_modulate", Color.FromHtml("ffffff00"), skipTransition ? 0 : 0.25);
             })
         );
     }

@@ -26,30 +26,24 @@ public partial class Results : BaseScene
         // stops menu music after going to results scene
         SoundManager.MenuMusic?.Stop();
 
-        Input.MouseMode = settings.UseCursorInMenus
-            ? Input.MouseModeEnum.Hidden
-            : Input.MouseModeEnum.Visible;
+        Input.MouseMode = settings.UseCursorInMenus ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
         MenuCursor.Instance.Visible = settings.UseCursorInMenus;
 
         var attempt = Game.Attempt;
 
-        holder.GetNode<Label>("Title").Text =
-            (attempt.IsReplay ? "[REPLAY] " : "") + attempt.Map.PrettyTitle;
+        holder.GetNode<Label>("Title").Text = (attempt.IsReplay ? "[REPLAY] " : "") + attempt.Map.PrettyTitle;
         holder.GetNode<Label>("Difficulty").Text = attempt.Map.DifficultyName;
         holder.GetNode<Label>("Mappers").Text = $"by {attempt.Map.PrettyMappers}";
         holder.GetNode<Label>("Accuracy").Text = $"{attempt.Accuracy:F2}%";
         holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(attempt.Score)}";
-        holder.GetNode<Label>("Hits").Text =
-            $"{Util.String.PadMagnitude(attempt.Hits)} / {Util.String.PadMagnitude(attempt.Sum)}";
+        holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(attempt.Hits)} / {Util.String.PadMagnitude(attempt.Sum)}";
         holder.GetNode<Label>("Status").Text =
             attempt.IsReplay ? attempt.Replays[0].Status
             : attempt.Alive ? (attempt.Qualifies ? "PASSED" : "DISQUALIFIED")
             : "FAILED";
         holder.GetNode<Label>("Speed").Text = $"{attempt.Speed:F2}x";
 
-        HBoxContainer modifiersContainer = holder
-            .GetNode("Modifiers")
-            .GetNode<HBoxContainer>("HBoxContainer");
+        HBoxContainer modifiersContainer = holder.GetNode("Modifiers").GetNode<HBoxContainer>("HBoxContainer");
         TextureRect modTemplate = modifiersContainer.GetNode<TextureRect>("ModifierTemplate");
 
         foreach (var mod in attempt.Modifiers)
@@ -120,15 +114,7 @@ public partial class Results : BaseScene
                 Replay replay = new(path);
                 SoundManager.Song.Stop();
 
-                Game.Play(
-                    MapParser.Decode(replay.MapFilePath),
-                    replay.Speed,
-                    replay.StartFrom,
-                    replay.CameraMode,
-                    replay.Modifiers,
-                    null,
-                    [replay]
-                );
+                Game.Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
             }
         };
     }
@@ -141,10 +127,7 @@ public partial class Results : BaseScene
 
         Vector2 size = GetViewport().GetVisibleRect().Size;
 
-        holder.Position = holder.Position.Lerp(
-            (size / 2 - MousePosition) * (8 / size.Y),
-            Math.Min(1, (float)delta * 16)
-        );
+        holder.Position = holder.Position.Lerp((size / 2 - MousePosition) * (8 / size.Y), Math.Min(1, (float)delta * 16));
     }
 
     public override void _Input(InputEvent @event)
@@ -181,9 +164,7 @@ public partial class Results : BaseScene
         base.Load();
 
         DisplayServer.WindowSetVsyncMode(
-            SettingsManager.Instance.Settings.VSyncMenus
-                ? DisplayServer.VSyncMode.Adaptive
-                : DisplayServer.VSyncMode.Disabled
+            SettingsManager.Instance.Settings.VSyncMenus ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled
         );
     }
 
@@ -191,10 +172,7 @@ public partial class Results : BaseScene
     {
         // SoundManager.Song.VolumeDb = (float)SoundManager.ComputeVolumeDb((float)settings.VolumeMusic.Value, (float)settings.VolumeMaster.Value, 70);
         SoundManager.Song.VolumeDb =
-            -80
-            + 70
-                * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1)
-                * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
+            -80 + 70 * (float)Math.Pow(settings.VolumeMusic.Value / 100, 0.1) * (float)Math.Pow(settings.VolumeMaster.Value / 100, 0.1);
     }
 
     public static void Replay()

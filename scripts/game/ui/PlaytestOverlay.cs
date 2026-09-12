@@ -16,10 +16,8 @@ public partial class PlaytestOverlay : Panel
         var holder = GetNode("VB");
         var startFromEdit = holder.GetNode<LineEdit>("StartFrom/LineEdit");
 
-        startFromEdit.FocusExited += () =>
-            ApplyStartFrom(startFromEdit.Text, Attempt.Map, startFromEdit);
-        startFromEdit.TextSubmitted += _ =>
-            ApplyStartFrom(startFromEdit.Text, Attempt.Map, startFromEdit);
+        startFromEdit.FocusExited += () => ApplyStartFrom(startFromEdit.Text, Attempt.Map, startFromEdit);
+        startFromEdit.TextSubmitted += _ => ApplyStartFrom(startFromEdit.Text, Attempt.Map, startFromEdit);
         holder.GetNode<Button>("PlayButton").Pressed += () => UpdatePlaytestOverlay(false);
     }
 
@@ -32,9 +30,7 @@ public partial class PlaytestOverlay : Panel
 
         Visible = show;
 
-        MenuCursor.Instance.UpdateVisible(
-            Visible && SettingsManager.Instance.Settings.UseCursorInMenus.Value
-        );
+        MenuCursor.Instance.UpdateVisible(Visible && SettingsManager.Instance.Settings.UseCursorInMenus.Value);
 
         if (Visible)
         {
@@ -50,9 +46,7 @@ public partial class PlaytestOverlay : Panel
 
         var holder = GetNode("VB");
 
-        Rhythia.TempCam = holder.GetNode<CheckButton>("SpinCheck").ButtonPressed
-            ? new CameraSpin()
-            : new CameraLock();
+        Rhythia.TempCam = holder.GetNode<CheckButton>("SpinCheck").ButtonPressed ? new CameraSpin() : new CameraLock();
 
         var startFromEdit = holder.GetNode<LineEdit>("StartFrom/LineEdit");
         var speedEdit = holder.GetNode<LineEdit>("Speed/LineEdit");
@@ -62,20 +56,12 @@ public partial class PlaytestOverlay : Panel
         if (!PlaytestInit && SettingsManager.Instance.Settings.OptionalPlaytestParameters)
         {
             // start from init
-            double.TryParse(
-                Rhythia.StartFromParameter,
-                CultureInfo.InvariantCulture,
-                out double sfInit
-            );
+            double.TryParse(Rhythia.StartFromParameter, CultureInfo.InvariantCulture, out double sfInit);
             string sfSeconds = (sfInit /= 1000).ToString(CultureInfo.InvariantCulture);
             ApplyStartFrom(sfSeconds, Attempt.Map, startFromEdit);
 
             // speed init
-            double.TryParse(
-                Rhythia.SpeedParameter,
-                CultureInfo.InvariantCulture,
-                out double spInit
-            );
+            double.TryParse(Rhythia.SpeedParameter, CultureInfo.InvariantCulture, out double spInit);
             speedEdit.Text = spInit.ToString(CultureInfo.CurrentCulture);
         }
 
@@ -93,13 +79,7 @@ public partial class PlaytestOverlay : Panel
 
             var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
 
-            Game.Attempt = new(
-                map,
-                speedValue,
-                GetStartFrom(startFromEdit) * 1000,
-                Rhythia.TempCam,
-                Rhythia.TempMods
-            );
+            Game.Attempt = new(map, speedValue, GetStartFrom(startFromEdit) * 1000, Rhythia.TempCam, Rhythia.TempMods);
             SceneManager.ReloadCurrentScene();
         }
     }

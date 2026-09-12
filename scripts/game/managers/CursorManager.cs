@@ -120,14 +120,7 @@ public partial class CursorManager : Node
 
         var attempt = runner.Attempt;
 
-        attempt.CameraMode.Process(
-            attempt,
-            replayManager,
-            camera,
-            cursors[cursorIndex],
-            inputDelta,
-            sensitivity
-        );
+        attempt.CameraMode.Process(attempt, replayManager, camera, cursors[cursorIndex], inputDelta, sensitivity);
     }
 
     // Reset everything to zero so it doesn't have infinite sensitivity
@@ -139,6 +132,5 @@ public partial class CursorManager : Node
     }
 
     private void updateCursorRotation(double delta) =>
-        cursorMesh.RotationDegrees +=
-            Vector3.Back * (float)(double)settings.CursorRotation * (float)delta;
+        cursorMesh.RotationDegrees += Vector3.Back * (float)(double)settings.CursorRotation * (float)delta;
 }
