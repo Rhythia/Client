@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/GameComponent.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/game/ui/MotorcycleController.cs" id="2"]
+[ext_resource type="Script" path="res://scripts/game/renderers/GateRenderer.cs" id="3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bike"]
+size = Vector3(0.6, 0.5, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lane"]
+size = Vector3(1.0, 0.05, 40.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bike"]
+albedo_color = Color(0.9, 0.15, 0.15, 1)
+
+[node name="MotorcycleGame" type="Node3D" node_paths=PackedStringArray("Camera", "InterfaceComponents", "Renderers")]
+script = ExtResource("1")
+Camera = NodePath("Camera")
+InterfaceComponents = [NodePath("MotorcycleController")]
+Renderers = [NodePath("GateRenderer")]
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.5, 3.75)
+current = true
+
+[node name="LaneLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, -0.3, -15)
+mesh = SubResource("BoxMesh_lane")
+
+[node name="LaneCenter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -15)
+mesh = SubResource("BoxMesh_lane")
+
+[node name="LaneRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, -0.3, -15)
+mesh = SubResource("BoxMesh_lane")
+
+[node name="MotorcycleController" type="Node3D" parent="." node_paths=PackedStringArray("Bike", "Camera")]
+script = ExtResource("2")
+Bike = NodePath("Bike")
+Camera = NodePath("../Camera")
+
+[node name="Bike" type="MeshInstance3D" parent="MotorcycleController"]
+mesh = SubResource("BoxMesh_bike")
+material_override = SubResource("StandardMaterial3D_bike")
+
+[node name="GateRenderer" type="Node3D" parent="."]
+script = ExtResource("3")
