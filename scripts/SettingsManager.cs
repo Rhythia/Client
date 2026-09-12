@@ -248,7 +248,7 @@ public partial class SettingsManager : Node
 
     private static void showUserFolderConfirmationPopup(string destinationPath)
     {
-        var popup = new OptionPopup("Are you sure?", "This will overwrite the contents of the new folder.");
+        var popup = new OptionPopup("Are you sure?", "This will overwrite the contents of the new folder and double the game in size unless you remove the old files.\n\nPS: you can find the old folder in settings > other > open old user folder");
 
         popup.AddOption("Restart And Copy", Callable.From(() => {
             FileOperations.CopyDir(Constants.USER_FOLDER, destinationPath, true);
