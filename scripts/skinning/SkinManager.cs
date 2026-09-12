@@ -146,7 +146,8 @@ public partial class SkinManager : Node
 
         // Colors
 
-        string colorsetPath = $"{Constants.USER_FOLDER}/colorsets/{(settings.NoteColors == "skin" ? skin.Config.NoteColors : settings.NoteColors)}.txt";
+        string colorsetPath =
+            $"{Constants.USER_FOLDER}/colorsets/{(settings.NoteColors == "skin" ? skin.Config.NoteColors : settings.NoteColors)}.txt";
 
         if (File.Exists(colorsetPath))
         {
@@ -239,9 +240,7 @@ public partial class SkinManager : Node
 
     private static BaseSpace loadSpace(string path)
     {
-        return GD.Load<PackedScene>(
-            resourceExists(path) ? path : "res://prefabs/spaces/void.tscn"
-        ).Instantiate<Node3D>() as BaseSpace;
+        return GD.Load<PackedScene>(resourceExists(path) ? path : "res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;
     }
 
     private static bool resourceExists(string path)

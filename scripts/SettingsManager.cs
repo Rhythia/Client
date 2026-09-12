@@ -18,7 +18,7 @@ public partial class SettingsManager : Node
 
     public static SettingsManager Instance { get; private set; }
 
-    public SettingsProfile Settings = new SettingsProfile();
+    public SettingsProfile Settings = new();
 
     [Signal]
     public delegate void SavedEventHandler();
@@ -128,7 +128,8 @@ public partial class SettingsManager : Node
 
         foreach (var property in typeof(SettingsProfile).GetProperties())
         {
-            if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType)) continue;
+            if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType))
+                continue;
 
             ISettingsItem current = (ISettingsItem)property.GetValue(Instance.Settings);
             ISettingsItem defs = (ISettingsItem)property.GetValue(defaults);

@@ -50,7 +50,7 @@ public struct Replay
         public float Progress = progress;
         public Vector2 CursorPosition = new(x, y);
 
-        public override string ToString() => $"({CursorPosition}) @{Progress}ms";
+        public override readonly string ToString() => $"({CursorPosition}) @{Progress}ms";
     }
 
     public Replay(string path)
@@ -114,7 +114,10 @@ public struct Replay
             Settings.Sensitivity.Value = Sensitivity;
 
             ushort status = FileBuffer.GetUInt8();
-            Status = status == 0 ? "PASSED" : status == 1 ? "DISQUALIFIED" : "FAILED";
+            Status =
+                status == 0 ? "PASSED"
+                : status == 1 ? "DISQUALIFIED"
+                : "FAILED";
 
             List<string> rawMods = [.. FileBuffer.GetString((int)FileBuffer.GetUInt32()).Split("_")];
 
@@ -173,7 +176,6 @@ public struct Replay
             {
                 Logger.Log($"Legacy Replay detected: {MapFilePath}");
                 MapFilePath = Path.ChangeExtension(MapFilePath, null); // just in case it tries to read a .phxm file
-
             }
 
             if (!Directory.Exists(MapFilePath))
@@ -246,7 +248,7 @@ public struct Replay
 
         for (int i = 0; i < hash.Length; i += 4)
         {
-            hashCode += BitConverter.ToInt32(hash, i);  // this is so ass
+            hashCode += BitConverter.ToInt32(hash, i); // this is so ass
         }
 
         return hashCode;

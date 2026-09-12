@@ -5,9 +5,14 @@ using Godot;
 // this isn't actually a renderer
 public partial class TrailRenderer : Node
 {
-    [Export] private MeshInstance3D cursor;
-    [Export] private MultiMeshInstance3D cursorTrail;
-    [Export] private Runner runner;
+    [Export]
+    private MeshInstance3D cursor;
+
+    [Export]
+    private MultiMeshInstance3D cursorTrail;
+
+    [Export]
+    private Runner runner;
 
     private const float trail_spawn_rate = 240;
     private const float trail_min_detail = 0;
@@ -25,7 +30,8 @@ public partial class TrailRenderer : Node
 
     public override void _Process(double delta)
     {
-        if (!runner.Attempt.Settings.CursorTrail || !runner.Playing) return;
+        if (!runner.Attempt.Settings.CursorTrail || !runner.Playing)
+            return;
         updateCursorTrail(delta);
     }
 
@@ -54,11 +60,7 @@ public partial class TrailRenderer : Node
         if (steps <= 0)
             return;
 
-        activeTrailsData.Add(new CursorTrailData(
-            time: now,
-            position: runner.Attempt.CursorPosition,
-            rotation: cursor.Rotation.Z
-        ));
+        activeTrailsData.Add(new CursorTrailData(time: now, position: runner.Attempt.CursorPosition, rotation: cursor.Rotation.Z));
         deltaAccumulator -= interval * steps;
     }
 
@@ -86,9 +88,7 @@ public partial class TrailRenderer : Node
         {
             CursorTrailData trail = activeTrailsData[j];
 
-            Transform3D transform = Transform3D.Identity
-                .Scaled(new Vector3(size, size, size))
-                .Rotated(Vector3.Back, trail.Rotation);
+            Transform3D transform = Transform3D.Identity.Scaled(new Vector3(size, size, size)).Rotated(Vector3.Back, trail.Rotation);
             transform.Origin = new Vector3(trail.Position.X, trail.Position.Y, 0);
 
             // skip actually rendering the mesh if the player doesn't move the cursor

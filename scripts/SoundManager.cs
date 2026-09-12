@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Godot;
 
@@ -76,7 +77,7 @@ public partial class SoundManager : Node, ISkinnable
                     }
                     break;
                 case "SceneResults":
-                    PlayJukebox(JukeboxIndex);  // play skinnable results song here in the future
+                    PlayJukebox(JukeboxIndex); // play skinnable results song here in the future
                     break;
                 default:
                     break;
@@ -84,7 +85,10 @@ public partial class SoundManager : Node, ISkinnable
         };
 
         SettingsManager.Instance.Loaded += UpdateVolume;
-        Lobby.Instance.SpeedChanged += (speed) => { SoundManager.Song.PitchScale = (float)speed; };
+        Lobby.Instance.SpeedChanged += (speed) =>
+        {
+            SoundManager.Song.PitchScale = (float)speed;
+        };
         MapManager.Selected.ValueChanged += (_, _) => RefreshMenuMusicPlayback();
 
         MapManager.MapDeleted += (map) =>
@@ -164,7 +168,10 @@ public partial class SoundManager : Node, ISkinnable
 
         if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {
-            if ((eventMouseButton.CtrlPressed || eventMouseButton.AltPressed) && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown))
+            if (
+                (eventMouseButton.CtrlPressed || eventMouseButton.AltPressed)
+                && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown)
+            )
             {
                 switch (eventMouseButton.ButtonIndex)
                 {
@@ -177,7 +184,7 @@ public partial class SoundManager : Node, ISkinnable
                 }
 
                 Label label = SceneManager.VolumePanel.GetNode<Label>("Label");
-                label.Text = settings.VolumeMaster.Value.ToString();
+                label.Text = settings.VolumeMaster.Value.ToString(CultureInfo.CurrentCulture);
 
                 Tween tween = SceneManager.VolumePanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
                 tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffffff"), 0.25);
@@ -377,13 +384,15 @@ public partial class SoundManager : Node, ISkinnable
 
     public static float ComputeVolumeDb(float volume, float master, float range)
     {
-        if (volume <= 0 || master <= 0) return float.NegativeInfinity;
+        if (volume <= 0 || master <= 0)
+            return float.NegativeInfinity;
         return (float)(-80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1));
     }
 
     public static float ComputeVolumeFromDb(float db, float master, float range)
     {
-        if (float.IsNegativeInfinity(db) || master <= 0) return 0;
+        if (float.IsNegativeInfinity(db) || master <= 0)
+            return 0;
         return (float)Math.Clamp(100 * Math.Pow((db + 80) / (range * Math.Pow(master / 100, 0.1)), 10), 0, 100);
     }
 

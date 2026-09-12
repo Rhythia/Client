@@ -10,13 +10,20 @@ public partial class ReplayManager : Node
     {
         NONE,
         RECORD,
-        PLAYBACK
+        PLAYBACK,
     }
 
-    [Export] public Runner Runner { get; set; }
-    [Export] public Mode CurrentMode { get; set; }
-    [Export] public Panel ReplayViewer { get; set; }
-    [Export] public CursorManager CursorManager { get; private set; }
+    [Export]
+    public Runner Runner { get; set; }
+
+    [Export]
+    public Mode CurrentMode { get; set; }
+
+    [Export]
+    public Panel ReplayViewer { get; set; }
+
+    [Export]
+    public CursorManager CursorManager { get; private set; }
 
     public bool ViewerVisible;
     public bool CanShow;
@@ -34,20 +41,22 @@ public partial class ReplayManager : Node
     public Vector2 CursorPosition { get; private set; }
 
     private Godot.FileAccess file;
-    private ulong statusOffset, frameCountOffset;
+    private ulong statusOffset,
+        frameCountOffset;
 
     public void NewReplay(Attempt attempt)
     {
         var settings = attempt.Settings;
 
-        if (!settings.RecordReplays || Rhythia.TempMode) return;
+        if (!settings.RecordReplays || Rhythia.TempMode)
+            return;
 
         ReplayPath = $"{Constants.USER_FOLDER}/replays/{attempt.ID}.phxr";
 
         file = Godot.FileAccess.Open(ReplayPath, Godot.FileAccess.ModeFlags.Write);
 
-        file.StoreString("phxr");  // sig
-        file.Store8(1);    // replay file version
+        file.StoreString("phxr"); // sig
+        file.Store8(1); // replay file version
 
         file.StoreDouble(attempt.Speed);
         file.StoreDouble(attempt.StartFrom);
@@ -89,12 +98,15 @@ public partial class ReplayManager : Node
         storeSizedString(player);
 
         frameCountOffset = (uint)file.GetPosition();
-        file.Store64(0);   // reserve frame count
+        file.Store64(0); // reserve frame count
     }
 
     public void SaveReplay(Attempt attempt)
     {
-        if (file == null || !file.IsOpen()) { return; }
+        if (file == null || !file.IsOpen())
+        {
+            return;
+        }
 
         file.Seek(statusOffset);
         file.Store8((byte)(attempt.Alive ? (attempt.Qualifies ? 0 : 1) : 2));
@@ -143,7 +155,8 @@ public partial class ReplayManager : Node
 
     public void InitReplayLength()
     {
-        if (Runner?.Attempt == null || !Runner.Attempt.IsReplay) return;
+        if (Runner?.Attempt == null || !Runner.Attempt.IsReplay)
+            return;
         ReplayLength = Runner.Attempt.MaxReplayLength;
     }
 
@@ -187,7 +200,8 @@ public partial class ReplayManager : Node
 
     public override void _Process(double delta)
     {
-        if (!Runner.Attempt.IsReplay || !Runner.Playing) return;
+        if (!Runner.Attempt.IsReplay || !Runner.Playing)
+            return;
 
         if (!seekerHovered)
         {
@@ -215,9 +229,7 @@ public partial class ReplayManager : Node
 
         if (attempt.IsReplay)
         {
-            Input.MouseMode = visible
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Hidden;
+            Input.MouseMode = visible ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Hidden;
         }
     }
 
@@ -233,9 +245,7 @@ public partial class ReplayManager : Node
     {
         Runner.Pause();
 
-        string texturePath = Runner.Playing
-            ? "res://textures/ui/pause.png"
-            : "res://textures/ui/play.png";
+        string texturePath = Runner.Playing ? "res://textures/ui/pause.png" : "res://textures/ui/play.png";
 
         SeekerPause.TextureNormal = GD.Load<Texture2D>(texturePath);
     }
@@ -311,11 +321,11 @@ public partial class ReplayManager : Node
         {
             var replay = Runner.Attempt.Replays[i];
 
-            if (replay.FrameIndex == replay.Frames.Length - 1) continue;
+            if (replay.FrameIndex == replay.Frames.Length - 1)
+                continue;
 
             // advance frame forward deterministically making sure frames only advance when allowed
-            while (replay.FrameIndex < replay.Frames.Length - 1 &&
-                   Runner.Attempt.Progress >= replay.Frames[replay.FrameIndex + 1].Progress)
+            while (replay.FrameIndex < replay.Frames.Length - 1 && Runner.Attempt.Progress >= replay.Frames[replay.FrameIndex + 1].Progress)
             {
                 replay.FrameIndex++;
 
@@ -331,16 +341,9 @@ public partial class ReplayManager : Node
             var currentFrame = replay.Frames[replay.FrameIndex];
             var nextFrame = replay.Frames[next];
 
-            double inverse = Mathf.InverseLerp(
-                currentFrame.Progress,
-                nextFrame.Progress,
-                Runner.Attempt.Progress
-            );
+            double inverse = Mathf.InverseLerp(currentFrame.Progress, nextFrame.Progress, Runner.Attempt.Progress);
 
-            Vector2 cursorPos = currentFrame.CursorPosition.Lerp(
-                nextFrame.CursorPosition,
-                (float)Math.Clamp(inverse, 0, 1)
-            );
+            Vector2 cursorPos = currentFrame.CursorPosition.Lerp(nextFrame.CursorPosition, (float)Math.Clamp(inverse, 0, 1));
 
             CursorPosition = cursorPos;
 

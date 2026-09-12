@@ -14,7 +14,7 @@ public class FileParser
 
         if (file == null)
         {
-            Buffer = Array.Empty<byte>();
+            Buffer = [];
             Length = 0;
         }
         else
@@ -29,7 +29,7 @@ public class FileParser
 
     public FileParser(byte[] buffer)
     {
-        Buffer = buffer ?? Array.Empty<byte>();
+        Buffer = buffer ?? [];
         Length = Buffer.Length;
         Pointer = 0;
     }

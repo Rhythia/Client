@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class FlatPreview : Panel
@@ -19,11 +20,7 @@ public partial class FlatPreview : Panel
     {
         for (int i = 0; i < 9; i++)
         {
-            ColorRect tile = new()
-            {
-                Name = i.ToString(),
-                Color = transparent
-            };
+            ColorRect tile = new() { Name = i.ToString(CultureInfo.CurrentCulture), Color = transparent };
 
             AddChild(tile);
 
@@ -42,7 +39,8 @@ public partial class FlatPreview : Panel
 
     public override void _Process(double delta)
     {
-        if (Map == null) return;
+        if (Map == null)
+            return;
 
         float alpha = (float)Math.Min(1, delta * 6);
 
@@ -94,7 +92,8 @@ public partial class FlatPreview : Panel
 
     public void Setup(Map map, bool useSoundManagerStreamPlayer = false)
     {
-        if (Map != null && Map.Name == map.Name) return;
+        if (Map != null && Map.Name == map.Name)
+            return;
 
         Map = map;
         UseSoundManagerStreamPlayer = useSoundManagerStreamPlayer;
@@ -104,7 +103,8 @@ public partial class FlatPreview : Panel
 
     public void Seek(double seek)
     {
-        if (Map == null) return;
+        if (Map == null)
+            return;
 
         Time = seek;
 

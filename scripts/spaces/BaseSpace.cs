@@ -54,9 +54,7 @@ public partial class BaseSpace : Node3D
         }
     }
 
-    public virtual void OnHit(uint combo)
-    {
-    }
+    public virtual void OnHit(uint combo) { }
 
     public virtual void Load()
     {

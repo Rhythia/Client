@@ -21,7 +21,7 @@ public class EarthquakeModifier : Modifier, IObjectRenderModifier<Note>
         {
             float rad = random.Next(-180, 180) * (Mathf.Pi / 180);
             var dir = Vector3.Up.Rotated(Vector3.Back, rad);
-            float offset = depth / (float)attempt.Settings.ApproachDistance;
+            float offset = depth / (float)(double)attempt.Settings.ApproachDistance;
             offset = (float)Math.Pow(offset, 1.5) / 2;
 
             note.Transform.Origin += dir * offset;
