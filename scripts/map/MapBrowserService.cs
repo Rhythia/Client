@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
 
-public static class MapBrowser
+public static class MapBrowserService
 {
     public static async Task<JsonElement[]> Search(MapQueryParameters queryParameters)
     {

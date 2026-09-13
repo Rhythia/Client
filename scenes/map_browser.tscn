@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c0bj5wxr28uup"]
 
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="1_wvv2m"]
+[ext_resource type="Script" uid="uid://bvcrkit87w2gg" path="res://scripts/scenes/MapBrowser.cs" id="2_10mjv"]
 [ext_resource type="Texture2D" uid="uid://bl6ten82nkjmd" path="res://user/skins/default/ui/buttons/sort.png" id="2_vofg3"]
 [ext_resource type="Shader" uid="uid://7qsvgo4ubp13" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
 [ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="4_vofg3"]
@@ -83,6 +84,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_wvv2m")
+script = ExtResource("2_10mjv")
 
 [node name="Hide" type="Button" parent="." unique_id=1149646911]
 self_modulate = Color(1, 1, 1, 0)
@@ -388,11 +390,6 @@ size_flags_vertical = 8
 text = "Insane"
 label_settings = SubResource("LabelSettings_3usyh")
 text_overrun_behavior = 3
-
-[node name="Facts" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=973323829]
-layout_mode = 2
-size_flags_vertical = 6
-mouse_filter = 2
 
 [node name="Bottom" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=51256571]
 layout_mode = 2
