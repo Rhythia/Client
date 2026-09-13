@@ -235,6 +235,7 @@ HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_13gg8")
 HSlider/styles/slider = SubResource("StyleBoxFlat_685ej")
 LineEdit/styles/focus = SubResource("StyleBoxFlat_5vygm")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_rqeco")
+MenuButton/font_sizes/font_size = 14
 OptionButton/font_sizes/font_size = 14
 Panel/styles/panel = SubResource("StyleBoxEmpty_jpkpw")
 PopupMenu/colors/font_hover_color = Color(1, 1, 1, 1)
