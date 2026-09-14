@@ -31,4 +31,7 @@ public partial class Constants : Node
     public static readonly string[] DIFFICULTIES = ["N/A", "Easy", "Medium", "Hard", "Insane", "Illogical"];
 
     public static readonly Color[] DIFFICULTY_COLORS = [new(0xffffffff), new(0x77f379ff), new(0xfff832ff), new(0xe24479ff), new(0x9d6effff), new(0x0094fcff)];
+
+    public static readonly Color UNRANKED_COLOR = new(0xc7c7c7ff);
+    public static readonly Color RANKED_COLOR = new(0x00f23cff);
 }

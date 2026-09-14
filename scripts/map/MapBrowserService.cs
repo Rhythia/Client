@@ -17,7 +17,7 @@ public static class MapBrowserService
         byte[] coverBytes = await ApiClient.CLIENT.GetByteArrayAsync(coverUri);
 
         var image = new Image();
-        image.LoadPngFromBuffer(coverBytes);
+        image.LoadWebpFromBuffer(coverBytes);
 
         return image.IsEmpty() ? null : image;
     }

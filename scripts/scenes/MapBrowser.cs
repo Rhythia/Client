@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
@@ -25,24 +26,7 @@ public partial class MapBrowser : Control
     {
         JsonElement[] maps = await MapBrowserService.Search(new MapQueryParameters());
 
-        var tasks = maps.Select(async map =>
-        {
-            JsonElement coverUrl = map.GetProperty("coverUrl");
-            Texture2D cover = null;
-
-            GD.Print($"{map.GetProperty("title").GetString()}: {coverUrl.ToString()}");
-
-            if (coverUrl.ValueKind != JsonValueKind.Null)
-            {
-                cover = ImageTexture.CreateFromImage(await MapBrowserService.GetCoverImage(coverUrl.ToString()));
-            }
-
-            return (Map: map, Cover: cover);
-        });
-
-        var results = await Task.WhenAll(tasks);
-
-        foreach (var (map, cover) in results)
+        foreach (var map in maps)
         {
             if (mapCardTemplate.Duplicate() is not PanelContainer mapCard) { continue; }
 
@@ -53,28 +37,55 @@ public partial class MapBrowser : Control
             TextureRect blurCoverImage = mapCard.GetNode<TextureRect>("Row/Map/BlurCoverHolder/BlurCover");
 
             VBoxContainer info = mapCard.GetNode<VBoxContainer>("Row/Map/Content/Info");
-            Label name = info.GetNode<Label>("Top/Text/Title");
-            Label mappersLabel = info.GetNode<Label>("Top/Text/Mapper");
-            Label difficultyName = info.GetNode<Label>("Top/Text/Difficulty");
-            Label noteCountLabel = info.GetNode<Label>("Bottom/Ranking/Notes");
-            Label rankedLabel = info.GetNode<Label>("Bottom/Ranking/Ranking");
-            Label durationLabel = info.GetNode<Label>("Bottom/Duration");
+            VBoxContainer topText = info.GetNode<VBoxContainer>("Top/Text");
+            HBoxContainer bottomText = info.GetNode<HBoxContainer>("Bottom");
 
-            coverImage.Texture = cover;
-            blurCoverImage.Texture = cover;
+            Label titleLabel = topText.GetNode<Label>("TitleHolder/Title");
+            Label mappersLabel = topText.GetNode<Label>("Details/VBoxContainer/Mapper");
+            PanelContainer notablePill = topText.GetNode<PanelContainer>("Details/NotablePill");
+            Label difficultyLabel = topText.GetNode<Label>("Details/VBoxContainer/Difficulty");
+            Label noteCountLabel = bottomText.GetNode<Label>("Notes");
+            PanelContainer rankingPill = bottomText.GetNode<PanelContainer>("RankingPill");
+            Label rankingLabel = rankingPill.GetNode<Label>("Ranking");
+            Label durationLabel = bottomText.GetNode<Label>("Duration");
 
-            name.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title")}";
-            mappersLabel.Text = $"mapped by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
-            difficultyName.Text = map.GetProperty("difficultyName").GetString();
-            difficultyName.LabelSettings.FontColor =Constants.DIFFICULTY_COLORS[map.GetProperty("difficulty").GetInt32()];
-            noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString()} notes";
-            rankedLabel.Text = (map.GetProperty("isRanked").GetBoolean()) ? "RANKED" : "UNRANKED";
+            _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage);
 
+            int difficulty = map.GetProperty("difficulty").GetInt32();
+            string difficultyName = map.GetProperty("difficultyName").GetString();
+            string difficultyText = string.IsNullOrEmpty(difficultyName) ? Constants.DIFFICULTIES[difficulty] : difficultyName;
+            bool isRanked = map.GetProperty("isRanked").GetBoolean();
+            var rankingPillStyle = (StyleBoxFlat)rankingPill.GetThemeStylebox("panel").Duplicate();
             var duration = TimeSpan.FromMilliseconds(map.GetProperty("length").GetDouble());
+
+            titleLabel.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title").GetString()}";
+            mappersLabel.Text = $"mapped by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
+            notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
+            difficultyLabel.Text = difficultyText;
+            difficultyLabel.LabelSettings.FontColor = Constants.DIFFICULTY_COLORS[difficulty];
+            noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString()} notes";
+            rankingLabel.Text = isRanked ? "RANKED" : "UNRANKED";
+
+            rankingPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;
+            rankingPill.AddThemeStyleboxOverride("panel", rankingPillStyle);
 
             durationLabel.Text = duration.TotalHours >= 1
                 ? duration.ToString(@"hh\:mm\:ss")
                 : duration.ToString(@"mm\:ss");
         }
+    }
+
+    private static async Task loadCover(JsonElement coverUrl, TextureRect coverTexture, TextureRect blurCoverTexture)
+    {
+        Texture2D cover = null;
+
+        if (coverUrl.ValueKind != JsonValueKind.Null)
+        {
+            var coverImage = await MapBrowserService.GetCoverImage(coverUrl.GetString());
+            cover = ImageTexture.CreateFromImage(coverImage);
+        }
+
+        coverTexture.Texture = cover;
+        blurCoverTexture.Texture = cover;
     }
 }

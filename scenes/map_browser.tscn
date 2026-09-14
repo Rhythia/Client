@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://c0bj5wxr28uup"]
 
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="1_wvv2m"]
-[ext_resource type="Script" uid="uid://bvcrkit87w2gg" path="res://scripts/scenes/MapBrowser.cs" id="2_10mjv"]
+[ext_resource type="Script" uid="uid://ddigmsk4fbbtm" path="res://scripts/scenes/MapBrowser.cs" id="2_10mjv"]
 [ext_resource type="Texture2D" uid="uid://bl6ten82nkjmd" path="res://user/skins/default/ui/buttons/sort.png" id="2_vofg3"]
-[ext_resource type="Shader" uid="uid://7qsvgo4ubp13" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
+[ext_resource type="Shader" uid="uid://c7deuysf8r3mi" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
 [ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="4_vofg3"]
+[ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto/Roboto-Bold.ttf" id="5_0pn3c"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
 bg_color = Color(0.023529412, 0.019607844, 0.03529412, 1)
@@ -41,7 +42,7 @@ shader_parameter/strength = 2.600000076
 
 [sub_resource type="Gradient" id="Gradient_vofg3"]
 offsets = PackedFloat32Array(0, 0.77707005, 1)
-colors = PackedColorArray(0.26666668, 0.26666668, 0.26666668, 0.43137255, 0.18000486, 0.18000486, 0.18000486, 0.7254902, 0.12955844, 0.12955847, 0.12955844, 0.7882353)
+colors = PackedColorArray(0.22745098, 0.22745098, 0.22745098, 0.5803922, 0.18000486, 0.18000486, 0.18000486, 0.78431374, 0.12225223, 0.12225223, 0.12225223, 0.81960785)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ear6i"]
 gradient = SubResource("Gradient_vofg3")
@@ -64,10 +65,36 @@ shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_27haj"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0.60966635, 0.90395117, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[sub_resource type="LabelSettings" id="LabelSettings_ueqk1"]
+font = ExtResource("5_0pn3c")
+font_color = Color(0.1728327, 0.17283267, 0.17283267, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ikspe"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0, 0.95023936, 0.23396683, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
 [sub_resource type="LabelSettings" id="LabelSettings_10mjv"]
-shadow_size = 3
-shadow_color = Color(0, 0, 0, 0.39215687)
-shadow_offset = Vector2(1, 1.5)
+font = ExtResource("5_0pn3c")
+font_size = 14
+font_color = Color(0.26666668, 0.26666668, 0.26666668, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vofg3"]
 font_size = 20
@@ -357,65 +384,108 @@ theme_override_constants/margin_bottom = 5
 [node name="Info" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content" unique_id=1858565386]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 0
 
 [node name="Top" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=512602662]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 2
 mouse_filter = 2
 
 [node name="Text" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top" unique_id=1944971274]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 0
 mouse_filter = 2
-theme_override_constants/separation = -3
+theme_override_constants/separation = -1
 
-[node name="Title" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=108669646]
+[node name="TitleHolder" type="Control" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=183179678]
+custom_minimum_size = Vector2(0, 30)
+custom_maximum_size = Vector2(-1, 20)
 layout_mode = 2
+
+[node name="Title" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/TitleHolder" unique_id=108669646]
+custom_minimum_size = Vector2(0, 32)
+custom_maximum_size = Vector2(-1, 32)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
 text = "Artist - Title"
 label_settings = SubResource("LabelSettings_0pn3c")
+vertical_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Mapper" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=1889073238]
+[node name="Details" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=1843119036]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details" unique_id=1188854303]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Mapper" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=1889073238]
+layout_mode = 2
 text = "mapped by Mapper"
 label_settings = SubResource("LabelSettings_ear6i")
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Difficulty" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=2103154130]
+[node name="Difficulty" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=2103154130]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 8
 text = "Insane"
 label_settings = SubResource("LabelSettings_3usyh")
 text_overrun_behavior = 3
 
+[node name="NotablePill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details" unique_id=153266238]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_27haj")
+
+[node name="Notable" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/NotablePill" unique_id=89549222]
+layout_mode = 2
+text = "NOTABLE"
+label_settings = SubResource("LabelSettings_ueqk1")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Bottom" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=51256571]
 layout_mode = 2
+size_flags_vertical = 10
 mouse_filter = 2
 
-[node name="Ranking" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=630932107]
+[node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
 layout_mode = 2
-theme_override_constants/separation = -3
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_ikspe")
 
-[node name="Notes" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/Ranking" unique_id=200648501]
+[node name="Ranking" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/RankingPill" unique_id=1500989616]
+layout_mode = 2
+size_flags_vertical = 1
+text = "RANKED"
+label_settings = SubResource("LabelSettings_10mjv")
+
+[node name="Notes" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=200648501]
 layout_mode = 2
 size_flags_vertical = 10
 text = "1230 notes"
 label_settings = SubResource("LabelSettings_ear6i")
 
-[node name="Ranking" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/Ranking" unique_id=1500989616]
-layout_mode = 2
-size_flags_vertical = 10
-text = "RANKED"
-label_settings = SubResource("LabelSettings_10mjv")
-
 [node name="Duration" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1613545318]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 8
-text = "0:58"
+text = "00:00"
 label_settings = SubResource("LabelSettings_vofg3")
 
 [node name="Download" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1673526428]
