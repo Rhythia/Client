@@ -38,6 +38,22 @@ public partial class KeybindsManager : Node
                     }
                     break;
                 }
+                case Key.B:
+                {
+                    if (eventKey.CtrlPressed && MapBrowser.Instance != null)
+                    {
+                        if (MapBrowser.Instance.Shown)
+                        {
+                            MapBrowser.Instance.HideBrowser();
+                        }
+                        else
+                        {
+                            MapBrowser.Instance.ShowBrowser(true);
+                        }
+                        GetViewport().SetInputAsHandled();
+                    }
+                    break;
+                }
                 default:
                 {
                     if (eventKey.Keycode == Key.F11 || (eventKey.AltPressed && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)))

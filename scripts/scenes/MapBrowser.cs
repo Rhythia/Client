@@ -7,19 +7,52 @@ using Godot;
 
 public partial class MapBrowser : Control
 {
+    public static MapBrowser Instance;
+
+    public bool Shown = false;
+
+    private Button hideButton;
     private Panel holder;
     private ScrollContainer results;
     private PanelContainer mapCardTemplate;
 
     public override void _Ready()
     {
+        Instance = this;
+
+        hideButton = GetNode<Button>("Hide");
         holder = GetNode<Panel>("Holder");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
         mapCardTemplate = results.GetNode<PanelContainer>("RowsMargin/Rows/MapCardTemplate");
 
         mapCardTemplate.Visible = false;
 
+        Shown = false;
+        Visible = false;
+
+        hideButton.Pressed += HideBrowser;
+    }
+
+    public void ShowBrowser(bool show = true)
+    {
+        if (!show)
+        {
+            HideBrowser();
+            return;
+        }
+
+        Shown = true;
+        Visible = true;
+
+        CallDeferred("move_to_front");
+        clearResults();
         _ = populate();
+    }
+
+    public void HideBrowser()
+    {
+        Shown = false;
+        Visible = false;
     }
 
     private async Task populate()
@@ -92,5 +125,17 @@ public partial class MapBrowser : Control
 
         coverTexture.Texture = cover;
         blurCoverTexture.Texture = cover;
+    }
+
+    private void clearResults()
+    {
+        var parent = mapCardTemplate.GetParent();
+        foreach (Node child in parent.GetChildren())
+        {
+            if (child != mapCardTemplate)
+            {
+                child.QueueFree();
+            }
+        }
     }
 }

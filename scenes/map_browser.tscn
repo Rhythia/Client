@@ -113,14 +113,14 @@ shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
 
-[node name="Map Browser" type="Control" unique_id=273716231]
-layout_mode = 3
+[node name="Map Browser" type="ColorRect" unique_id=1634674963]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_wvv2m")
+color = Color(0, 0, 0, 0.5019608)
 script = ExtResource("2_10mjv")
 
 [node name="Hide" type="Button" parent="." unique_id=1149646911]

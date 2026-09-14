@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cyk7jcwxrgjm6" path="res://scripts/SceneManager.cs" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://b0721m86xe8nx" path="res://scripts/ui/SettingsMenu.cs" id="2_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://c0bj5wxr28uup" path="res://scenes/map_browser.tscn" id="2_ya4ey"]
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="3_tipki"]
 [ext_resource type="FontFile" uid="uid://bopde8iqsld1o" path="res://fonts/Ubuntu/Ubuntu-Regular.ttf" id="4_85g3d"]
 [ext_resource type="FontFile" uid="uid://4bnnn01f4dqr" path="res://fonts/Ubuntu/Ubuntu-Medium.ttf" id="5_choun"]
@@ -129,6 +130,9 @@ own_world_3d = true
 handle_input_locally = false
 size = Vector2i(1280, 720)
 render_target_update_mode = 4
+
+[node name="Map Browser" parent="." unique_id=1634674963 instance=ExtResource("2_ya4ey")]
+visible = false
 
 [node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog")]
 visible = false
