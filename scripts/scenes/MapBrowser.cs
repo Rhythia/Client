@@ -148,4 +148,18 @@ public partial class MapBrowser : Control
             }
         }
     }
+
+    private static async Task loadCover(JsonElement coverUrl, TextureRect coverTexture, TextureRect blurCoverTexture)
+    {
+        Texture2D cover = null;
+
+        if (coverUrl.ValueKind != JsonValueKind.Null)
+        {
+            var coverImage = await MapBrowserService.GetCoverImage(coverUrl.GetString());
+            cover = ImageTexture.CreateFromImage(coverImage);
+        }
+
+        coverTexture.Texture = cover;
+        blurCoverTexture.Texture = cover;
+    }
 }

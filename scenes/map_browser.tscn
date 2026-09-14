@@ -488,6 +488,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Long Artist - Even Longer Title"
 label_settings = SubResource("LabelSettings_0pn3c")
+vertical_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
@@ -525,6 +526,7 @@ label_settings = SubResource("LabelSettings_vr0hc")
 
 [node name="Bottom" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=51256571]
 layout_mode = 2
+size_flags_vertical = 10
 mouse_filter = 2
 
 [node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
