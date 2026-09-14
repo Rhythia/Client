@@ -489,6 +489,7 @@ text_overrun_behavior = 3
 
 [node name="Details" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=1843119036]
 layout_mode = 2
+offset_transform_enabled = true
 offset_transform_position = Vector2(0, 8)
 offset_transform_visual_only = false
 
@@ -520,7 +521,6 @@ label_settings = SubResource("LabelSettings_vr0hc")
 
 [node name="Bottom" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info" unique_id=51256571]
 layout_mode = 2
-size_flags_horizontal = 0
 mouse_filter = 2
 
 [node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
