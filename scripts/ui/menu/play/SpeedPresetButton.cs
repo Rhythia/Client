@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class SpeedPresetButton : Button
@@ -10,7 +11,7 @@ public partial class SpeedPresetButton : Button
     {
         base._Ready();
 
-        TooltipText = Speed.ToString();
+        TooltipText = Speed.ToString(CultureInfo.CurrentCulture);
 
         updateState(Lobby.Speed);
 

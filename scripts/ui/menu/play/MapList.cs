@@ -242,7 +242,7 @@ public partial class MapList : Panel, ISkinnable
                 {
                     var parentContainer = button.Container;
 
-                    foreach (MapButton buttonSibling in parentContainer.GetChildren())
+                    foreach (MapButton buttonSibling in parentContainer.GetChildren().Cast<MapButton>())
                     {
                         buttonSibling.Container = null;
 
@@ -349,7 +349,7 @@ public partial class MapList : Panel, ISkinnable
             container.OffsetLeft = 0;
             container.OffsetRight = 0;
 
-            foreach (MapButton button in container.GetChildren())
+            foreach (MapButton button in container.GetChildren().Cast<MapButton>())
             {
                 button.LightPosition = DisplaySelectionCursor ? selectionCursor.GlobalPosition : new(-10000, Size.Y / 2);
             }
@@ -457,20 +457,22 @@ public partial class MapList : Panel, ISkinnable
         switch (Sorting.Value)
         {
             case SortType.Difficulty:
-                orderedMaps = Maps.OrderBy(map => map.Difficulty).ToList();
+                orderedMaps = [.. Maps.OrderBy(map => map.Difficulty)];
                 break;
 
             case SortType.Mappers:
-                orderedMaps = Maps.OrderBy(map =>
+                orderedMaps =
+                [
+                    .. Maps.OrderBy(map =>
                     {
                         string[] mappers = map.Mappers?.Length == 0 ? map.PrettyMappers.Split(", ") : map.Mappers;
                         return mappers.Order().First();
-                    })
-                    .ToList();
+                    }),
+                ];
                 break;
 
             default:
-                orderedMaps = Maps.OrderBy(map => map.PrettyTitle).ToList();
+                orderedMaps = [.. Maps.OrderBy(map => map.PrettyTitle)];
                 break;
         }
 
@@ -479,7 +481,7 @@ public partial class MapList : Panel, ISkinnable
             orderedMaps.Reverse();
         }
 
-        Maps = orderedMaps.Where(map => map.Favorite).ToList();
+        Maps = [.. orderedMaps.Where(map => map.Favorite)];
         Maps.AddRange(orderedMaps.Where(map => !map.Favorite));
 
         clear();

@@ -9,7 +9,7 @@ public partial class MapManager : Node
 {
     public static Bindable<Map> Selected { get; set; } = new(null);
 
-    public static List<Map> Maps { get; set; } = new();
+    public static List<Map> Maps { get; set; } = [];
 
     public static event Action<Map> MapDeleted;
 

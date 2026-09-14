@@ -75,7 +75,7 @@ public class Misc
             md5.TransformBlock(fileData, 0, fileData.Length, null, 0);
         }
 
-        md5.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
+        md5.TransformFinalBlock([], 0, 0);
 
         return md5.Hash;
     }
@@ -133,14 +133,14 @@ public class Misc
         Logger.Log(
             $"""
             Couldn't load image from buffer
-            	Type: {(
+                Type: {(
                 isPng ? "PNG"
                 : isJpeg ? "JPG"
                 : isBmp ? "BMP"
                 : isWebp ? "WEBP"
                 : "Unknown"
             )};
-            Size: {buffer.Length}
+                Size: {buffer.Length}
             """
         );
 

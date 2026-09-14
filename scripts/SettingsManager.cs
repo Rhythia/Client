@@ -18,7 +18,7 @@ public partial class SettingsManager : Node
 
     public static SettingsManager Instance { get; private set; }
 
-    public SettingsProfile Settings = new SettingsProfile();
+    public SettingsProfile Settings = new();
 
     [Signal]
     public delegate void SavedEventHandler();

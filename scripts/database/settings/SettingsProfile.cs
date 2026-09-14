@@ -236,6 +236,12 @@ public partial class SettingsProfile
     public SettingsItem<bool> AltComboCounter { get; private set; }
 
     /// <summary>
+    /// Enables a dark radial fade to help visibility
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> VisibilityAssist { get; private set; }
+
+    /// <summary>
     /// Toggles a popup on a hit
     /// </summary>
     [Order]
@@ -928,6 +934,14 @@ public partial class SettingsProfile
             Section = SettingsSection.Visual,
         };
 
+        VisibilityAssist = new(false)
+        {
+            Id = "VisibilityAssist",
+            Title = "Visibility Assist",
+            Description = "Enables a dark radial fade to help with visibility",
+            Section = SettingsSection.Visual,
+        };
+
         HitPopups = new(true)
         {
             Id = "HitPopups",
@@ -1347,9 +1361,9 @@ public partial class SettingsProfile
     {
         var dictionary = new Dictionary<SettingsSection, List<ISettingsItem>>();
 
-        foreach (SettingsSection section in Enum.GetValues(typeof(SettingsSection)))
+        foreach (SettingsSection section in Enum.GetValues<SettingsSection>())
         {
-            dictionary.Add(section, new List<ISettingsItem>());
+            dictionary.Add(section, []);
         }
 
         var items = typeof(SettingsProfile)

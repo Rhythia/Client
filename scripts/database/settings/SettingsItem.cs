@@ -24,7 +24,7 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 
     public T DefaultValue { get; private set; } = default;
 
-    public List<SettingsButton> Buttons { get; set; } = new();
+    public List<SettingsButton> Buttons { get; set; } = [];
 
     public SettingsList<T> List { get; set; } = default;
 

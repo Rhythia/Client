@@ -39,6 +39,7 @@
 [ext_resource type="Script" uid="uid://b7jvxorkr4xfi" path="res://scripts/game/ui/Speed.cs" id="28_gxtfn"]
 [ext_resource type="Texture2D" uid="uid://b0k0ltu15bart" path="res://user/skins/default/modifiers/nofail.png" id="34_8ool0"]
 [ext_resource type="Script" uid="uid://cvaggwr3rrenl" path="res://scripts/game/renderers/NoteRenderer.cs" id="34_pr1ej"]
+[ext_resource type="Texture2D" uid="uid://bc0w1ujoshiyk" path="res://user/skins/default/game/visibility_assist.png" id="36_05nbr"]
 [ext_resource type="Script" uid="uid://c8d872aoiqglo" path="res://scripts/PlayerInputController.cs" id="37_02fa5"]
 [ext_resource type="Script" uid="uid://dlxxg2h4cl5hj" path="res://scripts/game/ui/PauseMenu.cs" id="38_8ool0"]
 [ext_resource type="Script" uid="uid://c24b7vefbxvbh" path="res://scripts/game/ui/PlaytestOverlay.cs" id="40_m4url"]
@@ -94,6 +95,14 @@ texture_repeat = false
 [sub_resource type="QuadMesh" id="QuadMesh_0sl42"]
 material = SubResource("StandardMaterial3D_05nbr")
 size = Vector2(4, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rc4du"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("36_05nbr")
+
+[sub_resource type="QuadMesh" id="QuadMesh_oaba0"]
+material = SubResource("StandardMaterial3D_rc4du")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_pl11u"]
 viewport_path = NodePath("Runner/HUD/Health/HealthViewport")
@@ -328,6 +337,12 @@ transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, -0.2)
 visible = false
 mesh = SubResource("QuadMesh_0sl42")
 skeleton = NodePath("../../../..")
+
+[node name="VisibilityAssist" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=613600632]
+transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0, 0, -140)
+transparency = 0.25
+mesh = SubResource("QuadMesh_oaba0")
+skeleton = NodePath("../..")
 
 [node name="Health" type="MeshInstance3D" parent="Runner/HUD" unique_id=449857227]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -6.3, -10)
@@ -826,10 +841,11 @@ size = Vector2i(256, 256)
 render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="ReplayViewer/OrthogonalPanel/OrthogonalCamera/SubViewport" unique_id=1970241273]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.44182658)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.60892284)
 top_level = true
 projection = 1
 size = 4.5
+far = 139.0
 
 [node name="Tip" type="Label" parent="ReplayViewer" unique_id=919285545]
 layout_mode = 1

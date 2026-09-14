@@ -39,7 +39,7 @@ public partial class OptionPopup : Control
 
         Header = header;
         Info = info;
-        Name = $"OptionPopup{new Regex("[^a-zA-Z0-9_-]").Replace(Header, "")}";
+        Name = $"OptionPopup{MyRegex().Replace(Header, "")}";
 
         SceneManager.Root.CallDeferred("add_child", this);
     }
@@ -129,4 +129,7 @@ public partial class OptionPopup : Control
         Info = info;
         infoLabel.Text = info;
     }
+
+    [GeneratedRegex("[^a-zA-Z0-9_-]")]
+    private static partial Regex MyRegex();
 }

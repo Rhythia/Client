@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -232,12 +233,12 @@ public partial class MapParser : Node
 
         byte[] hash = Misc.HashFiles([Path.Combine(mapFolderPath, "metadata.json"), Path.Combine(mapFolderPath, "objects.phxmo")]);
 
-        map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
+        map.MetadataObjectHash = Convert.ToHexStringLower(hash);
 
         DateTime metadataModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "metadata.json"));
         DateTime objectsModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "objects.phxmo"));
-        map.LastModifiedMetadata = metadataModified.ToString();
-        map.LastModifiedNotes = objectsModified.ToString();
+        map.LastModifiedMetadata = metadataModified.ToString("O", CultureInfo.InvariantCulture);
+        map.LastModifiedNotes = objectsModified.ToString("O", CultureInfo.InvariantCulture);
 
         map.FolderPath = mapFolderPath;
 
@@ -736,9 +737,9 @@ public partial class MapParser : Node
                 (string)artistPlatform ?? ""
             )
             {
-                MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower(),
-                LastModifiedMetadata = metadataModified.ToString(),
-                LastModifiedNotes = objectsModified.ToString(),
+                MetadataObjectHash = Convert.ToHexStringLower(hash),
+                LastModifiedMetadata = metadataModified.ToString("O", CultureInfo.InvariantCulture),
+                LastModifiedNotes = objectsModified.ToString("O", CultureInfo.InvariantCulture),
             };
             // map.MetadataObjectHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
             // map.LastModifiedMetadata = metadataModified.ToString();

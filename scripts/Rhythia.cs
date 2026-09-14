@@ -58,7 +58,10 @@ public partial class Rhythia : Node
         // Map import
         var nonConvertedMaps = Directory
             .EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories)
-            .Where(f => f.GetExtension().ToLower() != Constants.DEFAULT_MAP_EXT && MapParser.IsValidExt(f.GetExtension().ToLower()));
+            .Where(f =>
+                !f.GetExtension().Equals(Constants.DEFAULT_MAP_EXT, StringComparison.CurrentCultureIgnoreCase)
+                && MapParser.IsValidExt(f.GetExtension().ToLower())
+            );
 
         await MapParser.BulkImport([.. nonConvertedMaps], notify: true);
 
@@ -225,7 +228,7 @@ public partial class Rhythia : Node
         if (loaded)
         {
             SettingsManager.Save();
-            Stats.Instance.Save();
+            Stats.Save();
         }
 
         Discord.Client.Dispose();

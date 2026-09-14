@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using Godot;
 
@@ -204,7 +205,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             }
 
             speedSlider.SetValueNoSignal(speed);
-            speedEdit.Text = speed.ToString();
+            speedEdit.Text = speed.ToString(CultureInfo.InvariantCulture);
         }
 
         displaySpeed(Lobby.Speed);
@@ -213,7 +214,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void applySpeed()
         {
-            if (!double.TryParse(speedEdit.Text, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            if (!double.TryParse(speedEdit.Text, CultureInfo.InvariantCulture, out double value))
             {
                 value = 100;
             }
@@ -235,7 +236,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         };
         speedSlider.ValueChanged += (value) =>
         {
-            speedEdit.Text = value.ToString();
+            speedEdit.Text = value.ToString(CultureInfo.InvariantCulture);
             applySpeed();
         };
 
@@ -274,7 +275,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
                 value += 60 * split[1].ToFloat();
             }
 
-            if (double.TryParse(split[0], System.Globalization.CultureInfo.InvariantCulture, out double inputValue))
+            if (double.TryParse(split[0], CultureInfo.InvariantCulture, out double inputValue))
             {
                 if (inputValue < 1)
                 {
@@ -310,7 +311,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         };
         startFromSlider.ValueChanged += value =>
         {
-            applyStartFrom((Math.Round(value * Map.Length) / 1000).ToString("F2", new System.Globalization.CultureInfo("en-US")), false);
+            applyStartFrom((Math.Round(value * Map.Length) / 1000).ToString("F2", CultureInfo.InvariantCulture), false);
         };
         startFromSlider.DragEnded += changed =>
         {
@@ -435,6 +436,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         var difficultyColor = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
 
         mainLabel.Text = string.Format(
+            CultureInfo.CurrentCulture,
             mainLabelFormat,
             Util.String.SanitizeBBCode(map.PrettyTitle),
             difficultyColor.ToHtml(),
@@ -443,6 +445,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         );
 
         extraLabel.Text = string.Format(
+            CultureInfo.CurrentCulture,
             extraLabelFormat,
             Util.String.FormatTime(map.Length / 1000),
             map.Notes.Length,
@@ -455,7 +458,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;
 
         artistLink.Visible = map.ArtistLink != "";
-        artistLink.Text = string.Format(artistLinkFormat, map.ArtistPlatform);
+        artistLink.Text = string.Format(CultureInfo.CurrentCulture, artistLinkFormat, map.ArtistPlatform);
 
         artistLink.UpdateLink(map.ArtistLink);
 
@@ -541,9 +544,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
         lbHide.Visible = show;
         lbScrollContainer.VerticalScrollMode = show ? ScrollContainer.ScrollMode.Auto : ScrollContainer.ScrollMode.ShowNever;
 
-        foreach (ScorePanel panel in lbContainer.GetChildren())
+        foreach (Node node in lbContainer.GetChildren())
         {
-            panel.Button.Visible = show;
+            if (node is ScorePanel panel)
+            {
+                panel.Button.Visible = show;
+            }
         }
 
         Tween tween = CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).SetParallel();

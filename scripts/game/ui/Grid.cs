@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class Grid : MeshInstance3D, IUIComponent
@@ -8,6 +9,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
     public MeshInstance3D Cursor { get; set; }
     public MultiMeshInstance3D CursorTrail { get; set; }
     public MeshInstance3D GridGuides { get; set; }
+    public MeshInstance3D VisibilityAssist { get; set; }
 
     private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
     private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
@@ -24,6 +26,11 @@ public partial class Grid : MeshInstance3D, IUIComponent
 
     public void Init()
     {
+        VisibilityAssist ??= GetNode<MeshInstance3D>("VisibilityAssist");
+
+        VisibilityAssist.Visible = Runner.Attempt.Settings.VisibilityAssist;
+        (VisibilityAssist.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.VisibilityAssistImage;
+
         GridGuides ??= GetNode<MeshInstance3D>("GridGuides");
 
         GridGuides.Visible = Runner.Attempt.Settings.GridGuides;
@@ -38,7 +45,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
         (Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
 
         // Cursor Transparency
-        float alpha = Math.Clamp((float)Runner.Attempt.Settings.CursorOpacity, 0, 1);
+        float alpha = Math.Clamp((float)(double)Runner.Attempt.Settings.CursorOpacity, 0, 1);
         Cursor.Transparency = 1f - alpha;
 
         CursorTrail ??= GetNode<MultiMeshInstance3D>("CursorTrail");
@@ -80,7 +87,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
         Label3D popup = hit_feedback.Instantiate<Label3D>();
         AddChild(popup);
         popup.GlobalPosition = new Vector3(Runner.Attempt.Map.Notes[objIndex].X, -1.4f, 0);
-        popup.Text = hitScore.ToString();
+        popup.Text = hitScore.ToString(CultureInfo.CurrentCulture);
         Tween tween = popup.CreateTween();
         tween.TweenProperty(popup, "transparency", 1, 0.25f);
         tween
@@ -126,5 +133,5 @@ public partial class Grid : MeshInstance3D, IUIComponent
         tween.Play();
     }
 
-    private void updateGridPosition(Vector2 position) { }
+    private static void updateGridPosition(Vector2 position) { }
 }

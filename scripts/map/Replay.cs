@@ -50,7 +50,7 @@ public struct Replay
         public float Progress = progress;
         public Vector2 CursorPosition = new(x, y);
 
-        public override string ToString() => $"({CursorPosition}) @{Progress}ms";
+        public override readonly string ToString() => $"({CursorPosition}) @{Progress}ms";
     }
 
     public Replay(string path)

@@ -6,8 +6,8 @@ public partial class PanelLeft : UIComponent
     private SubViewport viewport;
     private ShaderMaterial multiplierProgressMaterial;
     private float currentProgress = 0;
-    private Color currentColor = new Color(1, 1, 1, 1);
-    private Color targetMultiplierColour = new Color(1, 1, 1, 1);
+    private Color currentColor = new(1, 1, 1, 1);
+    private Color targetMultiplierColour = new(1, 1, 1, 1);
     private float targetMultiplierProgress = 0;
     private Tween multiplierTween;
 
@@ -58,7 +58,7 @@ public partial class PanelLeft : UIComponent
 
     public void OnStatsUpdated(Attempt attempt)
     {
-        score.Text = Util.String.PadMagnitude(attempt.Score.ToString());
+        score.Text = Util.String.PadMagnitude(attempt.Score);
         multiplier.Text = $"{attempt.ComboMultiplier}x";
         altCombo.Text = $"{attempt.Combo}";
 

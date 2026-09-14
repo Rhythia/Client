@@ -56,7 +56,7 @@ jobs:
 
           echo "Godot SDK OK: $ACTUAL_SDK"
 
-  dotnet-format:
+  formatting:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # Checkout v4
@@ -67,5 +67,9 @@ jobs:
         cache: true
     - name: Restore dependencies
       run: dotnet restore --locked-mode
-    - name: Format
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: Check CSharpier
+      run: dotnet csharpier check .
+    - name: Check dotnet format
       run: dotnet format --verify-no-changes Rhythia.csproj

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class FlatPreview : Panel
@@ -19,7 +20,7 @@ public partial class FlatPreview : Panel
     {
         for (int i = 0; i < 9; i++)
         {
-            ColorRect tile = new() { Name = i.ToString(), Color = transparent };
+            ColorRect tile = new() { Name = i.ToString(CultureInfo.CurrentCulture), Color = transparent };
 
             AddChild(tile);
 

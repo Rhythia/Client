@@ -60,6 +60,7 @@ public partial class Runner : Node3D
 
         HudManager ??= GetNode<HudManager>("HUD");
         Camera ??= GetNode<Camera3D>("Camera3D");
+        Renderers ??= GetNode<Godot.Collections.Array<Renderer>>("Renderers");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
@@ -231,7 +232,7 @@ public partial class Runner : Node3D
             ObjectIndicesStart[entry.Key] = (int)Attempt.FirstNote;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
-        noteTimestamps = Attempt.Objects[typeof(Note)].Select(note => (double)note.Millisecond).ToArray();
+        noteTimestamps = [.. Attempt.Objects[typeof(Note)].Select(note => (double)note.Millisecond)];
 
         if (!NotesOnly)
         {
@@ -264,7 +265,7 @@ public partial class Runner : Node3D
         }
 
         settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
-        Camera.Fov = (float)settings.FoV;
+        Camera.Fov = (float)(double)settings.FoV;
 
         // temp until skinning support
         (Renderers[0] as NoteRenderer)
