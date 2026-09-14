@@ -1,6 +1,6 @@
 using System;
+using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
@@ -65,14 +65,18 @@ public partial class MapBrowser : Control
             mappersLabel.Text = $"by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
             notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
             difficultyLabel.Text = difficultyText;
+            difficultyLabel.LabelSettings = (LabelSettings)difficultyLabel.LabelSettings.Duplicate();
             difficultyLabel.LabelSettings.FontColor = Constants.DIFFICULTY_COLORS[difficulty];
-            noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString()} notes";
+            noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString(CultureInfo.InvariantCulture)} notes";
             rankingLabel.Text = isRanked ? "RANKED" : "UNRANKED";
 
             rankingPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;
             rankingPill.AddThemeStyleboxOverride("panel", rankingPillStyle);
 
-            durationLabel.Text = duration.TotalHours >= 1 ? duration.ToString(@"hh\:mm\:ss") : duration.ToString(@"mm\:ss");
+            durationLabel.Text =
+                duration.TotalHours >= 1
+                    ? duration.ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture)
+                    : duration.ToString(@"mm\:ss", CultureInfo.InvariantCulture);
         }
     }
 

@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://bl6ten82nkjmd" path="res://user/skins/default/ui/buttons/sort.png" id="2_vofg3"]
 [ext_resource type="Shader" uid="uid://lywu8c8plv4j" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
 [ext_resource type="FontFile" uid="uid://4bnnn01f4dqr" path="res://fonts/Ubuntu/Ubuntu-Medium.ttf" id="3_ueqk1"]
-[ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="4_vofg3"]
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto/Roboto-Bold.ttf" id="5_0pn3c"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
@@ -89,8 +88,8 @@ corner_radius_bottom_left = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_10mjv"]
 font = ExtResource("5_0pn3c")
-font_size = 10
-font_color = Color(0.26666668, 0.26666668, 0.26666668, 1)
+font_size = 12
+font_color = Color(0.17254902, 0.17254902, 0.17254902, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_27haj"]
 content_margin_left = 8.0
@@ -105,7 +104,7 @@ corner_radius_bottom_left = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_ueqk1"]
 font = ExtResource("5_0pn3c")
-font_size = 10
+font_size = 12
 font_color = Color(0.1728327, 0.17283267, 0.17283267, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vofg3"]
@@ -113,58 +112,6 @@ font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ueqk1"]
-content_margin_left = 8.0
-content_margin_top = 6.0
-content_margin_right = 8.0
-content_margin_bottom = 6.0
-draw_center = false
-border_width_bottom = 2
-border_color = Color(0.7882353, 0, 0.27058825, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr0hc"]
-content_margin_left = 8.0
-content_margin_top = 7.0
-content_margin_right = 8.0
-content_margin_bottom = 5.0
-draw_center = false
-border_width_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jydku"]
-content_margin_left = 8.0
-content_margin_top = 6.0
-content_margin_right = 8.0
-content_margin_bottom = 6.0
-bg_color = Color(0.09411765, 0.09411765, 0.09411765, 1)
-draw_center = false
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
-border_blend = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rav3o"]
-content_margin_left = 8.0
-content_margin_top = 7.0
-content_margin_right = 8.0
-content_margin_bottom = 5.0
-draw_center = false
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bwt54"]
-content_margin_left = 8.0
-content_margin_top = 6.0
-content_margin_right = 8.0
-content_margin_bottom = 6.0
-draw_center = false
-border_color = Color(1, 1, 1, 1)
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u7sc7"]
 
 [node name="Map Browser" type="Control" unique_id=273716231]
 layout_mode = 3
@@ -526,7 +473,6 @@ mouse_filter = 2
 [node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
 layout_mode = 2
 size_flags_vertical = 4
-offset_transform_enabled = true
 offset_transform_position = Vector2(0, 6)
 offset_transform_visual_only = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_ikspe")
@@ -541,7 +487,6 @@ vertical_alignment = 1
 [node name="NotablePill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=153266238]
 layout_mode = 2
 size_flags_vertical = 4
-offset_transform_enabled = true
 offset_transform_position = Vector2(0, 6)
 offset_transform_visual_only = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_27haj")
@@ -559,23 +504,6 @@ size_flags_horizontal = 10
 size_flags_vertical = 8
 text = "00:00"
 label_settings = SubResource("LabelSettings_vofg3")
-
-[node name="Download" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1673526428]
-custom_minimum_size = Vector2(32, 32)
-custom_maximum_size = Vector2(32, 32)
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 8
-offset_transform_visual_only = false
-theme_override_styles/normal = SubResource("StyleBoxFlat_ueqk1")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_vr0hc")
-theme_override_styles/hover = SubResource("StyleBoxFlat_jydku")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_rav3o")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_bwt54")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_u7sc7")
-icon = ExtResource("4_vofg3")
-icon_alignment = 1
-expand_icon = true
 
 [node name="Pagination" type="HBoxContainer" parent="Holder/Background/Layout" unique_id=49456061]
 layout_mode = 2

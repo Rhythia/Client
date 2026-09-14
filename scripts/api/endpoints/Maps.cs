@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -7,8 +8,8 @@ public static class Maps
     public static async Task<JsonDocument> Search(MapQueryParameters queryParameters)
     {
         var query = HttpUtility.ParseQueryString(string.Empty);
-        query["limit"] = queryParameters.Limit.ToString();
-        query["offset"] = queryParameters.Offset.ToString();
+        query["limit"] = queryParameters.Limit.ToString(CultureInfo.InvariantCulture);
+        query["offset"] = queryParameters.Offset.ToString(CultureInfo.InvariantCulture);
         query["sortBy"] = queryParameters.SortBy;
         query["sortDirection"] = queryParameters.SortDirection;
 
