@@ -50,6 +50,7 @@ colors = PackedColorArray(0.22745098, 0.22745098, 0.22745098, 0.5803922, 0.18000
 gradient = SubResource("Gradient_vofg3")
 
 [sub_resource type="LabelSettings" id="LabelSettings_0pn3c"]
+font_size = 18
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
@@ -70,12 +71,6 @@ shadow_offset = Vector2(1, 1.5)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vr0hc"]
 font_size = 14
-font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
-shadow_size = 3
-shadow_color = Color(0, 0, 0, 0.39215687)
-shadow_offset = Vector2(1, 1.5)
-
-[sub_resource type="LabelSettings" id="LabelSettings_vofg3"]
 font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
@@ -112,6 +107,12 @@ corner_radius_bottom_left = 25
 font = ExtResource("5_0pn3c")
 font_size = 10
 font_color = Color(0.1728327, 0.17283267, 0.17283267, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vofg3"]
+font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.39215687)
+shadow_offset = Vector2(1, 1.5)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ueqk1"]
 content_margin_left = 8.0
@@ -466,6 +467,7 @@ theme_override_constants/separation = -1
 custom_minimum_size = Vector2(0, 30)
 custom_maximum_size = Vector2(-1, 20)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Title" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/TitleHolder" unique_id=108669646]
 custom_minimum_size = Vector2(0, 32)
@@ -487,6 +489,8 @@ text_overrun_behavior = 3
 
 [node name="Details" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=1843119036]
 layout_mode = 2
+offset_transform_position = Vector2(0, 8)
+offset_transform_visual_only = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details" unique_id=1188854303]
 layout_mode = 2
@@ -519,13 +523,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 
-[node name="Duration" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1613545318]
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 8
-text = "00:00"
-label_settings = SubResource("LabelSettings_vofg3")
-
 [node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
 layout_mode = 2
 size_flags_vertical = 4
@@ -555,6 +552,13 @@ text = "NOTABLE"
 label_settings = SubResource("LabelSettings_ueqk1")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Duration" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1613545318]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+text = "00:00"
+label_settings = SubResource("LabelSettings_vofg3")
 
 [node name="Download" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1673526428]
 custom_minimum_size = Vector2(32, 32)

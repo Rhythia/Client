@@ -59,7 +59,7 @@ public partial class MapBrowser : Control
             var duration = TimeSpan.FromMilliseconds(map.GetProperty("length").GetDouble());
 
             titleLabel.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title").GetString()}";
-            mappersLabel.Text = $"mapped by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
+            mappersLabel.Text = $"by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
             notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
             difficultyLabel.Text = difficultyText;
             difficultyLabel.LabelSettings.FontColor = Constants.DIFFICULTY_COLORS[difficulty];
