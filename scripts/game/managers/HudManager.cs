@@ -4,7 +4,8 @@ using Util;
 
 public partial class HudManager : Node
 {
-    [Export] public Runner Runner;
+    [Export]
+    public Runner Runner;
 
     private List<IUIComponent> components = [];
     private readonly List<Sprite3D> modifierIcons = [];
@@ -53,7 +54,8 @@ public partial class HudManager : Node
 
     public override void _Process(double delta)
     {
-        if (Runner?.Attempt == null) return;
+        if (Runner?.Attempt == null)
+            return;
 
         foreach (var component in components)
         {

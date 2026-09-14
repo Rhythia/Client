@@ -21,10 +21,13 @@ public partial class OptionPopup : Control
 
     [Export]
     private Label headerLabel;
+
     [Export]
     private RichTextLabel infoLabel;
+
     [Export]
     private HBoxContainer buttonContainer;
+
     [Export]
     private Button buttonTemplate;
 
@@ -91,15 +94,23 @@ public partial class OptionPopup : Control
 
         MoveToFront();
 
-        if (show) { Visible = true; }
-        else { EmitSignal(SignalName.Canceled); }
+        if (show)
+        {
+            Visible = true;
+        }
+        else
+        {
+            EmitSignal(SignalName.Canceled);
+        }
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad);
         tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.1);
-        tween.TweenCallback(Callable.From(() =>
-        {
-            Visible = Shown;
-        }));
+        tween.TweenCallback(
+            Callable.From(() =>
+            {
+                Visible = Shown;
+            })
+        );
     }
 
     public void Hide()
@@ -118,6 +129,4 @@ public partial class OptionPopup : Control
         Info = info;
         infoLabel.Text = info;
     }
-
-
 }

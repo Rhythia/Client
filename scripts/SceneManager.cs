@@ -62,23 +62,31 @@ public partial class SceneManager : Node
             outTween.TweenProperty(Scene.Transition, "self_modulate", Color.FromHtml("ffffffff"), skipTransition ? 0 : 0.25);
         }
 
-        outTween.TweenCallback(Callable.From(() =>
-        {
-            removeScene(Scene);
+        outTween.TweenCallback(
+            Callable.From(() =>
+            {
+                removeScene(Scene);
 
-            activeScenePath = path;
-            Scene = newScene;
+                activeScenePath = path;
+                Scene = newScene;
 
-            addScene(newScene);
+                addScene(newScene);
 
-            newScene.Transition.SelfModulate = Color.FromHtml("ffffffff");
-            Instance.CreateTween().SetTrans(Tween.TransitionType.Quad).TweenProperty(newScene.Transition, "self_modulate", Color.FromHtml("ffffff00"), skipTransition ? 0 : 0.25);
-        }));
+                newScene.Transition.SelfModulate = Color.FromHtml("ffffffff");
+                Instance
+                    .CreateTween()
+                    .SetTrans(Tween.TransitionType.Quad)
+                    .TweenProperty(newScene.Transition, "self_modulate", Color.FromHtml("ffffff00"), skipTransition ? 0 : 0.25);
+            })
+        );
     }
 
     private static void addScene(BaseScene scene, bool updateSpace = true)
     {
-        if (scene == null || scene.GetParent() == Instance) { return; }
+        if (scene == null || scene.GetParent() == Instance)
+        {
+            return;
+        }
 
         if (updateSpace)
         {
@@ -91,7 +99,10 @@ public partial class SceneManager : Node
 
     private static void removeScene(BaseScene scene, bool updateSpace = true)
     {
-        if (scene == null || scene.GetParent() != Instance) { return; }
+        if (scene == null || scene.GetParent() != Instance)
+        {
+            return;
+        }
 
         scene.Unload();
         Instance.RemoveChild(scene);
@@ -110,7 +121,10 @@ public partial class SceneManager : Node
 
     private static void addSpace(BaseSpace space, bool addToScene = false)
     {
-        if (space == null || space.GetParent() == backgroundViewport) { return; }
+        if (space == null || space.GetParent() == backgroundViewport)
+        {
+            return;
+        }
 
         if (addToScene)
         {
@@ -130,7 +144,10 @@ public partial class SceneManager : Node
 
     private static void removeSpace()
     {
-        if (Space == null) { return; }
+        if (Space == null)
+        {
+            return;
+        }
 
         Space.GetParent().RemoveChild(Space);
 

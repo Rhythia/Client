@@ -16,7 +16,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
     // Info & main buttons
 
     [ExportCategory("Info")]
-
     [Export]
     private Control info;
 
@@ -68,7 +67,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
     // Actions panel
 
     [ExportCategory("Actions")]
-
     [Export]
     private Control actions;
 
@@ -99,7 +97,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
     // Leaderboard
 
     [ExportCategory("Leaderboards")]
-
     [Export]
     private Control leaderboard;
 
@@ -176,7 +173,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
             MapManager.Delete(Map);
         };
 
-        void updateOffset() { infoSubholder.OffsetLeft = coverBackground.Size.X + 8; }
+        void updateOffset()
+        {
+            infoSubholder.OffsetLeft = coverBackground.Size.X + 8;
+        }
 
         coverBackground.Connect("resized", Callable.From(updateOffset));
 
@@ -189,7 +189,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void displaySpeed(double speed)
         {
-            if (!IsInstanceValid(speedSlider)) { return; }
+            if (!IsInstanceValid(speedSlider))
+            {
+                return;
+            }
 
             speed *= 100;
 
@@ -226,7 +229,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
         }
 
         speedEdit.FocusExited += applySpeed;
-        speedEdit.TextSubmitted += (_) => { applySpeed(); };
+        speedEdit.TextSubmitted += (_) =>
+        {
+            applySpeed();
+        };
         speedSlider.ValueChanged += (value) =>
         {
             speedEdit.Text = value.ToString();
@@ -240,7 +246,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void displayStartFrom(double startFrom)
         {
-            if (!IsInstanceValid(startFromSlider)) { return; }
+            if (!IsInstanceValid(startFromSlider))
+            {
+                return;
+            }
 
             int length = Map != null ? Map.Length : 1;
 
@@ -291,15 +300,24 @@ public partial class MapInfoContainer : Panel, ISkinnable
             }
         }
 
-        startFromEdit.FocusExited += () => { applyStartFrom(); };
-        startFromEdit.TextSubmitted += (_) => { applyStartFrom(); };
+        startFromEdit.FocusExited += () =>
+        {
+            applyStartFrom();
+        };
+        startFromEdit.TextSubmitted += (_) =>
+        {
+            applyStartFrom();
+        };
         startFromSlider.ValueChanged += value =>
         {
             applyStartFrom((Math.Round(value * Map.Length) / 1000).ToString("F2", new System.Globalization.CultureInfo("en-US")), false);
         };
         startFromSlider.DragEnded += changed =>
         {
-            if (changed) { applyStartFrom(); }
+            if (changed)
+            {
+                applyStartFrom();
+            }
         };
 
         //
@@ -315,13 +333,28 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         void tweenExpandHover(bool show)
         {
-            CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).TweenProperty(lbExpandHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
+            CreateTween()
+                .SetEase(Tween.EaseType.Out)
+                .SetTrans(Tween.TransitionType.Quart)
+                .TweenProperty(lbExpandHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
         }
 
-        lbExpand.MouseEntered += () => { tweenExpandHover(true); };
-        lbExpand.MouseExited += () => { tweenExpandHover(false); };
-        lbExpand.Pressed += () => { toggleLeaderboard(true); };
-        lbHide.Pressed += () => { toggleLeaderboard(false); };
+        lbExpand.MouseEntered += () =>
+        {
+            tweenExpandHover(true);
+        };
+        lbExpand.MouseExited += () =>
+        {
+            tweenExpandHover(false);
+        };
+        lbExpand.Pressed += () =>
+        {
+            toggleLeaderboard(true);
+        };
+        lbHide.Pressed += () =>
+        {
+            toggleLeaderboard(false);
+        };
 
         //
 
@@ -341,7 +374,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             switch (mouseButton.ButtonIndex)
             {
-                case MouseButton.Right: toggleLeaderboard(false); break;
+                case MouseButton.Right:
+                    toggleLeaderboard(false);
+                    break;
             }
         }
     }
@@ -352,14 +387,17 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             switch (mouseButton.ButtonIndex)
             {
-                case MouseButton.Left: toggleLeaderboard(false); break;
+                case MouseButton.Left:
+                    toggleLeaderboard(false);
+                    break;
             }
         }
     }
 
     public void Setup(Map map)
     {
-        if (map == null) return;
+        if (map == null)
+            return;
 
         if (Name == map.Name)
         {
@@ -463,7 +501,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
             panel.Setup(Leaderboard.Scores[i]);
             panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 * 8));
 
-            panel.Button.Pressed += () => { toggleLeaderboard(false); };
+            panel.Button.Pressed += () =>
+            {
+                toggleLeaderboard(false);
+            };
         }
     }
 

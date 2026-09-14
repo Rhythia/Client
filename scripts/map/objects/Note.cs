@@ -29,31 +29,33 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
 
     public void Hit(Runner runner, bool playSound = true)
     {
-        if (LastResult != HitResult.None) return;
+        if (LastResult != HitResult.None)
+            return;
 
         LastResult = HitResult.Hit;
         runner.EmitSignal(Runner.SignalName.HitResultChanged, Index, (int)LastResult);
 
-        if (playSound) SoundManager.PlayHitSound();
+        if (playSound)
+            SoundManager.PlayHitSound();
     }
 
     public void Miss(Runner runner, bool playSound = true)
     {
-        if (LastResult != HitResult.None) return;
+        if (LastResult != HitResult.None)
+            return;
 
         LastResult = HitResult.Miss;
         runner.EmitSignal(Runner.SignalName.HitResultChanged, Index, (int)LastResult);
 
-        if (playSound) SoundManager.PlayMissSound();
+        if (playSound)
+            SoundManager.PlayMissSound();
     }
 
     public bool DoProcess(Runner runner)
     {
         var attempt = runner.Attempt;
 
-        return Millisecond >= attempt.StartFrom
-            && Millisecond - attempt.Progress <= 0
-            && LastResult == HitResult.None;
+        return Millisecond >= attempt.StartFrom && Millisecond - attempt.Progress <= 0 && LastResult == HitResult.None;
     }
 
     public void Process(Runner runner)
@@ -77,8 +79,10 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
         {
             Miss(runner);
         }
-        else if (!attempt.IsReplay && CheckHitResult(attempt) == HitResult.Hit
-            || attempt.IsReplay && replayLateness != -1 && isPastWindow(runner, replayLateness))
+        else if (
+            !attempt.IsReplay && CheckHitResult(attempt) == HitResult.Hit
+            || attempt.IsReplay && replayLateness != -1 && isPastWindow(runner, replayLateness)
+        )
         {
             Hit(runner);
         }
@@ -86,10 +90,12 @@ public partial class Note : IHitObject, IAnimatableObject<NoteAnimation>, ICompa
 
     public HitResult CheckHitResult(Attempt attempt)
     {
-        if (attempt.CursorPosition.X + Constants.HIT_BOX_SIZE >= X - 0.5f
+        if (
+            attempt.CursorPosition.X + Constants.HIT_BOX_SIZE >= X - 0.5f
             && attempt.CursorPosition.X - Constants.HIT_BOX_SIZE <= X + 0.5f
             && attempt.CursorPosition.Y + Constants.HIT_BOX_SIZE >= Y - 0.5f
-            && attempt.CursorPosition.Y - Constants.HIT_BOX_SIZE <= Y + 0.5f)
+            && attempt.CursorPosition.Y - Constants.HIT_BOX_SIZE <= Y + 0.5f
+        )
         {
             return HitResult.Hit;
         }

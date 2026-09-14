@@ -3,8 +3,11 @@ using Godot;
 
 public partial class CameraModes : Panel
 {
-    [Export] private VBoxContainer container;
-    [Export] private Button templateButton;
+    [Export]
+    private VBoxContainer container;
+
+    [Export]
+    private Button templateButton;
 
     private List<Button> buttons = [];
 

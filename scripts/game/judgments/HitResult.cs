@@ -4,5 +4,5 @@ public enum HitResult
 {
     None,
     Hit,
-    Miss
+    Miss,
 }

@@ -28,7 +28,10 @@ public partial class MapBrowser : Control
 
         foreach (var map in maps)
         {
-            if (mapCardTemplate.Duplicate() is not PanelContainer mapCard) { continue; }
+            if (mapCardTemplate.Duplicate() is not PanelContainer mapCard)
+            {
+                continue;
+            }
 
             mapCard.Visible = true;
             mapCardTemplate.GetParent().AddChild(mapCard);
@@ -69,9 +72,7 @@ public partial class MapBrowser : Control
             rankingPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;
             rankingPill.AddThemeStyleboxOverride("panel", rankingPillStyle);
 
-            durationLabel.Text = duration.TotalHours >= 1
-                ? duration.ToString(@"hh\:mm\:ss")
-                : duration.ToString(@"mm\:ss");
+            durationLabel.Text = duration.TotalHours >= 1 ? duration.ToString(@"hh\:mm\:ss") : duration.ToString(@"mm\:ss");
         }
     }
 

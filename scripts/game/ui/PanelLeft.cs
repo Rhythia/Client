@@ -11,12 +11,14 @@ public partial class PanelLeft : UIComponent
     private float targetMultiplierProgress = 0;
     private Tween multiplierTween;
 
-    private Label score, multiplier;
+    private Label score,
+        multiplier;
     private Label altCombo;
 
     public override void _ExitTree()
     {
-        if (Runner.Attempt == null) return;
+        if (Runner.Attempt == null)
+            return;
         Runner.AttemptStatsUpdated -= OnStatsUpdated;
     }
 

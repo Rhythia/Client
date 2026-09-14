@@ -5,7 +5,8 @@ using Godot;
 
 public partial class NoteRenderer : Renderer, IRenderer<Note>
 {
-    [Export] private Runner runner;
+    [Export]
+    private Runner runner;
 
     public MultiMeshInstance3D NoteMultiMesh { get; set; }
 
@@ -18,11 +19,7 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
         NoteMultiMesh = new()
         {
             CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
-            Multimesh = new()
-            {
-                UseColors = true,
-                TransformFormat = MultiMesh.TransformFormatEnum.Transform3D
-            }
+            Multimesh = new() { UseColors = true, TransformFormat = MultiMesh.TransformFormatEnum.Transform3D },
         };
 
         AddChild(NoteMultiMesh);
@@ -39,7 +36,8 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
 
         for (int i = 0; i < mesh.GetSurfaceCount(); i++)
         {
-            if (mesh.SurfaceGetMaterial(i) is not StandardMaterial3D mat) continue;
+            if (mesh.SurfaceGetMaterial(i) is not StandardMaterial3D mat)
+                continue;
 
             mat.Transparency = BaseMaterial3D.TransparencyEnum.AlphaDepthPrePass;
             mat.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
@@ -53,7 +51,8 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
 
     private bool doRender(Note note, float time, float approachTime, float speed)
     {
-        return note.Millisecond - time >= (Settings.Pushback ? -Constants.HIT_WINDOW * speed : 0) && note.Millisecond - time <= approachTime * 1000 * speed;
+        return note.Millisecond - time >= (Settings.Pushback ? -Constants.HIT_WINDOW * speed : 0)
+            && note.Millisecond - time <= approachTime * 1000 * speed;
     }
 
     public void Render(double delta, double time, IList<Note> notes)

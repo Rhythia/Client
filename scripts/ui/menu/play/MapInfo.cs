@@ -27,14 +27,16 @@ public partial class MapInfo : AspectRatioContainer
         MapManager.Selected.ValueChanged += (_, _) => Select(MapManager.Selected.Value);
         MapManager.MapDeleted += map =>
         {
-            Callable.From(() =>
-            {
-                if (Map == null || Map.Name == map.Name)
+            Callable
+                .From(() =>
                 {
-                    Map = null;
-                    InfoContainer?.Transition(false);
-                }
-            }).CallDeferred();
+                    if (Map == null || Map.Name == map.Name)
+                    {
+                        Map = null;
+                        InfoContainer?.Transition(false);
+                    }
+                })
+                .CallDeferred();
         };
     }
 
@@ -61,7 +63,8 @@ public partial class MapInfo : AspectRatioContainer
 
     public void Select(Map map)
     {
-        if (map == null) return;
+        if (map == null)
+            return;
 
         // Defer selection if not in the scene tree (e.g. importing from another scene)
         if (!IsInsideTree())
@@ -70,18 +73,25 @@ public partial class MapInfo : AspectRatioContainer
             return;
         }
 
-        if (Map != null && map.Name == Map.Name) { return; }
+        if (Map != null && map.Name == Map.Name)
+        {
+            return;
+        }
 
         Map = map;
         pendingSelection = null;
 
         var oldContainer = InfoContainer;
 
-        InfoContainer?.Transition(false).TweenCallback(Callable.From(() =>
-        {
-            holder.RemoveChild(oldContainer);
-            infoContainerCache.Push(oldContainer);
-        }));
+        InfoContainer
+            ?.Transition(false)
+            .TweenCallback(
+                Callable.From(() =>
+                {
+                    holder.RemoveChild(oldContainer);
+                    infoContainerCache.Push(oldContainer);
+                })
+            );
 
         InfoContainer = infoContainerCache.Count > 0 ? infoContainerCache.Pop() : infoContainerTemplate.Instantiate<MapInfoContainer>();
 

@@ -4,7 +4,11 @@ using Godot;
 public partial class PanelRight : UIComponent
 {
     private SubViewport viewport;
-    private Label accuracy, hits, misses, simpleMisses, sum;
+    private Label accuracy,
+        hits,
+        misses,
+        simpleMisses,
+        sum;
     private Tween hitTween;
     private Tween missTween;
     private float hitOpacity = 0.62f;
@@ -12,7 +16,8 @@ public partial class PanelRight : UIComponent
 
     public override void _ExitTree()
     {
-        if (Runner.Attempt == null) return;
+        if (Runner.Attempt == null)
+            return;
         Runner.AttemptStatsUpdated -= OnStatsUpdated;
         Runner.HitResultChanged -= OnHitStateChanged;
     }

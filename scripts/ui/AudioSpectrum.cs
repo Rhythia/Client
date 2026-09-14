@@ -5,9 +5,13 @@ using Godot;
 public partial class AudioSpectrum : Panel
 {
     [ExportGroup("Sampling")]
-
     [Export]
-    public int Bus { get; set => SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(Math.Clamp(value, 0, AudioServer.BusCount), 0); } = 0;
+    public int Bus
+    {
+        get;
+        set =>
+            SpectrumAnalyzer = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(Math.Clamp(value, 0, AudioServer.BusCount), 0);
+    } = 0;
 
     [Export]
     public int MinFreq = 20;
@@ -22,7 +26,6 @@ public partial class AudioSpectrum : Panel
     public float MagnitudeCeiling = 0.2f;
 
     [ExportGroup("Visualizer")]
-
     [Export]
     public Color BarColor = Color.Color8(255, 255, 255);
 
@@ -90,7 +93,10 @@ public partial class AudioSpectrum : Panel
 
     public override void _Draw()
     {
-        if (barCount == 0) { return; }
+        if (barCount == 0)
+        {
+            return;
+        }
 
         Vector2 size = new(Size.X - BarSize, Size.Y);
         Vector2[] points = new Vector2[barCount * 2];

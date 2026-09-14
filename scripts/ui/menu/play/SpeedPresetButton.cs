@@ -26,7 +26,10 @@ public partial class SpeedPresetButton : Button
 
     private void updateState(double speed)
     {
-        if (!IsInstanceValid(this)) { return; }
+        if (!IsInstanceValid(this))
+        {
+            return;
+        }
 
         ButtonPressed = Speed / 100 == speed;
     }

@@ -11,7 +11,14 @@ public partial class KeybindsManager : Node
     {
         wikiPopup = new("Open Wiki", string.Format(LinkPopupButton.InfoTemplate, wikiLink));
 
-        wikiPopup.AddOption("Open", Callable.From(() => { OS.ShellOpen(wikiLink); }), wikiLink);
+        wikiPopup.AddOption(
+            "Open",
+            Callable.From(() =>
+            {
+                OS.ShellOpen(wikiLink);
+            }),
+            wikiLink
+        );
         wikiPopup.AddOption("Cancel", Callable.From(wikiPopup.Hide));
     }
 

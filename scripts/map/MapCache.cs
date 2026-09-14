@@ -29,9 +29,10 @@ public static class MapCache
         try
         {
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
-            List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
-                    .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
-                    .ToList();
+            List<string> mapsList = Directory
+                .GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
+                .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
+                .ToList();
 
             string[] toParseMaps = mapsList.ToArray();
 
@@ -161,7 +162,10 @@ public static class MapCache
                 if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
                 {
                     // Check if valid map
-                    if (!File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json") || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo"))
+                    if (
+                        !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json")
+                        || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo")
+                    )
                     {
                         Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
                     }
@@ -334,13 +338,15 @@ public static class MapCache
 
                     if (image != null)
                     {
-                        Callable.From(() =>
-                        {
-                            if (MapManager.Maps.Contains(map))
+                        Callable
+                            .From(() =>
                             {
-                                map.Cover = ImageTexture.CreateFromImage(image);
-                            }
-                        }).CallDeferred();
+                                if (MapManager.Maps.Contains(map))
+                                {
+                                    map.Cover = ImageTexture.CreateFromImage(image);
+                                }
+                            })
+                            .CallDeferred();
                     }
                 }
             }

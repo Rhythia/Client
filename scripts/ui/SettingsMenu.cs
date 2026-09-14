@@ -22,7 +22,8 @@ public partial class SettingsMenu : ColorRect
 
     private ScrollContainer selectedCategory;
 
-    [Export] public FileDialog ImportNightlyDialog;
+    [Export]
+    public FileDialog ImportNightlyDialog;
 
     public override void _Ready()
     {
@@ -62,7 +63,10 @@ public partial class SettingsMenu : ColorRect
         {
             string profile = profilesButton.GetItemText((int)index);
 
-            if (profile == SettingsManager.GetCurrentProfile()) { return; }
+            if (profile == SettingsManager.GetCurrentProfile())
+            {
+                return;
+            }
 
             SettingsManager.Save();
             SettingsManager.SetCurrentProfile(profile);
@@ -83,7 +87,10 @@ public partial class SettingsMenu : ColorRect
 
         foreach (Node child in settingTemplate.GetChildren())
         {
-            if (child.Name == "Title") { continue; }
+            if (child.Name == "Title")
+            {
+                continue;
+            }
             ;
 
             settingTemplate.RemoveChild(child);
@@ -93,7 +100,10 @@ public partial class SettingsMenu : ColorRect
 
         foreach (KeyValuePair<SettingsSection, List<ISettingsItem>> section in SettingsManager.Instance.Settings.ToOrderedSectionList())
         {
-            if (section.Key == SettingsSection.None) { continue; }
+            if (section.Key == SettingsSection.None)
+            {
+                continue;
+            }
 
             string sectionName = section.Key.ToString();
 
@@ -108,7 +118,10 @@ public partial class SettingsMenu : ColorRect
             sidebarCategory.Name = sectionName;
             sidebarCategory.Visible = true;
             sidebarButton.Text = sectionName.ToUpper();
-            sidebarButton.Pressed += () => { SelectCategory(category); };
+            sidebarButton.Pressed += () =>
+            {
+                SelectCategory(category);
+            };
 
             sidebar.AddChild(sidebarCategory);
 
@@ -193,6 +206,7 @@ public partial class SettingsMenu : ColorRect
         hideButton.Pressed += HideMenu;
         ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
     }
+
     // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
     public override void _Input(InputEvent @event)
     {
@@ -201,13 +215,20 @@ public partial class SettingsMenu : ColorRect
             switch (eventKey.Keycode)
             {
                 case Key.O:
-                    if (eventKey.CtrlPressed) { ShowMenu(!Shown); GetViewport().SetInputAsHandled(); }
+                    if (eventKey.CtrlPressed)
+                    {
+                        ShowMenu(!Shown);
+                        GetViewport().SetInputAsHandled();
+                    }
                     break;
                 case Key.Escape:
-                    if (Shown) { ShowMenu(false); GetViewport().SetInputAsHandled(); }
+                    if (Shown)
+                    {
+                        ShowMenu(false);
+                        GetViewport().SetInputAsHandled();
+                    }
                     break;
             }
-
         }
     }
 
@@ -229,7 +250,14 @@ public partial class SettingsMenu : ColorRect
         tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0b0)), 0.25);
         tween.TweenProperty(holder, "offset_top", Shown ? 0 : 25, 0.25);
         tween.TweenProperty(holder, "offset_bottom", Shown ? 0 : 25, 0.25);
-        tween.Chain().TweenCallback(Callable.From(() => { Visible = Shown; }));
+        tween
+            .Chain()
+            .TweenCallback(
+                Callable.From(() =>
+                {
+                    Visible = Shown;
+                })
+            );
     }
 
     public void HideMenu()
@@ -289,7 +317,10 @@ public partial class SettingsMenu : ColorRect
     {
         button.Toggled += value =>
         {
-            if ((bool)setting.GetVariant() != value) { setting.SetVariant(value); }
+            if ((bool)setting.GetVariant() != value)
+            {
+                setting.SetVariant(value);
+            }
         };
 
         setting.Updated += value => updateToggle(button, (bool)value);
@@ -306,18 +337,34 @@ public partial class SettingsMenu : ColorRect
     {
         void applyLineEdit()
         {
-            if (!double.TryParse(lineEdit.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            if (
+                !double.TryParse(
+                    lineEdit.Text,
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    out double value
+                )
+            )
             {
                 value = double.Parse(lineEdit.PlaceholderText, System.Globalization.CultureInfo.InvariantCulture);
             }
 
-            if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
+            if ((double)setting.GetVariant() != value)
+            {
+                setting.SetVariant(value);
+            }
         }
 
         double placeholder = 0;
 
-        if (setting is SettingsItem<double>) { placeholder = (setting as SettingsItem<double>).DefaultValue; }
-        else if (setting is SettingsItem<int>) { placeholder = (setting as SettingsItem<int>).DefaultValue; }
+        if (setting is SettingsItem<double>)
+        {
+            placeholder = (setting as SettingsItem<double>).DefaultValue;
+        }
+        else if (setting is SettingsItem<int>)
+        {
+            placeholder = (setting as SettingsItem<int>).DefaultValue;
+        }
 
         lineEdit.PlaceholderText = placeholder.ToString("F4");
         slider.Step = setting.Slider.Step;
@@ -325,13 +372,22 @@ public partial class SettingsMenu : ColorRect
         slider.MaxValue = setting.Slider.MaxValue;
 
         lineEdit.FocusExited += applyLineEdit;
-        lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
+        lineEdit.TextSubmitted += (_) =>
+        {
+            applyLineEdit();
+        };
         slider.ValueChanged += value =>
         {
-            if ((double)setting.GetVariant() != value) { setting.SetVariant(value); }
+            if ((double)setting.GetVariant() != value)
+            {
+                setting.SetVariant(value);
+            }
         };
 
-        setting.Updated += (value) => { updateSlider(slider, lineEdit, (double)value); };
+        setting.Updated += (value) =>
+        {
+            updateSlider(slider, lineEdit, (double)value);
+        };
 
         updateSlider(slider, lineEdit, (double)setting.GetVariant());
     }
@@ -355,13 +411,22 @@ public partial class SettingsMenu : ColorRect
         {
             string value = (lineEdit.Text == "" ? lineEdit.PlaceholderText : lineEdit.Text);
 
-            if ((string)setting.GetVariant() != value) { setting.SetVariant(value); }
+            if ((string)setting.GetVariant() != value)
+            {
+                setting.SetVariant(value);
+            }
         }
 
         lineEdit.FocusExited += applyLineEdit;
-        lineEdit.TextSubmitted += (_) => { applyLineEdit(); };
+        lineEdit.TextSubmitted += (_) =>
+        {
+            applyLineEdit();
+        };
 
-        setting.Updated += (value) => { updateInput(lineEdit, (string)value); };
+        setting.Updated += (value) =>
+        {
+            updateInput(lineEdit, (string)value);
+        };
 
         updateInput(lineEdit, (string)setting.GetVariant());
     }
@@ -388,7 +453,10 @@ public partial class SettingsMenu : ColorRect
             string oldVal = (string)setting.GetVariant();
             string newVal = (string)setting.List.Values[(int)id];
 
-            if (oldVal != newVal) { setting.SetVariant(newVal); }
+            if (oldVal != newVal)
+            {
+                setting.SetVariant(newVal);
+            }
         };
 
         int getIndex()
@@ -408,7 +476,10 @@ public partial class SettingsMenu : ColorRect
             return index;
         }
 
-        setting.Updated += (_) => { updateList(optionButton, getIndex()); };
+        setting.Updated += (_) =>
+        {
+            updateList(optionButton, getIndex());
+        };
 
         updateList(optionButton, getIndex());
     }
@@ -428,7 +499,10 @@ public partial class SettingsMenu : ColorRect
         button.Pressed += () =>
         {
             ulong now = Time.GetTicksMsec();
-            if (now - lastPressedAt < 250) { return; }
+            if (now - lastPressedAt < 250)
+            {
+                return;
+            }
 
             lastPressedAt = now;
             setting.OnPressed?.Invoke();

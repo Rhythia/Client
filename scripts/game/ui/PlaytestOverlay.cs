@@ -3,7 +3,8 @@ using Godot;
 
 public partial class PlaytestOverlay : Panel
 {
-    [Export] public ReplayManager ReplayManager { get; set; }
+    [Export]
+    public ReplayManager ReplayManager { get; set; }
 
     public bool PlaytestInit = false;
     public Runner Runner;
@@ -36,7 +37,8 @@ public partial class PlaytestOverlay : Panel
         }
         else
         {
-            Input.MouseMode = Attempt.IsReplay && ReplayManager.ViewerVisible ? Input.MouseModeEnum.Visible
+            Input.MouseMode =
+                Attempt.IsReplay && ReplayManager.ViewerVisible ? Input.MouseModeEnum.Visible
                 : Attempt.Settings.AbsoluteInput ? Input.MouseModeEnum.ConfinedHidden
                 : Input.MouseModeEnum.Captured;
         }
@@ -87,7 +89,6 @@ public partial class PlaytestOverlay : Panel
 
         input ??= valueEdit.Text == "" ? valueEdit.PlaceholderText : valueEdit.Text;
 
-
         if (input.Contains(":")) // time conversion (ex. 1:25)
         {
             if (!input.IsValidFloat())
@@ -105,7 +106,8 @@ public partial class PlaytestOverlay : Panel
             }
             if (double.TryParse(split[0], System.Globalization.CultureInfo.InvariantCulture, out double inputValue))
             {
-                if (inputValue < 1) inputValue *= map.Length / 1000;
+                if (inputValue < 1)
+                    inputValue *= map.Length / 1000;
                 value += inputValue;
             }
 
@@ -122,7 +124,8 @@ public partial class PlaytestOverlay : Panel
 
             double value = 0.0;
 
-            if (double.TryParse(input, out double inputValue)) value = inputValue;
+            if (double.TryParse(input, out double inputValue))
+                value = inputValue;
             value = Math.Clamp(value, 0, map.Length);
 
             valueEdit.Text = Util.String.FormatTime(value);
@@ -138,8 +141,8 @@ public partial class PlaytestOverlay : Panel
 
         if (split.Length == 1)
         {
-            if (split[0].IsValidFloat()) value = split[0].ToFloat();
-
+            if (split[0].IsValidFloat())
+                value = split[0].ToFloat();
         }
         else
         {

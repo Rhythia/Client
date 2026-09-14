@@ -3,14 +3,26 @@ using Godot;
 
 public partial class Game : BaseScene
 {
-    [Export] public Runner Runner;
-    [Export] public PauseMenu Menu;
-    [Export] public PlaytestOverlay PlaytestOverlay;
-    [Export] public ReplayManager ReplayManager { get; private set; }
-    [Export] public PlayerInputController PlayerInputController { get; private set; }
-    [Export] public CursorManager CursorManager { get; private set; }
+    [Export]
+    public Runner Runner;
 
-    [Signal] public delegate void StartTempPauseEventHandler(Attempt attempt);
+    [Export]
+    public PauseMenu Menu;
+
+    [Export]
+    public PlaytestOverlay PlaytestOverlay;
+
+    [Export]
+    public ReplayManager ReplayManager { get; private set; }
+
+    [Export]
+    public PlayerInputController PlayerInputController { get; private set; }
+
+    [Export]
+    public CursorManager CursorManager { get; private set; }
+
+    [Signal]
+    public delegate void StartTempPauseEventHandler(Attempt attempt);
 
     public static Game Instance;
     public static Attempt Attempt;
@@ -33,7 +45,8 @@ public partial class Game : BaseScene
 
         PlayerInputController.OnMouseMove += (relative, absolute) =>
         {
-            if (!Runner.Playing || Attempt.IsReplay) return;
+            if (!Runner.Playing || Attempt.IsReplay)
+                return;
 
             if (Attempt.Settings.AbsoluteInput)
             {
@@ -51,10 +64,7 @@ public partial class Game : BaseScene
             Attempt.DistanceMM += relative.Length() / Attempt.Settings.Sensitivity / 57.5;
         };
 
-        PlayerInputController.OnLeftMouseButton += isPressed =>
-        {
-
-        };
+        PlayerInputController.OnLeftMouseButton += isPressed => { };
 
         PlayerInputController.OnTogglePaused += () =>
         {
@@ -69,7 +79,8 @@ public partial class Game : BaseScene
             }
             else
             {
-                if (Rhythia.TempMode && !PlaytestOverlay.PlaytestInit) return;
+                if (Rhythia.TempMode && !PlaytestOverlay.PlaytestInit)
+                    return;
                 Menu.ShowMenu(!Menu.Shown);
             }
         };
@@ -102,7 +113,8 @@ public partial class Game : BaseScene
             }
             else
             {
-                if (Lobby.Players.Count > 1) return;
+                if (Lobby.Players.Count > 1)
+                    return;
                 Runner.Skip();
 
                 // Space To Pause
@@ -180,9 +192,18 @@ public partial class Game : BaseScene
         }
     }
 
-    public static void Play(Map map, double speed, double startFrom, CameraMode cameraMode, List<Modifier> mods, string[] players = null, Replay[] replays = null)
+    public static void Play(
+        Map map,
+        double speed,
+        double startFrom,
+        CameraMode cameraMode,
+        List<Modifier> mods,
+        string[] players = null,
+        Replay[] replays = null
+    )
     {
-        if (StartQueued) return;
+        if (StartQueued)
+            return;
 
         StartQueued = true;
 
@@ -199,7 +220,15 @@ public partial class Game : BaseScene
 
         var oldAttempt = Attempt;
         var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
-        Attempt = new(map, oldAttempt.Speed, oldAttempt.StartFrom, oldAttempt.CameraMode, oldAttempt.Modifiers, oldAttempt.Players, oldAttempt.Replays);
+        Attempt = new(
+            map,
+            oldAttempt.Speed,
+            oldAttempt.StartFrom,
+            oldAttempt.CameraMode,
+            oldAttempt.Modifiers,
+            oldAttempt.Players,
+            oldAttempt.Replays
+        );
 
         SceneManager.ReloadCurrentScene();
     }

@@ -12,7 +12,8 @@ public partial class HealthBar : UIComponent
 
     public override void _ExitTree()
     {
-        if (Runner.Attempt == null) return;
+        if (Runner.Attempt == null)
+            return;
         Runner.AttemptStatsUpdated -= OnStatsUpdated;
         tween?.Kill();
     }

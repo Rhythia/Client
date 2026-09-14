@@ -49,7 +49,6 @@ public class Stats
 
     public event Action<Stats>? StatsUpdated;
 
-
     /// <summary>
     /// Forces a sync for stats
     /// </summary>

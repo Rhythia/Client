@@ -38,7 +38,10 @@ public partial class ScorePanel : Panel
 
             buttonLabel.Text = File.Exists(replayPath) ? "VIEW" : "REPLAY NOT FOUND";
 
-            CreateTween().SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quart).TweenProperty(buttonHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
+            CreateTween()
+                .SetEase(Tween.EaseType.Out)
+                .SetTrans(Tween.TransitionType.Quart)
+                .TweenProperty(buttonHover, "modulate", Color.Color8(255, 255, 255, (byte)(show ? 255 : 0)), 0.25);
         }
 
         Button.MouseEntered += () => tweenHover(true);

@@ -1,7 +1,4 @@
 using System;
 using Godot;
 
-public partial class CreditsPanel : ExtrasPanel
-{
-
-}
+public partial class CreditsPanel : ExtrasPanel { }

@@ -102,7 +102,6 @@ public partial class MapManager : Node
                 {
                     Logger.Log($"{map.Title} has been deleted");
                 }
-
             }
             catch
             {
@@ -116,10 +115,12 @@ public partial class MapManager : Node
             MapCache.RemoveMap(map);
             Maps.RemoveAll(x => x.Id == map.Id);
 
-            Callable.From(() =>
-            {
-                _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
-            }).CallDeferred();
+            Callable
+                .From(() =>
+                {
+                    _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
+                })
+                .CallDeferred();
             Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();
         }
         catch (Exception e)
