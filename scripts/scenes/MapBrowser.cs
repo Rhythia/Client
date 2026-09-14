@@ -42,9 +42,9 @@ public partial class MapBrowser : Control
 
             Label titleLabel = topText.GetNode<Label>("TitleHolder/Title");
             Label mappersLabel = topText.GetNode<Label>("Details/VBoxContainer/Mapper");
-            PanelContainer notablePill = topText.GetNode<PanelContainer>("Details/NotablePill");
+            PanelContainer notablePill = bottomText.GetNode<PanelContainer>("NotablePill");
             Label difficultyLabel = topText.GetNode<Label>("Details/VBoxContainer/Difficulty");
-            Label noteCountLabel = bottomText.GetNode<Label>("Notes");
+            Label noteCountLabel = topText.GetNode<Label>("Details/VBoxContainer/Notes");
             PanelContainer rankingPill = bottomText.GetNode<PanelContainer>("RankingPill");
             Label rankingLabel = rankingPill.GetNode<Label>("Ranking");
             Label durationLabel = bottomText.GetNode<Label>("Duration");
@@ -59,7 +59,7 @@ public partial class MapBrowser : Control
             var duration = TimeSpan.FromMilliseconds(map.GetProperty("length").GetDouble());
 
             titleLabel.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title").GetString()}";
-            mappersLabel.Text = $"mapped by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
+            mappersLabel.Text = $"by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
             notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
             difficultyLabel.Text = difficultyText;
             difficultyLabel.LabelSettings.FontColor = Constants.DIFFICULTY_COLORS[difficulty];
