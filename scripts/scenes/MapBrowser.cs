@@ -66,7 +66,8 @@ public partial class MapBrowser : Control
             name.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title")}";
             mappersLabel.Text = $"mapped by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
             difficultyName.Text = map.GetProperty("difficultyName").GetString();
-            noteCountLabel.Text = map.GetProperty("noteCount").GetInt32().ToString();
+            difficultyName.LabelSettings.FontColor =Constants.DIFFICULTY_COLORS[map.GetProperty("difficulty").GetInt32()];
+            noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString()} notes";
             rankedLabel.Text = (map.GetProperty("isRanked").GetBoolean()) ? "RANKED" : "UNRANKED";
 
             var duration = TimeSpan.FromMilliseconds(map.GetProperty("length").GetDouble());
