@@ -30,7 +30,7 @@ public partial class MapBrowser : Control
         Shown = false;
         Visible = false;
 
-        hideButton.Pressed += HideBrowser;
+        hideButton.Pressed += HideMenu;
     }
 
     public override void _Input(InputEvent @event)
@@ -39,30 +39,44 @@ public partial class MapBrowser : Control
             return;
         if (!Shown)
             return;
-        ShowBrowser(false);
+        ShowMenu(false);
         GetViewport().SetInputAsHandled();
     }
 
-    public void ShowBrowser(bool show = true)
+    public void ShowMenu(bool show = true)
     {
-        if (!show)
-        {
-            HideBrowser();
-            return;
-        }
-
-        Shown = true;
-        Visible = true;
+        Shown = show;
+        hideButton.MouseFilter = show ? MouseFilterEnum.Stop : MouseFilterEnum.Ignore;
 
         CallDeferred("move_to_front");
-        clearResults();
-        _ = populate();
+
+        if (Shown)
+        {
+            Visible = true;
+            holder.OffsetTop = 10;
+            holder.OffsetBottom = 10;
+
+            clearResults();
+            _ = populate();
+        }
+
+        Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
+        tween.TweenProperty(this, "modulate", Color.Color8(255, 255, 255, (byte)(Shown ? 255 : 0b0)), 0.25);
+        tween.TweenProperty(holder, "offset_top", Shown ? 0 : 10, 0.25);
+        tween.TweenProperty(holder, "offset_bottom", Shown ? 0 : 10, 0.25);
+        tween
+            .Chain()
+            .TweenCallback(
+                Callable.From(() =>
+                {
+                    Visible = Shown;
+                })
+            );
     }
 
-    public void HideBrowser()
+    public void HideMenu()
     {
-        Shown = false;
-        Visible = false;
+        ShowMenu(false);
     }
 
     private async Task populate()

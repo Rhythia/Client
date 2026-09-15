@@ -44,11 +44,11 @@ public partial class KeybindsManager : Node
                     {
                         if (MapBrowser.Instance.Shown)
                         {
-                            MapBrowser.Instance.HideBrowser();
+                            MapBrowser.Instance.HideMenu();
                         }
                         else
                         {
-                            MapBrowser.Instance.ShowBrowser(true);
+                            MapBrowser.Instance.ShowMenu(true);
                         }
                         GetViewport().SetInputAsHandled();
                     }
