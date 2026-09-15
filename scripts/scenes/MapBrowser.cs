@@ -33,6 +33,16 @@ public partial class MapBrowser : Control
         hideButton.Pressed += HideBrowser;
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is not InputEventKey { Pressed: true, Echo: false, Keycode: Key.Escape })
+            return;
+        if (!Shown)
+            return;
+        ShowBrowser(false);
+        GetViewport().SetInputAsHandled();
+    }
+
     public void ShowBrowser(bool show = true)
     {
         if (!show)
