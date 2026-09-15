@@ -166,30 +166,30 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin" unique_id=1827421630]
+[node name="TopBar" type="VBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin" unique_id=1827421630]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer" unique_id=56255056]
+[node name="Header" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=56255056]
 layout_mode = 2
 theme = ExtResource("1_wvv2m")
 
-[node name="Title" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/Header" unique_id=1928745732]
+[node name="Title" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Header" unique_id=1928745732]
 layout_mode = 2
 theme = ExtResource("1_wvv2m")
 text = "MAP BROWSER"
 label_settings = SubResource("LabelSettings_hrfuy")
 vertical_alignment = 1
 
-[node name="SearchBar" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer" unique_id=1326782548]
+[node name="SearchBar" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1326782548]
 layout_mode = 2
 
-[node name="Search" type="LineEdit" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/SearchBar" unique_id=1105201271]
+[node name="Search" type="LineEdit" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=1105201271]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Search maps, mappers, or difficulty…"
 clear_button_enabled = true
 
-[node name="Sort" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/SearchBar" unique_id=2098712667]
+[node name="Sort" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=2098712667]
 layout_mode = 2
 selected = 0
 item_count = 3
@@ -200,12 +200,12 @@ popup/item_1/id = 2
 popup/item_2/text = "Notes"
 popup/item_2/id = 2
 
-[node name="Direction" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/SearchBar" unique_id=1884251797]
+[node name="Direction" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=1884251797]
 layout_mode = 2
 text = "Descending"
 icon = ExtResource("2_vofg3")
 
-[node name="BrowseMode" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/SearchBar" unique_id=824117255]
+[node name="BrowseMode" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=824117255]
 layout_mode = 2
 selected = 0
 item_count = 2
@@ -214,14 +214,14 @@ popup/item_0/id = 0
 popup/item_1/text = "Scrolling"
 popup/item_1/id = 1
 
-[node name="Refresh" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/SearchBar" unique_id=1745989520]
+[node name="Refresh" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=1745989520]
 layout_mode = 2
 text = "Refresh"
 
-[node name="Filters" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer" unique_id=1421262505]
+[node name="Filters" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1421262505]
 layout_mode = 2
 
-[node name="Difficulty" type="MenuButton" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/Filters" unique_id=1695394737]
+[node name="Difficulty" type="MenuButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=1695394737]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Difficulties"
@@ -248,7 +248,7 @@ popup/item_4/checkable = 1
 popup/item_4/checked = true
 popup/item_4/id = 4
 
-[node name="Ranking" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/Filters" unique_id=330241703]
+[node name="Ranking" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=330241703]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
@@ -261,7 +261,7 @@ popup/item_1/id = 1
 popup/item_2/text = "Both"
 popup/item_2/id = 2
 
-[node name="Installed" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/Filters" unique_id=1262770447]
+[node name="Installed" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=1262770447]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
@@ -274,35 +274,35 @@ popup/item_1/id = 0
 popup/item_2/text = "Both"
 popup/item_2/id = 2
 
-[node name="ActiveFilters" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer" unique_id=1401022026]
+[node name="ActiveFilters" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1401022026]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/ActiveFilters" unique_id=1844162903]
+[node name="Label" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters" unique_id=1844162903]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Scroll" type="ScrollContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/ActiveFilters" unique_id=882056051]
+[node name="Scroll" type="ScrollContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters" unique_id=882056051]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Tags" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/ActiveFilters/Scroll" unique_id=403074119]
+[node name="Tags" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters/Scroll" unique_id=403074119]
 layout_mode = 2
 
-[node name="Clear" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/ActiveFilters" unique_id=1284947479]
+[node name="Clear" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters" unique_id=1284947479]
 layout_mode = 2
 text = "Clear filters"
 
-[node name="DownloadStatus" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer" unique_id=1484611059]
+[node name="DownloadStatus" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1484611059]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/DownloadStatus" unique_id=1525450065]
+[node name="Label" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/DownloadStatus" unique_id=1525450065]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Retry" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/VBoxContainer/DownloadStatus" unique_id=1000402623]
+[node name="Retry" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/DownloadStatus" unique_id=1000402623]
 layout_mode = 2
 text = "Retry failed"
 
@@ -523,3 +523,7 @@ horizontal_alignment = 1
 layout_mode = 2
 disabled = true
 text = "Next →"
+
+[node name="SearchTimer" type="Timer" parent="." unique_id=1241663088]
+wait_time = 0.3
+one_shot = true

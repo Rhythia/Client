@@ -13,6 +13,11 @@ public partial class MapBrowser : Control
 
     private Button hideButton;
     private Panel holder;
+    private VBoxContainer topBar;
+    private HBoxContainer searchBar;
+    private LineEdit search;
+    private Timer searchTimer;
+    private HBoxContainer filters;
     private ScrollContainer results;
     private PanelContainer mapCardTemplate;
 
@@ -22,6 +27,10 @@ public partial class MapBrowser : Control
 
         hideButton = GetNode<Button>("Hide");
         holder = GetNode<Panel>("Holder");
+        topBar = holder.GetNode<VBoxContainer>("Background/Layout/TopBarBackground/Margin/TopBar");
+        searchBar = topBar.GetNode<HBoxContainer>("SearchBar");
+        search = searchBar.GetNode<LineEdit>("Search");
+        searchTimer = GetNode<Timer>("SearchTimer");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
         mapCardTemplate = results.GetNode<PanelContainer>("RowsMargin/Rows/MapCardTemplate");
 
@@ -29,6 +38,9 @@ public partial class MapBrowser : Control
 
         Shown = false;
         Visible = false;
+
+        search.TextChanged += _ => searchTimer.Start();
+        searchTimer.Timeout += onSearchTimerTimeout;
 
         hideButton.Pressed += HideMenu;
     }
@@ -57,7 +69,7 @@ public partial class MapBrowser : Control
             holder.OffsetBottom = 10;
 
             clearResults();
-            _ = populate();
+            _ = populate(buildQueryParameters());
         }
 
         Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
@@ -79,9 +91,9 @@ public partial class MapBrowser : Control
         ShowMenu(false);
     }
 
-    private async Task populate()
+    private async Task populate(MapQueryParameters queryParameters)
     {
-        JsonElement[] maps = await MapBrowserService.Search(new MapQueryParameters());
+        JsonElement[] maps = await MapBrowserService.Search(queryParameters);
 
         foreach (var map in maps)
         {
@@ -149,6 +161,17 @@ public partial class MapBrowser : Control
 
         coverTexture.Texture = cover;
         blurCoverTexture.Texture = cover;
+    }
+
+    private async void onSearchTimerTimeout()
+    {
+        clearResults();
+        _ = populate(buildQueryParameters());
+    }
+
+    private MapQueryParameters buildQueryParameters()
+    {
+        return new MapQueryParameters { Query = search.Text.Trim() };
     }
 
     private void clearResults()
