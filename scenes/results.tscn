@@ -76,19 +76,25 @@ shader = ExtResource("8_ldb53")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ttaov"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_v6imt"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_00qb5"]
 shader = ExtResource("5_eo0oh")
-shader_parameter/brightness = 1.25
+shader_parameter/brightness = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_00fns"]
+bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_f104l"]
 font = ExtResource("4_yxv8s")
 font_size = 32
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bop88"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_18lcc"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4a50n"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f8ry2"]
 shader = ExtResource("5_eo0oh")
-shader_parameter/brightness = 1.25
+shader_parameter/brightness = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lmve7"]
+bg_color = Color(1, 1, 1, 1)
 
 [node name="SceneResults" type="Node" unique_id=11944572]
 script = ExtResource("1_llpx6")
@@ -99,7 +105,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0252979, 0.0178548, 0.0358456, 1)
+color = Color(0.050980393, 0.050980393, 0.050980393, 1)
 
 [node name="CoverBackground" type="TextureRect" parent="." unique_id=1406868645]
 modulate = Color(1, 1, 1, 0.14902)
@@ -334,67 +340,89 @@ color = Color(1, 1, 1, 0.12549)
 [node name="TopBar" type="Panel" parent="." unique_id=571217894]
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 64.0
+offset_bottom = 72.0
+grow_horizontal = 2
 theme = ExtResource("2_dgnpu")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ttaov")
 
-[node name="Background" type="ColorRect" parent="TopBar" unique_id=894318878]
-material = SubResource("ShaderMaterial_v6imt")
+[node name="Background" type="Panel" parent="TopBar" unique_id=485087901]
+material = SubResource("ShaderMaterial_00qb5")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_00fns")
 
-[node name="Logo" type="TextureRect" parent="TopBar" unique_id=1129669805]
+[node name="Logo" type="TextureRect" parent="TopBar/Background" unique_id=70085367]
 layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 1.0
 offset_left = 6.0
-offset_top = 6.0
-offset_bottom = -6.0
+offset_top = 8.0
+offset_bottom = -8.0
 texture = ExtResource("10_00qb5")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="TopBar" unique_id=424784939]
+[node name="Version" type="RichTextLabel" parent="TopBar/Background" unique_id=641249879]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.6
+anchor_top = 0.5
+anchor_right = 0.25
+anchor_bottom = 0.5
+offset_left = 64.0
+offset_top = -16.0
+offset_bottom = 16.0
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("2_f4qdi")
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "Rhythia"
+shortcut_keys_enabled = false
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="TopBar" unique_id=424784939]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
+anchor_bottom = 0.5
+offset_left = -141.0
+offset_top = -19.0
+offset_right = -10.0
+offset_bottom = 19.0
+grow_horizontal = 0
+grow_vertical = 2
 text = "RESULTS"
 label_settings = SubResource("LabelSettings_f104l")
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Footer" type="Panel" parent="." unique_id=367936054]
-anchors_preset = 12
+clip_contents = true
+anchors_preset = -1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = -64.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_top = -72.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
 theme = ExtResource("2_dgnpu")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_bop88")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_18lcc")
 
-[node name="Background" type="ColorRect" parent="Footer" unique_id=154102556]
-material = SubResource("ShaderMaterial_4a50n")
+[node name="Background" type="Panel" parent="Footer" unique_id=2044229015]
+material = SubResource("ShaderMaterial_f8ry2")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lmve7")
 
 [node name="Back" type="Button" parent="Footer" unique_id=1252711574]
 layout_mode = 1
