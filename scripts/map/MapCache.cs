@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ public static class MapCache
     public static Bindable<int> FilesSynced = new(0);
     public static event Action<int> OnFilesSyncFinished;
     public static bool OldCacheFormat = false;
-    public static List<string> MapsToBeFavorited = new();
+    public static List<string> MapsToBeFavorited = [];
 
     public static void Initialize()
     {
@@ -29,11 +30,13 @@ public static class MapCache
         try
         {
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
-            List<string> mapsList = Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories)
-                    .Concat(Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories))
-                    .ToList();
+            List<string> mapsList =
+            [
+                .. Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories),
+                .. Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories),
+            ];
 
-            string[] toParseMaps = mapsList.ToArray();
+            string[] toParseMaps = [.. mapsList];
 
             if (fullSync)
             {
@@ -102,8 +105,8 @@ public static class MapCache
                 DateTime objectModifiedDate = File.GetLastWriteTime(Path.Combine(mapPath, "objects.phxmo"));
 
                 // Time must be converted to string because the SQLite library doesn't support DateTime types -fog
-                string metadataResult = metadataModifiedDate.ToString();
-                string notesResult = objectModifiedDate.ToString();
+                string metadataResult = metadataModifiedDate.ToString("O", CultureInfo.InvariantCulture);
+                string notesResult = objectModifiedDate.ToString("O", CultureInfo.InvariantCulture);
 
                 bool metadataCheck = map.LastModifiedMetadata == metadataResult;
                 bool objectsCheck = map.LastModifiedNotes == notesResult;
@@ -145,8 +148,8 @@ public static class MapCache
                     continue;
                 }
 
-                newMap.LastModifiedMetadata = metadataModifiedDate.ToString();
-                newMap.LastModifiedNotes = objectModifiedDate.ToString();
+                newMap.LastModifiedMetadata = metadataModifiedDate.ToString("O", CultureInfo.InvariantCulture);
+                newMap.LastModifiedNotes = objectModifiedDate.ToString("O", CultureInfo.InvariantCulture);
 
                 newMap.Id = map.Id;
                 newMap.MetadataObjectHash = checksum;
@@ -161,7 +164,10 @@ public static class MapCache
                 if (Directory.Exists($"{MapUtil.MapsFolder}/{map.Name}"))
                 {
                     // Check if valid map
-                    if (!File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json") || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo"))
+                    if (
+                        !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/metadata.json")
+                        || !File.Exists($"{MapUtil.MapsFolder}/{map.Name}/objects.phxmo")
+                    )
                     {
                         Directory.Delete($"{MapUtil.MapsFolder}/{map.Name}", true);
                     }
@@ -189,11 +195,11 @@ public static class MapCache
     {
         var maps = FetchAll();
 
-        HashSet<string> hashSet = new();
+        HashSet<string> hashSet = [];
         maps.ForEach(map => hashSet.Add(map.FolderPath));
 
         // Maps that need to be parsed - maps in database cache
-        FilesToSync.Value = toParseMaps.Count() - maps.Count();
+        FilesToSync.Value = toParseMaps.Length - maps.Count;
         FilesSynced.Value = 0;
 
         // For Old Cache version
@@ -222,7 +228,7 @@ public static class MapCache
                     continue;
                 }
 
-                map.FolderPath = $"{Constants.USER_FOLDER}/maps/{map.Name}";
+                map.FolderPath = BackSlashToForwardSlash(toParseMap);
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
 
                 if (OldCacheFormat)
@@ -334,13 +340,15 @@ public static class MapCache
 
                     if (image != null)
                     {
-                        Callable.From(() =>
-                        {
-                            if (MapManager.Maps.Contains(map))
+                        Callable
+                            .From(() =>
                             {
-                                map.Cover = ImageTexture.CreateFromImage(image);
-                            }
-                        }).CallDeferred();
+                                if (MapManager.Maps.Contains(map))
+                                {
+                                    map.Cover = ImageTexture.CreateFromImage(image);
+                                }
+                            })
+                            .CallDeferred();
                     }
                 }
             }
@@ -370,10 +378,10 @@ public static class MapCache
         string objectsPath = Path.Combine(path, "objects.phxmo");
         byte[] hash = Misc.HashFiles([metadataPath, objectsPath]);
 
-        return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
+        return Convert.ToHexStringLower(hash);
     }
 
-    public static List<Map> FetchAll() => DatabaseService.Connection.Table<Map>().ToList();
+    public static List<Map> FetchAll() => [.. DatabaseService.Connection.Table<Map>()];
 
     public static string BackSlashToForwardSlash(string path) => path.Replace("\\", "/");
 }

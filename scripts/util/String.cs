@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Godot;
 
@@ -8,18 +9,21 @@ public class String
 {
     public static string FormatTime(double seconds, bool padMinutes = false)
     {
-        int minutes = (int)Mathf.Floor(seconds / (seconds > 0 ? 60 : -60));
+        bool negative = seconds < 0;
 
-        seconds -= minutes * 60;
-        seconds = Math.Floor(seconds);
+        int minutes = (int)Mathf.Floor(Math.Abs(seconds) / 60);
+        seconds = (int)Math.Floor(Math.Abs(seconds) % 60);
 
-        return $"{(seconds < 0 ? "-" : "")}{(padMinutes ? minutes.ToString().PadZeros(2) : minutes)}:{Math.Abs(seconds).ToString().PadZeros(2)}";
+        return $"{(negative ? "-" : "")}{(padMinutes ? minutes.ToString("D2", CultureInfo.CurrentCulture) : minutes)}:{seconds.ToString("00", CultureInfo.CurrentCulture)}";
     }
 
     public static string FormatUnixTimePretty(double now, double time)
     {
         string formatted;
-        double seconds, minutes, hours, days;
+        double seconds,
+            minutes,
+            hours,
+            days;
         double difference = now - time;
         string prefix = difference < 0 ? "in " : "";
         string suffix = difference > 0 ? " ago" : "";
@@ -31,19 +35,19 @@ public class String
 
         if (days > 0)
         {
-            formatted = $"{PadMagnitude(days.ToString())} day" + (days > 1 ? "s" : "");
+            formatted = $"{PadMagnitude(days)} day" + (days > 1 ? "s" : "");
         }
         else if (hours > 0)
         {
-            formatted = $"{PadMagnitude(hours.ToString())} hour" + (hours > 1 ? "s" : "");
+            formatted = $"{PadMagnitude(hours)} hour" + (hours > 1 ? "s" : "");
         }
         else if (minutes > 0)
         {
-            formatted = $"{PadMagnitude(minutes.ToString())} minute" + (minutes > 1 ? "s" : "");
+            formatted = $"{PadMagnitude(minutes)} minute" + (minutes > 1 ? "s" : "");
         }
         else if (seconds > 0)
         {
-            formatted = $"{PadMagnitude(seconds.ToString())} second" + (seconds > 1 ? "s" : "");
+            formatted = $"{PadMagnitude(seconds)} second" + (seconds > 1 ? "s" : "");
         }
         else
         {
@@ -53,24 +57,9 @@ public class String
         return $"{prefix}{formatted}{suffix}";
     }
 
-    public static string PadMagnitude(string str, string pad = ",")
+    public static string PadMagnitude(double value)
     {
-        string formatted = "";
-        string[] split = str.Split(".");
-        string whole = split[0];
-        string decimals = split.Length > 1 ? "." + split[1] : "";
-
-        for (int i = 0; i < whole.Length; i++)
-        {
-            formatted += whole[i];
-
-            if ((whole.Length - i - 1) % 3 == 0)
-            {
-                formatted += pad;
-            }
-        }
-
-        return formatted.TrimSuffix(pad) + decimals;
+        return value.ToString("N0", CultureInfo.CurrentCulture);
     }
 
     public static string SanitizeZalgo(string input, int limit = 3)

@@ -37,12 +37,24 @@ public partial class JukeboxPanel : Panel, ISkinnable
 
         foreach (TextureButton button in new TextureButton[] { pauseButton, skipButton, rewindButton })
         {
-            button.MouseEntered += () => { button.SelfModulate = Color.Color8(255, 255, 255); };
-            button.MouseExited += () => { button.SelfModulate = Color.Color8(255, 255, 255, 190); };
+            button.MouseEntered += () =>
+            {
+                button.SelfModulate = Color.Color8(255, 255, 255);
+            };
+            button.MouseExited += () =>
+            {
+                button.SelfModulate = Color.Color8(255, 255, 255, 190);
+            };
         }
 
-        selectButton.MouseEntered += () => { title.SelfModulate = Color.Color8(255, 255, 255); };
-        selectButton.MouseExited += () => { title.SelfModulate = Color.Color8(255, 255, 255, 190); };
+        selectButton.MouseEntered += () =>
+        {
+            title.SelfModulate = Color.Color8(255, 255, 255);
+        };
+        selectButton.MouseExited += () =>
+        {
+            title.SelfModulate = Color.Color8(255, 255, 255, 190);
+        };
 
         if (SettingsManager.Instance.Settings.AutoplayJukebox)
         {

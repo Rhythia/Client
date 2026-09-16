@@ -1,14 +1,8 @@
 ﻿using System;
 
-public class BindableEventArgs<T> : EventArgs
+public class BindableEventArgs<T>(T value, T oldValue) : EventArgs
 {
-    public T Value;
+    public T Value = value;
 
-    public T OldValue;
-
-    public BindableEventArgs(T value, T oldValue)
-    {
-        Value = value;
-        OldValue = oldValue;
-    }
+    public T OldValue = oldValue;
 }

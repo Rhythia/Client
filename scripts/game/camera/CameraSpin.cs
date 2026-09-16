@@ -7,7 +7,14 @@ public class CameraSpin : CameraMode
 
     public override bool Rankable => true;
 
-    public override void Process(Attempt attempt, ReplayManager replayManager, Camera3D camera, MeshInstance3D cursor, Vector2 mouseDelta, float sensitivity)
+    public override void Process(
+        Attempt attempt,
+        ReplayManager replayManager,
+        Camera3D camera,
+        MeshInstance3D cursor,
+        Vector2 mouseDelta,
+        float sensitivity
+    )
     {
         var settings = attempt.Settings;
 
@@ -20,7 +27,11 @@ public class CameraSpin : CameraMode
             camera.Rotation += new Vector3(mouseDelta.Y / (float)Math.PI, -mouseDelta.X / (float)Math.PI, 0);
         }
 
-        camera.Rotation = new Vector3((float)Math.Clamp(camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)), camera.Rotation.Y, camera.Rotation.Z);
+        camera.Rotation = new Vector3(
+            (float)Math.Clamp(camera.Rotation.X, Mathf.DegToRad(-90), Mathf.DegToRad(90)),
+            camera.Rotation.Y,
+            camera.Rotation.Z
+        );
 
         var origin = new Vector3(0, 0, 3.5f);
         var cursorLock = new Vector3(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
@@ -29,7 +40,7 @@ public class CameraSpin : CameraMode
         var pivot = camera.Basis.Z / 4f;
 
         // Proper Parallax Support
-        camera.Position = origin + cursorLock * (float)settings.CameraParallax + pivot;
+        camera.Position = origin + cursorLock * (float)(double)settings.CameraParallax + pivot;
 
         var lookVector = camera.Basis.Z;
         var cameraVector2 = new Vector2(camera.Position.X, camera.Position.Y);

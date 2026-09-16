@@ -6,6 +6,7 @@ public partial class Galaxy : BaseSpace
 {
     private SettingsProfile settings;
     private Environment environment;
+
     //private Node3D planet;
     //private Vector3 planetStartPos;
     private StandardMaterial3D tileMaterial;
@@ -33,6 +34,6 @@ public partial class Galaxy : BaseSpace
         tileMaterial.Uv1Offset += Vector3.Up * (float)delta / 2;
 
         // planet floating
-        //planet.Position = planetStartPos + Vector3.Up * (float)Mathf.Sin(Time.GetTicksMsec() / 1000f ); 
+        //planet.Position = planetStartPos + Vector3.Up * (float)Mathf.Sin(Time.GetTicksMsec() / 1000f );
     }
 }

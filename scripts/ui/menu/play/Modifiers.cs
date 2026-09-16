@@ -5,8 +5,11 @@ using Godot;
 
 public partial class Modifiers : Panel
 {
-    [Export] private HBoxContainer container;
-    [Export] private Button templateButton;
+    [Export]
+    private HBoxContainer container;
+
+    [Export]
+    private Button templateButton;
 
     private List<Button> buttons = [];
 

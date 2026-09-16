@@ -1,4 +1,3 @@
-
 using Godot;
 
 public class NoteAnimation : AnimationObject

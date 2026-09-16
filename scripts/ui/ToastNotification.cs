@@ -17,7 +17,10 @@ public partial class ToastNotification : Node
 
     public static async Task Notify(string message, int severity = 0)
     {
-        if (SceneManager.Scene == null) { return; }
+        if (SceneManager.Scene == null)
+        {
+            return;
+        }
 
         ColorRect notification = template.Instantiate<ColorRect>();
         SceneManager.Scene.AddChild(notification);
@@ -42,7 +45,10 @@ public partial class ToastNotification : Node
         notification.Position += Vector2.Up * activeNotifications * (notification.Size.Y + 8);
 
         Tween inTween = notification.CreateTween();
-        inTween.TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+        inTween
+            .TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8)
+            .SetTrans(Tween.TransitionType.Quad)
+            .SetEase(Tween.EaseType.Out);
         inTween.Play();
 
         activeNotifications++;
@@ -50,12 +56,17 @@ public partial class ToastNotification : Node
         await Instance.ToSignal(Instance.GetTree().CreateTimer(4), "timeout");
 
         Tween outTween = notification.CreateTween();
-        outTween.TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
-        outTween.TweenCallback(Callable.From(() =>
-        {
-            activeNotifications--;
-            notification.QueueFree();
-        }));
+        outTween
+            .TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8)
+            .SetTrans(Tween.TransitionType.Quad)
+            .SetEase(Tween.EaseType.In);
+        outTween.TweenCallback(
+            Callable.From(() =>
+            {
+                activeNotifications--;
+                notification.QueueFree();
+            })
+        );
         outTween.Play();
     }
 }

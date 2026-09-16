@@ -49,13 +49,12 @@ public class Stats
 
     public event Action<Stats>? StatsUpdated;
 
-
     /// <summary>
     /// Forces a sync for stats
     /// </summary>
     public void ForceUpdate() => StatsUpdated?.Invoke(this);
 
-    public void Save()
+    public static void Save()
     {
         SQLiteConnection connection = DatabaseService.Connection;
         connection.InsertOrReplace(Instance);
