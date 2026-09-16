@@ -1789,17 +1789,17 @@ text = "[font_size=20]snuz
 fit_content = true
 horizontal_alignment = 1
 
-[node name="jonyro" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=478363351]
+[node name="jonvy" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=478363351]
 modulate = Color(0.9607843, 0.60784316, 0.6784314, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20][u]jonyro / jrolly
+text = "[font_size=20][u]jonvy
 [color=ffffffbb][font_size=16]\"Redshift\" (Menu theme) artist"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer/jonyro" unique_id=1840543780]
+[node name="Button" type="Button" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer/jonvy" unique_id=1840543780]
 show_behind_parent = true
 clip_contents = true
 layout_mode = 0
@@ -1811,7 +1811,7 @@ mouse_filter = 1
 mouse_default_cursor_shape = 2
 flat = true
 script = ExtResource("44_ybca7")
-Link = "https://soundcloud.com/jonyro"
+Link = "https://soundcloud.com/jonvyost"
 
 [node name="Outline" type="Panel" parent="Menus/Extras/Credits" unique_id=239136532]
 material = SubResource("ShaderMaterial_yxnar")
