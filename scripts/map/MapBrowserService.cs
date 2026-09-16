@@ -13,6 +13,12 @@ public static class MapBrowserService
         return [.. result.RootElement.GetProperty("maps").EnumerateArray().Select(e => e.Clone())];
     }
 
+    public static async Task<byte[]> GetMapFile(string fileUrl, CancellationToken token)
+    {
+        var fileUri = new Uri(ApiClient.CLIENT.BaseAddress, fileUrl);
+        return await ApiClient.CLIENT.GetByteArrayAsync(fileUri, token);
+    }
+
     public static async Task<Image> GetCoverImage(string coverUrl, CancellationToken token)
     {
         var coverUri = new Uri(ApiClient.CLIENT.BaseAddress, coverUrl);

@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://lywu8c8plv4j" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
 [ext_resource type="FontFile" uid="uid://4bnnn01f4dqr" path="res://fonts/Ubuntu/Ubuntu-Medium.ttf" id="3_ueqk1"]
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto/Roboto-Bold.ttf" id="5_0pn3c"]
+[ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="7_ueqk1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
 bg_color = Color(0.023529412, 0.019607844, 0.03529412, 1)
@@ -26,7 +27,7 @@ font = ExtResource("3_ueqk1")
 font_size = 26
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ear6i"]
-bg_color = Color(0.03529412, 0.03137255, 0.050980393, 1)
+bg_color = Color(0.023529412, 0.019607844, 0.03529412, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3usyh"]
 corner_radius_top_left = 10
@@ -112,6 +113,25 @@ font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ear6i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3usyh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i5ncw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_27haj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ikspe"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t1djq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1djq"]
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Map Browser" type="ColorRect" unique_id=1634674963]
 anchors_preset = 15
@@ -504,6 +524,43 @@ size_flags_horizontal = 10
 size_flags_vertical = 8
 text = "00:00"
 label_settings = SubResource("LabelSettings_vofg3")
+
+[node name="Hover" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate" unique_id=1787800176]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ear6i")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_3usyh")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_i5ncw")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_27haj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ikspe")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t1djq")
+
+[node name="Dim" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Hover" unique_id=673707878]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t1djq")
+
+[node name="DownloadIcon" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Hover" unique_id=1657699092]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("7_ueqk1")
+expand_mode = 1
 
 [node name="Pagination" type="HBoxContainer" parent="Holder/Background/Layout" unique_id=49456061]
 layout_mode = 2

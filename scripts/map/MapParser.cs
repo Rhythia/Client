@@ -783,6 +783,29 @@ public partial class MapParser : Node
         return PHXMFolder(extractedFolderPath);
     }
 
+    public static Map PHXM(byte[] buffer, string mapId)
+    {
+        string mapDirectory = $"{Constants.USER_FOLDER}/maps";
+
+        string extractedFolderPath = Path.Combine(mapDirectory, mapId);
+
+        // If the map you are extacting already exists
+        if (Directory.Exists(extractedFolderPath))
+        {
+            Directory.Delete(extractedFolderPath, true);
+            Map existingMap = DatabaseService.Connection.Table<Map>().FirstOrDefault(x => x.FolderPath == extractedFolderPath);
+            MapCache.RemoveMap(existingMap);
+        }
+
+        using MemoryStream ms = new(buffer);
+        ZipArchive archive = new(ms);
+
+        archive.ExtractToDirectory(extractedFolderPath);
+        archive.Dispose();
+
+        return PHXMFolder(extractedFolderPath);
+    }
+
     public static Note[] DecodePHXMO(string path)
     {
         FileParser objects = new(path);

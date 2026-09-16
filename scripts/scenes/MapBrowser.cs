@@ -185,6 +185,35 @@ public partial class MapBrowser : Control
         blurCoverTexture.Texture = cover;
     }
 
+    private static async Task downloadMap(JsonElement fileUrl, string mapId, CancellationTokenSource source)
+    {
+        var token = source.Token;
+
+        byte[] buffer;
+
+        try
+        {
+            buffer = await MapBrowserService.GetMapFile(fileUrl.GetString(), token);
+        }
+        catch (Exception exception)
+        {
+            await ToastNotification.Notify("Failed to download map", 2);
+            Logger.Error(exception);
+            return;
+        }
+
+        try
+        {
+            var map = MapParser.PHXM(buffer, mapId);
+            MapParser.Encode(map);
+        }
+        catch (Exception exception)
+        {
+            await ToastNotification.Notify("Map is corrupted", 2);
+            Logger.Error(exception);
+        }
+    }
+
     private void onSearchTimerTimeout()
     {
         clearResults();
