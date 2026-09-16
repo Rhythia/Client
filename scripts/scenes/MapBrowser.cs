@@ -2,14 +2,16 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using Timer = Godot.Timer;
 
 public partial class MapBrowser : Control
 {
     public static MapBrowser Instance;
 
-    public bool Shown = false;
+    public bool Shown;
 
     private Button hideButton;
     private Panel holder;
@@ -20,6 +22,8 @@ public partial class MapBrowser : Control
     private HBoxContainer filters;
     private ScrollContainer results;
     private PanelContainer mapCardTemplate;
+
+    private CancellationTokenSource source = new();
 
     public override void _Ready()
     {
@@ -93,7 +97,20 @@ public partial class MapBrowser : Control
 
     private async Task populate(MapQueryParameters queryParameters)
     {
-        JsonElement[] maps = await MapBrowserService.Search(queryParameters);
+        source = new CancellationTokenSource();
+
+        JsonElement[] maps;
+
+        try
+        {
+            maps = await MapBrowserService.Search(queryParameters);
+        }
+        catch (Exception exception)
+        {
+            await ToastNotification.Notify("Failed to load maps", 2);
+            Logger.Error(exception);
+            return;
+        }
 
         foreach (var map in maps)
         {
@@ -121,7 +138,7 @@ public partial class MapBrowser : Control
             Label rankingLabel = rankingPill.GetNode<Label>("Ranking");
             Label durationLabel = bottomText.GetNode<Label>("Duration");
 
-            _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage);
+            _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage, source);
 
             int difficulty = map.GetProperty("difficulty").GetInt32();
             string difficultyName = map.GetProperty("difficultyName").GetString();
@@ -149,21 +166,26 @@ public partial class MapBrowser : Control
         }
     }
 
-    private static async Task loadCover(JsonElement coverUrl, TextureRect coverTexture, TextureRect blurCoverTexture)
+    private static async Task loadCover(JsonElement coverUrl, TextureRect coverTexture, TextureRect blurCoverTexture, CancellationTokenSource source)
     {
+        var token = source.Token;
+
         Texture2D cover = null;
 
-        if (coverUrl.ValueKind != JsonValueKind.Null)
+        if (!token.IsCancellationRequested && coverUrl.ValueKind != JsonValueKind.Null)
         {
-            var coverImage = await MapBrowserService.GetCoverImage(coverUrl.GetString());
+            var coverImage = await MapBrowserService.GetCoverImage(coverUrl.GetString(), token);
             cover = ImageTexture.CreateFromImage(coverImage);
         }
+
+        if (!(IsInstanceValid(coverTexture) && IsInstanceValid(blurCoverTexture)))
+            return;
 
         coverTexture.Texture = cover;
         blurCoverTexture.Texture = cover;
     }
 
-    private async void onSearchTimerTimeout()
+    private void onSearchTimerTimeout()
     {
         clearResults();
         _ = populate(buildQueryParameters());
@@ -176,6 +198,9 @@ public partial class MapBrowser : Control
 
     private void clearResults()
     {
+        source.Cancel();
+        source.Dispose();
+
         var parent = mapCardTemplate.GetParent();
         foreach (Node child in parent.GetChildren())
         {
