@@ -165,7 +165,7 @@ public partial class Map : RefCounted
         PrettyMappers = Mappers.Join();
         CachedMappers = Mappers.Join("_");
         Difficulty = Math.Clamp(difficulty, 0, Constants.DIFFICULTIES.Length - 1);
-        DifficultyName = difficultyName?.StripEscapes() ?? Constants.DIFFICULTIES[Difficulty];
+        DifficultyName = string.IsNullOrEmpty(difficultyName) ? Constants.DIFFICULTIES[Difficulty] : difficultyName.StripEscapes();
         AudioBuffer = audioBuffer;
         CoverBuffer = coverBuffer;
         VideoBuffer = videoBuffer;
