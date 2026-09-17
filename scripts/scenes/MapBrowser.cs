@@ -122,6 +122,11 @@ public partial class MapBrowser : Control
             mapCard.Visible = true;
             mapCardTemplate.GetParent().AddChild(mapCard);
 
+            Button downloadButton = mapCard.GetNode<Button>("Download");
+            Panel downloadDim = downloadButton.GetNode<Panel>("Dim");
+            TextureRect downloadIcon = downloadButton.GetNode<TextureRect>("DownloadIcon");
+            Tween downloadTween = null;
+
             TextureRect coverImage = mapCard.GetNode<TextureRect>("Row/CoverHolder/Cover");
             TextureRect blurCoverImage = mapCard.GetNode<TextureRect>("Row/Map/BlurCoverHolder/BlurCover");
 
@@ -137,6 +142,38 @@ public partial class MapBrowser : Control
             PanelContainer rankingPill = bottomText.GetNode<PanelContainer>("RankingPill");
             Label rankingLabel = rankingPill.GetNode<Label>("Ranking");
             Label durationLabel = bottomText.GetNode<Label>("Duration");
+
+            downloadIcon.PivotOffset = downloadIcon.Size / 2;
+
+            downloadButton.MouseEntered += () =>
+            {
+                downloadTween?.Kill();
+                downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
+                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 100), 0.2);
+                downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255), 0.2);
+            };
+            downloadButton.MouseExited += () =>
+            {
+                downloadTween?.Kill();
+                downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
+                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
+                downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
+            };
+            downloadButton.Pressed += async () =>
+            {
+                downloadButton.Disabled = true;
+                downloadIcon.Texture = GD.Load<Texture2D>("res://textures/throbber.png");
+
+                Tween throbberTween = downloadIcon.CreateTween().SetLoops();
+                throbberTween.TweenProperty(downloadIcon, "rotation", Mathf.Tau, 1).AsRelative();
+
+                await downloadMap(map.GetProperty("fileUrl"), map.GetProperty("legacyId").GetString(), source);
+
+                throbberTween.Kill();
+                downloadIcon.Rotation = 0;
+                downloadIcon.Texture = GD.Load<Texture2D>("res://user/skins/default/ui/buttons/import.png");
+                downloadButton.Disabled = false;
+            };
 
             _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage, source);
 
@@ -206,6 +243,8 @@ public partial class MapBrowser : Control
         {
             var map = MapParser.PHXM(buffer, mapId);
             MapParser.Encode(map);
+            Callable.From(() => MapParser.Instance.EmitSignal(MapParser.SignalName.MapsImportFinished, new[] { map })).CallDeferred();
+            _ = ToastNotification.Notify("Map downloaded");
         }
         catch (Exception exception)
         {
