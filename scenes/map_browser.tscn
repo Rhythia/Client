@@ -126,8 +126,8 @@ shadow_offset = Vector2(1, 1.5)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t1djq"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1djq"]
-bg_color = Color(0, 0, 0, 0)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hrgd"]
+bg_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -525,7 +525,7 @@ size_flags_vertical = 8
 text = "00:00"
 label_settings = SubResource("LabelSettings_vofg3")
 
-[node name="Hover" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate" unique_id=1787800176]
+[node name="Download" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate" unique_id=1787800176]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_ear6i")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_3usyh")
@@ -534,7 +534,8 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_27haj")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_ikspe")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_t1djq")
 
-[node name="Dim" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Hover" unique_id=673707878]
+[node name="Dim" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Download" unique_id=673707878]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -542,9 +543,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_t1djq")
+theme_override_styles/panel = SubResource("StyleBoxFlat_2hrgd")
 
-[node name="DownloadIcon" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Hover" unique_id=1657699092]
+[node name="DownloadIcon" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Download" unique_id=1657699092]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
