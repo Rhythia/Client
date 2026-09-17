@@ -133,6 +133,7 @@ render_target_update_mode = 4
 
 [node name="Map Browser" parent="." unique_id=1634674963 instance=ExtResource("2_ya4ey")]
 visible = false
+z_index = 1
 
 [node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog")]
 visible = false
