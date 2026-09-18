@@ -24,6 +24,11 @@ public partial class Map : RefCounted
     /// </summary>
     public string MetadataObjectHash { get; set; }
 
+    /// <summary>
+    /// The hash of the objects.phxmo
+    /// </summary>
+    public string ObjectHash { get; set; }
+
     public string Collection { get; set; } = string.Empty;
 
     [Ignore]
@@ -151,6 +156,7 @@ public partial class Map : RefCounted
         FolderPath = folderPath;
         Ephemeral = ephemeral;
         MetadataObjectHash = "";
+        ObjectHash = "";
         LastModifiedMetadata = "";
         LastModifiedNotes = "";
         Artist = (artist ?? "").StripEscapes();

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Godot;
@@ -232,8 +233,10 @@ public partial class MapParser : Node
         File.WriteAllText(Path.Combine(mapFolderPath, "metadata.json"), map.EncodeMeta());
 
         byte[] hash = Misc.HashFiles([Path.Combine(mapFolderPath, "metadata.json"), Path.Combine(mapFolderPath, "objects.phxmo")]);
+        byte[] objectHash = SHA1.HashData(File.ReadAllBytes(Path.Combine(mapFolderPath, "objects.phxmo")));
 
         map.MetadataObjectHash = Convert.ToHexStringLower(hash);
+        map.ObjectHash = Convert.ToHexStringLower(objectHash);
 
         DateTime metadataModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "metadata.json"));
         DateTime objectsModified = File.GetLastWriteTime(Path.Combine(mapFolderPath, "objects.phxmo"));

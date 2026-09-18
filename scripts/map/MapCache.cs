@@ -256,7 +256,7 @@ public static class MapCache
 
     public static int InsertMap(Map map)
     {
-        var existing = DatabaseService.Connection.Find<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash);
+        var existing = DatabaseService.Connection.Find<Map>(x => x.ObjectHash == map.ObjectHash);
         var updated = DatabaseService.Connection.Find<Map>(x => x.Name == map.Name);
 
         try
@@ -270,7 +270,7 @@ public static class MapCache
 
             DatabaseService.Connection.Insert(map);
 
-            return DatabaseService.Connection.Get<Map>(x => x.MetadataObjectHash == map.MetadataObjectHash).Id;
+            return DatabaseService.Connection.Get<Map>(x => x.ObjectHash == map.ObjectHash).Id;
         }
         catch (Exception e)
         {
