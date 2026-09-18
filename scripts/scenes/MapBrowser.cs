@@ -149,7 +149,7 @@ public partial class MapBrowser : Control
             {
                 downloadTween?.Kill();
                 downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
-                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 100), 0.2);
+                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 225), 0.2);
                 downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255), 0.2);
             };
             downloadButton.MouseExited += () =>
