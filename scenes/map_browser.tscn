@@ -9,14 +9,14 @@
 [ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="7_ueqk1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
-bg_color = Color(0.023529412, 0.019607844, 0.03529412, 1)
+bg_color = Color(0, 0, 0, 0.8784314)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5ncw"]
-bg_color = Color(0.06877964, 0.05899337, 0.08834655, 1)
+bg_color = Color(0, 0, 0, 0.98039216)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -127,11 +127,18 @@ shadow_offset = Vector2(1, 1.5)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t1djq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hrgd"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0.019607844, 0.019607844, 0.019607844, 0.19607843)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.7882353, 0, 0.27058825, 1)
+border_blend = true
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+corner_detail = 10
 
 [node name="Map Browser" type="ColorRect" unique_id=1634674963]
 anchors_preset = 15
