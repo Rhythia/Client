@@ -26,7 +26,7 @@ public partial class Rhythia : Node
     public static string TextFilePath = null;
     public static string AudioFilePath = null;
     public static string StartFromParameter = "";
-    public static string SpeedParameter = "";
+    public static string SpeedParameter = "1.0";
 
     public override async void _Ready()
     {
