@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -843,6 +844,12 @@ public partial class MapParser : Node
             }
 
             notes[i] = new(i, ms, x, y);
+        }
+
+        notes = [.. notes.OrderBy(n => n.Millisecond)];
+        for (int i = 0; i < notes.Length; i++)
+        {
+            notes[i].Index = i;
         }
 
         return notes;
