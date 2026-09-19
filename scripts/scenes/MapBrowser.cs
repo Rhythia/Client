@@ -125,6 +125,11 @@ public partial class MapBrowser : Control
             Button downloadButton = mapCard.GetNode<Button>("Download");
             Panel downloadDim = downloadButton.GetNode<Panel>("Dim");
             TextureRect downloadIcon = downloadButton.GetNode<TextureRect>("DownloadIcon");
+
+            Texture2D downloadIconTexture = GD.Load<Texture2D>("res://user/skins/default/ui/buttons/import.png");
+            Texture2D deleteIconTexture = GD.Load<Texture2D>("res://user/skins/default/ui/buttons/delete.png");
+            Texture2D throbberTexture = GD.Load<Texture2D>("res://textures/throbber.png");
+
             Tween downloadTween = null;
 
             TextureRect coverImage = mapCard.GetNode<TextureRect>("Row/CoverHolder/Cover");
@@ -143,36 +148,86 @@ public partial class MapBrowser : Control
             Label rankingLabel = rankingPill.GetNode<Label>("Ranking");
             Label durationLabel = bottomText.GetNode<Label>("Duration");
 
+            Map downloadedMap = getDownloadedMap(map.GetProperty("noteHash").GetString());
+            bool isDownloaded = downloadedMap != null;
+            bool isDownloading = false;
+
+            if (isDownloaded)
+            {
+                downloadIcon.Texture = deleteIconTexture;
+                downloadIcon.Modulate = Color.Color8(255, 255, 255);
+            }
+            else
+            {
+                downloadIcon.Texture = downloadIconTexture;
+            }
             downloadIcon.PivotOffset = downloadIcon.Size / 2;
 
             downloadButton.MouseEntered += () =>
             {
+                if (isDownloading)
+                    return;
+
                 downloadTween?.Kill();
                 downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
-                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 225), 0.2);
-                downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255), 0.2);
+                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 128), 0.2);
+
+                if (!isDownloaded)
+                {
+                    downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255), 0.2);
+                }
             };
             downloadButton.MouseExited += () =>
             {
+                if (isDownloading)
+                    return;
+
                 downloadTween?.Kill();
                 downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
                 downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
-                downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
+
+                if (!isDownloaded)
+                {
+                    downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
+                }
             };
             downloadButton.Pressed += async () =>
             {
                 downloadButton.Disabled = true;
-                downloadIcon.Texture = GD.Load<Texture2D>("res://textures/throbber.png");
 
-                Tween throbberTween = downloadIcon.CreateTween().SetLoops();
-                throbberTween.TweenProperty(downloadIcon, "rotation", Mathf.Tau, 1).AsRelative();
+                if (isDownloaded)
+                {
+                    MapManager.Delete(downloadedMap);
+                    downloadedMap = null;
+                    isDownloaded = false;
+                }
+                else
+                {
+                    isDownloading = true;
+                    downloadIcon.Texture = throbberTexture;
 
-                await downloadMap(map.GetProperty("fileUrl"), map.GetProperty("legacyId").GetString(), source);
+                    Tween throbberTween = downloadIcon.CreateTween().SetLoops();
+                    throbberTween.TweenProperty(downloadIcon, "rotation", Mathf.Tau, 1).AsRelative();
 
-                throbberTween.Kill();
-                downloadIcon.Rotation = 0;
-                downloadIcon.Texture = GD.Load<Texture2D>("res://user/skins/default/ui/buttons/import.png");
+                    downloadedMap = await downloadMap(map.GetProperty("fileUrl"), map.GetProperty("legacyId").GetString(), source);
+                    isDownloaded = downloadedMap != null;
+
+                    throbberTween.Kill();
+
+                    downloadIcon.Rotation = 0;
+                    isDownloading = false;
+                }
+
+                downloadTween?.Kill();
                 downloadButton.Disabled = false;
+
+                bool hovered = downloadButton.IsHovered();
+
+                downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
+                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, (byte)(hovered ? 128 : 0)), 0.2);
+                downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255, (byte)(isDownloaded || hovered ? 255 : 0)), 0.2);
+
+                downloadIcon.Texture = isDownloaded ? deleteIconTexture : downloadIconTexture;
             };
 
             _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage, source);
@@ -222,7 +277,7 @@ public partial class MapBrowser : Control
         blurCoverTexture.Texture = cover;
     }
 
-    private static async Task downloadMap(JsonElement fileUrl, string mapId, CancellationTokenSource source)
+    private static async Task<Map> downloadMap(JsonElement fileUrl, string mapId, CancellationTokenSource source)
     {
         var token = source.Token;
 
@@ -236,7 +291,7 @@ public partial class MapBrowser : Control
         {
             await ToastNotification.Notify("Failed to download map", 2);
             Logger.Error(exception);
-            return;
+            return null;
         }
 
         try
@@ -245,12 +300,19 @@ public partial class MapBrowser : Control
             MapParser.Encode(map);
             Callable.From(() => MapParser.Instance.EmitSignal(MapParser.SignalName.MapsImportFinished, new[] { map })).CallDeferred();
             _ = ToastNotification.Notify("Map downloaded");
+            return map;
         }
         catch (Exception exception)
         {
             await ToastNotification.Notify("Map is corrupted", 2);
             Logger.Error(exception);
+            return null;
         }
+    }
+
+    private static Map getDownloadedMap(string hash)
+    {
+        return MapManager.Maps.FirstOrDefault(m => m.ObjectHash == hash);
     }
 
     private void onSearchTimerTimeout()
