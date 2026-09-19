@@ -77,6 +77,8 @@ public partial class VRNode : Node3D
     private void onOpenXRPoseRecentered()
     {
         EmitSignal(SignalName.PoseRecentered);
+        XRServer.CenterOnHmd(XRServer.RotationMode.ResetFullRotation, true);
+        
     }
 
     private void onOpenXRVisibleState()
