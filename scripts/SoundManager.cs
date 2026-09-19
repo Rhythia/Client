@@ -95,7 +95,7 @@ public partial class SoundManager : Node, ISkinnable
         {
             UpdateJukeboxQueue();
 
-            if (Map != map)
+            if (Map.ObjectHash != map.ObjectHash)
             {
                 return;
             }
