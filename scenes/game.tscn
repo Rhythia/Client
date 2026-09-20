@@ -55,6 +55,9 @@ texture_repeat = false
 material = SubResource("StandardMaterial3D_a6jk1")
 size = Vector2(4, 4)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_vr_grid"]
+size = Vector3(50, 50, 0.05)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lvhmj"]
 transparency = 1
 shading_mode = 0
@@ -68,9 +71,6 @@ distance_fade_min_distance = 1076.07
 [sub_resource type="QuadMesh" id="QuadMesh_xij4d"]
 material = SubResource("StandardMaterial3D_lvhmj")
 size = Vector2(0.263, 0.263)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_vr_grid"]
-size = Vector3(4, 4, 0.05)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ssr8x"]
 transparency = 1
@@ -327,11 +327,11 @@ mesh = SubResource("QuadMesh_aih2q")
 skeleton = NodePath("../../..")
 script = ExtResource("27_js0lu")
 
-[node name="VRInputSurface" type="StaticBody3D" parent="Runner/HUD/Grid"]
+[node name="VRInputSurface" type="StaticBody3D" parent="Runner/HUD/Grid" unique_id=1212929125]
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Runner/HUD/Grid/VRInputSurface"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Runner/HUD/Grid/VRInputSurface" unique_id=7081148]
 shape = SubResource("BoxShape3D_vr_grid")
 
 [node name="Cursor" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=292067677]
