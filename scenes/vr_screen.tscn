@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c1qkve10vrbdy"]
 
-[ext_resource type="Script" uid="uid://cc6jrnqn5lhg7" path="res://scripts/VRController.cs" id="1_rrq62"]
+[ext_resource type="Script" uid="uid://cc6jrnqn5lhg7" path="res://scripts/vr/VRController.cs" id="1_rrq62"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_5qps4"]
 viewport_path = NodePath("Sprite3D/SubViewport")

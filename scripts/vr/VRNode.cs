@@ -46,7 +46,7 @@ public partial class VRNode : Node3D
             GD.Print("OpenXR instantiated successfully.");
 
             // Enable XR on our viewport
-            GetViewport().UseXR = true;
+            //GetViewport().UseXR = true;
 
             // Make sure v-sync is off, v-sync is handled by OpenXR
             DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);

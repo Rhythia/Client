@@ -7,7 +7,7 @@ public partial class SceneManager : Node
 
     private static SubViewport backgroundViewport;
 
-    private static SubViewport vrViewport;
+    private static SubViewport vrScreenViewport;
 
     private static Node vrSceneContainer;
 
@@ -46,22 +46,25 @@ public partial class SceneManager : Node
 
         if (VRNode.IsVrEnabled)
         {
+            RemoveChild(backgroundContainer);
             var vrMain = ResourceLoader.Load<PackedScene>("res://scenes/vr_main.tscn").Instantiate();
             AddChild(vrMain);
 
             var vrScreen = ResourceLoader.Load<PackedScene>("res://scenes/vr_screen.tscn").Instantiate();
-            vrMain.GetNode("XROrigin3D").AddChild(vrScreen);
+            vrMain.GetNode("SubViewport/XROrigin3D").AddChild(vrScreen);
 
-            vrSceneContainer = vrMain.GetNode("XROrigin3D");
-            vrViewport = vrMain.GetNode<SubViewport>("XROrigin3D/VRScreen/Sprite3D/SubViewport");
-            vrViewport.GuiEmbedSubwindows = true;
-            sceneContainer = vrViewport;
-            OverlayContainer = vrViewport;
+            vrSceneContainer = vrMain.GetNode("SubViewport/XROrigin3D");
+            vrScreenViewport = vrMain.GetNode<SubViewport>("SubViewport/XROrigin3D/VRScreen/Sprite3D/SubViewport");
+            vrScreenViewport.GuiEmbedSubwindows = true;
+            sceneContainer = vrScreenViewport;
+            OverlayContainer = vrScreenViewport;
 
             reparentOverlay("Settings");
             reparentOverlay("Volume");
             reparentOverlay("Cursor");
             reparentOverlay("FPSCounter");
+
+            GetNode<SubViewport>("VRMain/SubViewport").UseXR = true;
         }
 
         if (!Rhythia.TempMode)
@@ -113,7 +116,7 @@ public partial class SceneManager : Node
 
                 activeScenePath = path;
                 Scene = newScene;
-                sceneContainer = !VRNode.IsVrEnabled ? Instance : newScene is Game ? vrSceneContainer : vrViewport;
+                sceneContainer = !VRNode.IsVrEnabled ? Instance : newScene is Game ? vrSceneContainer : vrScreenViewport;
 
                 addScene(newScene);
 
