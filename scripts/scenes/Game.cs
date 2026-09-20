@@ -74,7 +74,7 @@ public partial class Game : BaseScene
                 Attempt.Qualifies = false;
             }
 
-            if (SettingsManager.Shown)
+            if (SettingsMenu.Instance?.Shown == true)
             {
                 SettingsMenu.Instance.HideMenu();
             }

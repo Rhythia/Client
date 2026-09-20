@@ -150,8 +150,8 @@ public partial class VRController : Node
         grabbing = false;
         bool enteringGame = !gameSceneActive;
         gameSceneActive = true;
-        updateGameUiVisibility(game, enteringGame);
         processGameControllerInput(game);
+        updateGameUiVisibility(game, enteringGame);
 
         if (gameUiVisible)
         {
@@ -360,7 +360,7 @@ public partial class VRController : Node
 
         if (triggerPressed && !utilityTriggerPressed)
         {
-            game.Menu.ShowMenu(!game.Menu.Shown);
+            game.PlayerInputController.TogglePaused();
         }
 
         utilityTriggerPressed = triggerPressed;

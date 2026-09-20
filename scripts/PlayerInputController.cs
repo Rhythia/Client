@@ -119,5 +119,7 @@ public partial class PlayerInputController : Node
         }
     }
 
+    public void TogglePaused() => OnTogglePaused?.Invoke();
+
     public void ToggleState() => IsEnabled = !IsEnabled;
 }
