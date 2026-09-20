@@ -24,6 +24,22 @@ public partial class VRNode : Node3D
     {
         Instance = this;
         xrInterface = (OpenXRInterface)XRServer.FindInterface("OpenXR");
+
+        var args = OS.GetCmdlineArgs();
+        GD.Print("Command line arguments: " + string.Join(" ", args));
+        if (args.Contains("--enter-vr") && xrInterface != null && !xrInterface.IsInitialized())
+        {
+            Logger.Log("Failed to initialize OpenXR interface");
+            ToastNotification.Notify("Failed to initialize OpenXR interface\n" +
+            "Common failure reasons are:\n" +
+            "- No OpenXR runtime\n" +
+            "- Headset isn't connected/turned on.\n" +
+            "- SteamVR is not set to the active OpenXR runtime.\n" +
+            "- Microsoft's WMR OpenXR only supports DirectX.\n",
+            2);
+
+        }
+
         if (xrInterface != null && xrInterface.IsInitialized())
         {
             IsVrEnabled = true;
@@ -53,11 +69,6 @@ public partial class VRNode : Node3D
             ((OpenXRInterface)xrInterface).SessionFocussed += onOpenXRFocusedState;
             ((OpenXRInterface)xrInterface).InstanceExiting += onOpenXRInstanceExiting;
 
-        }
-        else
-        {
-            // We couldn't start OpenXR.
-            GD.Print("OpenXR not instantiated!");
         }
     }
 

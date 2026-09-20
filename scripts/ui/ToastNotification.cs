@@ -14,6 +14,7 @@ public partial class ToastNotification : Node
     private static int toastNextId = 0;
 
     private static List<string> toasts = [];
+    private static readonly Queue<(string message, int severity, bool multilineWrap)> pendingToasts = new();
 
     private static readonly Dictionary<string, Task> activetweens = [];
 
@@ -26,6 +27,9 @@ public partial class ToastNotification : Node
     {
         if (SceneManager.Scene == null)
         {
+            // Scene is not ready, queue the notification for later
+            pendingToasts.Enqueue((message, severity, multilineWrap));
+            notifyPendingToastsLoop();
             return;
         }
 
@@ -88,6 +92,29 @@ public partial class ToastNotification : Node
         }, notification);
     }
 
+    private static bool notifyPendingToasts()
+    {
+        // if scene ready, show pending toasts
+        if (SceneManager.Scene != null)
+        {
+            while (pendingToasts.Count > 0)
+            {
+                var (message, severity, multilineWrap) = pendingToasts.Dequeue();
+                Notify(message, severity, multilineWrap);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static async void notifyPendingToastsLoop()
+    {
+        while (pendingToasts.Count > 0 && !notifyPendingToasts())
+        {
+            await Task.Delay(100);
+        }
+    }
+
     private static async Task queueTween(Func<Tween> tween, PanelContainer toast)
     {
         Task previousTweenTask = activetweens.TryGetValue(toast.Name, out Task current) ? current : Task.CompletedTask;
@@ -112,26 +139,31 @@ public partial class ToastNotification : Node
 
     private static string calculateMultilineWrap(float maxWidth, string text, Font font, int fontSize)
     {
-        string[] words = text.Split(" ");
-        List<string> normalizedWords = [];
+        List<string> wrappedLines = [];
 
-        float lineWidth = 0f;
-
-        for (int i = 0; i < words.Length; i++)
+        foreach (string line in text.Split('\n'))
         {
-            float wordWidth = font.GetStringSize(words[i], HorizontalAlignment.Left, -1, fontSize).X;
+            string currentLine = "";
 
-            if ((lineWidth + wordWidth) > maxWidth)
+            foreach (string word in line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             {
-                normalizedWords[^1] = "\n";
-                lineWidth = 0f;
+                string candidateLine = currentLine.Length == 0 ? word : $"{currentLine} {word}";
+                float candidateWidth = font.GetStringSize(candidateLine, HorizontalAlignment.Left, -1, fontSize).X;
+
+                if (currentLine.Length > 0 && candidateWidth > maxWidth)
+                {
+                    wrappedLines.Add(currentLine);
+                    currentLine = word;
+                }
+                else
+                {
+                    currentLine = candidateLine;
+                }
             }
 
-            lineWidth += wordWidth;
-            normalizedWords.Add(words[i]);
-            normalizedWords.Add(" ");
+            wrappedLines.Add(currentLine);
         }
 
-        return string.Join("", normalizedWords);
+        return string.Join("\n", wrappedLines);
     }
 }

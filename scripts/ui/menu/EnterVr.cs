@@ -16,7 +16,7 @@ public partial class EnterVr : Button
     public override void _Pressed()
     {
         // reopen app with --xr-mode on
-        OS.CreateInstance(new string[] { "--xr-mode", "on" });
-        SceneManager.Root.PropagateNotification((int)NotificationWMCloseRequest);
+        OS.CreateInstance(new string[] { "--xr-mode", "on", "--enter-vr" });
+        Rhythia.Quit();
     }
 }
