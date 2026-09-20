@@ -256,7 +256,8 @@ public partial class Rhythia : Node
 
             Quit();
         }
-        else if (what == NotificationApplicationFocusOut)
+        if (VRNode.IsVrEnabled) {return;} // dont limit unfocused FPS in VR
+        if (what == NotificationApplicationFocusOut)
         {
             Engine.MaxFps = 30;
         }
