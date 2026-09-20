@@ -164,6 +164,13 @@ public partial class Game : BaseScene
             Menu.Size = Menu.GetViewport().GetVisibleRect().Size;
         }
 
+        if (VRNode.IsVrEnabled && ReplayManager.ReplayViewer.GetParent() != SceneManager.OverlayContainer)
+        {
+            // reparent replay viewer for VR
+            ReplayManager.ReplayViewer.GetParent().RemoveChild(ReplayManager.ReplayViewer);
+            SceneManager.OverlayContainer.AddChild(ReplayManager.ReplayViewer);
+        }
+
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 
         if (VRNode.IsVrEnabled)
@@ -228,6 +235,12 @@ public partial class Game : BaseScene
         {
             SceneManager.OverlayContainer.RemoveChild(Menu);
             AddChild(Menu);
+        }
+
+        if (VRNode.IsVrEnabled && ReplayManager.ReplayViewer.GetParent() == SceneManager.OverlayContainer)
+        {
+            SceneManager.OverlayContainer.RemoveChild(ReplayManager.ReplayViewer);
+            AddChild(ReplayManager.ReplayViewer);
         }
 
         base.Unload();

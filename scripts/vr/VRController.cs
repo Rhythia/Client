@@ -368,7 +368,8 @@ public partial class VRController : Node
 
     private bool isGameUiVisible()
     {
-        return SceneManager.Scene is Game game && (game.Menu.Shown || SettingsMenu.Instance?.Shown == true);
+        return SceneManager.Scene is Game game
+            && (game.Menu.Shown || SettingsMenu.Instance?.Shown == true || game.Runner?.Attempt?.IsReplay == true);
     }
 
     private InputEvent scaleMouseEvent(InputEventMouse mouseEvent)
