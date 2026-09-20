@@ -28,22 +28,22 @@ public partial class VRController : Node
     private bool gameSceneActive;
     private bool hasSavedScreenTransform;
     private Transform3D savedScreenTransform;
-    private Vector2 grabPointLocal;
+    private Vector3 grabPointLocal;
     private float grabDistance;
     private Vector3 grabTargetPosition;
     private XRCamera3D xrCamera;
     private float joystickScrollTimer;
     private const float joystick_deadzone = 0.2f;
     private const float joystick_scroll_interval = 0.12f;
-    private const float grab_distance_speed = 2f;
+    private const float grab_distance_speed = 5f;
     private const float grab_min_distance = 0.2f;
     private const float grab_camera_clearance = 0.05f;
     private const float screen_ray_length = 1000f;
-    private const float max_grab_distance = 20f;
+    private const float max_grab_distance = 10f;
     private const float grab_scale_speed = 0.75f;
     private const float grab_position_smoothing = 14f;
     private const float min_screen_scale = 0.05f;
-    private const float max_screen_scale = 1.5f;
+    private const float max_screen_scale = 1f;
 
     public override void _Ready()
     {
@@ -52,7 +52,7 @@ public partial class VRController : Node
         {
             Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
             ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-            AlbedoTexture = screen.Texture
+            AlbedoTexture = screen.Texture,
         };
         screenBody = screen.GetNode<StaticBody3D>("StaticBody3D");
         viewport = screen.GetNode<SubViewport>("SubViewport");
@@ -288,10 +288,7 @@ public partial class VRController : Node
         }
 
         Vector3 localPosition = screen.ToLocal(activeRay.GetCollisionPoint());
-        Vector2 screenSize = new(
-            screen.Texture.GetWidth() * screen.PixelSize,
-            screen.Texture.GetHeight() * screen.PixelSize
-        );
+        Vector2 screenSize = new(screen.Texture.GetWidth() * screen.PixelSize, screen.Texture.GetHeight() * screen.PixelSize);
         Vector2 viewportSize = viewport.Size;
         Vector2 screenPosition = new(
             (localPosition.X / screenSize.X + 0.5f) * viewportSize.X,
@@ -311,12 +308,15 @@ public partial class VRController : Node
 
         if (screenPosition != lastPosition)
         {
-            viewport.PushInput(new InputEventMouseMotion
-            {
-                Position = screenPosition,
-                GlobalPosition = screenPosition,
-                Relative = screenPosition - lastPosition
-            }, true);
+            viewport.PushInput(
+                new InputEventMouseMotion
+                {
+                    Position = screenPosition,
+                    GlobalPosition = screenPosition,
+                    Relative = screenPosition - lastPosition,
+                },
+                true
+            );
 
             lastPosition = screenPosition;
         }
@@ -383,7 +383,7 @@ public partial class VRController : Node
                 Position = motion.Position * scale,
                 GlobalPosition = motion.GlobalPosition * scale,
                 Relative = motion.Relative * scale,
-                Velocity = motion.Velocity * scale
+                Velocity = motion.Velocity * scale,
             };
         }
 
@@ -395,7 +395,7 @@ public partial class VRController : Node
             Position = button.Position * scale,
             GlobalPosition = button.GlobalPosition * scale,
             ButtonMask = button.ButtonMask,
-            DoubleClick = button.DoubleClick
+            DoubleClick = button.DoubleClick,
         };
     }
 
@@ -412,7 +412,7 @@ public partial class VRController : Node
         grabbing = true;
         Vector3 collisionPoint = activeRay.GetCollisionPoint();
         Vector3 localPoint = screen.ToLocal(collisionPoint);
-        grabPointLocal = new Vector2(localPoint.X, localPoint.Y);
+        grabPointLocal = new Vector3(localPoint.X, localPoint.Y, 0);
         grabDistance = -activeRay.ToLocal(collisionPoint).Z;
         grabDistance = Mathf.Max(grabDistance, getMinimumGrabDistance());
         grabTargetPosition = screen.GlobalPosition;
@@ -442,7 +442,8 @@ public partial class VRController : Node
         }
 
         Vector3 grabPointWorld = activeRay.GlobalPosition - activeRay.GlobalBasis.Z * grabDistance;
-        Vector3 normal = (xrCamera.GlobalPosition - grabPointWorld).Normalized();
+        Vector3 screenCenter = screen.GlobalPosition;
+        Vector3 normal = (xrCamera.GlobalPosition - screenCenter).Normalized();
         Vector3 up = Vector3.Up - normal * Vector3.Up.Dot(normal);
         if (up.LengthSquared() < 0.001f)
         {
@@ -450,8 +451,12 @@ public partial class VRController : Node
         }
         up = up.Normalized();
         Vector3 right = up.Cross(normal).Normalized();
-        screen.GlobalRotation = new Basis(right, up, normal).GetEuler();
-        grabTargetPosition = grabPointWorld - screen.GlobalBasis * new Vector3(grabPointLocal.X, grabPointLocal.Y, 0);
+        Basis screenBasis = new Basis(right, up, normal);
+        screen.GlobalRotation = screenBasis.GetEuler();
+        // keeps grab point on ray
+        // is clean but needs a lot of work to make it comfortable and prevent eldritch horrors
+        //grabTargetPosition = grabPointWorld - screenBasis * (grabPointLocal * screen.Scale.X);
+        grabTargetPosition = grabPointWorld;
 
         float smoothing = 1f - Mathf.Exp(-grab_position_smoothing * (float)delta);
         screen.GlobalPosition = screen.GlobalPosition.Lerp(grabTargetPosition, smoothing);
@@ -463,13 +468,15 @@ public partial class VRController : Node
         Vector3 cameraForward = -xrCamera.GlobalBasis.Z;
         Vector3 rayDirection = -activeRay.GlobalBasis.Z;
         float rayAlignment = rayDirection.Dot(cameraForward);
+        float depthGap =
+            (activeController.GlobalPosition - xrCamera.GlobalPosition).Dot(cameraForward)
+            + grab_camera_clearance
+            - (activeRay.GlobalPosition - xrCamera.GlobalPosition).Dot(cameraForward);
 
-        if (rayAlignment > 0.001f)
+        if (rayAlignment > 0.1f && depthGap > 0)
         {
-            float controllerDepth = (activeController.GlobalPosition - xrCamera.GlobalPosition).Dot(cameraForward);
-            float rayOriginDepth = (activeRay.GlobalPosition - xrCamera.GlobalPosition).Dot(cameraForward);
-            float cameraSafeDistance = (controllerDepth + grab_camera_clearance - rayOriginDepth) / rayAlignment;
-            minimumDistance = Mathf.Max(minimumDistance, cameraSafeDistance);
+            float cameraSafeDistance = depthGap / rayAlignment;
+            minimumDistance = Mathf.Max(minimumDistance, Mathf.Min(cameraSafeDistance, max_grab_distance));
         }
 
         return minimumDistance;
@@ -537,12 +544,15 @@ public partial class VRController : Node
 
     private void pushButton(bool pressed, Vector2 position, Viewport targetViewport)
     {
-        targetViewport.PushInput(new InputEventMouseButton
-        {
-            ButtonIndex = MouseButton.Left,
-            Pressed = pressed,
-            Position = position,
-            GlobalPosition = position
-        }, true);
+        targetViewport.PushInput(
+            new InputEventMouseButton
+            {
+                ButtonIndex = MouseButton.Left,
+                Pressed = pressed,
+                Position = position,
+                GlobalPosition = position,
+            },
+            true
+        );
     }
 }
