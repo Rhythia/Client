@@ -373,7 +373,7 @@ public partial class VRController : Node
 
     private InputEvent scaleMouseEvent(InputEventMouse mouseEvent)
     {
-        Vector2 sourceSize = GetViewport().GetVisibleRect().Size;
+        Vector2 sourceSize = SceneManager.Root.GetVisibleRect().Size;
         Vector2 scale = new(viewport.Size.X / sourceSize.X, viewport.Size.Y / sourceSize.Y);
 
         if (mouseEvent is InputEventMouseMotion motion)

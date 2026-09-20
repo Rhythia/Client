@@ -7,6 +7,8 @@ public partial class SceneManager : Node
 
     private static SubViewport backgroundViewport;
 
+    private static SubViewport xrViewport;
+
     private static SubViewport vrScreenViewport;
 
     private static Node vrSceneContainer;
@@ -50,6 +52,8 @@ public partial class SceneManager : Node
             var vrMain = ResourceLoader.Load<PackedScene>("res://scenes/vr_main.tscn").Instantiate();
             AddChild(vrMain);
 
+            xrViewport = vrMain.GetNode<SubViewport>("SubViewport");
+
             var vrScreen = ResourceLoader.Load<PackedScene>("res://scenes/vr_screen.tscn").Instantiate();
             vrMain.GetNode("SubViewport/XROrigin3D").AddChild(vrScreen);
 
@@ -71,6 +75,17 @@ public partial class SceneManager : Node
         {
             Load("res://scenes/loading.tscn");
         }
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (!VRNode.IsVrEnabled || xrViewport == null || @event is not InputEventMouse)
+        {
+            return;
+        }
+
+        xrViewport.PushInput(@event, true);
+        GetViewport().SetInputAsHandled();
     }
 
     private void reparentOverlay(string nodeName)
