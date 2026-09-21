@@ -1,3 +1,4 @@
+using System.Globalization;
 using Godot;
 
 public partial class LinkPopupButton : Button
@@ -59,7 +60,7 @@ public partial class LinkPopupButton : Button
                 button.TooltipText = link;
             }
 
-            popup.UpdateInfo(string.Format(InfoTemplate, link));
+            popup.UpdateInfo(string.Format(CultureInfo.InvariantCulture, InfoTemplate, link));
         }
     }
 }
