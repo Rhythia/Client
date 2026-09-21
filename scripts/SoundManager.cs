@@ -207,7 +207,10 @@ public partial class SoundManager : Node, ISkinnable
 
                 UpdateVolume();
             }
-            if ((eventMouseButton.ShiftPressed) && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown))
+            if (
+                (eventMouseButton.ShiftPressed)
+                && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown)
+            )
             {
                 switch (eventMouseButton.ButtonIndex)
                 {

@@ -19,7 +19,7 @@ public interface ISettingsItem
     string Description { get; }
 
     string Placeholder { get; }
-    
+
     ISettingsList List { get; }
 
     SettingsSlider Slider { get; }

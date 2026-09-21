@@ -1320,10 +1320,11 @@ public partial class SettingsProfile
             Description = "Set the path where Rhythia stores it's files",
             Section = SettingsSection.Other,
             Placeholder = Constants.DEFAULT_USER_FOLDER,
-            UpdateAction = (value, _) => {
+            UpdateAction = (value, _) =>
+            {
                 SettingsManager.SetUserFolder(value);
             },
-            SaveToDisk = false
+            SaveToDisk = false,
         };
 
         SetUserFolderDialog = new(default)
@@ -1334,24 +1335,46 @@ public partial class SettingsProfile
             Section = SettingsSection.Other,
             Buttons =
             [
-                new() { Title = "Open Previous User Folder", Description = "Open the path to the previously used User Folder", OnPressed = () => {
-                    if (Constants.PREVIOUS_USER_FOLDER == "")
+                new()
+                {
+                    Title = "Open Previous User Folder",
+                    Description = "Open the path to the previously used User Folder",
+                    OnPressed = () =>
                     {
-                        var popup = new OptionPopup("No Previous User Folder Found", "You have no previous user folder. Either you didn't change your User Folder (and that's fine) or the record of it got deleted.");
+                        if (Constants.PREVIOUS_USER_FOLDER == "")
+                        {
+                            var popup = new OptionPopup(
+                                "No Previous User Folder Found",
+                                "You have no previous user folder. Either you didn't change your User Folder (and that's fine) or the record of it got deleted."
+                            );
 
-                        popup.AddOption("Ok", Callable.From(() => {
-                            SettingsMenu.Instance.Show();
-                        }));
+                            popup.AddOption(
+                                "Ok",
+                                Callable.From(() =>
+                                {
+                                    SettingsMenu.Instance.Show();
+                                })
+                            );
 
-                        SettingsMenu.Instance.Hide();
-                        popup.Show();
-                    }
-                    else { OS.ShellShowInFileManager(Constants.PREVIOUS_USER_FOLDER); }
-                }},
-                new() { Title = "Set User Folder Path", Description = "Choose the path to the User Folder", OnPressed = () => {
-                    SettingsMenu.Instance.UserFolderDialog.PopupCentered();
-                }}
-            ]
+                            SettingsMenu.Instance.Hide();
+                            popup.Show();
+                        }
+                        else
+                        {
+                            OS.ShellShowInFileManager(Constants.PREVIOUS_USER_FOLDER);
+                        }
+                    },
+                },
+                new()
+                {
+                    Title = "Set User Folder Path",
+                    Description = "Choose the path to the User Folder",
+                    OnPressed = () =>
+                    {
+                        SettingsMenu.Instance.UserFolderDialog.PopupCentered();
+                    },
+                },
+            ],
         };
 
         DisplayFPS = new(true)

@@ -132,14 +132,23 @@ public partial class SettingsManager : Node
 
         string pointerContent = File.ReadAllText(Constants.USER_FOLDER_POINTER).Trim();
         string[] lines = pointerContent.Split("\n");
-        
+
         foreach (string line in lines)
         {
             string normalLine = line.TrimEnd('\r');
 
-            if (normalLine.StartsWith("CurrentDir:")) { currentDir = normalLine.Substring("CurrentDir:".Length); }
-            else if (normalLine.StartsWith("PreviousDir:")) { previousDir = normalLine.Substring("PreviousDir:".Length); }
-            else { Logger.Error("Unexpected line in user pointer file."); }
+            if (normalLine.StartsWith("CurrentDir:"))
+            {
+                currentDir = normalLine.Substring("CurrentDir:".Length);
+            }
+            else if (normalLine.StartsWith("PreviousDir:"))
+            {
+                previousDir = normalLine.Substring("PreviousDir:".Length);
+            }
+            else
+            {
+                Logger.Error("Unexpected line in user pointer file.");
+            }
         }
 
         return [currentDir, previousDir];
@@ -149,7 +158,7 @@ public partial class SettingsManager : Node
     {
         string[] paths = GetUserFolderPointerContent();
         string currentDir = paths[0];
-        
+
         try
         {
             var _ = Directory.EnumerateFileSystemEntries(currentDir);
@@ -170,7 +179,10 @@ public partial class SettingsManager : Node
         string[] paths = GetUserFolderPointerContent();
         string previousDir = paths[1];
 
-        if (string.IsNullOrWhiteSpace(previousDir)) { return ""; }
+        if (string.IsNullOrWhiteSpace(previousDir))
+        {
+            return "";
+        }
 
         try
         {
@@ -203,10 +215,14 @@ public partial class SettingsManager : Node
         var popup = new OptionPopup("Restart required.", "Would you like to restart the game?");
 
         popup.AddOption("Restart", Callable.From(restartGame));
-        popup.AddOption("Restart And Copy", Callable.From(() => {
-            popup.Hide();
-            showUserFolderConfirmationPopup(path);
-        }));
+        popup.AddOption(
+            "Restart And Copy",
+            Callable.From(() =>
+            {
+                popup.Hide();
+                showUserFolderConfirmationPopup(path);
+            })
+        );
         popup.AddOption("Cancel", Callable.From(popup.Hide));
 
         SettingsMenu.Instance.Hide();
@@ -227,7 +243,8 @@ public partial class SettingsManager : Node
         {
             if (!typeof(ISettingsItem).IsAssignableFrom(property.PropertyType))
                 continue;
-            if (excludeFromReset.Contains(property.Name)) continue;
+            if (excludeFromReset.Contains(property.Name))
+                continue;
 
             ISettingsItem current = (ISettingsItem)property.GetValue(Instance.Settings);
             ISettingsItem defs = (ISettingsItem)property.GetValue(defaults);
@@ -240,6 +257,7 @@ public partial class SettingsManager : Node
 
         ToastNotification.Notify("Settings reset to default successfully!");
     }
+
     private static void restartGame()
     {
         int pid = OS.GetProcessId();
@@ -264,13 +282,23 @@ public partial class SettingsManager : Node
 
     private static void showUserFolderConfirmationPopup(string destinationPath)
     {
-        var popup = new OptionPopup("Are you sure?", "This will overwrite the contents of the new folder and double the game in size unless you remove the old files.\n\nPS: you can find the old folder in settings > other > open old user folder");
+        var popup = new OptionPopup(
+            "Are you sure?",
+            "This will overwrite the contents of the new folder and double the game in size unless you remove the old files.\n\nPS: you can find the old folder in settings > other > open old user folder"
+        );
 
-        popup.AddOption("Restart And Copy", Callable.From(() => {
-            FileOperations.CopyDir(Constants.USER_FOLDER, destinationPath, true);
-            if (Path.GetFullPath(destinationPath) != Constants.DEFAULT_USER_FOLDER) { File.Delete(Path.Combine(destinationPath, "user_folder_path.txt")); }
-            restartGame();
-        }));
+        popup.AddOption(
+            "Restart And Copy",
+            Callable.From(() =>
+            {
+                FileOperations.CopyDir(Constants.USER_FOLDER, destinationPath, true);
+                if (Path.GetFullPath(destinationPath) != Constants.DEFAULT_USER_FOLDER)
+                {
+                    File.Delete(Path.Combine(destinationPath, "user_folder_path.txt"));
+                }
+                restartGame();
+            })
+        );
         popup.AddOption("Cancel", Callable.From(popup.Hide));
 
         popup.Show();
