@@ -36,6 +36,9 @@ public partial class SoundManager : Node, ISkinnable
     private static bool? jeeping = null; // we're jeeping (last state of a song)
     private static bool menuMusicPausedByUser = false;
 
+    private static bool offsetPopupShown = false;
+    private static ulong lastOffsetChange = 0;
+
     public override void _Ready()
     {
         Instance = this;
@@ -160,6 +163,14 @@ public partial class SoundManager : Node, ISkinnable
             tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
             tween.TweenProperty(SceneManager.VolumePanel.GetNode<Label>("Label"), "anchor_bottom", 1, 0.35);
         }
+
+        if (offsetPopupShown && Time.GetTicksMsec() - lastOffsetChange >= 1000)
+        {
+            offsetPopupShown = false;
+
+            Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
+            tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
+        }
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -195,6 +206,27 @@ public partial class SoundManager : Node, ISkinnable
                 lastVolumeChange = Time.GetTicksMsec();
 
                 UpdateVolume();
+            }
+            if ((eventMouseButton.ShiftPressed) && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown))
+            {
+                switch (eventMouseButton.ButtonIndex)
+                {
+                    case MouseButton.WheelUp:
+                        settings.LocalOffset.Value = Math.Round(settings.LocalOffset) + 1;
+                        break;
+                    case MouseButton.WheelDown:
+                        settings.LocalOffset.Value = Math.Round(settings.LocalOffset) - 1;
+                        break;
+                }
+
+                Label label = SceneManager.OffsetPanel.GetNode<Label>("Label");
+                label.Text = $"Local Offset: {settings.LocalOffset.Value}ms";
+
+                Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
+                tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffffff"), 0.25);
+
+                offsetPopupShown = true;
+                lastOffsetChange = Time.GetTicksMsec();
             }
         }
     }
