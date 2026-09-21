@@ -58,12 +58,18 @@ public partial class Runner : Node3D
     {
         base._Ready();
 
+        settings = SettingsManager.Instance.Settings;
         HudManager ??= GetNode<HudManager>("HUD");
         Camera ??= GetNode<Camera3D>("Camera3D");
         Renderers ??= GetNode<Godot.Collections.Array<Renderer>>("Renderers");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
+    }
+
+    public void Init()
+    {
+        distanceOffset();
     }
 
     public override void _Process(double delta)
@@ -236,6 +242,7 @@ public partial class Runner : Node3D
 
         if (!NotesOnly)
         {
+            Init();
             HudManager.Init();
             Attempt.TimeStarted = Time.GetTicksUsec();
 
@@ -624,6 +631,24 @@ public partial class Runner : Node3D
 
             SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
             // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
+        }
+    }
+
+    private void distanceOffset()
+    {
+        var grid = HudManager.GetNode<Node3D>("Grid");
+        var render = GetNode<Node3D>("Renderers");
+        var gridPos = Grid.Position;
+        var renderPos = render.Position;
+        double offset = settings.PlayfieldZOffset.Value;
+
+        gridPos.Z = (float)offset;
+        renderPos.Z = (float)offset;
+
+        if (VRNode.IsVrEnabled)
+        {
+            grid.Position = gridPos;
+            render.Position = renderPos;
         }
     }
 }

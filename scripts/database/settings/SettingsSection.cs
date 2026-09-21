@@ -5,5 +5,6 @@ public enum SettingsSection
     Visual,
     Audio,
     Video,
+    VR,
     Other,
 }

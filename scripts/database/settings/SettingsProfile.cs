@@ -429,6 +429,16 @@ public partial class SettingsProfile
 
     #endregion
 
+    #region VR
+
+    /// <summary>
+    /// Adjusts the Z offset of the Playfield
+    /// </summary>
+    [Order]
+    public SettingsItem<double> PlayfieldZOffset { get; private set; }
+
+    #endregion
+
     #region Initializers
 
 
@@ -1215,6 +1225,24 @@ public partial class SettingsProfile
                 Step = 1,
                 MinValue = 0,
                 MaxValue = 100,
+            },
+        };
+
+        #endregion
+
+        #region VR
+
+        PlayfieldZOffset = new(0)
+        {
+            Id = "PlayfieldZOffset",
+            Title = "Playfield Z Offset",
+            Description = "Adjusts the Z offset of the Playfield, only in VR",
+            Section = SettingsSection.VR,
+            Slider = new()
+            {
+                Step = 0.5f,
+                MinValue = -10,
+                MaxValue = 1,
             },
         };
 
