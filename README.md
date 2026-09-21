@@ -149,7 +149,10 @@ Your maps, replays, skins, and settings are stored separately from the game inst
 | **Windows** | `%appdata%\Rhythia` |
 | **Linux** | `~/.local/share/Rhythia` |
 
-You can also access the user folder from within the game via **Settings → User Folder**.
+You can also access the user folder from within the game via the **User Folder** button on the top bar.
+
+> [!NOTE]
+> You can change the user folder location to your desired path in **Settings** → **Other** → **Set User Folder Path**
 
 ---
 
@@ -165,14 +168,13 @@ Maps aren't included in the game by default; they must be downloaded and importe
 
 | Tool | Version | Notes |
 |---|---|---|
-| [Godot Engine](https://godotengine.org/download) | **4.6** | .NET (C#) build required |
+| [Godot Engine](https://godotengine.org/download) | **4.7** | .NET (C#) build required |
 | [.NET SDK](https://dotnet.microsoft.com/download) | **10.0** | |
 | [Git LFS](https://git-lfs.github.com/) | Latest | Required for large binary assets |
 
 ### Project Structure
 
 ```
-├── addons/          # Third-party addons (ffmpeg, etc.)
 ├── fonts/           # Font assets
 ├── meshes/          # 3D mesh assets
 ├── prefabs/         # Reusable scene prefabs (UI elements, etc.)
@@ -236,6 +238,9 @@ cd Client
 # Fetch large files (textures, audio, etc.)
 git lfs fetch --all
 git lfs pull
+
+# Restore .NET tools
+dotnet tool restore
 ```
 
 #### 3. Open in Godot
@@ -246,6 +251,12 @@ git lfs pull
 4. Click **Open**.
 
 ### Submitting Your Changes
+
+1. **Format** the project:
+   ```bash
+   dotnet format Rhythia.csproj
+   dotnet csharpier format .
+   ```
 
 1. **Stage** any new files you created:
    ```bash
