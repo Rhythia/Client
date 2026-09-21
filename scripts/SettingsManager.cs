@@ -242,8 +242,23 @@ public partial class SettingsManager : Node
     }
     private static void restartGame()
     {
+        int pid = OS.GetProcessId();
         string executablePath = OS.GetExecutablePath();
-        OS.CreateProcess(executablePath, []);  // may misbehave on macos
+
+        switch (OS.GetName())
+        {
+            case "Windows":
+                OS.CreateProcess("powershell.exe", ["-Command", $"Wait-Process -Id {pid}; Start-Process '{executablePath}'"]);
+                break;
+            case "macOS":
+                string executablePathMac = Path.Combine(executablePath, "../..");
+                OS.CreateProcess("/bin/sh", [$"while kill -0 {pid} 2>/dev/null; do sleep 0.1; done; open {executablePathMac}"]);
+                break;
+            case "Linux":
+                OS.CreateProcess("/bin/sh", [$"while kill -0 {pid} 2>/dev/null; do sleep 0.1; done; exec {executablePath}"]);
+                break;
+        }
+
         Instance.GetTree().Quit();
     }
 
