@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+
 public class FileOperations
 {
     public static void CopyDir(string source, string destination, bool overwrite = false)
@@ -11,7 +12,10 @@ public class FileOperations
             return;
         }
 
-        if (!Directory.Exists(destination)) { Directory.CreateDirectory(destination); }
+        if (!Directory.Exists(destination))
+        {
+            Directory.CreateDirectory(destination);
+        }
 
         string[] files = Directory.GetFiles(source);
 
@@ -28,7 +32,7 @@ public class FileOperations
         {
             string dirName = Path.GetFileName(dir);
             string destinationDir = Path.Combine(destination, dirName);
-            CopyDir(dir, destinationDir, overwrite);            
+            CopyDir(dir, destinationDir, overwrite);
         }
     }
 }

@@ -51,7 +51,9 @@ public partial class ToastNotification : Node
         }
 
         Label label = notification.GetNode<Label>("HBoxContainer/Label");
-        label.Text = multilineWrap ? calculateMultilineWrap(maxToastWidth, message, label.GetThemeFont("font"), label.GetThemeFontSize("font_size")) : message;
+        label.Text = multilineWrap
+            ? calculateMultilineWrap(maxToastWidth, message, label.GetThemeFont("font"), label.GetThemeFontSize("font_size"))
+            : message;
 
         notification.GetNode<ColorRect>("HBoxContainer/Severity").Color = color;
         notification.ResetSize();
@@ -59,33 +61,61 @@ public partial class ToastNotification : Node
 
         foreach (string toast in toasts)
         {
-            if (toast == notification.Name) continue;
+            if (toast == notification.Name)
+                continue;
             PanelContainer toastPanel = (PanelContainer)SceneManager.Scene.GetNodeOrNull(toast);
-            _ = queueTween(() => {
-                Tween upTween = toastPanel.CreateTween();
-                upTween.TweenProperty(toastPanel, "position", toastPanel.Position + Vector2.Up * (notification.Size.Y + 8), 0.15).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut);
-                return upTween;
-            }, toastPanel);
+            _ = queueTween(
+                () =>
+                {
+                    Tween upTween = toastPanel.CreateTween();
+                    upTween
+                        .TweenProperty(toastPanel, "position", toastPanel.Position + Vector2.Up * (notification.Size.Y + 8), 0.15)
+                        .SetTrans(Tween.TransitionType.Quad)
+                        .SetEase(Tween.EaseType.InOut);
+                    return upTween;
+                },
+                toastPanel
+            );
         }
 
-        _ = queueTween(() => {
-            Tween inTween = notification.CreateTween();
-            inTween.TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
-            return inTween;
-        }, notification);
+        _ = queueTween(
+            () =>
+            {
+                Tween inTween = notification.CreateTween();
+                inTween
+                    .TweenProperty(notification, "position", notification.Position + Vector2.Left * (notification.Size.X + 8), 0.8)
+                    .SetTrans(Tween.TransitionType.Quad)
+                    .SetEase(Tween.EaseType.Out);
+                return inTween;
+            },
+            notification
+        );
 
         await Instance.ToSignal(Instance.GetTree().CreateTimer(4), "timeout");
 
-        _ = queueTween(() => {
-            Tween outTween = notification.CreateTween();
-            outTween.TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
-            outTween.TweenCallback(Callable.From(() => {
-                toasts.Remove(notification.Name);
-                notification.QueueFree();
-                if (toasts.Count == 0) { toastNextId = 0; }
-            }));
-            return outTween;
-        }, notification);
+        _ = queueTween(
+            () =>
+            {
+                Tween outTween = notification.CreateTween();
+                outTween
+                    .TweenProperty(notification, "position", notification.Position + Vector2.Right * (notification.Size.X + 8), 0.8)
+                    .SetTrans(Tween.TransitionType.Quad)
+                    .SetEase(Tween.EaseType.In);
+                outTween.TweenCallback(
+                    Callable.From(() =>
+                    {
+                        toasts.Remove(notification.Name);
+                        notification.QueueFree();
+                        if (toasts.Count == 0)
+                        {
+                            toastNextId = 0;
+                        }
+                    })
+                );
+                return outTween;
+            },
+            notification
+        );
     }
 
     private static async Task queueTween(Func<Tween> tween, PanelContainer toast)
@@ -96,7 +126,7 @@ public partial class ToastNotification : Node
 
         await previousTweenTask;
 
-        if (!IsInstanceValid(toast)) 
+        if (!IsInstanceValid(toast))
         {
             taskCompletionSource.SetResult();
             return;
