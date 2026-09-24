@@ -163,9 +163,7 @@ public partial class Results : BaseScene
     {
         base.Load();
 
-        DisplayServer.WindowSetVsyncMode(
-            SettingsManager.Instance.Settings.VSyncMenus ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled
-        );
+        SettingsManager.Instance.Settings.VSyncMenus.UpdateAction?.Invoke(SettingsManager.Instance.Settings.VSyncMenus.Value, true);
     }
 
     public void UpdateVolume()

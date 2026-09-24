@@ -41,7 +41,7 @@ render_target_update_mode = 4
 [node name="DesktopCamera3D" type="Camera3D" parent="DesktopViewportContainer/SubViewport" unique_id=2035356183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.75)
 current = true
-fov = 110.0
+fov = 100.0
 script = ExtResource("1_43f0v")
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1653966335]

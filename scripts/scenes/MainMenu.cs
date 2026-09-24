@@ -89,9 +89,7 @@ public partial class MainMenu : BaseScene
     {
         base.Load();
 
-        DisplayServer.WindowSetVsyncMode(
-            SettingsManager.Instance.Settings.VSyncMenus ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled
-        );
+        SettingsManager.Instance.Settings.VSyncMenus.UpdateAction?.Invoke(SettingsManager.Instance.Settings.VSyncMenus.Value, true);
 
         // Apply any map selection that was deferred while menu was off-tree (e.g. import from another scene)
         MapInfo.ApplyPendingSelection();

@@ -431,11 +431,23 @@ public partial class SettingsProfile
 
     #region VR
 
+    [Order]
     /// <summary>
     /// Adjusts the Z offset of the Playfield
     /// </summary>
-    [Order]
     public SettingsItem<double> PlayfieldZOffset { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Locks floor when centering
+    /// </summary>
+    public SettingsItem<bool> LockFloorWhenCentering { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// Adjusts the field of view for the desktop camera of the VR view
+    /// </summary>
+    public SettingsItem<double> DesktopCameraFOV { get; private set; }
 
     #endregion
 
@@ -1032,7 +1044,7 @@ public partial class SettingsProfile
             {
                 if (SceneManager.Scene is not Game)
                 {
-                    DisplayServer.WindowSetVsyncMode(value ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
+                    DisplayServer.WindowSetVsyncMode((value && !VRNode.IsVrEnabled) ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
                 }
             },
         };
@@ -1243,6 +1255,28 @@ public partial class SettingsProfile
                 Step = 0.5f,
                 MinValue = -10,
                 MaxValue = 1,
+            },
+        };
+
+        LockFloorWhenCentering = new(true)
+        {
+            Id = "LockFloorWhenCentering",
+            Title = "Lock Floor When Centering",
+            Description = "Disabling allows the stage to be freely adjusted",
+            Section = SettingsSection.VR,
+        };
+
+        DesktopCameraFOV = new(100)
+        {
+            Id = "DesktopCameraFOV",
+            Title = "Desktop Camera FOV",
+            Description = "Adjusts the field of view for the desktop camera of the VR view",
+            Section = SettingsSection.VR,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 60,
+                MaxValue = 120,
             },
         };
 

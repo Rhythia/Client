@@ -88,7 +88,14 @@ public partial class VRNode : Node3D
     private void onOpenXRPoseRecentered()
     {
         EmitSignal(SignalName.PoseRecentered);
-        XRServer.CenterOnHmd(XRServer.RotationMode.ResetFullRotation, true);
+        if (!SettingsManager.Instance.Settings.LockFloorWhenCentering.Value)
+        {
+            XRServer.CenterOnHmd(XRServer.RotationMode.ResetFullRotation, true);
+        }
+        else
+        {
+            XRServer.CenterOnHmd(XRServer.RotationMode.ResetButKeepTilt, true);
+        }
         
     }
 
