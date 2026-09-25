@@ -244,16 +244,9 @@ corner_radius_bottom_left = 12
 [sub_resource type="LabelSettings" id="LabelSettings_a70tm"]
 font_color = Color(1, 1, 1, 0.25098)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43mxh"]
-bg_color = Color(0.0235294, 0.0196078, 0.0352941, 0.768627)
-
 [sub_resource type="LabelSettings" id="LabelSettings_pwlqp"]
 font = ExtResource("23_wf21h")
-font_size = 36
-
-[sub_resource type="LabelSettings" id="LabelSettings_tjduq"]
-font = ExtResource("24_j6p10")
-font_size = 12
+font_size = 48
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kncke"]
 bg_color = Color(0.0352941, 0.0313726, 0.0509804, 0.501961)
@@ -272,6 +265,10 @@ Button/styles/focus = SubResource("StyleBoxFlat_kncke")
 Button/styles/hover = SubResource("StyleBoxFlat_6kbgk")
 Button/styles/normal = SubResource("StyleBoxEmpty_jlnvv")
 Button/styles/pressed = SubResource("StyleBoxFlat_y08lf")
+
+[sub_resource type="LabelSettings" id="LabelSettings_tjduq"]
+font = ExtResource("24_j6p10")
+font_size = 18
 
 [node name="SceneGame" type="Node" unique_id=909809067 node_paths=PackedStringArray("Runner", "Menu", "PlaytestOverlay", "ReplayManager", "PlayerInputController", "CursorManager")]
 script = ExtResource("1_m4url")
@@ -926,7 +923,6 @@ mouse_filter = 2
 alignment = 2
 
 [node name="Menu" type="Panel" parent="." unique_id=856970091 node_paths=PackedStringArray("game", "runner", "hide", "resume", "restart", "settings", "quit")]
-visible = false
 modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -976,38 +972,45 @@ offset_top = -280.0
 offset_right = 220.0
 offset_bottom = 280.0
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_43mxh")
+theme_override_styles/panel = SubResource("StyleBoxFlat_sijr0")
 
 [node name="Header" type="Label" parent="Menu/Holder" unique_id=544084605]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.2
-offset_top = 16.0
+anchor_top = 0.002
+anchor_right = 0.998
+anchor_bottom = 0.21400002
+offset_top = -0.120000005
+offset_right = -0.120025635
+offset_bottom = 0.1599884
 text = "PAUSED"
 label_settings = SubResource("LabelSettings_pwlqp")
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Disclaimer" type="Label" parent="Menu/Holder" unique_id=1874627546]
+[node name="Separator" type="ColorRect" parent="Menu/Holder" unique_id=2059385615]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.8
+anchor_top = 0.216
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_bottom = -16.0
-text = "NOTE: Pausing disqualifies your pass"
-label_settings = SubResource("LabelSettings_tjduq")
-horizontal_alignment = 1
-vertical_alignment = 2
+anchor_bottom = 0.216
+offset_left = 16.0
+offset_top = -0.9600067
+offset_right = -16.0
+offset_bottom = 0.039993286
+grow_horizontal = 2
+color = Color(1, 1, 1, 0.078431375)
 
 [node name="Resume" type="Button" parent="Menu/Holder" unique_id=616429602]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.2
+anchor_top = 0.23400001
 anchor_right = 1.0
-anchor_bottom = 0.35
-offset_left = 32.0
-offset_right = -32.0
+anchor_bottom = 0.384
+offset_left = 1.0
+offset_top = -0.040008545
+offset_right = 1.0
+offset_bottom = -0.040008545
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
@@ -1016,11 +1019,11 @@ text = "RESUME"
 [node name="Restart" type="Button" parent="Menu/Holder" unique_id=865082248]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.35
+anchor_top = 0.384
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 32.0
-offset_right = -32.0
+anchor_bottom = 0.53400004
+offset_top = -0.040008545
+offset_bottom = -0.040008545
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
@@ -1029,11 +1032,11 @@ text = "RESTART"
 [node name="Settings" type="Button" parent="Menu/Holder" unique_id=730914507]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.5
+anchor_top = 0.53400004
 anchor_right = 1.0
-anchor_bottom = 0.65
-offset_left = 32.0
-offset_right = -32.0
+anchor_bottom = 0.684
+offset_top = -0.040008545
+offset_bottom = -0.040008545
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
@@ -1042,15 +1045,59 @@ text = "SETTINGS"
 [node name="Quit" type="Button" parent="Menu/Holder" unique_id=225658949]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.65
+anchor_top = 0.684
 anchor_right = 1.0
-anchor_bottom = 0.8
-offset_left = 32.0
-offset_right = -32.0
+anchor_bottom = 0.83400005
+offset_top = -0.040008545
+offset_bottom = -0.040039063
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
 text = "GIVE UP"
+
+[node name="Separator2" type="ColorRect" parent="Menu/Holder" unique_id=543076678]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.85
+anchor_right = 1.0
+anchor_bottom = 0.85200006
+offset_left = 16.0
+offset_right = -16.0
+offset_bottom = -0.120025635
+grow_horizontal = 2
+color = Color(1, 1, 1, 0.078431375)
+
+[node name="Disclaimer" type="Label" parent="Menu/Holder" unique_id=1874627546]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -1.7999878
+text = "NOTE: Pausing disqualifies your pass
+[font_size=12][color=ffffffa0] of which you are right now..."
+label_settings = SubResource("LabelSettings_tjduq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Menu/Holder" unique_id=1028947402]
+clip_contents = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -1.7999878
+focus_mode = 0
+mouse_filter = 2
+bbcode_enabled = true
+text = "NOTE: Pausing disqualifies your pass"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Transition" type="ColorRect" parent="." unique_id=784178581]
 self_modulate = Color(1, 1, 1, 0)
