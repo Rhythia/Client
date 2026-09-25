@@ -21,6 +21,9 @@ public class Misc
             case "NoFail":
                 tex = skin.ModNoFailImage;
                 break;
+            case "Autoplay":
+                tex = skin.ModAutoplayImage;
+                break;
             case "Ghost":
                 tex = skin.ModGhostImage;
                 break;
