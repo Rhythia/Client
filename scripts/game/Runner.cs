@@ -440,7 +440,7 @@ public partial class Runner : Node3D
                         Attempt.ID,
                         "You",
                         Attempt.Qualifies,
-                        Attempt.Score,
+                        (ulong)Math.Round(Attempt.Score),
                         Attempt.Accuracy,
                         Time.GetUnixTimeFromSystem(),
                         Attempt.Progress,
@@ -454,7 +454,7 @@ public partial class Runner : Node3D
                 if (Attempt.Qualifies)
                 {
                     Stats.Instance.Passes++;
-                    Stats.Instance.TotalScore += Attempt.Score;
+                    Stats.Instance.TotalScore += (ulong)Math.Round(Attempt.Score);
 
                     if (Attempt.Accuracy == 100)
                     {
@@ -463,7 +463,7 @@ public partial class Runner : Node3D
 
                     if (Attempt.Score > Stats.Instance.HighestScore)
                     {
-                        Stats.Instance.HighestScore = Attempt.Score;
+                        Stats.Instance.HighestScore = (ulong)Math.Round(Attempt.Score);
                     }
 
                     Stats.Instance.AverageAccuracy = (Stats.Instance.AverageAccuracy + Attempt.Accuracy) / Stats.Instance.Passes;
@@ -485,7 +485,7 @@ public partial class Runner : Node3D
             ? Attempt.HitsInfo[noteIndex]
             : (float)(((int)Attempt.Progress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
         float factor = 1 - Math.Max(0, lateness - 25) / 150f;
-        uint hitScore = (uint)(100 * Attempt.ComboMultiplier * Attempt.ModsMultiplier * factor * ((Speed - 1) / 2.5 + 1));
+        double hitScore = Attempt.UnitHitScore * Attempt.ComboMultiplier * factor;
 
         switch (hitResult)
         {

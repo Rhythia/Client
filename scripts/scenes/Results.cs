@@ -35,7 +35,7 @@ public partial class Results : BaseScene
         holder.GetNode<Label>("Difficulty").Text = attempt.Map.DifficultyName;
         holder.GetNode<Label>("Mappers").Text = $"by {attempt.Map.PrettyMappers}";
         holder.GetNode<Label>("Accuracy").Text = $"{attempt.Accuracy:F2}%";
-        holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(attempt.Score)}";
+        holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(Math.Round(attempt.Score))}";
         holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(attempt.Hits)} / {Util.String.PadMagnitude(attempt.Sum)}";
         holder.GetNode<Label>("Status").Text =
             attempt.IsReplay ? attempt.Replays[0].Status
