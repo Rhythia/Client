@@ -1,6 +1,4 @@
 using System;
-using System.Globalization;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +19,7 @@ public partial class MapBrowser : Control
     private Timer searchTimer;
     private HBoxContainer filters;
     private ScrollContainer results;
-    private PanelContainer mapCardTemplate;
+    private MapCard mapCardTemplate;
 
     private CancellationTokenSource source = new();
 
@@ -36,7 +34,7 @@ public partial class MapBrowser : Control
         search = searchBar.GetNode<LineEdit>("Search");
         searchTimer = GetNode<Timer>("SearchTimer");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
-        mapCardTemplate = results.GetNode<PanelContainer>("RowsMargin/Rows/MapCardTemplate");
+        mapCardTemplate = results.GetNode<MapCard>("RowsMargin/Rows/MapCardTemplate");
 
         mapCardTemplate.Visible = false;
 
@@ -114,205 +112,15 @@ public partial class MapBrowser : Control
 
         foreach (var map in maps)
         {
-            if (mapCardTemplate.Duplicate() is not PanelContainer mapCard)
+            if (mapCardTemplate.Duplicate() is not MapCard mapCard)
             {
                 continue;
             }
 
             mapCard.Visible = true;
             mapCardTemplate.GetParent().AddChild(mapCard);
-
-            Button downloadButton = mapCard.GetNode<Button>("Download");
-            Panel downloadDim = downloadButton.GetNode<Panel>("Dim");
-            TextureRect downloadIcon = downloadButton.GetNode<TextureRect>("DownloadIcon");
-
-            Texture2D downloadIconTexture = GD.Load<Texture2D>("res://user/skins/default/ui/buttons/import.png");
-            Texture2D deleteIconTexture = GD.Load<Texture2D>("res://user/skins/default/ui/buttons/delete.png");
-            Texture2D throbberTexture = GD.Load<Texture2D>("res://textures/throbber.png");
-
-            Tween downloadTween = null;
-
-            TextureRect coverImage = mapCard.GetNode<TextureRect>("Row/CoverHolder/Cover");
-            TextureRect blurCoverImage = mapCard.GetNode<TextureRect>("Row/Map/BlurCoverHolder/BlurCover");
-
-            VBoxContainer info = mapCard.GetNode<VBoxContainer>("Row/Map/Content/Info");
-            VBoxContainer topText = info.GetNode<VBoxContainer>("Top/Text");
-            HBoxContainer bottomText = info.GetNode<HBoxContainer>("Bottom");
-
-            Label titleLabel = topText.GetNode<Label>("TitleHolder/Title");
-            Label mappersLabel = topText.GetNode<Label>("Details/VBoxContainer/Mapper");
-            PanelContainer notablePill = bottomText.GetNode<PanelContainer>("NotablePill");
-            Label difficultyLabel = topText.GetNode<Label>("Details/VBoxContainer/Difficulty");
-            Label noteCountLabel = topText.GetNode<Label>("Details/VBoxContainer/Notes");
-            PanelContainer rankingPill = bottomText.GetNode<PanelContainer>("RankingPill");
-            Label rankingLabel = rankingPill.GetNode<Label>("Ranking");
-            Label durationLabel = bottomText.GetNode<Label>("Duration");
-
-            Map downloadedMap = getDownloadedMap(map.GetProperty("noteHash").GetString());
-            bool isDownloaded = downloadedMap != null;
-            bool isDownloading = false;
-
-            if (isDownloaded)
-            {
-                downloadIcon.Texture = deleteIconTexture;
-                downloadIcon.Modulate = Color.Color8(255, 255, 255);
-            }
-            else
-            {
-                downloadIcon.Texture = downloadIconTexture;
-            }
-            downloadIcon.PivotOffset = downloadIcon.Size / 2;
-
-            downloadButton.MouseEntered += () =>
-            {
-                if (isDownloading)
-                    return;
-
-                downloadTween?.Kill();
-                downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
-                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 128), 0.2);
-
-                if (!isDownloaded)
-                {
-                    downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255), 0.2);
-                }
-            };
-            downloadButton.MouseExited += () =>
-            {
-                if (isDownloading)
-                    return;
-
-                downloadTween?.Kill();
-                downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
-                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
-
-                if (!isDownloaded)
-                {
-                    downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255, 0), 0.2);
-                }
-            };
-            downloadButton.Pressed += async () =>
-            {
-                downloadButton.Disabled = true;
-
-                if (isDownloaded)
-                {
-                    MapManager.Delete(downloadedMap);
-                    downloadedMap = null;
-                    isDownloaded = false;
-                }
-                else
-                {
-                    isDownloading = true;
-                    downloadIcon.Texture = throbberTexture;
-
-                    Tween throbberTween = downloadIcon.CreateTween().SetLoops();
-                    throbberTween.TweenProperty(downloadIcon, "rotation", Mathf.Tau, 1).AsRelative();
-
-                    downloadedMap = await downloadMap(map.GetProperty("fileUrl"), map.GetProperty("legacyId").GetString(), source);
-                    isDownloaded = downloadedMap != null;
-
-                    throbberTween.Kill();
-
-                    downloadIcon.Rotation = 0;
-                    isDownloading = false;
-                }
-
-                downloadTween?.Kill();
-                downloadButton.Disabled = false;
-
-                bool hovered = downloadButton.IsHovered();
-
-                downloadTween = downloadButton.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut).SetParallel();
-                downloadTween.TweenProperty(downloadDim, "modulate", Color.Color8(255, 255, 255, (byte)(hovered ? 128 : 0)), 0.2);
-                downloadTween.TweenProperty(downloadIcon, "modulate", Color.Color8(255, 255, 255, (byte)(isDownloaded || hovered ? 255 : 0)), 0.2);
-
-                downloadIcon.Texture = isDownloaded ? deleteIconTexture : downloadIconTexture;
-            };
-
-            _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage, source);
-
-            int difficulty = map.GetProperty("difficulty").GetInt32();
-            string difficultyName = map.GetProperty("difficultyName").GetString();
-            string difficultyText = string.IsNullOrEmpty(difficultyName) ? Constants.DIFFICULTIES[difficulty] : difficultyName;
-            bool isRanked = map.GetProperty("isRanked").GetBoolean();
-            var rankingPillStyle = (StyleBoxFlat)rankingPill.GetThemeStylebox("panel").Duplicate();
-            var duration = TimeSpan.FromMilliseconds(map.GetProperty("length").GetDouble());
-
-            titleLabel.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title").GetString()}";
-            mappersLabel.Text = $"by {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
-            notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
-            difficultyLabel.Text = difficultyText;
-            difficultyLabel.LabelSettings = (LabelSettings)difficultyLabel.LabelSettings.Duplicate();
-            difficultyLabel.LabelSettings.FontColor = Constants.DIFFICULTY_COLORS[difficulty];
-            noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString(CultureInfo.InvariantCulture)} notes";
-            rankingLabel.Text = isRanked ? "RANKED" : "UNRANKED";
-
-            rankingPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;
-            rankingPill.AddThemeStyleboxOverride("panel", rankingPillStyle);
-
-            durationLabel.Text =
-                duration.TotalHours >= 1
-                    ? duration.ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture)
-                    : duration.ToString(@"mm\:ss", CultureInfo.InvariantCulture);
+            mapCard.Bind(map, source);
         }
-    }
-
-    private static async Task loadCover(JsonElement coverUrl, TextureRect coverTexture, TextureRect blurCoverTexture, CancellationTokenSource source)
-    {
-        var token = source.Token;
-
-        Texture2D cover = null;
-
-        if (!token.IsCancellationRequested && coverUrl.ValueKind != JsonValueKind.Null)
-        {
-            var coverImage = await MapBrowserService.GetCoverImage(coverUrl.GetString(), token);
-            cover = ImageTexture.CreateFromImage(coverImage);
-        }
-
-        if (!(IsInstanceValid(coverTexture) && IsInstanceValid(blurCoverTexture)))
-            return;
-
-        coverTexture.Texture = cover;
-        blurCoverTexture.Texture = cover;
-    }
-
-    private static async Task<Map> downloadMap(JsonElement fileUrl, string mapId, CancellationTokenSource source)
-    {
-        var token = source.Token;
-
-        byte[] buffer;
-
-        try
-        {
-            buffer = await MapBrowserService.GetMapFile(fileUrl.GetString(), token);
-        }
-        catch (Exception exception)
-        {
-            await ToastNotification.Notify("Failed to download map", 2);
-            Logger.Error(exception);
-            return null;
-        }
-
-        try
-        {
-            var map = MapParser.PHXM(buffer, mapId);
-            MapParser.Encode(map);
-            Callable.From(() => MapParser.Instance.EmitSignal(MapParser.SignalName.MapsImportFinished, new[] { map })).CallDeferred();
-            _ = ToastNotification.Notify("Map downloaded");
-            return map;
-        }
-        catch (Exception exception)
-        {
-            await ToastNotification.Notify("Map is corrupted", 2);
-            Logger.Error(exception);
-            return null;
-        }
-    }
-
-    private static Map getDownloadedMap(string hash)
-    {
-        return MapManager.Maps.FirstOrDefault(m => m.ObjectHash == hash);
     }
 
     private void onSearchTimerTimeout()
