@@ -488,7 +488,6 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Long Artist - Even Longer Title"
 label_settings = SubResource("LabelSettings_0pn3c")
-vertical_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
