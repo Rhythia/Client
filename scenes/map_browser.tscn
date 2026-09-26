@@ -5,7 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://bl6ten82nkjmd" path="res://user/skins/default/ui/buttons/sort.png" id="2_vofg3"]
 [ext_resource type="Shader" uid="uid://lywu8c8plv4j" path="res://scripts/shaders/cover_blur.gdshader" id="3_s54e2"]
 [ext_resource type="FontFile" uid="uid://4bnnn01f4dqr" path="res://fonts/Ubuntu/Ubuntu-Medium.ttf" id="3_ueqk1"]
-[ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto/Roboto-Bold.ttf" id="5_0pn3c"]
+[ext_resource type="Script" uid="uid://cexyomdgasvme" path="res://scripts/scenes/MapCard.cs" id="5_vr0hc"]
+[ext_resource type="FontFile" uid="uid://dwojpwm7o4l1a" path="res://fonts/Nunito/Nunito-Black.ttf" id="6_ueqk1"]
 [ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="7_ueqk1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
@@ -27,37 +28,38 @@ font = ExtResource("3_ueqk1")
 font_size = 26
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ear6i"]
-bg_color = Color(0.023529412, 0.019607844, 0.03529412, 1)
+bg_color = Color(0, 0, 0, 0.8784314)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3usyh"]
 corner_radius_top_left = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjpuo"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hrgd"]
+bg_color = Color(0, 0, 0, 1)
+border_color = Color(0.7882353, 0, 0.27058825, 1)
+border_blend = true
+corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr0hc"]
+bg_color = Color(0.27058825, 0.30980393, 0.32941177, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hrfuy"]
 shader = ExtResource("3_s54e2")
-shader_parameter/offset = 16.00000076
-shader_parameter/strength = 2.600000076
+shader_parameter/offset = 16.0
+shader_parameter/strength = 2.6
 
 [sub_resource type="Gradient" id="Gradient_vofg3"]
-offsets = PackedFloat32Array(0, 0.77707005, 1)
-colors = PackedColorArray(0.22745098, 0.22745098, 0.22745098, 0.5803922, 0.18000486, 0.18000486, 0.18000486, 0.78431374, 0.12225223, 0.12225223, 0.12225223, 0.81960785)
+colors = PackedColorArray(0.27058825, 0.30980393, 0.32941177, 1, 0.27058825, 0.30980393, 0.32941177, 0.4627451)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ear6i"]
 gradient = SubResource("Gradient_vofg3")
 
 [sub_resource type="LabelSettings" id="LabelSettings_0pn3c"]
 font_size = 18
-shadow_size = 3
-shadow_color = Color(0, 0, 0, 0.39215687)
-shadow_offset = Vector2(1, 1.5)
-
-[sub_resource type="LabelSettings" id="LabelSettings_ear6i"]
-font_size = 14
-font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
@@ -88,9 +90,9 @@ corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_10mjv"]
-font = ExtResource("5_0pn3c")
+font = ExtResource("6_ueqk1")
 font_size = 12
-font_color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+font_color = Color(0.27058825, 0.30980393, 0.32941177, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_27haj"]
 content_margin_left = 8.0
@@ -104,9 +106,9 @@ corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_ueqk1"]
-font = ExtResource("5_0pn3c")
+font = ExtResource("6_ueqk1")
 font_size = 12
-font_color = Color(0.1728327, 0.17283267, 0.17283267, 1)
+font_color = Color(0.27058825, 0.30980393, 0.32941177, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vofg3"]
 font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
@@ -114,27 +116,51 @@ shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.39215687)
 shadow_offset = Vector2(1, 1.5)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ear6i"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jydku"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3usyh"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ueqk1"]
+bg_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i5ncw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bwt54"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_27haj"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjpuo"]
+bg_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rav3o"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ikspe"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t1djq"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hrgd"]
-bg_color = Color(0.13682574, 0.13682574, 0.13682568, 1)
-border_color = Color(0.7882353, 0, 0.27058825, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 10
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ear6i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3usyh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8t2u"]
+bg_color = Color(0, 0, 0, 0.39215687)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_27haj"]
 
 [node name="Map Browser" type="ColorRect" unique_id=1634674963]
 anchors_preset = 15
@@ -352,10 +378,10 @@ custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_ear6i")
+script = ExtResource("5_vr0hc")
 
 [node name="Row" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate" unique_id=1621144170]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
 [node name="CoverHolder" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row" unique_id=808732459]
@@ -373,6 +399,12 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 
+[node name="Dim" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/CoverHolder" unique_id=392941825]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2hrgd")
+
 [node name="Map" type="Control" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row" unique_id=388758340]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -387,10 +419,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vjpuo")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vr0hc")
 
 [node name="BlurCover" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/BlurCoverHolder" unique_id=366161290]
-modulate = Color(0.5649617, 0.5649616, 0.5649616, 1)
 material = SubResource("ShaderMaterial_hrfuy")
 layout_mode = 2
 mouse_filter = 2
@@ -401,20 +432,25 @@ stretch_mode = 6
 layout_mode = 2
 texture = SubResource("GradientTexture2D_ear6i")
 
+[node name="Dim" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/BlurCoverHolder" unique_id=673707878]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2hrgd")
+
 [node name="Content" type="MarginContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map" unique_id=152846069]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1.0
 offset_right = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
 [node name="Info" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content" unique_id=1858565386]
 layout_mode = 2
@@ -434,10 +470,10 @@ mouse_filter = 2
 theme_override_constants/separation = -1
 
 [node name="TitleHolder" type="Control" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=183179678]
-custom_minimum_size = Vector2(0, 30)
+custom_minimum_size = Vector2(0, 20)
 custom_maximum_size = Vector2(-1, 20)
 layout_mode = 2
-size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="Title" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/TitleHolder" unique_id=108669646]
 custom_minimum_size = Vector2(0, 32)
@@ -450,30 +486,29 @@ offset_top = 2.0
 offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
-offset_transform_enabled = true
 text = "Long Artist - Even Longer Title"
 label_settings = SubResource("LabelSettings_0pn3c")
-vertical_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
 [node name="Details" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text" unique_id=1843119036]
 layout_mode = 2
-offset_transform_enabled = true
-offset_transform_position = Vector2(0, 8)
-offset_transform_visual_only = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details" unique_id=1188854303]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="Mapper" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=1889073238]
+[node name="Mapper" type="RichTextLabel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=2078438243]
 layout_mode = 2
-text = "by: Mapper, Mapper, Mapper, Mapper"
-label_settings = SubResource("LabelSettings_ear6i")
-clip_text = true
-text_overrun_behavior = 3
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.39215687)
+theme_override_constants/shadow_outline_size = 1
+theme_override_constants/shadow_offset_y = 2
+bbcode_enabled = true
+text = "[color=#c8c8c8]by[/color] Mapper "
+fit_content = true
+autowrap_mode = 0
 
 [node name="Difficulty" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=2103154130]
 layout_mode = 2
@@ -485,7 +520,6 @@ text_overrun_behavior = 3
 
 [node name="Notes" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=200648501]
 layout_mode = 2
-size_flags_vertical = 10
 text = "1230 notes"
 label_settings = SubResource("LabelSettings_vr0hc")
 
@@ -495,9 +529,7 @@ mouse_filter = 2
 
 [node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
 layout_mode = 2
-size_flags_vertical = 4
-offset_transform_position = Vector2(0, 6)
-offset_transform_visual_only = false
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ikspe")
 
 [node name="Ranking" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/RankingPill" unique_id=1500989616]
@@ -509,9 +541,7 @@ vertical_alignment = 1
 
 [node name="NotablePill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=153266238]
 layout_mode = 2
-size_flags_vertical = 4
-offset_transform_position = Vector2(0, 6)
-offset_transform_visual_only = false
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_27haj")
 
 [node name="Notable" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/NotablePill" unique_id=89549222]
@@ -523,32 +553,51 @@ vertical_alignment = 1
 
 [node name="Duration" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1613545318]
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 8
+size_flags_horizontal = 2
 text = "00:00"
 label_settings = SubResource("LabelSettings_vofg3")
+text_overrun_behavior = 3
 
-[node name="Download" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate" unique_id=1787800176]
+[node name="RightPanel" type="Control" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row" unique_id=1150644064]
+custom_minimum_size = Vector2(15, 0)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_ear6i")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_3usyh")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_i5ncw")
-theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_27haj")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_ikspe")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_t1djq")
+mouse_filter = 2
 
-[node name="Dim" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Download" unique_id=673707878]
-modulate = Color(1, 1, 1, 0)
+[node name="Panel" type="Panel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel" unique_id=1644518063]
+self_modulate = Color(0.22352941, 0.25882354, 0.27450982, 1)
+custom_minimum_size = Vector2(15, 0)
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 11
+anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jydku")
+
+[node name="Download" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel" unique_id=1787800176]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -30.0
+offset_right = 15.0
+offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_2hrgd")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ueqk1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bwt54")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vjpuo")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_rav3o")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ikspe")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t1djq")
 
-[node name="DownloadIcon" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Download" unique_id=1657699092]
+[node name="Icon" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel/Download" unique_id=1657699092]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -556,15 +605,73 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -16.0
-offset_right = 16.0
-offset_bottom = 16.0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("7_ueqk1")
 expand_mode = 1
+
+[node name="Favorite" type="Button" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel" unique_id=1504371854]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -52.0
+offset_right = 12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ear6i")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_3usyh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8t2u")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_27haj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ikspe")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t1djq")
+
+[node name="Icon" type="TextureRect" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel/Favorite" unique_id=2012959816]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("7_ueqk1")
+expand_mode = 1
+
+[node name="Corners" type="Control" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel" unique_id=1201788807]
+modulate = Color(0.22352941, 0.25882354, 0.27450982, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(-10, 0)
+mouse_filter = 2
+
+[node name="TopCorner" type="Polygon2D" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel/Corners" unique_id=1409967721]
+polygon = PackedVector2Array(10, 0, 10, 10, 9.81, 8.05, 9.24, 6.17, 8.31, 4.44, 7.07, 2.93, 5.56, 1.69, 3.83, 0.76, 1.95, 0.19, 0, 0)
+
+[node name="BottomCorner" type="Polygon2D" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/RightPanel/Panel/Corners" unique_id=799821482]
+offset = Vector2(0, 110)
+polygon = PackedVector2Array(10, 10, 10, 0, 9.81, 1.95, 9.24, 3.83, 8.31, 5.56, 7.07, 7.07, 5.56, 8.31, 3.83, 9.24, 1.95, 9.81, 0, 10)
 
 [node name="Pagination" type="HBoxContainer" parent="Holder/Background/Layout" unique_id=49456061]
 layout_mode = 2

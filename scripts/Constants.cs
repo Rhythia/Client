@@ -42,4 +42,6 @@ public partial class Constants : Node
 
     public static readonly Color UNRANKED_COLOR = new(0xc7c7c7ff);
     public static readonly Color RANKED_COLOR = new(0x00f23cff);
+
+    public static readonly Color DOWNLOADED_COLOR = new Color(0x87fd89ff);
 }
