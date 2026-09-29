@@ -10,6 +10,8 @@ public interface ISettingsItem
 
     void SetVariant(Variant variant);
 
+    void Reset();
+
     string Id { get; }
 
     Type Type { get; }
