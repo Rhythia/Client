@@ -59,7 +59,7 @@ project/assembly_name="Rhythia"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/gde_gozen/plugin.cfg")
 
 [file_customization]
 

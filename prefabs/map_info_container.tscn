@@ -382,7 +382,6 @@ icon = ExtResource("5_1m5pv")
 icon_alignment = 1
 
 [node name="Video" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=1985048325]
-visible = false
 layout_mode = 2
 tooltip_text = "Add Video"
 focus_mode = 0
@@ -390,7 +389,6 @@ mouse_default_cursor_shape = 2
 theme = ExtResource("4_4d08m")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/icon_max_width = 24
-disabled = true
 icon = ExtResource("6_g02bu")
 icon_alignment = 1
 

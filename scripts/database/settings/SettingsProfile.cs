@@ -208,14 +208,14 @@ public partial class SettingsProfile
     /// <summary>
     /// Adjusts the video background dim
     /// </summary>
-    //[Order]
-    //public SettingsItem<double> VideoDim { get; private set; }
+    [Order]
+    public SettingsItem<double> VideoDim { get; private set; }
 
     /// <summary>
     /// Adjusts the scale of the video background
     /// </summary>
-    //[Order]
-    //public SettingsItem<double> VideoRenderScale { get; private set; }
+    [Order]
+    public SettingsItem<double> VideoRenderScale { get; private set; }
 
     /// <summary>
     /// Toggles Grid Guides
@@ -916,37 +916,37 @@ public partial class SettingsProfile
             },
         };
 
-        //VideoDim = new(80)
-        //{
-        //Id = "VideoDim",
-        //Title = "Video BG Dim",
-        //Description = "Adjusts the video background dim",
-        //Section = SettingsSection.Visual,
-        //Slider = new()
-        //{
-        //Step = 1,
-        //MinValue = 0,
-        //MaxValue = 100
-        //}
-        //};
+        VideoDim = new(80)
+        {
+            Id = "VideoDim",
+            Title = "Video BG Dim",
+            Description = "Adjusts the video background dim",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
 
         #endregion
 
         #region Video
 
-        //VideoRenderScale = new(100)
-        //{
-        //Id = "VideoRenderScale",
-        //Title = "Video BG Render Scale",
-        //Description = "Adjusts the scale of the video background",
-        //Section = SettingsSection.Visual,
-        //Slider = new()
-        //{
-        //Step = 1,
-        //MinValue = 0,
-        //MaxValue = 100
-        //}
-        //};
+        VideoRenderScale = new(100)
+        {
+            Id = "VideoRenderScale",
+            Title = "Video BG Render Scale",
+            Description = "Adjusts the scale of the video background",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100
+            }
+        };
 
         SimpleHUD = new(false)
         {
