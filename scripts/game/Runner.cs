@@ -318,7 +318,7 @@ public partial class Runner : Node3D
             {
                 mod.Activate(Attempt);
 
-                if(!NotesOnly)
+                if (!NotesOnly)
                 {
                     HudManager.DisplayModifier(mod);
                 }
