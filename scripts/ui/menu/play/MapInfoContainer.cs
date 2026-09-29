@@ -148,15 +148,15 @@ public partial class MapInfoContainer : Panel, ISkinnable
             favoriteButton.Icon = Map.Favorite ? skin.UnfavoriteButtonImage : skin.FavoriteButtonImage;
         };
 
-        //videoButton.Pressed += () =>
-        //{
-        //    videoDialog.Popup();
-        //};
+        videoButton.Pressed += () =>
+        {
+           videoDialog.Popup();
+        };
 
-        //videoDialog.FileSelected += (file) =>
-        //{
-        //    MapManager.InsertVideo(Map, file);
-        //};
+        videoDialog.FileSelected += (file) =>
+        {
+           MapManager.InsertVideo(Map, file);
+        };
 
         // copyButton.Pressed += () =>
         // {

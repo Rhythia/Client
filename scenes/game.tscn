@@ -41,6 +41,7 @@
 [ext_resource type="Script" uid="uid://cvaggwr3rrenl" path="res://scripts/game/renderers/NoteRenderer.cs" id="34_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://bc0w1ujoshiyk" path="res://user/skins/default/game/visibility_assist.png" id="36_05nbr"]
 [ext_resource type="Script" uid="uid://c8d872aoiqglo" path="res://scripts/PlayerInputController.cs" id="37_02fa5"]
+[ext_resource type="Script" uid="uid://dqo4ee3g73ock" path="res://addons/gde_gozen/VideoPlayback.cs" id="38_0sl42"]
 [ext_resource type="Script" uid="uid://dlxxg2h4cl5hj" path="res://scripts/game/ui/PauseMenu.cs" id="38_8ool0"]
 [ext_resource type="Script" uid="uid://c24b7vefbxvbh" path="res://scripts/game/ui/PlaytestOverlay.cs" id="40_m4url"]
 
@@ -220,7 +221,6 @@ texture_filter = 1
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_3p7x2"]
-size = Vector2(258.3, 210)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d5aou"]
 
@@ -708,8 +708,7 @@ fov = 70.0
 size = 5.0
 
 [node name="Video" type="MeshInstance3D" parent="Runner" unique_id=1036410191]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.479675, -0.459572, -99.9929)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
 material_override = SubResource("StandardMaterial3D_rj3ky")
 transparency = 1.0
 cast_shadow = 0
@@ -720,6 +719,17 @@ skeleton = NodePath("../..")
 transparent_bg = true
 canvas_item_default_texture_filter = 2
 size = Vector2i(1920, 1080)
+
+[node name="VideoPlayer" type="Control" parent="Runner/Video/VideoViewport" unique_id=1903130493]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("38_0sl42")
+EnableAudio = false
+metadata/_custom_type_script = "uid://dqo4ee3g73ock"
 
 [node name="QuitOverlay" type="Panel" parent="." unique_id=316579954]
 visible = false

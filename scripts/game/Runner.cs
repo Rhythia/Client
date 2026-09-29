@@ -55,9 +55,16 @@ public partial class Runner : Node3D
     [Export]
     public MeshInstance3D Cursor;
 
-    // [Export] public VideoStreamPlayer VideoStreamPlayer;
+    [Export]
+    public MeshInstance3D VideoMesh;
 
-    public override void _Ready()
+    [Export]
+    public SubViewport VideoViewport;
+
+    [Export]
+    public VideoPlayback VideoPlayer;
+
+    public override async void _Ready()
     {
         base._Ready();
 
@@ -66,7 +73,9 @@ public partial class Runner : Node3D
         Renderers ??= GetNode<Godot.Collections.Array<Renderer>>("Renderers");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
-        // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
+        VideoMesh ??= GetNode<MeshInstance3D>("Video");
+        VideoViewport ??= GetNode<SubViewport>("Video/VideoViewport");
+        VideoPlayer ??= GetNode<VideoPlayback>("Video/VideoViewport/VideoPlayer");
     }
 
     public override void _Process(double delta)
@@ -125,7 +134,7 @@ public partial class Runner : Node3D
             }
         }
 
-        // Song state check
+        // Song and video state check
 
         if (Attempt.Map.AudioBuffer != null)
         {
@@ -139,6 +148,26 @@ public partial class Runner : Node3D
             else if (SoundManager.Song.Playing && offsetProgress >= songEnd)
             {
                 SoundManager.Song.Stop();
+            }
+        }
+
+        if (Map.VideoBuffer != null && settings.VideoDim < 100 && VideoPlayer.IsOpen())
+        {
+            double offsetProgress = Attempt.Progress - settings.LocalOffset;
+            double songEnd = SoundManager.Song.Stream.GetLength() * 1000;
+
+            if (VideoPlayer.CurrentFrame >= VideoPlayer.GetVideoFrameCount())
+            {
+                VideoPlayer.Close();
+            }
+            else if (!VideoPlayer.IsPlaying && offsetProgress >= 0 && offsetProgress < songEnd)
+            {
+                VideoPlayer.SeekFrame((int)((float)Attempt.Progress / 1000f * VideoPlayer.GetVideoFramerate()));
+                VideoPlayer.Play();
+            }
+            else if (VideoPlayer.IsPlaying && offsetProgress >= songEnd)
+            {
+                VideoPlayer.Close();
             }
         }
 
@@ -353,6 +382,23 @@ public partial class Runner : Node3D
             SoundManager.Song.PitchScale = (float)Speed;
         }
 
+        if (Attempt.Map.VideoBuffer != null && settings.VideoDim < 100)
+        {
+            double parallax = (double)settings.CameraParallax;
+
+            double meshHeight = 2 * Math.Abs(Camera.Position.Z - VideoMesh.Position.Z) * Math.Tan(settings.FoV * Math.PI / 180 / 2);
+            double meshWidth = (double)VideoViewport.Size.X / VideoViewport.Size.Y * meshHeight;
+
+            QuadMesh videoQuad = (QuadMesh)VideoMesh.Mesh;
+            videoQuad.Size = new Vector2((float)meshWidth + 2 * Constants.BOUNDS.X, (float)meshHeight + 2 * Constants.BOUNDS.Y);
+
+            VideoMesh.Visible = true;
+            VideoMesh.Transparency = (float)(double)settings.VideoDim / 100f;
+
+            VideoPlayer.Path = $"{MapUtil.MapsFolder}/{Attempt.Map.Name}/video.mp4";
+            VideoPlayer.PlaybackSpeed = (float)Speed;
+        }
+
         if (Attempt.IsReplay)
         {
             for (int i = 0; i < Attempt.Replays.Length; i++)
@@ -373,9 +419,16 @@ public partial class Runner : Node3D
         SoundManager.Song.PitchScale = (float)Speed;
         SoundManager.Song.StreamPaused = !Playing;
 
+        if (Attempt.Map.VideoBuffer != null && Attempt.Progress >= 0)
+        {
+            if (Playing && VideoPlayer.IsOpen()) { VideoPlayer.Play(); }
+            else if (!Playing && VideoPlayer.IsOpen()) { VideoPlayer.Pause(); }
+        }
+
         if (Playing)
         {
             syncSongPosition();
+            syncVideoPosition();
         }
     }
 
@@ -413,6 +466,7 @@ public partial class Runner : Node3D
         RenderObjects(0);
 
         syncSongPosition();
+        syncVideoPosition();
 
         // Discord.Client.UpdateEndTime(DateTime.UtcNow.AddSeconds((Time.GetUnixTimeFromSystem() + (Attempt.Map.Length - Attempt.Progress) / 1000 / Speed)));
     }
@@ -459,6 +513,8 @@ public partial class Runner : Node3D
         {
             return;
         }
+
+        VideoPlayer.Close();
 
         // give objects a last chance
         ProcessObjects();
@@ -691,7 +747,19 @@ public partial class Runner : Node3D
             }
 
             SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
-            // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
+        }
+    }
+
+    private void syncVideoPosition()
+    {
+        if (Attempt.Map.VideoBuffer != null)
+        {
+            if (!VideoPlayer.IsPlaying && VideoPlayer.IsOpen() && Playing)
+            {
+                VideoPlayer.Play();
+            }
+
+            VideoPlayer.SeekFrame((int)((float)Attempt.Progress / 1000f * VideoPlayer.GetVideoFramerate()));
         }
     }
 }

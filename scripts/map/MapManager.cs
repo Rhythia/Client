@@ -65,10 +65,10 @@ public partial class MapManager : Node
         map.AudioBuffer = oldmap.AudioBuffer;
         map.CoverBuffer = oldmap.CoverBuffer;
 
-        Directory.Delete(map.FolderPath);
+        Directory.Delete(map.FolderPath, true);
 
         MapParser.Encode(map);
-        map.FolderPath = MapCache.GetMd5Checksum(map.FolderPath);
+        map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
     }
 
