@@ -317,6 +317,11 @@ public partial class Runner : Node3D
             foreach (var mod in Attempt.Modifiers.Where(mod => mod is AutoplayModifier))
             {
                 mod.Activate(Attempt);
+
+                if(!NotesOnly)
+                {
+                    HudManager.DisplayModifier(mod);
+                }
             }
 
             autoplayHandler = new(Attempt);
