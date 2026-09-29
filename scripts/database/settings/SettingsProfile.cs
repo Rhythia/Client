@@ -200,6 +200,12 @@ public partial class SettingsProfile
     public SettingsItem<bool> UseCursorInMenus { get; private set; }
 
     /// <summary>
+    /// Adjusts the easing when the HP Bar is updated
+    /// </summary>
+    [Order]
+    public SettingsItem<double> HPLerpValue { get; private set; }
+
+    /// <summary>
     /// Adjusts the video background dim
     /// </summary>
     //[Order]
@@ -888,6 +894,20 @@ public partial class SettingsProfile
             Title = "Use Cursor in Menus",
             Description = "Uses the skin's cursor instead of the native cursor",
             Section = SettingsSection.Visual,
+        };
+
+        HPLerpValue = new(60f)
+        {
+            Id = "HPLerpValue",
+            Title = "HP Bar Easing Value",
+            Description = "Adjusts how smooth, or harsh, the HP Bar eases in while it updates",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 1f,
+                MinValue = 10,
+                MaxValue = 100,
+            },
         };
 
         //VideoDim = new(80)
