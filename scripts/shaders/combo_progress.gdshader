@@ -29,9 +29,11 @@ void fragment() {
 	vec2 middle = (points[a] + points[b]) / 2.0;
 	float dotp = dot(normalize(point_diff), UV - middle);
 	
-	if (abs(dotp) <= distance(point_diff, vec2(0.0, 0.0)) / 2.0 + thickness && distance(UV, middle + dotp * normalize(point_diff)) <= thickness / 256.0)
-	{
-		COLOR = vec4(background_colour.rgb, 1.0);
+	float dist_to_line = distance(UV, middle + dotp * normalize(point_diff));
+	float line_alpha = smoothstep((thickness / 256.0) + fwidth(dist_to_line), (thickness / 256.0) - fwidth(dist_to_line), dist_to_line);
+	
+	if (abs(dotp) <= distance(point_diff, vec2(0.0, 0.0)) / 2.0 + thickness) {
+		COLOR = mix(COLOR, vec4(background_colour.rgb, 1.0), line_alpha);
 	}
 	
 	if (frag_angle <= progress * 360.0)
