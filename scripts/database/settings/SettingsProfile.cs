@@ -293,6 +293,12 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<bool> VSyncMenus { get; private set; }
 
+    /// <summary>
+    /// Sets the MSAA value in the viewport
+    /// </summary>
+    [Order]
+    public SettingsItem<string> AntiAliasing { get; private set; }
+
     #endregion
 
     #region Audio
@@ -1045,6 +1051,27 @@ public partial class SettingsProfile
                     DisplayServer.WindowSetVsyncMode(value ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
                 }
             },
+        };
+
+        AntiAliasing = new("Off (roughest)")
+        {
+            Id = "AntiAliasing",
+            Title = "Anti Aliasing",
+            Description = "Smoothes edges, at the cost of performance",
+            Section = SettingsSection.Video,
+            UpdateAction = (value, _) =>
+            {
+                var root = (Engine.GetMainLoop() as SceneTree)?.Root;
+                root?.Msaa3D = value switch
+                {
+                    "Off (roughest)" => Viewport.Msaa.Disabled,
+                    "2x (rough)" => Viewport.Msaa.Msaa2X,
+                    "4x (smooth)" => Viewport.Msaa.Msaa4X,
+                    "8x (smoothest)" => Viewport.Msaa.Msaa8X,
+                    _ => Viewport.Msaa.Disabled,
+                };
+            },
+            List = new("Off (roughest)") { Values = ["Off (roughest)", "2x (rough)", "4x (smooth)", "8x (smoothest)"] },
         };
 
         #endregion
