@@ -262,7 +262,6 @@ public partial class SettingsManager : Node
     {
         int pid = OS.GetProcessId();
         string executablePath = OS.GetExecutablePath();
-        OS.CreateProcess(executablePath, []); // may misbehave on macos
 
         switch (OS.GetName())
         {
