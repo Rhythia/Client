@@ -202,7 +202,13 @@ public partial class SkinManager : Node
         }
 
         var image = Image.LoadFromFile(fullPath);
-        return image != null ? ImageTexture.CreateFromImage(image) : null;
+        if (image == null)
+            return null;
+
+        image.Convert(Image.Format.Rgba8);
+        image.GenerateMipmaps();
+
+        return ImageTexture.CreateFromImage(image);
     }
 
     private static byte[] loadSound(string skinPath)
