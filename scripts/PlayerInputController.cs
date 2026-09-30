@@ -17,6 +17,8 @@ public partial class PlayerInputController : Node
 
     public event Action OnTogglePaused;
     public event Action OnRestartPressed;
+    public event Action OnQuitPressed;
+    public event Action OnQuitReleased;
     public event Action OnToggleReplayViewerVisibility;
     public event Action OnToggleShowOrthonogalCamera;
     public event Action OnPauseOrSkipPressed;
@@ -49,6 +51,7 @@ public partial class PlayerInputController : Node
             case InputEventKey { PhysicalKeycode: Key.F }:
             case InputEventKey { PhysicalKeycode: Key.P }:
             case InputEventKey { PhysicalKeycode: Key.Quoteleft }:
+            case InputEventKey { PhysicalKeycode: Key.R }:
                 handleKeyboardInput(@event);
                 break;
         }
@@ -79,6 +82,16 @@ public partial class PlayerInputController : Node
 
         switch (key)
         {
+            case { PhysicalKeycode: Key.R }:
+                if (key.Pressed)
+                {
+                    OnQuitPressed?.Invoke();
+                }
+                else
+                {
+                    OnQuitReleased?.Invoke();
+                }
+                break;
             case { PhysicalKeycode: Key.Space }:
                 if (key.Pressed)
                 {
