@@ -46,7 +46,7 @@ public partial class Game : BaseScene
 
         PlayerInputController.OnMouseMove += (relative, absolute) =>
         {
-            if (!Runner.Playing || Attempt.IsReplay)
+            if (!Runner.Playing || Attempt.IsReplay || Attempt.Modifiers.Exists(mod => mod is AutoplayModifier))
                 return;
 
             if (Attempt.Settings.AbsoluteInput)

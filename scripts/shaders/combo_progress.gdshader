@@ -31,7 +31,7 @@ void fragment() {
 	
 	float dist_to_line = distance(UV, middle + dotp * normalize(point_diff));
 	float line_alpha = smoothstep((thickness / 256.0) + fwidth(dist_to_line), (thickness / 256.0) - fwidth(dist_to_line), dist_to_line);
-	
+
 	if (abs(dotp) <= distance(point_diff, vec2(0.0, 0.0)) / 2.0 + thickness) {
 		COLOR = mix(COLOR, vec4(background_colour.rgb, 1.0), line_alpha);
 	}
