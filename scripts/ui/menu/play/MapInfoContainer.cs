@@ -150,7 +150,15 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         videoButton.Pressed += () =>
         {
-           videoDialog.Popup();
+            Map.DisableVideo = !Map.DisableVideo;
+            MapManager.Update(Map);
+
+            var skin = SkinManager.Instance.Skin;
+
+            videoButton.TooltipText = Map.DisableVideo ? "Enable Video Background" : "Disable Video Background";
+            videoButton.Icon = Map.DisableVideo ? skin.VideoDisabledButtonImage : skin.VideoEnabledButtonImage;
+
+            // videoDialog.Popup();
         };
 
         videoDialog.FileSelected += (file) =>
@@ -456,6 +464,17 @@ public partial class MapInfoContainer : Panel, ISkinnable
         cover.Texture = map.Cover;
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
         favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;
+
+        if (File.Exists($"{MapUtil.MapsFolder}/{Map.Name}/video.mp4"))
+        {
+            videoButton.TooltipText = Map.DisableVideo ? "Enable Video Background" : "Disable Video Background";
+            videoButton.Icon = Map.DisableVideo ? SkinManager.Instance.Skin.VideoDisabledButtonImage : SkinManager.Instance.Skin.VideoEnabledButtonImage;
+        }
+        else 
+        {
+            videoButton.Disabled = true;
+            videoButton.TooltipText = "Map Has No Video";
+        }
 
         artistLink.Visible = map.ArtistLink != "";
         artistLink.Text = string.Format(CultureInfo.CurrentCulture, artistLinkFormat, map.ArtistPlatform);

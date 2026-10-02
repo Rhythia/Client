@@ -151,7 +151,7 @@ public partial class Runner : Node3D
             }
         }
 
-        if (Map.VideoBuffer != null && settings.VideoDim < 100 && VideoPlayer.IsOpen())
+        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && settings.VideoDim < 100 && VideoPlayer.IsOpen())
         {
             double offsetProgress = Attempt.Progress - settings.LocalOffset;
             double songEnd = SoundManager.Song.Stream.GetLength() * 1000;
@@ -382,7 +382,7 @@ public partial class Runner : Node3D
             SoundManager.Song.PitchScale = (float)Speed;
         }
 
-        if (Attempt.Map.VideoBuffer != null && settings.VideoDim < 100)
+        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && settings.VideoDim < 100)
         {
             double parallax = (double)settings.CameraParallax;
 
@@ -392,11 +392,16 @@ public partial class Runner : Node3D
             QuadMesh videoQuad = (QuadMesh)VideoMesh.Mesh;
             videoQuad.Size = new Vector2((float)meshWidth + 2 * Constants.BOUNDS.X, (float)meshHeight + 2 * Constants.BOUNDS.Y);
 
-            VideoMesh.Visible = true;
-            VideoMesh.Transparency = (float)(double)settings.VideoDim / 100f;
-
             VideoPlayer.Path = $"{MapUtil.MapsFolder}/{Attempt.Map.Name}/video.mp4";
             VideoPlayer.PlaybackSpeed = (float)Speed;
+
+            VideoMesh.Transparency = 1;
+            VideoMesh.Visible = true;
+            // VideoMesh.Transparency = (float)(double)settings.VideoDim / 100f;
+
+            Tween fadeIn = VideoMesh.CreateTween();
+            fadeIn.TweenProperty(VideoMesh, "transparency", (float)(double)settings.VideoDim / 100f, Math.Abs(Attempt.Progress) / 1000).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In); // assuming Attempt.Progress < 0
+            fadeIn.Play();
         }
 
         if (Attempt.IsReplay)
@@ -419,7 +424,7 @@ public partial class Runner : Node3D
         SoundManager.Song.PitchScale = (float)Speed;
         SoundManager.Song.StreamPaused = !Playing;
 
-        if (Attempt.Map.VideoBuffer != null && Attempt.Progress >= 0)
+        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && Attempt.Progress >= 0)
         {
             if (Playing && VideoPlayer.IsOpen()) { VideoPlayer.Play(); }
             else if (!Playing && VideoPlayer.IsOpen()) { VideoPlayer.Pause(); }
@@ -752,9 +757,9 @@ public partial class Runner : Node3D
 
     private void syncVideoPosition()
     {
-        if (Attempt.Map.VideoBuffer != null)
+        if (!Attempt.Map.DisableVideo && Attempt.Map.VideoBuffer != null && VideoPlayer.IsOpen())
         {
-            if (!VideoPlayer.IsPlaying && VideoPlayer.IsOpen() && Playing)
+            if (!VideoPlayer.IsPlaying && Playing)
             {
                 VideoPlayer.Play();
             }

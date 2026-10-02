@@ -116,6 +116,24 @@ public partial class SettingsProfile
     public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
+    /// Sets the default color of the space
+    /// </summary>
+    [Order]
+    public SettingsItem<Color> SpaceColor { get; private set; }
+
+    /// <summary>
+    /// Toggles the use of a custom color
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> CustomSpaceColor { get; private set; }
+
+    /// <summary>
+    /// Use void background when video background is visible
+    /// </summary>
+    // [Order]
+    // public SettingsItem<bool> VideoBgBlankSpace { get; private set; }
+
+    /// <summary>
     /// Toggles note hit effects for the game space
     /// </summary>
     [Order]
@@ -216,6 +234,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<double> VideoRenderScale { get; private set; }
+
+    /// <summary>
+    /// Disables video bg for all maps
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> DisableVideoGlobal { get; private set; }
 
     /// <summary>
     /// Toggles Grid Guides
@@ -718,6 +742,37 @@ public partial class SettingsProfile
             },
         };
 
+        SpaceColor = new(Color.Color8(0, 0, 0, 0))
+        {
+            Id = "SpaceColor",
+            Title = "Space Color",
+            Description = "Changes the color of the space (only when space hit effects is off)",
+            Section = SettingsSection.Spaces,
+        };
+
+        CustomSpaceColor = new(false)
+        {
+            Id = "CustomSpaceColor",
+            Title = "Custom Space Color",
+            Description = "Toggles the use of a custom space color",
+            Section = SettingsSection.Spaces,
+            UpdateAction = (_, init) =>
+            {
+                if ((bool)CustomSpaceColor.GetVariant())
+                {
+                    SpaceHitEffects.SetVariant(false);
+                }
+            },
+        };
+
+        // VideoBgBlankSpace = new(false)
+        // {
+        //     Id = "VideoBgBlankSpace",
+        //     Title = "Use Void Space For Video Backgrounds",
+        //     Description = "Use the void game space when video background is visible",
+        //     Section = SettingsSection.Visual,
+        // };
+
         SpaceHitEffects = new(true)
         {
             Id = "SpaceHitEffects",
@@ -916,6 +971,10 @@ public partial class SettingsProfile
             },
         };
 
+        #endregion
+
+        #region Video
+
         VideoDim = new(80)
         {
             Id = "VideoDim",
@@ -930,10 +989,6 @@ public partial class SettingsProfile
             }
         };
 
-        #endregion
-
-        #region Video
-
         VideoRenderScale = new(100)
         {
             Id = "VideoRenderScale",
@@ -946,6 +1001,14 @@ public partial class SettingsProfile
                 MinValue = 0,
                 MaxValue = 100
             }
+        };
+
+        DisableVideoGlobal = new(false)
+        {
+            Id = "DisableVideoGlobal",
+            Title = "Disable All Video Backgrounds",
+            Description = "Don't show video backgrounds for any map",
+            Section = SettingsSection.Visual,
         };
 
         SimpleHUD = new(false)
