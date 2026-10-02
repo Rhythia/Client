@@ -73,9 +73,9 @@ public partial class SkinProfile : RefCounted
 
     public ImageTexture DeleteButtonImage { get; set; } = new();
 
-    public ImageTexture AddVideoButtonImage { get; set; } = new();
+    public ImageTexture VideoEnabledButtonImage { get; set; } = new();
 
-    public ImageTexture RemoveVideoButtonImage { get; set; } = new();
+    public ImageTexture VideoDisabledButtonImage { get; set; } = new();
 
     public ImageTexture GrabberNormalImage { get; set; } = new();
 

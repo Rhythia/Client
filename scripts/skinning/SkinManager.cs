@@ -94,8 +94,8 @@ public partial class SkinManager : Node
         skin.UnfavoriteButtonImage = loadTexture("ui/buttons/unfavorite.png");
         skin.CopyButtonImage = loadTexture("ui/buttons/copy.png");
         skin.DeleteButtonImage = loadTexture("ui/buttons/delete.png");
-        skin.AddVideoButtonImage = loadTexture("ui/buttons/add_video.png");
-        skin.RemoveVideoButtonImage = loadTexture("ui/buttons/remove_video.png");
+        skin.VideoEnabledButtonImage = loadTexture("ui/buttons/add_video.png");
+        skin.VideoDisabledButtonImage = loadTexture("ui/buttons/remove_video.png");
 
         skin.GrabberNormalImage = loadTexture("ui/buttons/grabber_normal.png");
         skin.GrabberPressedImage = loadTexture("ui/buttons/grabber_pressed.png");
