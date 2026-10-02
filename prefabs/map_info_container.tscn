@@ -419,7 +419,7 @@ icon_alignment = 1
 [node name="Video" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=1985048325]
 visible = false
 layout_mode = 2
-tooltip_text = "Add Video"
+tooltip_text = "Disable Video Background"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("4_4d08m")

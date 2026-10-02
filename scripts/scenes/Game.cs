@@ -224,7 +224,13 @@ public partial class Game : BaseScene
         StartQueued = true;
 
         var parsedMap = MapParser.Decode(map.FolderPath, Rhythia.AudioFilePath);
-        Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays);
+
+        bool mapDisableVideo = DatabaseService.Connection.Get<Map>(map.Id).DisableVideo;
+        bool globalVideoDisable = SettingsManager.Instance.Settings.DisableVideoGlobal;
+        bool disableVideo = mapDisableVideo || globalVideoDisable;
+
+        Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays, disableVideo: disableVideo);
+        GD.Print(Attempt.DisableVideo);
 
         SceneManager.Load("res://scenes/game.tscn");
     }

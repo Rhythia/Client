@@ -48,7 +48,7 @@ public partial class PauseMenu : Panel
         SoundManager.Song.PitchScale = (float)attempt.Speed;
         SoundManager.Song.StreamPaused = !runner.Playing;
 
-        if (attempt.Map.VideoBuffer != null && attempt.Progress >= 0 && runner.VideoPlayer.IsOpen())
+        if (!attempt.DisableVideo && attempt.Map.VideoBuffer != null && attempt.Progress >= 0 && runner.VideoPlayer.IsOpen())
         {
             if (runner.Playing) { runner.VideoPlayer.Play(); }
             else if (!runner.Playing) { runner.VideoPlayer.Pause(); }
