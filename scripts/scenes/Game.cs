@@ -226,13 +226,14 @@ public partial class Game : BaseScene
         var parsedMap = MapParser.Decode(map.FolderPath, Rhythia.AudioFilePath);
 
         bool mapDisableVideo = DatabaseService.Connection.Get<Map>(map.Id).DisableVideo;
-        bool globalVideoDisable = SettingsManager.Instance.Settings.DisableVideoGlobal;
+        bool globalVideoDisable = (bool)SettingsManager.Instance.Settings.DisableVideoGlobal;
         bool disableVideo = mapDisableVideo || globalVideoDisable;
 
         Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays, disableVideo: disableVideo);
-        GD.Print(Attempt.DisableVideo);
 
-        SceneManager.Load("res://scenes/game.tscn");
+        bool useVoidSpace = (bool)SettingsManager.Instance.Settings.VideoBgVoidSpace && !disableVideo;
+
+        SceneManager.Load("res://scenes/game.tscn", forceVoidBg: useVoidSpace);
     }
 
     public void Restart()

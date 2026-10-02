@@ -135,8 +135,8 @@ public partial class SettingsProfile
     /// <summary>
     /// Use void background when video background is visible
     /// </summary>
-    // [Order]
-    // public SettingsItem<bool> VideoBgBlankSpace { get; private set; }
+    [Order]
+    public SettingsItem<bool> VideoBgVoidSpace { get; private set; }
 
     /// <summary>
     /// Toggles note hit effects for the game space
@@ -789,13 +789,13 @@ public partial class SettingsProfile
             },
         };
 
-        // VideoBgBlankSpace = new(false)
-        // {
-        //     Id = "VideoBgBlankSpace",
-        //     Title = "Use Void Space For Video Backgrounds",
-        //     Description = "Use the void game space when video background is visible",
-        //     Section = SettingsSection.Visual,
-        // };
+        VideoBgVoidSpace = new(false)
+        {
+            Id = "VideoBgVoidSpace",
+            Title = "Use Void Space For Video Backgrounds",
+            Description = "Use the void game space when video background is visible",
+            Section = SettingsSection.Spaces,
+        };
 
         SpaceHitEffects = new(true)
         {
@@ -1024,7 +1024,7 @@ public partial class SettingsProfile
             Id = "VideoDim",
             Title = "Video BG Dim",
             Description = "Adjusts the video background dim",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             Slider = new()
             {
                 Step = 1,
@@ -1038,7 +1038,7 @@ public partial class SettingsProfile
             Id = "VideoRenderScale",
             Title = "Video BG Render Scale",
             Description = "Adjusts the scale of the video background",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             Slider = new()
             {
                 Step = 1,
@@ -1052,7 +1052,7 @@ public partial class SettingsProfile
             Id = "DisableVideoGlobal",
             Title = "Disable All Video Backgrounds",
             Description = "Don't show video backgrounds for any map",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
         };
 
         SimpleHUD = new(false)
