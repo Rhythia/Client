@@ -10,6 +10,8 @@ public interface ISettingsItem
 
     void SetVariant(Variant variant);
 
+    void Reset();
+
     string Id { get; }
 
     Type Type { get; }
@@ -17,6 +19,8 @@ public interface ISettingsItem
     string Title { get; }
 
     string Description { get; }
+
+    string Placeholder { get; }
 
     ISettingsList List { get; }
 

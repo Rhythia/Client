@@ -144,10 +144,6 @@ public partial class Results : BaseScene
                     break;
             }
         }
-        else if (@event is InputEventMouseMotion eventMouseMotion)
-        {
-            MousePosition = eventMouseMotion.Position;
-        }
         else if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {
             switch (eventMouseButton.ButtonIndex)

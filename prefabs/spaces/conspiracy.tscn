@@ -10,13 +10,7 @@
 
 [sub_resource type="Environment" id="Environment_n6lso"]
 background_mode = 1
-background_color = Color(0.06053035, 0.06053035, 0.060530342, 1)
-glow_intensity = 1.5
-glow_bloom = 0.15
-fog_enabled = true
-fog_light_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
-fog_light_energy = 0.1
-fog_density = 0.05
+background_color = Color(0.017732391, 0.01773239, 0.017732402, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fp3uj"]
 render_priority = 1
@@ -74,6 +68,8 @@ transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("4_xo752")
 uv1_scale = Vector3(1, 20, 1)
+distance_fade_mode = 1
+distance_fade_min_distance = 30.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_rc4du"]
 material = SubResource("StandardMaterial3D_ay2bh")
@@ -83,6 +79,8 @@ transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("5_iimi0")
 uv1_scale = Vector3(1, 20, 1)
+distance_fade_mode = 1
+distance_fade_min_distance = 30.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_xig5v"]
 lightmap_size_hint = Vector2i(12, 12)

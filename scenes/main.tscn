@@ -12,15 +12,16 @@
 [ext_resource type="Script" uid="uid://carutkgoqpr4e" path="res://scripts/ui/MenuCursor.cs" id="9_choun"]
 [ext_resource type="Script" uid="uid://bmq7ajx48l7ng" path="res://scripts/ui/FPSCounter.cs" id="10_choun"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8skyv"]
-bg_color = Color(0.0360807, 0.0300716, 0.0527505, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1q06g"]
+bg_color = Color(0, 0, 0, 0.8784314)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m7m67"]
-bg_color = Color(0.0235294, 0.0196078, 0.0352941, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_choun"]
+bg_color = Color(0, 0, 0, 0.98039216)
+border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -62,15 +63,15 @@ Button/styles/hover = SubResource("StyleBoxFlat_6kbgk")
 Button/styles/normal = SubResource("StyleBoxFlat_8pig8")
 Button/styles/pressed = SubResource("StyleBoxFlat_y08lf")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yp26f"]
-bg_color = Color(0.0235294, 0.0196078, 0.0352941, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ya4ey"]
+bg_color = Color(0, 0, 0, 0.98039216)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="LabelSettings" id="LabelSettings_osuri"]
-font_size = 26
+font_size = 24
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pwsiv"]
 bg_color = Color(0, 0, 0, 1)
@@ -135,7 +136,7 @@ render_target_update_mode = 4
 visible = false
 z_index = 1
 
-[node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog")]
+[node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog", "UserFolderDialog")]
 visible = false
 z_index = 1
 anchors_preset = 15
@@ -147,6 +148,7 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0.501961)
 script = ExtResource("2_o6xl0")
 ImportNightlyDialog = NodePath("ImportNightlyDialog")
+UserFolderDialog = NodePath("UserFolderDialog")
 
 [node name="Hide" type="Button" parent="Settings" unique_id=1153372742]
 self_modulate = Color(1, 1, 1, 0)
@@ -167,7 +169,7 @@ anchor_top = 0.25
 anchor_right = 0.75
 anchor_bottom = 0.75
 theme = ExtResource("3_tipki")
-theme_override_styles/panel = SubResource("StyleBoxFlat_8skyv")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1q06g")
 
 [node name="Dim" type="Panel" parent="Settings/Holder" unique_id=289656473]
 layout_mode = 1
@@ -177,7 +179,18 @@ anchor_bottom = 1.0
 offset_top = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_m7m67")
+theme_override_styles/panel = SubResource("StyleBoxFlat_choun")
+
+[node name="Separator1" type="ColorRect" parent="Settings/Holder/Dim" unique_id=1127923845]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.050980393, 0.050980393, 0.050980393, 1)
 
 [node name="Categories" type="Panel" parent="Settings/Holder" unique_id=1823496670]
 layout_mode = 1
@@ -298,16 +311,21 @@ theme = ExtResource("3_tipki")
 alignment = 1
 fit_to_longest_item = false
 
-[node name="Button" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1397608326]
+[node name="ButtonHBoxContainer" type="HBoxContainer" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=380660075]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.7
 anchor_right = 1.0
-anchor_bottom = 1.0
 offset_top = 4.0
 offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 0
+theme_override_constants/separation = 8
+
+[node name="Button" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate/ButtonHBoxContainer" unique_id=1397608326]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
@@ -351,7 +369,7 @@ anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 40.0
 theme = ExtResource("3_tipki")
-theme_override_styles/panel = SubResource("StyleBoxFlat_yp26f")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ya4ey")
 
 [node name="Title" type="Label" parent="Settings/Holder/Header" unique_id=640204085]
 layout_mode = 1
@@ -359,6 +377,7 @@ anchors_preset = -1
 anchor_right = 0.6
 anchor_bottom = 1.0
 offset_left = 8.0
+offset_top = 2.0
 offset_right = -8.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -442,6 +461,12 @@ access = 2
 filters = PackedStringArray("*.json")
 use_native_dialog = true
 
+[node name="UserFolderDialog" type="FileDialog" parent="Settings" unique_id=1587875798]
+title = "Open a Directory"
+file_mode = 2
+access = 2
+use_native_dialog = true
+
 [node name="Volume" type="Panel" parent="." unique_id=1219254705]
 modulate = Color(1, 1, 1, 0)
 z_index = 1
@@ -493,6 +518,39 @@ anchors_preset = -1
 anchor_bottom = 1.0
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="Offset" type="Panel" parent="." unique_id=1452613721]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+z_as_relative = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = -38.0
+offset_right = 128.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_o6xl0")
+
+[node name="Label" type="Label" parent="Offset" unique_id=897770917]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = -10.667001
+anchor_right = 1.0
+anchor_bottom = -6.333
+offset_top = 0.0020065308
+offset_bottom = -0.0019989014
+grow_horizontal = 2
+grow_vertical = 0
+text = "Current Offset is: idfkms"
+label_settings = SubResource("LabelSettings_tipki")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Cursor" type="TextureRect" parent="." unique_id=1518183282]
 visible = false

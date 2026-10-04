@@ -200,6 +200,12 @@ public partial class SettingsProfile
     public SettingsItem<bool> UseCursorInMenus { get; private set; }
 
     /// <summary>
+    /// Adjusts the easing when the HP Bar is updated
+    /// </summary>
+    [Order]
+    public SettingsItem<double> HPLerpValue { get; private set; }
+
+    /// <summary>
     /// Adjusts the video background dim
     /// </summary>
     //[Order]
@@ -287,6 +293,12 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<bool> VSyncMenus { get; private set; }
 
+    /// <summary>
+    /// Sets the MSAA value in the viewport
+    /// </summary>
+    [Order]
+    public SettingsItem<string> AntiAliasing { get; private set; }
+
     #endregion
 
     #region Audio
@@ -366,6 +378,18 @@ public partial class SettingsProfile
     #endregion
 
     #region Other
+
+    [Order]
+    /// <summary>
+    /// Sets a custom user folder
+    /// <summary>
+    public SettingsItem<string> SetUserFolderPath { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// File dialog for the user folder path selection
+    /// <summary>
+    public SettingsItem<Variant> SetUserFolderDialog { get; private set; }
 
     [Order]
     /// <summary>
@@ -878,6 +902,20 @@ public partial class SettingsProfile
             Section = SettingsSection.Visual,
         };
 
+        HPLerpValue = new(60f)
+        {
+            Id = "HPLerpValue",
+            Title = "HP Bar Easing Value",
+            Description = "Adjusts how smooth, or harsh, the HP Bar eases in while it updates",
+            Section = SettingsSection.Visual,
+            Slider = new()
+            {
+                Step = 1f,
+                MinValue = 10,
+                MaxValue = 100,
+            },
+        };
+
         //VideoDim = new(80)
         //{
         //Id = "VideoDim",
@@ -938,7 +976,7 @@ public partial class SettingsProfile
         {
             Id = "VisibilityAssist",
             Title = "Visibility Assist",
-            Description = "Enables a dark radial fade to help with visibility",
+            Description = "Enables a dark radial fade to help with visibility (impacts performance significantly)",
             Section = SettingsSection.Visual,
         };
 
@@ -1013,6 +1051,27 @@ public partial class SettingsProfile
                     DisplayServer.WindowSetVsyncMode(value ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
                 }
             },
+        };
+
+        AntiAliasing = new("Off (roughest)")
+        {
+            Id = "AntiAliasing",
+            Title = "Anti Aliasing",
+            Description = "Smoothes edges, at the cost of performance",
+            Section = SettingsSection.Video,
+            UpdateAction = (value, _) =>
+            {
+                var root = (Engine.GetMainLoop() as SceneTree)?.Root;
+                root?.Msaa3D = value switch
+                {
+                    "Off (roughest)" => Viewport.Msaa.Disabled,
+                    "2x (rough)" => Viewport.Msaa.Msaa2X,
+                    "4x (smooth)" => Viewport.Msaa.Msaa4X,
+                    "8x (smoothest)" => Viewport.Msaa.Msaa8X,
+                    _ => Viewport.Msaa.Disabled,
+                };
+            },
+            List = new("Off (roughest)") { Values = ["Off (roughest)", "2x (rough)", "4x (smooth)", "8x (smoothest)"] },
         };
 
         #endregion
@@ -1301,6 +1360,70 @@ public partial class SettingsProfile
             SaveToDisk = false,
         };
 
+        SetUserFolderPath = new(Constants.USER_FOLDER)
+        {
+            Id = "SetUserFolderPath",
+            Title = "Path To User Folder",
+            Description = "Set the path where Rhythia stores it's files",
+            Section = SettingsSection.Other,
+            Placeholder = Constants.DEFAULT_USER_FOLDER,
+            UpdateAction = (value, _) =>
+            {
+                SettingsManager.SetUserFolder(value);
+            },
+            SaveToDisk = false,
+        };
+
+        SetUserFolderDialog = new(default)
+        {
+            Id = "SetUserFolderDialog",
+            Title = "", // belongs to the field above
+            Description = "",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new()
+                {
+                    Title = "Open Previous User Folder",
+                    Description = "Open the path to the previously used User Folder",
+                    OnPressed = () =>
+                    {
+                        if (Constants.PREVIOUS_USER_FOLDER == "")
+                        {
+                            var popup = new OptionPopup(
+                                "No Previous User Folder Found",
+                                "You have no previous user folder. Either you didn't change your User Folder (and that's fine) or the record of it got deleted."
+                            );
+
+                            popup.AddOption(
+                                "Ok",
+                                Callable.From(() =>
+                                {
+                                    SettingsMenu.Instance.Show();
+                                })
+                            );
+
+                            SettingsMenu.Instance.Hide();
+                            popup.Show();
+                        }
+                        else
+                        {
+                            OS.ShellShowInFileManager(Constants.PREVIOUS_USER_FOLDER);
+                        }
+                    },
+                },
+                new()
+                {
+                    Title = "Set User Folder Path",
+                    Description = "Choose the path to the User Folder",
+                    OnPressed = () =>
+                    {
+                        SettingsMenu.Instance.UserFolderDialog.PopupCentered();
+                    },
+                },
+            ],
+        };
+
         DisplayFPS = new(true)
         {
             Id = "DisplayFPS",
@@ -1543,6 +1666,11 @@ public partial class SettingsProfile
         SettingsMenu.Instance.UpdateProfileSelection();
 
         ToastNotification.Notify($"Created profile '{profileName}'");
+    }
+
+    public static void ConfigureSetUserFolderPath(string userFolderPath)
+    {
+        SettingsManager.Instance.Settings.SetUserFolderPath.Value = userFolderPath;
     }
 
     private static void importColorsetsFromNightly()

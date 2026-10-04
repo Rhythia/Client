@@ -379,7 +379,7 @@ public partial class MapList : Panel, ISkinnable
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event is InputEventMouseButton mouseButton && !mouseButton.CtrlPressed && !mouseButton.AltPressed)
+        if (@event is InputEventMouseButton mouseButton && !mouseButton.CtrlPressed && !mouseButton.AltPressed && !mouseButton.ShiftPressed)
         {
             switch (mouseButton.ButtonIndex)
             {

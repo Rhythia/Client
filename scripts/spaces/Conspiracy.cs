@@ -47,9 +47,6 @@ public partial class Conspiracy : BaseSpace
                 scrollingText.Position = scrollingTextStartPos;
             }
         }
-        else
-        {
-            scrollingText.Visible = settings.SpaceEffects;
-        }
+        scrollingText.Visible = settings.SpaceEffects;
     }
 }

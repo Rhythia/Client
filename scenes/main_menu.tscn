@@ -53,6 +53,7 @@
 [ext_resource type="Texture2D" uid="uid://c60rl8itmawe7" path="res://textures/ui/github_pressed.png" id="42_mb34c"]
 [ext_resource type="Texture2D" uid="uid://cfl8us0rpkpqs" path="res://textures/ui/github_hovered.png" id="43_sgh51"]
 [ext_resource type="Script" uid="uid://c1235cyjfh4rl" path="res://scripts/ui/LinkPopupButton.cs" id="44_ybca7"]
+[ext_resource type="Script" uid="uid://dqi64p5jl23cv" path="res://scripts/ui/menu/VersionLabel.cs" id="45_mb34c"]
 [ext_resource type="Texture2D" uid="uid://8du82a5dxjdk" path="res://user/skins/default/ui/jukebox_play.png" id="48_q1l3m"]
 [ext_resource type="Texture2D" uid="uid://bpsvcunhigs6c" path="res://user/skins/default/ui/jukebox_skip.png" id="49_7u5pb"]
 
@@ -1646,7 +1647,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_eku7s")
 
-[node name="Credits" type="Panel" parent="Menus/Extras" unique_id=1419690382]
+[node name="Contributors" type="Panel" parent="Menus/Extras" unique_id=1419690382]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 1
 anchors_preset = -1
@@ -1662,7 +1663,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qw82i")
 script = ExtResource("39_b4jiv")
 
-[node name="Background" type="Panel" parent="Menus/Extras/Credits" unique_id=696055577]
+[node name="Background" type="Panel" parent="Menus/Extras/Contributors" unique_id=696055577]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1671,17 +1672,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jvjdd")
 
-[node name="Header" type="Label" parent="Menus/Extras/Credits" unique_id=1984432132]
+[node name="Header" type="Label" parent="Menus/Extras/Contributors" unique_id=1984432132]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_top = 8.0
 grow_horizontal = 2
-text = "CREDITS"
+text = "CONTRIBUTORS"
 label_settings = SubResource("LabelSettings_5g0q6")
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Menus/Extras/Credits" unique_id=1667657081]
+[node name="ScrollContainer" type="ScrollContainer" parent="Menus/Extras/Contributors" unique_id=1667657081]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -1692,128 +1693,120 @@ grow_vertical = 2
 theme = ExtResource("6_engjn")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_b4jiv")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Extras/Credits/ScrollContainer" unique_id=299647207]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Extras/Contributors/ScrollContainer" unique_id=299647207]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="nyuwaea" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=424408434]
+[node name="nyuwaea" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=424408434]
 modulate = Color(0.8156863, 0.7411765, 1, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]nyuwaea
-[color=ffffffbb][font_size=16]Developer"
+text = "[font_size=20]nyuwaea"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="fog" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=670577229]
+[node name="fog" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=670577229]
 modulate = Color(0.73922217, 0.46258998, 0.9705774, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]fog
-[color=ffffffbb][font_size=16]Developer"
+text = "[font_size=20]fog"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="nyarw" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=427847284]
+[node name="nyarw" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=427847284]
 modulate = Color(0.2627451, 1, 0.9529412, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]nyarw
-[color=ffffffbb][font_size=16]Contributor"
+text = "[font_size=20]nyarw"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="lulusuki" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1649530311]
+[node name="lulusuki" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=1649530311]
 modulate = Color(1, 0.7411765, 1, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]lulusuki
-[color=ffffffbb][font_size=16]Contributor"
+text = "[font_size=20]lulusuki"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="cake" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1336553338]
-modulate = Color(0.49546552, 0.9457299, 0.77711904, 1)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-text = "[font_size=20]cake
-[color=ffffffbb][font_size=16]Contributor"
-fit_content = true
-horizontal_alignment = 1
-
-[node name="noobour" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1684835200]
+[node name="noobour" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=1684835200]
 modulate = Color(0.05882353, 0.5058824, 0.7176471, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]noobour
-[color=ffffffbb][font_size=16]Contributor"
+text = "[font_size=20]noobour"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="allusionist" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=2118833467]
+[node name="cake" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=1336553338]
+modulate = Color(0.49546552, 0.9457299, 0.77711904, 1)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "[font_size=20]cake"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="allusionist" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=2118833467]
 modulate = Color(0.9814784, 0.7174443, 0.6400969, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]allusionist
-[color=ffffffbb][font_size=16]Contributor"
+text = "[font_size=20]allusionist"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="kiwie" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=699076624]
+[node name="kiwie" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=699076624]
 modulate = Color(1, 0.8156863, 0.53333336, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]kiwie
-[color=ffffffbb][font_size=16]Contributor"
+text = "[font_size=20]kiwie"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="snuz" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=1573219614]
+[node name="snuz" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=1573219614]
 modulate = Color(0.59607846, 0.9843137, 0.59607846, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20]snuz
-[color=ffffffbb][font_size=16]Contributor"
+text = "[font_size=20]snuz"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="jonyro" type="RichTextLabel" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer" unique_id=478363351]
+[node name="jonvy" type="RichTextLabel" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer" unique_id=478363351]
 modulate = Color(0.9607843, 0.60784316, 0.6784314, 1)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "[font_size=20][u]jonyro / jrolly
+text = "[font_size=20][u]jonvy
 [color=ffffffbb][font_size=16]\"Redshift\" (Menu theme) artist"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="Menus/Extras/Credits/ScrollContainer/VBoxContainer/jonyro" unique_id=1840543780]
+[node name="Button" type="Button" parent="Menus/Extras/Contributors/ScrollContainer/VBoxContainer/jonvy" unique_id=1840543780]
 show_behind_parent = true
 clip_contents = true
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 33.0
-offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 flat = true
 script = ExtResource("44_ybca7")
-Link = "https://soundcloud.com/jonyro"
+Link = "https://soundcloud.com/jonvyost"
 
-[node name="Outline" type="Panel" parent="Menus/Extras/Credits" unique_id=239136532]
+[node name="Outline" type="Panel" parent="Menus/Extras/Contributors" unique_id=239136532]
 material = SubResource("ShaderMaterial_yxnar")
 layout_mode = 1
 anchors_preset = 15
@@ -1866,9 +1859,10 @@ grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "Rhythia [font_size=12][color=ffffffa0]0.2-rc1"
+text = "Rhythia [font_size=12][color=ffffffa0]{0}"
 shortcut_keys_enabled = false
 vertical_alignment = 1
+script = ExtResource("45_mb34c")
 
 [node name="MenuButtons" type="HBoxContainer" parent="TopBar" unique_id=1927365414]
 layout_mode = 1

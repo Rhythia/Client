@@ -120,6 +120,7 @@ public partial class SkinManager : Node
         skin.MapInfoCoverBackgroundImage = loadTexture("ui/play/mapinfo_cover_background.png");
 
         skin.ModNoFailImage = loadTexture("modifiers/nofail.png");
+        skin.ModAutoplayImage = loadTexture("modifiers/autoplay.png");
         skin.ModGhostImage = loadTexture("modifiers/ghost.png");
         skin.ModStrobeImage = loadTexture("modifiers/strobe.png");
         skin.ModChaosImage = loadTexture("modifiers/chaos.png");
@@ -202,7 +203,13 @@ public partial class SkinManager : Node
         }
 
         var image = Image.LoadFromFile(fullPath);
-        return image != null ? ImageTexture.CreateFromImage(image) : null;
+        if (image == null)
+            return null;
+
+        image.Convert(Image.Format.Rgba8);
+        image.GenerateMipmaps();
+
+        return ImageTexture.CreateFromImage(image);
     }
 
     private static byte[] loadSound(string skinPath)
