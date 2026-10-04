@@ -484,7 +484,7 @@ public partial class Runner : Node3D
             Stats.Instance.GamePlaytime += (Time.GetTicksUsec() - Attempt.TimeStarted) / 1000000;
             Stats.Instance.TotalDistance += (ulong)Attempt.DistanceMM;
 
-            if (Attempt.StartFrom == 0)
+            if (Attempt.StartFrom == 0 && !autoplayEnabled)
             {
                 if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}"))
                 {
