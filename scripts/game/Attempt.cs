@@ -94,7 +94,8 @@ public partial class Attempt : RefCounted
 
         uint noteWeightIterations = (uint)Math.Clamp(Math.Floor((double)Map.Notes.Length / ComboMultiplierIncrement), 1, 7);
         NoteWeight += Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * (1 + noteWeightIterations) * noteWeightIterations / 2;
-        NoteWeight += ((uint)Map.Notes.Length - Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * noteWeightIterations) * (noteWeightIterations + 1);
+        NoteWeight +=
+            ((uint)Map.Notes.Length - Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * noteWeightIterations) * (noteWeightIterations + 1);
 
         if (Modifiers.Count >= 1)
         {
