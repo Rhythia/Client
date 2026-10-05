@@ -74,6 +74,8 @@ public partial class MapList : Panel, ISkinnable
     /// </summary>
     public List<Map> Maps = [];
 
+    private Panel contextMenu;
+
     private TextureRect mask;
     private TextureRect selectionCursor;
     private Panel scrollBar;
@@ -107,6 +109,7 @@ public partial class MapList : Panel, ISkinnable
     {
         Instance = this;
 
+        contextMenu = Owner.GetNode<Panel>("ContextMenu");
         mask = GetNode<TextureRect>("Mask");
         selectionCursor = GetNode<TextureRect>("SelectionCursor");
         scrollBar = GetNode<Panel>("ScrollBar");
@@ -574,12 +577,24 @@ public partial class MapList : Panel, ISkinnable
                 button.UpdateOutline(hovered ? 0.5f : 0);
             }
         };
-        button.Pressed += () =>
+
+        button.GuiInput += action =>
         {
-            if (dragDistance < 500 && Select(button.Map))
+            if (action is InputEventMouseButton mouseButton && mouseButton.Pressed)
             {
-                button.Select();
-                button.UpdateOutline(1.0f);
+                if (mouseButton.ButtonIndex == MouseButton.Left)
+                {
+                    if (dragDistance < 500 && Select(button.Map))
+                    {
+                        button.Select();
+                        button.UpdateOutline(1.0f);
+                    }
+                }
+                if (mouseButton.ButtonIndex == MouseButton.Right)
+                {
+                    ContextMenu.Show(mouseButton.GlobalPosition, button.Map);
+                    GetViewport().SetInputAsHandled();
+                }
             }
         };
 
