@@ -53,8 +53,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
     [Export]
     private Button videoButton;
 
-    [Export]
-    private FileDialog videoDialog;
+    // [Export]
+    // private FileDialog videoDialog;
 
     [Export]
     private Button copyButton;
@@ -161,10 +161,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
             // videoDialog.Popup();
         };
 
-        videoDialog.FileSelected += (file) =>
-        {
-           MapManager.InsertVideo(Map, file);
-        };
+        // videoDialog.FileSelected += (file) =>
+        // {
+        //    MapManager.InsertVideo(Map, file);
+        // };
 
         // copyButton.Pressed += () =>
         // {
