@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Godot;
 
 public partial class Runner : Node3D
@@ -61,7 +62,6 @@ public partial class Runner : Node3D
     [Export]
     public SubViewport VideoViewport;
 
-    [Export]
     public VideoPlayback VideoPlayer;
 
     public override async void _Ready()
@@ -75,7 +75,6 @@ public partial class Runner : Node3D
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         VideoMesh ??= GetNode<MeshInstance3D>("Video");
         VideoViewport ??= GetNode<SubViewport>("Video/VideoViewport");
-        VideoPlayer ??= GetNode<VideoPlayback>("Video/VideoViewport/VideoPlayer");
     }
 
     public override void _Process(double delta)
@@ -384,6 +383,8 @@ public partial class Runner : Node3D
 
         if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && settings.VideoDim < 100)
         {
+            spawnVideoPlayer();
+
             double parallax = (double)settings.CameraParallax;
 
             double meshHeight = 2 * Math.Abs(Camera.Position.Z - VideoMesh.Position.Z) * Math.Tan(settings.FoV * Math.PI / 180 / 2);
@@ -519,7 +520,9 @@ public partial class Runner : Node3D
             return;
         }
 
-        VideoPlayer.Close();
+        VideoPlayer?.SetCurrentFrame(VideoPlayer.GetVideoFrameCount());
+        VideoPlayer?.Close();
+        _ = destroyVideoPlayer();
 
         // give objects a last chance
         ProcessObjects();
@@ -766,5 +769,41 @@ public partial class Runner : Node3D
 
             VideoPlayer.SeekFrame((int)((float)Attempt.Progress / 1000f * VideoPlayer.GetVideoFramerate()));
         }
+    }
+
+    private void spawnVideoPlayer()
+    {
+        if (VideoPlayer != null)
+        {
+            Logger.Error("VideoPlayer is already populated. Skipping creation.");
+            return;
+        }
+
+        VideoPlayback player = new VideoPlayback
+        {
+            Name = "VideoPlayer",
+            EnableAudio = false
+        };
+
+        player.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+
+        VideoPlayer = player;
+
+        VideoViewport.AddChild(VideoPlayer);
+    }
+
+    private async Task destroyVideoPlayer()
+    {
+        if (VideoPlayer == null)
+        {
+            Logger.Error("VideoPlayer is already empty.");
+            return;
+        }
+
+        VideoPlayer.QueueFree();
+
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
+        VideoPlayer = null;
     }
 }
