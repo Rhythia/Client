@@ -66,6 +66,7 @@ public partial class MapManager : Node
         map.CoverBuffer = oldmap.CoverBuffer;
 
         Directory.Delete(map.FolderPath, true);
+        MapCache.RemoveMap(map);
 
         MapParser.Encode(map);
         map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
@@ -85,6 +86,7 @@ public partial class MapManager : Node
         map.CoverBuffer = oldmap.CoverBuffer;
 
         Directory.Delete(map.FolderPath, true);
+        MapCache.RemoveMap(map);
 
         MapParser.Encode(map);
         map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
