@@ -775,7 +775,7 @@ public partial class Runner : Node3D
     {
         if (VideoPlayer != null)
         {
-            Logger.Error("VideoPlayer is already populated. Skipping creation.");
+            Logger.Log("VideoPlayer is already populated. Skipping creation.");
             return;
         }
 
@@ -796,7 +796,7 @@ public partial class Runner : Node3D
     {
         if (VideoPlayer == null)
         {
-            Logger.Error("VideoPlayer is already empty.");
+            Logger.Log("VideoPlayer is already empty. Skipping.");
             return;
         }
 
