@@ -6,8 +6,6 @@ public partial class Constants : Node
 {
     public static readonly ulong STARTED = Time.GetTicksUsec();
 
-    public static readonly string ROOT_FOLDER = Directory.GetCurrentDirectory();
-
     public static readonly string DEFAULT_USER_FOLDER = OS.GetUserDataDir();
 
     public static readonly string USER_FOLDER_POINTER = $"{DEFAULT_USER_FOLDER}/user_folder_path.txt";
