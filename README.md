@@ -66,6 +66,7 @@ You can view all releases on the [Rewrite releases page](https://github.com/Rhyt
 |---|---|
 | **Windows** | [Download](https://github.com/Rhythia/Client/releases/latest/download/windows.zip) |
 | **Linux** | [Download](https://github.com/Rhythia/Client/releases/latest/download/linux.zip) |
+| **macOS** | [Download](https://github.com/Rhythia/Client/releases/latest/download/macOS.zip) |
 
 You can view the Rewrite source code [here](https://github.com/Rhythia/Client).
 
@@ -185,6 +186,7 @@ Your maps, replays, skins, and settings are stored separately from the game inst
 |---|---|
 | **Windows** | `%appdata%\Rhythia` |
 | **Linux** | `~/.local/share/Rhythia` |
+| **macOS** | `~/Library/Application Support/Rhythia` |
 
 You can also access the user folder from within the game via the **User Folder** button on the top bar.
 
@@ -247,7 +249,7 @@ We ❤️ developers! Contributions are welcome — whether it's bug fixes, feat
 | Software | Notes |
 |---|---|
 | [Godot 4.7 Stable (.NET)](https://godotengine.org/download) | The C# / .NET build is required |
-| [Git](https://git-scm.com/downloads) | Windows: Git for Windows · Linux: `git` package |
+| [Git](https://git-scm.com/downloads) | Windows: Git for Windows · Linux: `git` package · macOS: `xcode-select --install` or `brew install git` |
 | [GitHub Account](https://github.com/signup) | Needed to fork and open pull requests |
 
 **Optional:** [Visual Studio Code](https://code.visualstudio.com/) with the [godot-tools](https://marketplace.visualstudio.com/items?itemName=geequlim.godot-tools) extension.
@@ -286,6 +288,17 @@ dotnet tool restore
 2. Click **Import**.
 3. Browse to your cloned repository folder and select `project.godot`.
 4. Click **Open**.
+
+#### 4. Exporting a Build (Optional)
+
+Release builds are exported automatically by the [Release workflow](.github/workflows/release.yml) when a release is published. To export locally, install the matching [export templates](https://godotengine.org/download) and use **Project** → **Export**, or:
+
+```bash
+godot --headless --export-release "macOS" build/macOS/Rhythia.zip
+```
+
+> [!NOTE]
+> The macOS preset signs with Apple's `codesign`, so macOS builds must be exported on a Mac.
 
 ### Submitting Your Changes
 
