@@ -29,6 +29,8 @@
   - [Windows](#windows)
   - [Linux](#linux)
   - [Linux Troubleshooting](#linux-troubleshooting)
+  - [macOS](#macos)
+  - [macOS Troubleshooting](#macos-troubleshooting)
 - [User Folder](#user-folder)
 - [Getting Maps](#getting-maps)
 - [Development](#development)
@@ -135,6 +137,41 @@ sudo chmod +x Rhythia.x86_64
 
 > [!NOTE]
 > You need to be a superuser in order to run `sudo`.
+
+Still having issues? Visit the **#support** channel in our [Discord](https://discord.gg/rhythia).
+
+### macOS
+
+> [!NOTE]
+> Requires macOS 11 (Big Sur) or later on Intel, or macOS 13 (Ventura) or later on Apple Silicon.
+
+1. Download `macOS.zip` for your chosen client above.
+2. Double-click the downloaded file to extract `Rhythia.app`.
+3. Move `Rhythia.app` to your **Applications** folder.
+4. Open `Rhythia.app`. The first launch will be blocked, see below.
+
+#### Allowing Rhythia to Open
+
+Rhythia is not signed with an Apple Developer ID, so macOS blocks it the first time you open it. You only need to do this once; in-game updates keep working afterwards.
+
+**System Settings:**
+
+1. Try to open `Rhythia.app` and close the warning that appears.
+2. Open **System Settings** → **Privacy & Security**.
+3. Scroll down to the message about Rhythia being blocked and click **Open Anyway**.
+4. Confirm with your password, then open Rhythia again.
+
+**Terminal:**
+
+```bash
+xattr -dr com.apple.quarantine /Applications/Rhythia.app
+```
+
+### macOS Troubleshooting
+
+If macOS says the app **is damaged and can't be opened**, run the Terminal command above; it removes the download flag macOS adds to files from the internet.
+
+If the game won't open at all, check that you are using a release newer than 0.2.0; the 0.2.0 `macOS.zip` and earlier builds were signed incorrectly and are killed by macOS on launch.
 
 Still having issues? Visit the **#support** channel in our [Discord](https://discord.gg/rhythia).
 
