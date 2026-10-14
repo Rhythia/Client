@@ -23,7 +23,7 @@ public partial class SearchPanel : Panel
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.CtrlPressed && !eventKey.AltPressed)
+        if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.CtrlPressed && !eventKey.MetaPressed && !eventKey.AltPressed)
         {
             Control focusOwner = GetViewport().GuiGetFocusOwner();
 
