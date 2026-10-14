@@ -32,13 +32,18 @@ public partial class Skip : UIComponent
 
     public void OnSkipAvailable(Attempt attempt)
     {
-        if (Runner.ObjectIndicesStart[typeof(Note)] >= attempt.Map.Notes.Length)
+        if (Runner.ObjectIndicesStart[typeof(Note)] >= attempt.Map.Notes.Length && !Runner.Attempt.IsReplay)
         {
             label.Text = "Press Space to complete";
         }
 
         if (tween != null)
             return;
+
+        if (Runner.Attempt.IsReplay)
+        {
+            label.Text = "Seek forward to skip";
+        }
 
         tween = CreateTween().SetLoops().SetTrans(Tween.TransitionType.Sine);
         tween.TweenProperty(label, "modulate", new Color(label.Modulate, 0.25f), 0.75f);

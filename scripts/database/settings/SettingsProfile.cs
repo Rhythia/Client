@@ -8,6 +8,11 @@ using Godot;
 public partial class SettingsProfile
 {
     #region Gameplay
+    /// <summary>
+    /// Selected skin for the game
+    /// </summary>
+    [Order]
+    public SettingsItem<string> Skin { get; private set; }
 
     /// <summary>
     /// Adjusts cursor sensitivity
@@ -93,15 +98,15 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<double> FoV { get; private set; }
 
-    #endregion
-
-    #region Visual
-
     /// <summary>
-    /// Selected skin for the game
+    /// Auto restarts on death
     /// </summary>
     [Order]
-    public SettingsItem<string> Skin { get; private set; }
+    public SettingsItem<bool> AutoRestartOnDeath { get; private set; }
+
+    #endregion
+
+    #region Space
 
     /// <summary>
     /// Overrides the skin's background space for the menu
@@ -128,10 +133,32 @@ public partial class SettingsProfile
     public SettingsItem<bool> SpaceEffects { get; private set; }
 
     /// <summary>
+    /// Enables a dark radial fade to help visibility
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> VisibilityAssist { get; private set; }
+
+    #endregion
+
+    #region Notes
+
+    /// <summary>
     /// Overrides the skin's colorset
     /// </summary>
     [Order]
     public SettingsItem<string> NoteColors { get; private set; }
+
+    /// <summary>
+    /// Overrides the skin's note mesh
+    /// </summary>
+    [Order]
+    public SettingsItem<string> NoteMesh { get; private set; }
+
+    /// <summary>
+    /// Sets the size of the notes
+    /// </summary>
+    [Order]
+    public SettingsItem<double> NoteSize { get; private set; }
 
     /// <summary>
     /// Sets the maximum opacity of the notes
@@ -145,17 +172,9 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<double> NoteOpacityExponent { get; private set; }
 
-    /// <summary>
-    /// Overrides the skin's note mesh
-    /// </summary>
-    [Order]
-    public SettingsItem<string> NoteMesh { get; private set; }
+    #endregion
 
-    /// <summary>
-    /// Sets the size of the notes
-    /// </summary>
-    [Order]
-    public SettingsItem<double> NoteSize { get; private set; }
+    #region Cursor
 
     /// <summary>
     /// Adjusts the cursor scale
@@ -199,6 +218,9 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<bool> UseCursorInMenus { get; private set; }
 
+    #endregion
+
+    #region HUD
     /// <summary>
     /// Adjusts the easing when the HP Bar is updated
     /// </summary>
@@ -240,12 +262,6 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<bool> AltComboCounter { get; private set; }
-
-    /// <summary>
-    /// Enables a dark radial fade to help visibility
-    /// </summary>
-    [Order]
-    public SettingsItem<bool> VisibilityAssist { get; private set; }
 
     /// <summary>
     /// Toggles a popup on a hit
@@ -448,6 +464,34 @@ public partial class SettingsProfile
     {
         #region Gameplay
 
+        Skin = new("default")
+        {
+            Id = "Skin",
+            Title = "Skin",
+            Description = "Selected skin for the game",
+            Section = SettingsSection.Gameplay,
+            UpdateAction = (_, init) =>
+            {
+                if (!init)
+                {
+                    SkinManager.Load();
+                }
+            },
+            Buttons =
+            [
+                new()
+                {
+                    Title = "Skin Folder",
+                    Description = "Open the skin folder",
+                    OnPressed = () =>
+                    {
+                        OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}");
+                    },
+                },
+            ],
+            List = new("default") { Values = ["default"] },
+        };
+
         Sensitivity = new(0.5f)
         {
             Id = "Sensitivity",
@@ -618,44 +662,24 @@ public partial class SettingsProfile
             },
         };
 
+        AutoRestartOnDeath = new(false)
+        {
+            Id = "AutoRestartOnDeath",
+            Title = "Auto Restart On Death",
+            Description = "On death, automatically restart the run instead of going to the results screen",
+            Section = SettingsSection.Gameplay,
+        };
+
         #endregion
 
-        #region Visual
-
-        Skin = new("default")
-        {
-            Id = "Skin",
-            Title = "Skin",
-            Description = "Selected skin for the game",
-            Section = SettingsSection.Visual,
-            UpdateAction = (_, init) =>
-            {
-                if (!init)
-                {
-                    SkinManager.Load();
-                }
-            },
-            Buttons =
-            [
-                new()
-                {
-                    Title = "Skin Folder",
-                    Description = "Open the skin folder",
-                    OnPressed = () =>
-                    {
-                        OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}");
-                    },
-                },
-            ],
-            List = new("default") { Values = ["default"] },
-        };
+        #region Spaces
 
         MenuSpace = new("skin")
         {
             Id = "MenuSpace",
             Title = "Menu Space",
             Description = "Overrides the skin's background space for the menu",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -689,7 +713,7 @@ public partial class SettingsProfile
             Id = "GameSpace",
             Title = "Game Space",
             Description = "Overrides the skin's background space for gameplay",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -723,7 +747,7 @@ public partial class SettingsProfile
             Id = "SpaceHitEffects",
             Title = "Space Hit Effects",
             Description = "Toggles note hit effects for the game space",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
         };
 
         SpaceEffects = new(true)
@@ -731,15 +755,27 @@ public partial class SettingsProfile
             Id = "SpaceEffects",
             Title = "Space Effects",
             Description = "Toggles non-hit effects for the game space",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
         };
+
+        VisibilityAssist = new(false)
+        {
+            Id = "VisibilityAssist",
+            Title = "Visibility Assist",
+            Description = "Enables a dark radial fade to help with visibility (impacts performance significantly)",
+            Section = SettingsSection.Spaces,
+        };
+
+        #endregion
+
+        #region Notes
 
         NoteColors = new("skin")
         {
             Id = "Colors",
             Title = "Colors",
             Description = "Overrides the skin's colorset",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Notes,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -750,40 +786,12 @@ public partial class SettingsProfile
             List = new("skin") { Values = ["skin", "default"] },
         };
 
-        NoteOpacity = new(1)
-        {
-            Id = "NoteOpacity",
-            Title = "Note Opacity",
-            Description = "Sets the maximum opacity for the notes",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 0.05f,
-                MinValue = 0,
-                MaxValue = 1,
-            },
-        };
-
-        NoteOpacityExponent = new(1.25)
-        {
-            Id = "NoteOpacityExponent",
-            Title = "Note Opacity Exponent",
-            Description = "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 0.05f,
-                MinValue = 1,
-                MaxValue = 2,
-            },
-        };
-
         NoteMesh = new("skin")
         {
             Id = "NoteMesh",
             Title = "Note Mesh",
             Description = "Overrides the skin's note mesh",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Notes,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -799,7 +807,7 @@ public partial class SettingsProfile
             Id = "NoteSize",
             Title = "Note Size",
             Description = "Sets the size of the notes, does not change hitboxes",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Notes,
             Slider = new()
             {
                 Step = 0.025f,
@@ -808,20 +816,44 @@ public partial class SettingsProfile
             },
         };
 
-        GridGuides = new(true)
+        NoteOpacity = new(1)
         {
-            Id = "GridGuides",
-            Title = "Grid Guides",
-            Description = "Enables grid guides",
-            Section = SettingsSection.Visual,
+            Id = "NoteOpacity",
+            Title = "Note Opacity",
+            Description = "Sets the maximum opacity for the notes",
+            Section = SettingsSection.Notes,
+            Slider = new()
+            {
+                Step = 0.05f,
+                MinValue = 0,
+                MaxValue = 1,
+            },
         };
+
+        NoteOpacityExponent = new(1.25)
+        {
+            Id = "NoteOpacityExponent",
+            Title = "Note Opacity Exponent",
+            Description = "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly",
+            Section = SettingsSection.Notes,
+            Slider = new()
+            {
+                Step = 0.05f,
+                MinValue = 1,
+                MaxValue = 2,
+            },
+        };
+
+        #endregion
+
+        #region Cursor
 
         CursorScale = new(1)
         {
             Id = "CursorScale",
             Title = "Cursor Scale",
             Description = "Adjusts the cursor scale, does not change hitboxes",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 0.025f,
@@ -835,7 +867,7 @@ public partial class SettingsProfile
             Id = "CursorOpacity",
             Title = "Cursor Opacity",
             Description = "Adjusts the cursor opacity",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 0.05f,
@@ -849,7 +881,7 @@ public partial class SettingsProfile
             Id = "CursorRotation",
             Title = "Cursor Rotation",
             Description = "Degrees to rotate the cursor by every second",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 1,
@@ -863,7 +895,7 @@ public partial class SettingsProfile
             Id = "CursorTrail",
             Title = "Cursor Trail",
             Description = "Toggles a trail for your cursor",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
         };
 
         TrailTime = new(0.05f)
@@ -871,7 +903,7 @@ public partial class SettingsProfile
             Id = "TrailTime",
             Title = "Cursor Trail Time",
             Description = "Adjusts trail visibility time",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 0.01f,
@@ -885,7 +917,7 @@ public partial class SettingsProfile
             Id = "TrailDetail",
             Title = "Cursor Trail Detail",
             Description = "Adjusts the detail for the trail, a high value may impact performance",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 1f,
@@ -899,7 +931,19 @@ public partial class SettingsProfile
             Id = "UseCursorInMenus",
             Title = "Use Cursor in Menus",
             Description = "Uses the skin's cursor instead of the native cursor",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
+        };
+
+        #endregion
+
+        #region HUD
+
+        GridGuides = new(true)
+        {
+            Id = "GridGuides",
+            Title = "Grid Guides",
+            Description = "Enables grid guides",
+            Section = SettingsSection.HUD,
         };
 
         HPLerpValue = new(60f)
@@ -907,7 +951,7 @@ public partial class SettingsProfile
             Id = "HPLerpValue",
             Title = "HP Bar Easing Value",
             Description = "Adjusts how smooth, or harsh, the HP Bar eases in while it updates",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
             Slider = new()
             {
                 Step = 1f,
@@ -953,7 +997,7 @@ public partial class SettingsProfile
             Id = "SimpleHUD",
             Title = "Simple HUD",
             Description = "Hides the regular left and right panels, and instead displays a simple miss counter on the right",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         SuperSimpleHUD = new(false)
@@ -961,7 +1005,7 @@ public partial class SettingsProfile
             Id = "SuperSimpleHUD",
             Title = "Super Simple HUD",
             Description = "Hides health bar, song duration, and song name",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         AltComboCounter = new(false)
@@ -969,15 +1013,7 @@ public partial class SettingsProfile
             Id = "AltComboCounter",
             Title = "Alt. Combo Counter",
             Description = "Moves the Combo Counter to the HUD",
-            Section = SettingsSection.Visual,
-        };
-
-        VisibilityAssist = new(false)
-        {
-            Id = "VisibilityAssist",
-            Title = "Visibility Assist",
-            Description = "Enables a dark radial fade to help with visibility (impacts performance significantly)",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         HitPopups = new(true)
@@ -985,7 +1021,7 @@ public partial class SettingsProfile
             Id = "HitPopups",
             Title = "Hit Score Popups",
             Description = "Toggles a popup on a hit",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         MissPopups = new(true)
@@ -993,8 +1029,12 @@ public partial class SettingsProfile
             Id = "MissPopups",
             Title = "Miss Popups",
             Description = "Toggles a popup on a miss",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
+
+        #endregion
+
+        #region Video
 
         Fullscreen = new(true)
         {

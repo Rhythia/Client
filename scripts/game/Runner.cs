@@ -612,10 +612,22 @@ public partial class Runner : Node3D
 
             if (!Attempt.IsReplay && Attempt.Health <= 0 && Attempt.Alive)
             {
-                Fail();
+                if (Attempt.Settings.AutoRestartOnDeath && checkFail(hit, Attempt.Health))
+                {
+                    SoundManager.FailSound.Play();
+
+                    Attempt.Alive = false;
+                    Attempt.Qualifies = false;
+
+                    Results.Replay();
+                }
+                else
+                {
+                    Fail();
+                }
             }
 
-            if (checkFail(hit, Attempt.Health))
+            if (!Attempt.Settings.AutoRestartOnDeath && checkFail(hit, Attempt.Health))
             {
                 QueueStop();
             }
