@@ -10,11 +10,14 @@ public partial class SettingsMenu : ColorRect
     public static SettingsMenu Instance;
 
     public bool Shown = false;
+    public bool wasSkinPreviewToggled = false;
 
     private Dictionary<string, Panel> settingPanels = [];
     private Button hideButton;
+    private Button showSkinPreview;
     private Panel holder;
     private Panel header;
+    private Panel skinPreviewPanel;
     private OptionButton profilesButton;
     private VBoxContainer sidebar;
     private Panel categories;
@@ -36,7 +39,9 @@ public partial class SettingsMenu : ColorRect
 
         hideButton = GetNode<Button>("Hide");
         holder = GetNode<Panel>("Holder");
+        skinPreviewPanel = GetNode<Panel>("SkinPreviewPanel");
         header = holder.GetNode<Panel>("Header");
+        showSkinPreview = header.GetNode<Button>("ShowSkinPreview");
         profilesButton = header.GetNode<OptionButton>("Profiles");
         sidebar = holder.GetNode("Sidebar").GetNode<VBoxContainer>("Container");
         categories = holder.GetNode<Panel>("Categories");
@@ -214,6 +219,7 @@ public partial class SettingsMenu : ColorRect
 
         hideButton.Pressed += HideMenu;
         ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
+        showSkinPreview.Pressed += ToggleSkinPreview;
         UserFolderDialog.DirSelected += SettingsProfile.ConfigureSetUserFolderPath;
     }
 
@@ -320,6 +326,39 @@ public partial class SettingsMenu : ColorRect
             {
                 profilesButton.Select(i);
             }
+        }
+    }
+
+    public void ToggleSkinPreview()
+    {
+        var offsetPreview = GetWindow().Size[0] / 15;
+        var offsetHolder = GetWindow().Size[0] / -15;
+
+        if (!wasSkinPreviewToggled)
+        {
+            skinPreviewPanel.Visible = true;
+
+            Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
+            tween.TweenProperty(skinPreviewPanel, "modulate", Color.Color8(255, 255, 255, 255), 0.25);
+            tween.TweenProperty(skinPreviewPanel, "offset_left", offsetPreview, 0.25);
+            tween.TweenProperty(skinPreviewPanel, "offset_right", offsetPreview, 0.25);
+            tween.TweenProperty(holder, "offset_left", offsetHolder, 0.25);
+            tween.TweenProperty(holder, "offset_right", offsetHolder, 0.25);
+
+            wasSkinPreviewToggled = true;
+        }
+        else
+        {
+            Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
+            tween.TweenProperty(skinPreviewPanel, "modulate", Color.Color8(0, 0, 0, 0), 0.25);
+            tween.TweenProperty(holder, "offset_left", 0, 0.25);
+            tween.TweenProperty(holder, "offset_right", 0, 0.25);
+
+            skinPreviewPanel.OffsetLeft = 0;
+            skinPreviewPanel.OffsetRight = 0;
+
+            wasSkinPreviewToggled = false;
+            skinPreviewPanel.Visible = false;
         }
     }
 

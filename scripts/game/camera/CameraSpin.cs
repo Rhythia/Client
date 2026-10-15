@@ -12,6 +12,7 @@ public class CameraSpin : CameraMode
         ReplayManager replayManager,
         Camera3D camera,
         MeshInstance3D cursor,
+        MeshInstance3D bufferCursor,
         Vector2 mouseDelta,
         float sensitivity
     )

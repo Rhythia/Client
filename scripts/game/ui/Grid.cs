@@ -7,6 +7,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
     [Export]
     public Runner Runner { get; set; }
     public MeshInstance3D Cursor { get; set; }
+    public MeshInstance3D BufferCursor { get; set; }
     public MultiMeshInstance3D CursorTrail { get; set; }
     public MeshInstance3D GridGuides { get; set; }
     public MeshInstance3D VisibilityAssist { get; set; }
@@ -42,11 +43,21 @@ public partial class Grid : MeshInstance3D, IUIComponent
             (float)(Constants.CURSOR_SIZE * Runner.Attempt.Settings.CursorScale)
         );
 
+        BufferCursor ??= GetNode<MeshInstance3D>("BufferCursor");
+        (BufferCursor.Mesh as QuadMesh).Size = new Vector2(
+            (float)(Constants.CURSOR_SIZE * Runner.Attempt.Settings.CursorScale),
+            (float)(Constants.CURSOR_SIZE * Runner.Attempt.Settings.CursorScale)
+        );
+
         (Cursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
+        (BufferCursor.GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;
 
         // Cursor Transparency
         float alpha = Math.Clamp((float)(double)Runner.Attempt.Settings.CursorOpacity, 0, 1);
         Cursor.Transparency = 1f - alpha;
+
+        BufferCursor.Visible = !Runner.Attempt.Settings.CursorDrift && !Runner.Attempt.IsReplay;
+        BufferCursor.Transparency = 1f - alpha / 4;
 
         CursorTrail ??= GetNode<MultiMeshInstance3D>("CursorTrail");
         (CursorTrail.MaterialOverride as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.CursorImage;

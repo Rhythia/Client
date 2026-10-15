@@ -764,7 +764,7 @@ alignment = 2
 [node name="Settings" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=384311335]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-tooltip_text = "CTRL + O"
+tooltip_text = "Game settings, can be opened up at anytime using CTRL + O"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -776,6 +776,7 @@ script = ExtResource("8_yxnar")
 [node name="UserFolder" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=1212420658]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+tooltip_text = "Opens up the game's user folder, allows you to manually import or modify files."
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -787,6 +788,7 @@ script = ExtResource("27_eku7s")
 [node name="Import" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=554381373]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+tooltip_text = "Import maps, you can mass import with this"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")

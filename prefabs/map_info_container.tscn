@@ -33,19 +33,6 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i21mh"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1m5pv"]
-bg_color = Color(0, 0, 0, 0.3764706)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4d08m"]
 shader = ExtResource("2_nrche")
 shader_parameter/outline_color = Color(0.05, 0.05, 0.05, 1)
@@ -65,6 +52,13 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1m5pv"]
+bg_color = Color(0, 0, 0, 0.3764706)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -176,7 +170,7 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "infoSubholder", "mainLabel", "extraLabel", "artistLink", "exportButton", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
+[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "mainLabel", "extraLabel", "artistLink", "exportButton", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -188,19 +182,18 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_svokg")
 script = ExtResource("1_50xtp")
 info = NodePath("Info")
 dim = NodePath("Dim")
-coverBackground = NodePath("Info/ScrollContainer/HBoxContainer/Background")
-cover = NodePath("Info/ScrollContainer/HBoxContainer/Background/Cover")
-infoSubholder = NodePath("Info/ScrollContainer/HBoxContainer")
-mainLabel = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Main")
-extraLabel = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Extra")
-artistLink = NodePath("Info/ScrollContainer/HBoxContainer/Background/ArtistLink")
-exportButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Export")
-favoriteButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Favorite")
-videoButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Video")
-videoDialog = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Video/VideoDialog")
-copyButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Copy")
-copyDialog = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Copy/CopyDialog")
-deleteButton = NodePath("Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Delete")
+coverBackground = NodePath("Info/Control/Background")
+cover = NodePath("Info/Control/Background/Cover")
+mainLabel = NodePath("Info/Control/infoControl/infoSubholder/Main")
+extraLabel = NodePath("Info/Control/infoControl/infoSubholder/Extra")
+artistLink = NodePath("Info/Control/Background/ArtistLink")
+exportButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Export")
+favoriteButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Favorite")
+videoButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Video")
+videoDialog = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Video/VideoDialog")
+copyButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Copy")
+copyDialog = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Copy/CopyDialog")
+deleteButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Delete")
 actions = NodePath("Actions")
 preview = NodePath("Actions/ScrollContainer/Holder/Preview/AspectRatioContainer/FlatPreview")
 speedHolder = NodePath("Actions/ScrollContainer/Holder/Speed")
@@ -232,46 +225,57 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1q06g")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Info" unique_id=771327651]
+[node name="Outline" type="Panel" parent="Info" unique_id=1992047374]
+material = SubResource("ShaderMaterial_4d08m")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
-theme = ExtResource("4_4d08m")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_i21mh")
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_w0o2h")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Info/ScrollContainer" unique_id=660353866]
-custom_minimum_size = Vector2(0, 245)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Background" type="TextureRect" parent="Info/ScrollContainer/HBoxContainer" unique_id=1995472053]
-show_behind_parent = true
-layout_mode = 2
-texture = ExtResource("3_ne4r3")
-expand_mode = 2
-stretch_mode = 4
-
-[node name="Cover" type="TextureRect" parent="Info/ScrollContainer/HBoxContainer/Background" unique_id=1954943621]
+[node name="Control" type="Control" parent="Info" unique_id=358752342]
+clip_contents = true
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_force_pass_scroll_events = false
+theme = ExtResource("4_4d08m")
+
+[node name="Background" type="TextureRect" parent="Info/Control" unique_id=1995472053]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.34800002
+anchor_bottom = 0.99300003
+offset_left = 2.0
+offset_top = 2.0
+offset_right = -0.34414673
+offset_bottom = -0.040008545
+texture = ExtResource("3_ne4r3")
+expand_mode = 2
+
+[node name="Cover" type="TextureRect" parent="Info/Control/Background" unique_id=1954943621]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.029000001
+anchor_top = 0.029000001
+anchor_right = 0.9710001
+anchor_bottom = 0.9710001
+offset_left = -0.0040006638
+offset_top = -0.0040006638
+offset_right = 0.003967285
+offset_bottom = 0.003967285
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
-stretch_mode = 6
 
-[node name="ArtistLink" type="Button" parent="Info/ScrollContainer/HBoxContainer/Background" unique_id=752801089]
+[node name="ArtistLink" type="Button" parent="Info/Control/Background" unique_id=752801089]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -290,7 +294,7 @@ flat = true
 alignment = 0
 script = ExtResource("4_dccrs")
 
-[node name="Panel" type="Panel" parent="Info/ScrollContainer/HBoxContainer/Background/ArtistLink" unique_id=194309589]
+[node name="Panel" type="Panel" parent="Info/Control/Background/ArtistLink" unique_id=194309589]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -301,65 +305,96 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1m5pv")
 
-[node name="CoverContainer" type="AspectRatioContainer" parent="Info/ScrollContainer/HBoxContainer" unique_id=1266967334]
+[node name="CoverContainer" type="AspectRatioContainer" parent="Info/Control" unique_id=1266967334]
 visible = false
-layout_mode = 2
+layout_mode = 0
+offset_left = 282.0
+offset_top = 2.0
+offset_right = 282.0
+offset_bottom = 278.0
 alignment_horizontal = 0
 
-[node name="Subholder" type="Panel" parent="Info/ScrollContainer/HBoxContainer" unique_id=80746001]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="infoControl" type="Control" parent="Info/Control" unique_id=1409035100]
+layout_mode = 1
+anchor_left = 0.35300002
+anchor_right = 1.0
+anchor_bottom = 0.99300003
+offset_left = -0.34335327
+offset_right = -1.5853882
+offset_bottom = -0.040008545
+grow_horizontal = 0
 
-[node name="Extra" type="RichTextLabel" parent="Info/ScrollContainer/HBoxContainer/Subholder" unique_id=469525934]
+[node name="infoSubholder" type="Panel" parent="Info/Control/infoControl" unique_id=80746001]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.056
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 138.0
-offset_right = -8.399963
-offset_bottom = -50.0
-grow_horizontal = 0
+offset_left = -0.078229904
+offset_right = -0.25408936
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="Extra" type="RichTextLabel" parent="Info/Control/infoControl/infoSubholder" unique_id=469525934]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.019000001
+anchor_top = 0.572
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.08819294
+offset_top = -0.51600647
+offset_right = -8.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("4_4d08m")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
 text = "[color=ffffff88]{0}
-{1} notes
-[color=ffffff44]{2}"
+{1} notes"
+fit_content = true
+autowrap_mode = 2
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="Main" type="RichTextLabel" parent="Info/ScrollContainer/HBoxContainer/Subholder" unique_id=394044659]
+[node name="Main" type="RichTextLabel" parent="Info/Control/infoControl/infoSubholder" unique_id=394044659]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-offset_left = 8.0
+anchor_left = 0.015000001
+anchor_right = 0.984
+anchor_bottom = 0.57600003
+offset_left = 0.21499968
 offset_top = 6.0
-offset_right = -8.399963
-offset_bottom = 130.0
+offset_right = -0.09597778
+offset_bottom = -0.12800598
 mouse_filter = 1
 theme = ExtResource("4_4d08m")
 theme_override_constants/paragraph_separation = 4
 bbcode_enabled = true
 text = "[outline_size=2][font_size=24]{0}
-[color={1}]{2} [font_size=16][color=909096]by {3}"
+[color={1}]{2} [font_size=16][color=909096]
+by {3}
+[font_size=12][color=ffffff44]{4}"
 
-[node name="Buttons" type="HBoxContainer" parent="Info/ScrollContainer/HBoxContainer/Subholder" unique_id=1191092010]
+[node name="Buttons" type="HBoxContainer" parent="Info/Control/infoControl/infoSubholder" unique_id=1191092010]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -46.0
-offset_right = -6.0
-offset_bottom = -6.0
+anchor_left = 0.016
+anchor_top = 0.83500004
+anchor_right = 0.98800004
+anchor_bottom = 0.97800004
+offset_left = 0.20531178
+offset_top = -0.13000488
+offset_right = -0.1539917
+offset_bottom = 0.115997314
 grow_horizontal = 0
 grow_vertical = 0
 alignment = 2
 
-[node name="Export" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=2033571562]
+[node name="Export" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=2033571562]
 layout_mode = 2
 tooltip_text = "Exports map into a .phxm file to share easily"
 focus_mode = 0
@@ -370,7 +405,7 @@ theme_override_constants/icon_max_width = 24
 icon = ExtResource("5_g02bu")
 icon_alignment = 1
 
-[node name="Favorite" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=1022164792]
+[node name="Favorite" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=1022164792]
 layout_mode = 2
 tooltip_text = "Favorite"
 focus_mode = 0
@@ -381,7 +416,7 @@ theme_override_constants/icon_max_width = 24
 icon = ExtResource("5_1m5pv")
 icon_alignment = 1
 
-[node name="Video" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=1985048325]
+[node name="Video" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=1985048325]
 visible = false
 layout_mode = 2
 tooltip_text = "Add Video"
@@ -394,7 +429,7 @@ disabled = true
 icon = ExtResource("6_g02bu")
 icon_alignment = 1
 
-[node name="VideoDialog" type="FileDialog" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Video" unique_id=72805866]
+[node name="VideoDialog" type="FileDialog" parent="Info/Control/infoControl/infoSubholder/Buttons/Video" unique_id=72805866]
 oversampling_override = 1.0
 title = "Open a File"
 position = Vector2i(0, 36)
@@ -403,7 +438,7 @@ access = 2
 filters = PackedStringArray("*.mp4")
 use_native_dialog = true
 
-[node name="Copy" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=2053076461]
+[node name="Copy" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=2053076461]
 visible = false
 layout_mode = 2
 tooltip_text = "Copy"
@@ -415,12 +450,12 @@ theme_override_constants/icon_max_width = 24
 icon = ExtResource("7_oibm8")
 icon_alignment = 1
 
-[node name="CopyDialog" type="FileDialog" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons/Copy" unique_id=1634895255]
+[node name="CopyDialog" type="FileDialog" parent="Info/Control/infoControl/infoSubholder/Buttons/Copy" unique_id=1634895255]
 access = 2
 filters = PackedStringArray("*.phxm")
 use_native_dialog = true
 
-[node name="Delete" type="Button" parent="Info/ScrollContainer/HBoxContainer/Subholder/Buttons" unique_id=2015809903]
+[node name="Delete" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=2015809903]
 layout_mode = 2
 tooltip_text = "Delete"
 focus_mode = 0
@@ -430,17 +465,6 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/icon_max_width = 24
 icon = ExtResource("8_ssthb")
 icon_alignment = 1
-
-[node name="Outline" type="Panel" parent="Info" unique_id=1992047374]
-material = SubResource("ShaderMaterial_4d08m")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_w0o2h")
 
 [node name="Actions" type="Panel" parent="." unique_id=1101045169]
 clip_contents = true
@@ -533,7 +557,7 @@ offset_right = -8.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
-tooltip_text = "Favorite"
+tooltip_text = "Changes how the camera functions: Spin enables a first-person perspective, while Lock keeps the camera still"
 theme = ExtResource("4_4d08m")
 script = ExtResource("11_ne4r3")
 container = NodePath("ScrollContainer/VBoxContainer")
@@ -665,6 +689,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_4d08m")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_6xsea")
+vertical_scroll_mode = 0
 
 [node name="Presets" type="HBoxContainer" parent="Actions/ScrollContainer/Holder/Speed/ScrollContainer" unique_id=163344429]
 layout_mode = 2
@@ -907,6 +932,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -3.0
+offset_right = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
