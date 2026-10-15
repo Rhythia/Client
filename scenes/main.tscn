@@ -200,7 +200,6 @@ offset_bottom = -8.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_l24nh")
 
 [node name="CategoryTemplate" type="ScrollContainer" parent="Settings/Holder/Categories" unique_id=1591103492]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

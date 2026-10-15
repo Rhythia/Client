@@ -79,7 +79,6 @@ public partial class Solid : BaseSpace
             darkened = color.Darkened(0.9f);
         }
 
-
         WorldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
     }
 }
