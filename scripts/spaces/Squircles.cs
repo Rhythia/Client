@@ -81,7 +81,11 @@ public partial class Squircles : BaseSpace
 
     private void updateColor(Color color)
     {
-        Color darkened = color.Darkened(0.9f);
+        var darkened = color.Darkened(0);
+        if (!Playing || SettingsManager.Instance.Settings.SpaceColor.Value == "Colorset" || SettingsManager.Instance.Settings.SpaceHitEffects)
+        {
+            darkened = color.Darkened(0.9f);
+        }
 
         WorldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
         particlesNear.Color = color.Lightened(0.1f);

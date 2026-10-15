@@ -59,8 +59,14 @@ public partial class BaseSpace : Node3D
     public virtual void Load()
     {
         var skin = SkinManager.Instance.Skin;
-
-        NoteHitColor = skin.NoteColors[^1];
+        if (SettingsManager.Instance.Settings.SpaceColor.Value != "Colorset" && !SettingsManager.Instance.Settings.SpaceHitEffects)
+        {
+            NoteHitColor = Util.Misc.ParseColor(SettingsManager.Instance.Settings.SpaceColor.Value, Colors.Black);
+        }
+        else
+        {
+            NoteHitColor = skin.NoteColors[^1];
+        }
     }
 
     public virtual void UpdateMap(Map map)

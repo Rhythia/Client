@@ -420,6 +420,9 @@ public partial class SettingsMenu : ColorRect
             }
         }
 
+        Logger.Log(setting.Id);
+        Logger.Log(setting.Placeholder);
+
         if (setting.Placeholder != "")
         {
             lineEdit.PlaceholderText = setting.Placeholder;

@@ -121,6 +121,12 @@ public partial class SettingsProfile
     public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
+    /// Sets the default color of the space
+    /// </summary>
+    [Order]
+    public SettingsItem<string> SpaceColor { get; private set; }
+
+    /// <summary>
     /// Toggles note hit effects for the game space
     /// </summary>
     [Order]
@@ -739,6 +745,25 @@ public partial class SettingsProfile
                     "relic",
                     "conspiracy",
                 ],
+            },
+        };
+
+        SpaceColor = new("")
+        {
+            Id = "SpaceColor",
+            Title = "Space Color",
+            Description = "Changes the color of the space (only when space hit effects is off)",
+            Placeholder = "Colorset",
+            Section = SettingsSection.Spaces,
+            UpdateAction = (_, init) =>
+            {
+                if (!init)
+                {
+                    if (SpaceColor.Value != "Colorset" && (!SpaceColor.Value.IsValidHtmlColor() || SpaceColor.Value.Length != 6))
+                    {
+                        SpaceColor.Value = "Colorset";
+                    }
+                }
             },
         };
 
