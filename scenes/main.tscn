@@ -360,12 +360,11 @@ button_mask = 3
 [node name="Holder" type="Panel" parent="Settings" unique_id=622538118]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.20400001
+anchor_left = 0.25
 anchor_top = 0.25
-anchor_right = 0.72400004
+anchor_right = 0.75000006
 anchor_bottom = 0.75000006
-offset_left = 58.879974
-offset_right = 33.27997
+offset_right = -6.1035156e-05
 offset_bottom = -6.1035156e-05
 grow_horizontal = 2
 grow_vertical = 2
@@ -588,6 +587,18 @@ text = "SETTINGS"
 label_settings = SubResource("LabelSettings_osuri")
 vertical_alignment = 1
 
+[node name="RefreshSkinPreview" type="Button" parent="Settings/Holder/Header" unique_id=693048162]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.27800003
+anchor_top = 0.15
+anchor_right = 0.48600003
+anchor_bottom = 0.9250001
+offset_left = 0.07998657
+offset_right = -0.040008545
+theme = ExtResource("3_tipki")
+text = "Refresh Preview"
+
 [node name="ShowSkinPreview" type="Button" parent="Settings/Holder/Header" unique_id=558443082]
 layout_mode = 1
 anchors_preset = -1
@@ -682,6 +693,7 @@ access = 2
 use_native_dialog = true
 
 [node name="SkinPreviewPanel" type="Panel" parent="Settings" unique_id=499692920]
+visible = false
 modulate = Color(1, 1, 1, 0)
 light_mask = 512
 visibility_layer = 512
@@ -689,14 +701,14 @@ z_index = 1
 z_as_relative = false
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.609
-anchor_top = 0.31100002
-anchor_right = 0.901
-anchor_bottom = 0.70000005
-offset_left = 0.47998047
-offset_top = 0.07998657
-offset_right = -0.25708008
-offset_bottom = 0.19998169
+anchor_left = 0.55200005
+anchor_top = 0.279
+anchor_right = 0.919
+anchor_bottom = 0.72400004
+offset_left = -0.5600586
+offset_top = 0.11999512
+offset_right = 0.34692383
+offset_bottom = -0.2800293
 offset_transform_enabled = true
 offset_transform_pivot_ratio = Vector2(1, 1)
 offset_transform_visual_only = false
@@ -721,7 +733,7 @@ horizontal_alignment = 1
 [node name="SkinPreview" type="SubViewportContainer" parent="Settings/SkinPreviewPanel" unique_id=2122293191]
 z_index = 2
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -732,9 +744,11 @@ stretch = true
 own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
-scaling_3d_mode = 5
-size = Vector2i(373, 280)
-render_target_update_mode = 4
+msaa_3d = 1
+scaling_3d_scale = 1.5
+anisotropic_filtering_level = 1
+size = Vector2i(470, 320)
+render_target_update_mode = 0
 
 [node name="Combo" type="Node3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=385833504]
 

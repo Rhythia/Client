@@ -44,7 +44,7 @@ public partial class MapInfo : AspectRatioContainer
     {
         float height = (AnchorBottom - AnchorTop) * GetParent<Control>().Size.Y - OffsetTop + OffsetBottom;
 
-        holder.CustomMinimumSize = Vector2.One * Math.Min(850, height);
+        holder.CustomMinimumSize = Vector2.One * Math.Min(GetWindow().Size[1], height);
     }
 
     /// <summary>

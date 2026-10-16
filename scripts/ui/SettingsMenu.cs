@@ -15,6 +15,7 @@ public partial class SettingsMenu : ColorRect
     private Dictionary<string, Panel> settingPanels = [];
     private Button hideButton;
     private Button showSkinPreview;
+    private Button refreshPreview;
     private Panel holder;
     private Panel header;
     private Panel skinPreviewPanel;
@@ -42,6 +43,7 @@ public partial class SettingsMenu : ColorRect
         skinPreviewPanel = GetNode<Panel>("SkinPreviewPanel");
         header = holder.GetNode<Panel>("Header");
         showSkinPreview = header.GetNode<Button>("ShowSkinPreview");
+        refreshPreview = header.GetNode<Button>("RefreshSkinPreview");
         profilesButton = header.GetNode<OptionButton>("Profiles");
         sidebar = holder.GetNode("Sidebar").GetNode<VBoxContainer>("Container");
         categories = holder.GetNode<Panel>("Categories");
@@ -220,6 +222,7 @@ public partial class SettingsMenu : ColorRect
         hideButton.Pressed += HideMenu;
         ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
         showSkinPreview.Pressed += ToggleSkinPreview;
+        refreshPreview.Pressed += RefreshPreview;
         UserFolderDialog.DirSelected += SettingsProfile.ConfigureSetUserFolderPath;
     }
 
@@ -331,8 +334,8 @@ public partial class SettingsMenu : ColorRect
 
     public void ToggleSkinPreview()
     {
-        var offsetPreview = GetWindow().Size[0] / 15;
-        var offsetHolder = GetWindow().Size[0] / -15;
+        var offsetPreview = GetWindow().Size[0] / 14;
+        var offsetHolder = GetWindow().Size[0] / -7;
 
         if (!wasSkinPreviewToggled)
         {
@@ -360,6 +363,11 @@ public partial class SettingsMenu : ColorRect
             wasSkinPreviewToggled = false;
             skinPreviewPanel.Visible = false;
         }
+    }
+
+    public void RefreshPreview()
+    {
+        SkinManager.Load();
     }
 
     private static void setupToggle(ISettingsItem setting, CheckButton button)

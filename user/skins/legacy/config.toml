@@ -1,0 +1,5 @@
+theme_color = "c90045"
+note_colors = "default"
+note_mesh = "squircle"
+game_space = "grid"
+menu_space = "waves"
