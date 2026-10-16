@@ -112,9 +112,11 @@ public partial class Results : BaseScene
             if (FileAccess.FileExists(path))
             {
                 Replay replay = new(path);
+                Map replayMap = MapParser.Decode(replay.MapFilePath);
+                replayMap.Id = Game.Attempt.Map.Id;
                 SoundManager.Song.Stop();
 
-                Game.Play(MapParser.Decode(replay.MapFilePath), replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
+                Game.Play(replayMap, replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
             }
         };
     }
@@ -177,6 +179,7 @@ public partial class Results : BaseScene
 
         Map map = MapParser.Decode(attempt.Map.FolderPath);
         map.Ephemeral = attempt.Map.Ephemeral;
+        map.Id = attempt.Map.Id;
         SoundManager.Song.Stop();
 
         Game.Play(map, attempt.Speed, attempt.StartFrom, attempt.CameraMode, attempt.Modifiers);

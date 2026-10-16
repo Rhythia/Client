@@ -150,7 +150,7 @@ public partial class Runner : Node3D
             }
         }
 
-        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && settings.VideoDim < 100 && VideoPlayer.IsOpen())
+        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && settings.VideoDim < 100 && VideoPlayer != null && VideoPlayer.IsOpen())
         {
             double offsetProgress = Attempt.Progress - settings.LocalOffset;
             double songEnd = SoundManager.Song.Stream.GetLength() * 1000;
@@ -424,10 +424,10 @@ public partial class Runner : Node3D
         SoundManager.Song.PitchScale = (float)Speed;
         SoundManager.Song.StreamPaused = !Playing;
 
-        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && Attempt.Progress >= 0)
+        if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && Attempt.Progress >= 0 && VideoPlayer != null && VideoPlayer.IsOpen())
         {
-            if (Playing && VideoPlayer.IsOpen()) { VideoPlayer.Play(); }
-            else if (!Playing && VideoPlayer.IsOpen()) { VideoPlayer.Pause(); }
+            if (Playing) { VideoPlayer.Play(); }
+            else if (!Playing) { VideoPlayer.Pause(); }
         }
 
         if (Playing)
@@ -759,7 +759,7 @@ public partial class Runner : Node3D
 
     private void syncVideoPosition()
     {
-        if (!Attempt.Map.DisableVideo && Attempt.Map.VideoBuffer != null && VideoPlayer.IsOpen())
+        if (!Attempt.Map.DisableVideo && Attempt.Map.VideoBuffer != null && VideoPlayer != null && VideoPlayer.IsOpen())
         {
             if (!VideoPlayer.IsPlaying && Playing)
             {
