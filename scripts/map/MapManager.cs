@@ -55,9 +55,11 @@ public partial class MapManager : Node
     {
         Godot.FileAccess file = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
         byte[] videoBuffer = file.GetBuffer((long)file.GetLength());
+        string ext = Path.GetExtension(path).TrimStart('.');
         file.Close();
 
         map.VideoBuffer = videoBuffer;
+        map.VideoExt = ext;
 
         var oldmap = MapParser.Decode(map.FolderPath);
 
@@ -78,6 +80,7 @@ public partial class MapManager : Node
         _ = Godot.FileAccess.Open(map.FolderPath, Godot.FileAccess.ModeFlags.Read);
 
         map.VideoBuffer = null;
+        map.VideoExt = string.Empty;
 
         var oldmap = MapParser.Decode(map.FolderPath);
 

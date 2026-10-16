@@ -393,12 +393,11 @@ public partial class Runner : Node3D
             QuadMesh videoQuad = (QuadMesh)VideoMesh.Mesh;
             videoQuad.Size = new Vector2((float)meshWidth + 2 * Constants.BOUNDS.X, (float)meshHeight + 2 * Constants.BOUNDS.Y);
 
-            VideoPlayer.Path = $"{MapUtil.MapsFolder}/{Attempt.Map.Name}/video.mp4";
+            VideoPlayer.Path = MapUtil.GetMapVideoPath(Map);
             VideoPlayer.PlaybackSpeed = (float)Speed;
 
             VideoMesh.Transparency = 1;
             VideoMesh.Visible = true;
-            // VideoMesh.Transparency = (float)(double)settings.VideoDim / 100f;
 
             Tween fadeIn = VideoMesh.CreateTween();
             fadeIn.TweenProperty(VideoMesh, "transparency", (float)(double)settings.VideoDim / 100f, Math.Abs(Attempt.Progress) / 1000).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In); // assuming Attempt.Progress < 0

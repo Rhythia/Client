@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Godot;
 
 public partial class ContextMenu : Panel
@@ -74,12 +75,16 @@ public partial class ContextMenu : Panel
 
         deleteButton = createButton("Delete Map", Color.Color8(255, 128, 128), Color.Color8(255, 196, 196), deleteMap, templateButton);
 
-        bool hasVideo = File.Exists(Path.Combine(MapUtil.MapsFolder, Map.Name, "video.mp4"));
+        bool hasVideo = File.Exists(MapUtil.GetMapVideoPath(Map));
 
         videoButton = hasVideo ? createButton("Remove Video", Color.Color8(128, 128, 255), Color.Color8(196, 196, 255), removeVideo, templateButton) : createButton("Add Video", Color.Color8(128, 128, 255), Color.Color8(196, 196, 255), addVideo, templateButton);
 
         if (!dialogHasAction)
         {
+            List<string> filters = [.. Constants.SUPPORTED_VIDEO_EXTENSIONS];
+            filters = filters.Select(item => "*." + item).ToList();
+            
+            videoDialog.Filters = filters.ToArray<string>();
             videoDialog.FileSelected += insertVideo;
             dialogHasAction = true;
         }
@@ -181,6 +186,12 @@ public partial class ContextMenu : Panel
 
     private void insertVideo(string file)
     {
+        if (!Constants.SUPPORTED_VIDEO_EXTENSIONS.Contains(Path.GetExtension(file).TrimStart('.')))
+        {
+            _ = ToastNotification.Notify("The file type you selected isn't supported or isn't a video.", 2);
+            return;
+        }
+
         MapManager.InsertVideo(Map, file);
     }
 }
