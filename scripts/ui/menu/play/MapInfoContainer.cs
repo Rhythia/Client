@@ -465,7 +465,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
         favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;
 
-        if (File.Exists($"{MapUtil.MapsFolder}/{Map.Name}/video.mp4"))
+        if (File.Exists(MapUtil.GetMapVideoPath(Map)))
         {
             videoButton.TooltipText = Map.DisableVideo ? "Enable Video Background" : "Disable Video Background";
             videoButton.Icon = Map.DisableVideo ? SkinManager.Instance.Skin.VideoDisabledButtonImage : SkinManager.Instance.Skin.VideoEnabledButtonImage;
