@@ -64,6 +64,7 @@ public partial class MapList : Panel, ISkinnable
     public bool DragScroll = false;
     public bool MouseScroll = false;
     public bool DisplaySelectionCursor = false;
+    public bool SelectionCursorLockDisplay = false;
     public string SearchQuery = "";
     public string AuthorQuery = "";
     public Bindable<bool> Ascending = new(true);
@@ -127,7 +128,7 @@ public partial class MapList : Panel, ISkinnable
 
         MouseExited += () =>
         {
-            toggleSelectionCursor(false);
+            ToggleSelectionCursor(false);
         };
         Resized += clear;
         SkinManager.Instance.Loaded += UpdateSkin;
@@ -565,10 +566,10 @@ public partial class MapList : Panel, ISkinnable
         {
             if (hovered)
             {
-                hoveredButton = button;
+                if (!SelectionCursorLockDisplay) { hoveredButton = button; }
                 if (Layout == ListLayout.List)
                 {
-                    toggleSelectionCursor(true);
+                    ToggleSelectionCursor(true);
                 }
             }
 
@@ -593,6 +594,7 @@ public partial class MapList : Panel, ISkinnable
                 if (mouseButton.ButtonIndex == MouseButton.Right)
                 {
                     ContextMenu.Show(mouseButton.GlobalPosition, button.Map);
+                    ToggleSelectionCursor(true, true);
                     GetViewport().SetInputAsHandled();
                 }
             }
@@ -601,9 +603,11 @@ public partial class MapList : Panel, ISkinnable
         return button;
     }
 
-    private void toggleSelectionCursor(bool display)
+    public void ToggleSelectionCursor(bool display, bool? lockDisplay = null)
     {
-        if (DisplaySelectionCursor == display)
+        if (lockDisplay != null) { SelectionCursorLockDisplay = lockDisplay.Value; }
+
+        if (SelectionCursorLockDisplay || DisplaySelectionCursor == display)
         {
             return;
         }
