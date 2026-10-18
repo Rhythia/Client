@@ -96,6 +96,8 @@ public partial class ContextMenu : Panel
 
     public static void Show(Vector2 pos, Map map, bool show = true)
     {
+        if (!show) { Hide(); }
+
         Shown = show;
         Map = map;
 
@@ -115,6 +117,7 @@ public partial class ContextMenu : Panel
     {
         Shown = false;
         Instance.Visible = false;
+        MapList.Instance?.ToggleSelectionCursor(false, false);
     }
 
     private static Button createButton(string text, Color fontColor, Color fontHoverColor, Action clickAction, Button template = null, bool makeVisible = true)
