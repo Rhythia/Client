@@ -18,7 +18,11 @@ public class SettingsList<[MustBeVariant] T> : ISettingsList
 
     Variant ISettingsList.DefaultValue => Variant.From(DefaultValue);
 
-    Variant ISettingsList.SelectedValue { get => Variant.From(SelectedValue); set => SelectedValue = value.As<T>(); }
+    Variant ISettingsList.SelectedValue
+    {
+        get => Variant.From(SelectedValue);
+        set => SelectedValue = value.As<T>();
+    }
 
     IList<Variant> ISettingsList.Values => VariantUtil.ToList(Values);
 }

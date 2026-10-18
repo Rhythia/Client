@@ -19,7 +19,8 @@ public partial class ProgressBar : UIComponent
 
     public override void Process(double delta, Attempt attempt)
     {
-        if (Mathf.IsEqualApprox(lastProgress, attempt.Progress)) return;
+        if (Mathf.IsEqualApprox(lastProgress, attempt.Progress))
+            return;
 
         lastProgress = (float)attempt.Progress;
 

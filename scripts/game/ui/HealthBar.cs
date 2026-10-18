@@ -7,12 +7,13 @@ public partial class HealthBar : UIComponent
     private TextureRect healthBarTexture;
     private TextureRect healthBarBGTexture;
     private Tween tween;
-    private Vector2 targetSize = new Vector2(1088, 80);
-    private Vector2 currentSize = new Vector2(1088, 80);
+    private Vector2 targetSize = new(1088, 80);
+    private Vector2 currentSize = new(1088, 80);
 
     public override void _ExitTree()
     {
-        if (Runner.Attempt == null) return;
+        if (Runner.Attempt == null)
+            return;
         Runner.AttemptStatsUpdated -= OnStatsUpdated;
         tween?.Kill();
     }
@@ -35,7 +36,7 @@ public partial class HealthBar : UIComponent
 
     public override void _PhysicsProcess(double delta)
     {
-        currentSize = currentSize.Lerp(targetSize, (float)delta * 30f);
+        currentSize = currentSize.Lerp(targetSize, (float)delta * Math.Clamp((float)Runner.Attempt.Settings.HPLerpValue.Value, 10f, 100f));
         healthBarTexture.Size = currentSize;
     }
 

@@ -13,7 +13,10 @@ public partial class FPSCounter : Label
 
         Visible = settings.DisplayFPS.Value;
 
-        settings.DisplayFPS.Updated += value => { Visible = (bool)value; };
+        settings.DisplayFPS.Updated += value =>
+        {
+            Visible = (bool)value;
+        };
     }
 
     public override void _Process(double delta)

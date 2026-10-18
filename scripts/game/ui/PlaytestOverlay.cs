@@ -1,9 +1,11 @@
 using System;
+using System.Globalization;
 using Godot;
 
 public partial class PlaytestOverlay : Panel
 {
-    [Export] public ReplayManager ReplayManager { get; set; }
+    [Export]
+    public ReplayManager ReplayManager { get; set; }
 
     public bool PlaytestInit = false;
     public Runner Runner;
@@ -36,7 +38,8 @@ public partial class PlaytestOverlay : Panel
         }
         else
         {
-            Input.MouseMode = Attempt.IsReplay && ReplayManager.ViewerVisible ? Input.MouseModeEnum.Visible
+            Input.MouseMode =
+                Attempt.IsReplay && ReplayManager.ViewerVisible ? Input.MouseModeEnum.Visible
                 : Attempt.Settings.AbsoluteInput ? Input.MouseModeEnum.ConfinedHidden
                 : Input.MouseModeEnum.Captured;
         }
@@ -53,13 +56,13 @@ public partial class PlaytestOverlay : Panel
         if (!PlaytestInit && SettingsManager.Instance.Settings.OptionalPlaytestParameters)
         {
             // start from init
-            double.TryParse(Rhythia.StartFromParameter, out double sfInit);
-            string sfSeconds = (sfInit /= 1000).ToString();
+            double.TryParse(Rhythia.StartFromParameter, CultureInfo.InvariantCulture, out double sfInit);
+            string sfSeconds = (sfInit /= 1000).ToString(CultureInfo.InvariantCulture);
             ApplyStartFrom(sfSeconds, Attempt.Map, startFromEdit);
 
             // speed init
-            double.TryParse(Rhythia.SpeedParameter, out double spInit);
-            speedEdit.Text = spInit.ToString();
+            double.TryParse(Rhythia.SpeedParameter, CultureInfo.InvariantCulture, out double spInit);
+            speedEdit.Text = spInit.ToString(CultureInfo.CurrentCulture);
         }
 
         if (!show)
@@ -81,14 +84,13 @@ public partial class PlaytestOverlay : Panel
         }
     }
 
-    public void ApplyStartFrom(string input, Map map, LineEdit valueEdit)
+    public static void ApplyStartFrom(string input, Map map, LineEdit valueEdit)
     {
         // Hello MapInfoContainer.cs! :) -fog
 
         input ??= valueEdit.Text == "" ? valueEdit.PlaceholderText : valueEdit.Text;
 
-
-        if (input.Contains(":")) // time conversion (ex. 1:25)
+        if (input.Contains(':')) // time conversion (ex. 1:25)
         {
             if (!input.IsValidFloat())
             {
@@ -103,9 +105,10 @@ public partial class PlaytestOverlay : Panel
             {
                 value += 60 * split[1].ToFloat();
             }
-            if (double.TryParse(split[0], System.Globalization.CultureInfo.InvariantCulture, out double inputValue))
+            if (double.TryParse(split[0], CultureInfo.InvariantCulture, out double inputValue))
             {
-                if (inputValue < 1) inputValue *= map.Length / 1000;
+                if (inputValue < 1)
+                    inputValue *= map.Length / 1000;
                 value += inputValue;
             }
 
@@ -113,7 +116,7 @@ public partial class PlaytestOverlay : Panel
 
             valueEdit.Text = Util.String.FormatTime(value / 1000);
         }
-        else if (!input.Contains(":"))
+        else if (!input.Contains(':'))
         {
             if (!input.IsValidFloat())
             {
@@ -122,14 +125,15 @@ public partial class PlaytestOverlay : Panel
 
             double value = 0.0;
 
-            if (double.TryParse(input, out double inputValue)) value = inputValue;
+            if (double.TryParse(input, out double inputValue))
+                value = inputValue;
             value = Math.Clamp(value, 0, map.Length);
 
             valueEdit.Text = Util.String.FormatTime(value);
         }
     }
 
-    public double GetStartFrom(LineEdit valueEdit)
+    public static double GetStartFrom(LineEdit valueEdit)
     {
         double value = 0;
         string input = valueEdit.Text;
@@ -138,8 +142,8 @@ public partial class PlaytestOverlay : Panel
 
         if (split.Length == 1)
         {
-            if (split[0].IsValidFloat()) value = split[0].ToFloat();
-
+            if (split[0].IsValidFloat())
+                value = split[0].ToFloat();
         }
         else
         {

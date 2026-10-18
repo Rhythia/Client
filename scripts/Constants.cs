@@ -8,13 +8,19 @@ public partial class Constants : Node
 
     public static readonly string ROOT_FOLDER = Directory.GetCurrentDirectory();
 
-    public static readonly string USER_FOLDER = OS.GetUserDataDir();
+    public static readonly string DEFAULT_USER_FOLDER = OS.GetUserDataDir();
 
-    public static readonly string NIGHTLY_FOLDER = $"{Path.GetDirectoryName(USER_FOLDER)}/SoundSpacePlus";
+    public static readonly string USER_FOLDER_POINTER = $"{DEFAULT_USER_FOLDER}/user_folder_path.txt";
+
+    public static readonly string USER_FOLDER = SettingsManager.GetUserFolder();
+
+    public static readonly string PREVIOUS_USER_FOLDER = SettingsManager.GetPreviousUserFolder();
+
+    public static readonly string NIGHTLY_FOLDER = $"{Path.GetDirectoryName(DEFAULT_USER_FOLDER)}/SoundSpacePlus";
 
     public static readonly string DEFAULT_MAP_EXT = "phxm";
 
-    public static readonly bool TEMP_MAP_MODE = false;//OS.GetCmdlineArgs().Length > 0;
+    public static readonly bool TEMP_MAP_MODE = false; //OS.GetCmdlineArgs().Length > 0;
 
     public static readonly double CURSOR_SIZE = 0.2625;
 
@@ -26,9 +32,17 @@ public partial class Constants : Node
 
     public static readonly double HIT_WINDOW = 55;
 
-    public static readonly int BREAK_TIME = 4000;  // used for skipping breaks mid-map
+    public static readonly int BREAK_TIME = 4000; // used for skipping breaks mid-map
 
     public static readonly string[] DIFFICULTIES = ["N/A", "Easy", "Medium", "Hard", "Insane", "Illogical"];
 
-    public static readonly Color[] DIFFICULTY_COLORS = [new(0xffffffff), new(0x77f379ff), new(0xfff832ff), new(0xe24479ff), new(0x9d6effff), new(0x0094fcff)];
+    public static readonly Color[] DIFFICULTY_COLORS =
+    [
+        new(0xffffffff),
+        new(0x77f379ff),
+        new(0xfff832ff),
+        new(0xe24479ff),
+        new(0x9d6effff),
+        new(0x0094fcff),
+    ];
 }

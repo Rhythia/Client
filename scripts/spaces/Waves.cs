@@ -29,11 +29,31 @@ public partial class Waves : BaseSpace
             introTween.TweenProperty(Camera, "rotation", Vector3.Right * Mathf.DegToRad(15), 5);
             introTween.TweenProperty(Camera, "fov", 70, 5);
             introTween.SetTrans(Tween.TransitionType.Linear);
-            introTween.TweenMethod(Callable.From((float coverage) => { skyMaterial.SetShaderParameter("coverage", coverage); }), 0.0, 1.0, 8);
+            introTween.TweenMethod(
+                Callable.From(
+                    (float coverage) =>
+                    {
+                        skyMaterial.SetShaderParameter("coverage", coverage);
+                    }
+                ),
+                0.0,
+                1.0,
+                8
+            );
         }
 
         Tween echoTween = CreateTween().SetTrans(Tween.TransitionType.Linear);
-        echoTween.TweenMethod(Callable.From((float echo) => { waterMaterial.SetShaderParameter("echo", echo); }), 0.0, 0.5, 12);
+        echoTween.TweenMethod(
+            Callable.From(
+                (float echo) =>
+                {
+                    waterMaterial.SetShaderParameter("echo", echo);
+                }
+            ),
+            0.0,
+            0.5,
+            12
+        );
     }
 
     public override void _Process(double delta)
@@ -60,10 +80,17 @@ public partial class Waves : BaseSpace
             skyMaterial.SetShaderParameter("image_lerp", 0.0);
 
             Tween tween = CreateTween();
-            tween.TweenMethod(Callable.From((float alpha) =>
-            {
-                skyMaterial.SetShaderParameter("image_lerp", alpha);
-            }), 0.0, 1.0, 0.2);
+            tween.TweenMethod(
+                Callable.From(
+                    (float alpha) =>
+                    {
+                        skyMaterial.SetShaderParameter("image_lerp", alpha);
+                    }
+                ),
+                0.0,
+                1.0,
+                0.2
+            );
         }
     }
 

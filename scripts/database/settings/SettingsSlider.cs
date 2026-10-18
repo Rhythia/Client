@@ -1,5 +1,3 @@
-
-
 public class SettingsSlider
 {
     public float MinValue { get; set; } = default;

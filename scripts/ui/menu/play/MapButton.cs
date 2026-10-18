@@ -15,13 +15,13 @@ public partial class MapButton : Control, ISkinnable
     public int ListIndex = 0;
 
     /// <summary>
-	/// Minimum Y size (configure in MapList properties)
-	/// </summary>
+    /// Minimum Y size (configure in MapList properties)
+    /// </summary>
     public float MinimumSize = 90;
 
     /// <summary>
-	/// Additional Y size when hovered (configure in MapList properties)
-	/// </summary>
+    /// Additional Y size when hovered (configure in MapList properties)
+    /// </summary>
     public float HoveredSizeOffset = 10;
 
     /// <summary>
@@ -30,8 +30,8 @@ public partial class MapButton : Control, ISkinnable
     public float SelectedSizeOffset = 20;
 
     /// <summary>
-	/// Total Y size added on top of minimum size, equivalent to HoverSizeOffset + SelectedSizeOffset
-	/// </summary>
+    /// Total Y size added on top of minimum size, equivalent to HoverSizeOffset + SelectedSizeOffset
+    /// </summary>
     public float SizeOffset = 0;
 
     public bool Hovered = false;
@@ -69,9 +69,18 @@ public partial class MapButton : Control, ISkinnable
         OutlineShader = (ShaderMaterial)outline.Material.Duplicate();
         outline.Material = OutlineShader;
 
-        Button.MouseEntered += () => { Hover(true); };
-        Button.MouseExited += () => { Hover(false); };
-        Button.Pressed += () => { EmitSignal(SignalName.Pressed); };
+        Button.MouseEntered += () =>
+        {
+            Hover(true);
+        };
+        Button.MouseExited += () =>
+        {
+            Hover(false);
+        };
+        Button.Pressed += () =>
+        {
+            EmitSignal(SignalName.Pressed);
+        };
 
         SkinManager.Instance.Loaded += UpdateSkin;
     }
@@ -91,24 +100,30 @@ public partial class MapButton : Control, ISkinnable
 
     public virtual void Hover(bool hover)
     {
-        if (Hovered == hover) return;
+        if (Hovered == hover)
+            return;
 
         Hovered = hover;
         SizeOffset = computeSizeOffset();
 
         EmitSignal(SignalName.MouseHovered, hover);
 
-        CreateTween().SetTrans(Tween.TransitionType.Quad).TweenProperty(Holder, "self_modulate", Hovered ? Color.Color8(26, 6, 13, 224) : Color.Color8(0, 0, 0, 224), 0.15);
+        CreateTween()
+            .SetTrans(Tween.TransitionType.Quad)
+            .TweenProperty(Holder, "self_modulate", Hovered ? Color.Color8(26, 6, 13, 224) : Color.Color8(0, 0, 0, 224), 0.15);
     }
 
     public virtual void Select(bool select = true)
     {
-        if (Selected == select) return;
+        if (Selected == select)
+            return;
 
         Selected = select;
         SizeOffset = computeSizeOffset();
 
-        CreateTween().SetTrans(Tween.TransitionType.Quad).TweenProperty(Cover, "modulate", Color.Color8(255, 255, 255, (byte)(Selected ? 255 : 128)), 0.1);
+        CreateTween()
+            .SetTrans(Tween.TransitionType.Quad)
+            .TweenProperty(Cover, "modulate", Color.Color8(255, 255, 255, (byte)(Selected ? 255 : 128)), 0.1);
     }
 
     public void Deselect()

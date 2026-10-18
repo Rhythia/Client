@@ -78,7 +78,7 @@ public struct Leaderboard
         ScoreCount = (uint)Scores.Count;
     }
 
-    public void Save()
+    public readonly void Save()
     {
         Godot.FileAccess file = Godot.FileAccess.Open(Path, Godot.FileAccess.ModeFlags.Write);
 
@@ -90,7 +90,7 @@ public struct Leaderboard
             byte[] attemptIdBytes = Encoding.UTF8.GetBytes(score.AttemptID ?? string.Empty);
             byte[] playerBytes = Encoding.UTF8.GetBytes(score.Player ?? string.Empty);
 
-            file.Store32(0);    // reserved for length
+            file.Store32(0); // reserved for length
             file.Store32((uint)attemptIdBytes.Length);
             file.StoreBuffer(attemptIdBytes);
             file.Store32((uint)playerBytes.Length);
@@ -175,13 +175,27 @@ public struct Leaderboard
             int modifiersLength = (int)FileBuffer.GetUInt32();
             // Logger.Log($"[Leaderboard] modifiers length={modifiersLength}, remaining={FileBuffer.Length - FileBuffer.Pointer}");
 
-            foreach (KeyValuePair<string, bool> entry in (Godot.Collections.Dictionary<string, bool>)Json.ParseString(FileBuffer.GetString(modifiersLength)))
+            foreach (
+                KeyValuePair<string, bool> entry in (Godot.Collections.Dictionary<string, bool>)
+                    Json.ParseString(FileBuffer.GetString(modifiersLength))
+            )
             {
                 Modifiers[entry.Key] = entry.Value;
             }
         }
 
-        public Score(string id, string player, bool qualifies, ulong value, double accuracy, double time, double progress, double mapLength, double speed, Dictionary<string, bool> modifiers)
+        public Score(
+            string id,
+            string player,
+            bool qualifies,
+            ulong value,
+            double accuracy,
+            double time,
+            double progress,
+            double mapLength,
+            double speed,
+            Dictionary<string, bool> modifiers
+        )
         {
             AttemptID = id;
             Player = player;
@@ -200,7 +214,7 @@ public struct Leaderboard
 
     public struct ScoreComparer : IComparer<Score>
     {
-        public int Compare(Score a, Score b)
+        public readonly int Compare(Score a, Score b)
         {
             return b.Value.CompareTo(a.Value);
         }

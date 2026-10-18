@@ -20,18 +20,14 @@ public partial class BaseScene : Node
         Transition = GetNode<ColorRect>("Transition");
     }
 
-    public virtual void Load()
-    {
+    public virtual void Load() { }
 
-    }
-
-    public virtual void Unload()
-    {
-
-    }
+    public virtual void Unload() { }
 
     public BaseSpace GetSpace()
     {
-        return UseGameSpace ? SkinManager.Instance.Skin.GameSpace : UseMenuSpace ? SkinManager.Instance.Skin.MenuSpace : null;
+        return UseGameSpace ? SkinManager.Instance.Skin.GameSpace
+            : UseMenuSpace ? SkinManager.Instance.Skin.MenuSpace
+            : null;
     }
 }

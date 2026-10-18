@@ -7,11 +7,17 @@ using Godot;
 
 public partial class Runner : Node3D
 {
-    [Signal] public delegate void AttemptStatsUpdatedEventHandler(Attempt attempt);
-    [Signal] public delegate void SkipAvailableEventHandler(Attempt attempt);
-    [Signal] public delegate void HitResultChangedEventHandler(int noteIndex, HitResult hitResult);
+    [Signal]
+    public delegate void AttemptStatsUpdatedEventHandler(Attempt attempt);
 
-    [Export] public HudManager HudManager;
+    [Signal]
+    public delegate void SkipAvailableEventHandler(Attempt attempt);
+
+    [Signal]
+    public delegate void HitResultChangedEventHandler(int noteIndex, HitResult hitResult);
+
+    [Export]
+    public HudManager HudManager;
 
     public Attempt Attempt;
     public Dictionary<Type, int> ObjectIndicesStart = [];
@@ -24,19 +30,31 @@ public partial class Runner : Node3D
     public bool StopQueued = false;
 
     private SettingsProfile settings;
+    private AutoplayHandler autoplayHandler;
     private double lastFrame = Time.GetTicksUsec();
     private bool firstFrame = true;
     private bool eventsConnected = false;
+    private bool autoplayEnabled = false;
+    private double? hitResultProgressOverride = null;
     private double[] noteTimestamps;
 
     [ExportCategory("Settings")]
-    [Export] public bool NotesOnly = false;
+    [Export]
+    public bool NotesOnly = false;
 
     [ExportCategory("Nodes")]
-    [Export] public Camera3D Camera;
-    [Export] public Godot.Collections.Array<Renderer> Renderers;
-    [Export] public MeshInstance3D Grid;
-    [Export] public MeshInstance3D Cursor;
+    [Export]
+    public Camera3D Camera;
+
+    [Export]
+    public Godot.Collections.Array<Renderer> Renderers;
+
+    [Export]
+    public MeshInstance3D Grid;
+
+    [Export]
+    public MeshInstance3D Cursor;
+
     // [Export] public VideoStreamPlayer VideoStreamPlayer;
 
     public override void _Ready()
@@ -45,7 +63,7 @@ public partial class Runner : Node3D
 
         HudManager ??= GetNode<HudManager>("HUD");
         Camera ??= GetNode<Camera3D>("Camera3D");
-        Renderers ??= GetNode<Godot.Collections.Array<Renderer>>("Renderers");
+        Renderers ??= new Godot.Collections.Array<Renderer>(GetNode<Node3D>("Renderers").GetChildren().OfType<Renderer>());
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
@@ -58,8 +76,13 @@ public partial class Runner : Node3D
         delta = (now - lastFrame) / 1000000;
         lastFrame = now;
 
-        if (!Playing) return;
-        if (firstFrame) { firstFrame = false; return; }
+        if (!Playing)
+            return;
+        if (firstFrame)
+        {
+            firstFrame = false;
+            return;
+        }
 
         Attempt.Progress += delta * 1000 * Speed;
 
@@ -67,7 +90,8 @@ public partial class Runner : Node3D
 
         if (Attempt.Progress > 0 && Attempt.Progress < Attempt.Length && !Attempt.Stopped)
         {
-            double audioDelay = Attempt.Progress - settings.LocalOffset - (1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix()));
+            double audioDelay =
+                Attempt.Progress - settings.LocalOffset - (1000 * (SoundManager.Song.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix()));
 
             // if de-sync is over 40 milliseconds, then slightly adjust the speed of the song until under 40 milliseconds
             if (Math.Abs(audioDelay / Speed) > Math.Max(40, delta))
@@ -82,17 +106,22 @@ public partial class Runner : Node3D
 
         // Save replay frame
 
-        // if not paused & record replays on & not a temporary map & time from now and last replay frame was 60 frames apart
-        if (!Attempt.Stopped && settings.RecordReplays && !Attempt.Map.Ephemeral && now - Attempt.LastReplayFrame >= 1000000 / 60)
+        if (autoplayEnabled)
         {
-            if (Attempt.ReplayFrames.Count == 0 || (Attempt.ReplayFrames[^1][1..2] != new float[] { Attempt.CursorPosition.X, Attempt.CursorPosition.Y }))
+            Game.Instance.CursorManager.UpdateAutoplayCursor(autoplayHandler.GetCursorPosition(Attempt.Progress));
+            processAutoplayHits();
+        }
+
+        // if not paused & record replays on & not a temporary map & time from now and last replay frame was 60 frames apart
+        if (!autoplayEnabled && !Attempt.Stopped && settings.RecordReplays && !Attempt.Map.Ephemeral && now - Attempt.LastReplayFrame >= 1000000 / 60)
+        {
+            if (
+                Attempt.ReplayFrames.Count == 0
+                || (Attempt.ReplayFrames[^1][1..2] != new float[] { Attempt.CursorPosition.X, Attempt.CursorPosition.Y })
+            )
             {
                 Attempt.LastReplayFrame = now;
-                Attempt.ReplayFrames.Add([
-                    (float)Attempt.Progress,
-                    Attempt.CursorPosition.X,
-                    Attempt.CursorPosition.Y
-                ]);
+                Attempt.ReplayFrames.Add([(float)Attempt.Progress, Attempt.CursorPosition.X, Attempt.CursorPosition.Y]);
             }
         }
 
@@ -196,9 +225,47 @@ public partial class Runner : Node3D
         }
     }
 
+    private void processAutoplayHits()
+    {
+        if (!autoplayEnabled || Attempt.IsReplay || !Attempt.Objects.TryGetValue(typeof(Note), out var objects))
+        {
+            return;
+        }
+
+        int startIndex = ObjectIndicesStart[typeof(Note)];
+
+        for (int i = startIndex; i < objects.Count; i++)
+        {
+            Note note = (Note)objects[i];
+
+            if (note.Millisecond > Attempt.Progress)
+            {
+                break;
+            }
+
+            if (note.Millisecond < Attempt.StartFrom || note.LastResult != HitResult.None)
+            {
+                continue;
+            }
+
+            note.Hittable = true;
+
+            try
+            {
+                hitResultProgressOverride = note.Millisecond;
+                note.Hit(this);
+            }
+            finally
+            {
+                hitResultProgressOverride = null;
+            }
+        }
+    }
+
     public void Play()
     {
-        if (Attempt == null) return;
+        if (Attempt == null)
+            return;
 
         Map = Attempt.Map;
         Speed = Attempt.Speed;
@@ -211,7 +278,7 @@ public partial class Runner : Node3D
             ObjectIndicesStart[entry.Key] = (int)Attempt.FirstNote;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
-        noteTimestamps = Attempt.Objects[typeof(Note)].Select(note => (double)note.Millisecond).ToArray();
+        noteTimestamps = [.. Attempt.Objects[typeof(Note)].Select(note => (double)note.Millisecond)];
 
         if (!NotesOnly)
         {
@@ -243,11 +310,34 @@ public partial class Runner : Node3D
             }
         }
 
+        autoplayEnabled = Attempt.Modifiers.Any(mod => mod is AutoplayModifier) && !Attempt.IsReplay;
+
+        if (autoplayEnabled)
+        {
+            foreach (var mod in Attempt.Modifiers.Where(mod => mod is AutoplayModifier))
+            {
+                mod.Activate(Attempt);
+
+                if (!NotesOnly)
+                {
+                    HudManager.DisplayModifier(mod);
+                }
+            }
+
+            autoplayHandler = new(Attempt);
+        }
+        else
+        {
+            autoplayHandler = null;
+        }
         settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
-        Camera.Fov = (float)settings.FoV;
+        Camera.Fov = (float)(double)settings.FoV;
 
         // temp until skinning support
-        (Renderers[0] as NoteRenderer).NoteMultiMesh.Multimesh.Mesh = SkinManager.Instance.Skin.NoteMesh;
+        (Renderers[0] as NoteRenderer)
+            .NoteMultiMesh
+            .Multimesh
+            .Mesh = SkinManager.Instance.Skin.NoteMesh;
 
         foreach (var renderer in Renderers)
         {
@@ -311,6 +401,7 @@ public partial class Runner : Node3D
     public void Seek(double ms)
     {
         Attempt.Progress = ms;
+        autoplayHandler?.Reset(Attempt.Progress);
 
         foreach (var entry in Attempt.Objects)
         {
@@ -383,7 +474,7 @@ public partial class Runner : Node3D
         }
 
         // dont want an infinite dependency loop so im just going to do this -fog
-        if (!Attempt.IsReplay && Game.Instance.ReplayManager.CurrentMode == ReplayManager.Mode.RECORD)
+        if (!autoplayEnabled && !Attempt.IsReplay && Game.Instance.ReplayManager.CurrentMode == ReplayManager.Mode.RECORD)
         {
             Game.Instance.ReplayManager.SaveReplay(Attempt);
         }
@@ -393,7 +484,7 @@ public partial class Runner : Node3D
             Stats.Instance.GamePlaytime += (Time.GetTicksUsec() - Attempt.TimeStarted) / 1000000;
             Stats.Instance.TotalDistance += (ulong)Attempt.DistanceMM;
 
-            if (Attempt.StartFrom == 0)
+            if (Attempt.StartFrom == 0 && !autoplayEnabled)
             {
                 if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}"))
                 {
@@ -411,7 +502,20 @@ public partial class Runner : Node3D
 
                 Leaderboard leaderboard = new(Attempt.Map.Name, $"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}");
 
-                leaderboard.Add(new(Attempt.ID, "You", Attempt.Qualifies, Attempt.Score, Attempt.Accuracy, Time.GetUnixTimeFromSystem(), Attempt.Progress, Attempt.Map.Length, Speed, mods));
+                leaderboard.Add(
+                    new(
+                        Attempt.ID,
+                        "You",
+                        Attempt.Qualifies,
+                        Attempt.Score,
+                        Attempt.Accuracy,
+                        Time.GetUnixTimeFromSystem(),
+                        Attempt.Progress,
+                        Attempt.Map.Length,
+                        Speed,
+                        mods
+                    )
+                );
                 leaderboard.Save();
 
                 if (Attempt.Qualifies)
@@ -444,7 +548,10 @@ public partial class Runner : Node3D
 
     private void onHitResultChanged(int noteIndex, HitResult hitResult)
     {
-        float lateness = Attempt.IsReplay ? Attempt.HitsInfo[noteIndex] : (float)(((int)Attempt.Progress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
+        double judgmentProgress = hitResultProgressOverride ?? Attempt.Progress;
+        float lateness = Attempt.IsReplay
+            ? Attempt.HitsInfo[noteIndex]
+            : (float)(((int)judgmentProgress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
         float factor = 1 - Math.Max(0, lateness - 25) / 150f;
         uint hitScore = (uint)(100 * Attempt.ComboMultiplier * Attempt.ModsMultiplier * factor * ((Speed - 1) / 2.5 + 1));
 
@@ -462,7 +569,8 @@ public partial class Runner : Node3D
                 if (!Attempt.IsReplay)
                 {
                     Stats.Instance.NotesHit++;
-                    if (Attempt.Combo > Stats.Instance.HighestCombo) Stats.Instance.HighestCombo = Attempt.Combo;
+                    if (Attempt.Combo > Stats.Instance.HighestCombo)
+                        Stats.Instance.HighestCombo = Attempt.Combo;
 
                     Attempt.HitsInfo[noteIndex] = lateness;
                 }

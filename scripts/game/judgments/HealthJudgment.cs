@@ -9,15 +9,15 @@ public class HealthJudgment
 
     public event Action<bool> Failed;
 
-    private List<IFailModifier> failModifiers = new();
+    private List<IFailModifier> failModifiers = [];
 
-    private List<IHealthModifier> healthModifiers = new();
+    private List<IHealthModifier> healthModifiers = [];
 
     public double Health { get; private set; } = 1;
 
     public double HealthStep { get; private set; } = 15;
 
-    public void ApplyAttempt(Attempt attempt)
+    public static void ApplyAttempt(Attempt attempt)
     {
         // foreach (Mod mod in attempt.Mods)
         // {
@@ -35,7 +35,7 @@ public class HealthJudgment
 
     public void ApplyHitObjectResult(bool hit)
     {
-        if (healthModifiers.Any())
+        if (healthModifiers.Count != 0)
         {
             foreach (IHealthModifier mod in healthModifiers)
             {
@@ -47,7 +47,7 @@ public class HealthJudgment
             defaultHealthResult(hit);
         }
 
-        if (failModifiers.Any())
+        if (failModifiers.Count != 0)
         {
             foreach (IFailModifier mod in failModifiers)
             {

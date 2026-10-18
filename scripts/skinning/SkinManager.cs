@@ -120,6 +120,7 @@ public partial class SkinManager : Node
         skin.MapInfoCoverBackgroundImage = loadTexture("ui/play/mapinfo_cover_background.png");
 
         skin.ModNoFailImage = loadTexture("modifiers/nofail.png");
+        skin.ModAutoplayImage = loadTexture("modifiers/autoplay.png");
         skin.ModGhostImage = loadTexture("modifiers/ghost.png");
         skin.ModStrobeImage = loadTexture("modifiers/strobe.png");
         skin.ModChaosImage = loadTexture("modifiers/chaos.png");
@@ -146,7 +147,8 @@ public partial class SkinManager : Node
 
         // Colors
 
-        string colorsetPath = $"{Constants.USER_FOLDER}/colorsets/{(settings.NoteColors == "skin" ? skin.Config.NoteColors : settings.NoteColors)}.txt";
+        string colorsetPath =
+            $"{Constants.USER_FOLDER}/colorsets/{(settings.NoteColors == "skin" ? skin.Config.NoteColors : settings.NoteColors)}.txt";
 
         if (File.Exists(colorsetPath))
         {
@@ -201,7 +203,13 @@ public partial class SkinManager : Node
         }
 
         var image = Image.LoadFromFile(fullPath);
-        return image != null ? ImageTexture.CreateFromImage(image) : null;
+        if (image == null)
+            return null;
+
+        image.Convert(Image.Format.Rgba8);
+        image.GenerateMipmaps();
+
+        return ImageTexture.CreateFromImage(image);
     }
 
     private static byte[] loadSound(string skinPath)
@@ -239,9 +247,7 @@ public partial class SkinManager : Node
 
     private static BaseSpace loadSpace(string path)
     {
-        return GD.Load<PackedScene>(
-            resourceExists(path) ? path : "res://prefabs/spaces/void.tscn"
-        ).Instantiate<Node3D>() as BaseSpace;
+        return GD.Load<PackedScene>(resourceExists(path) ? path : "res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;
     }
 
     private static bool resourceExists(string path)

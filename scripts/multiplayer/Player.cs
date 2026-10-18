@@ -1,13 +1,7 @@
-public class Player
+public class Player(string name = "Player")
 {
-    public string Name;
-    public bool Ready;
-
-    public Player(string name = "Player")
-    {
-        Name = name;
-        Ready = false;
-    }
+    public string Name = name;
+    public bool Ready = false;
 
     public override string ToString() => $"{Name}";
 }

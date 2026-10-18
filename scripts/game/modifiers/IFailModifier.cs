@@ -1,5 +1,4 @@
-﻿
-/// <summary>
+﻿/// <summary>
 /// Modifiers that override the fail condition
 /// </summary>
 public interface IFailModifier : IModifier

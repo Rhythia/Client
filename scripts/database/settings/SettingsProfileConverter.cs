@@ -11,10 +11,7 @@ public class SettingsProfileConverter
 
     public static string Serialize(SettingsProfile profile)
     {
-        Dictionary data = new()
-        {
-            ["_Version"] = version
-        };
+        Dictionary data = new() { ["_Version"] = version };
 
         foreach (var property in typeof(SettingsProfile).GetProperties())
         {
@@ -52,12 +49,19 @@ public class SettingsProfileConverter
             {
                 object value = property.GetValue(profile);
 
-                if (value is ISettingsItem item && item.SaveToDisk && data.ContainsKey(property.Name))
+                if (value is not ISettingsItem { SaveToDisk: true } item)
+                {
+                    continue;
+                }
+                if (data.ContainsKey(property.Name))
                 {
                     item.SetVariant(data[property.Name]);
                 }
+                else
+                {
+                    item.Reset();
+                }
             }
-
         }
         catch (Exception)
         {

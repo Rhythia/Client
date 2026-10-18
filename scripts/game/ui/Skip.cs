@@ -8,7 +8,8 @@ public partial class Skip : UIComponent
 
     public override void OnExitTree()
     {
-        if (Runner.Attempt == null) return;
+        if (Runner.Attempt == null)
+            return;
         Runner.SkipAvailable -= OnSkipAvailable;
     }
 
@@ -36,11 +37,11 @@ public partial class Skip : UIComponent
             label.Text = "Press Space to complete";
         }
 
-        if (tween != null) return;
+        if (tween != null)
+            return;
 
         tween = CreateTween().SetLoops().SetTrans(Tween.TransitionType.Sine);
         tween.TweenProperty(label, "modulate", new Color(label.Modulate, 0.25f), 0.75f);
         tween.TweenProperty(label, "modulate", new Color(label.Modulate, 0.75f), 0.75f);
     }
 }
-

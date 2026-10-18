@@ -8,7 +8,6 @@ using SQLite;
 
 public partial class Map : RefCounted
 {
-
     public static Texture2D DefaultCover = GD.Load<Texture2D>("res://textures/empty.png");
 
     [PrimaryKey]
@@ -72,7 +71,11 @@ public partial class Map : RefCounted
     private Texture2D cover = DefaultCover;
 
     [Ignore]
-    public Texture2D Cover { get => getCover(); set => cover = value; }
+    public Texture2D Cover
+    {
+        get => getCover();
+        set => cover = value;
+    }
 
     [Ignore]
     public AudioStream Audio { get; set; } = null;
@@ -85,7 +88,11 @@ public partial class Map : RefCounted
     private Note[] notes;
 
     [Ignore]
-    public Note[] Notes { get => notes ?? TryParseNotes(); set => notes = value; }
+    public Note[] Notes
+    {
+        get => notes ?? TryParseNotes();
+        set => notes = value;
+    }
 
     public Note[] TryParseNotes()
     {
@@ -120,7 +127,24 @@ public partial class Map : RefCounted
 
     public Map() { }
 
-    public Map(string folderPath, Note[] data = null, string id = null, string artist = "", string title = "", float rating = 0, string[] mappers = null, int difficulty = 0, string difficultyName = null, int? length = null, byte[] audioBuffer = null, byte[] coverBuffer = null, byte[] videoBuffer = null, bool ephemeral = false, string artistLink = "", string artistPlatform = "")
+    public Map(
+        string folderPath,
+        Note[] data = null,
+        string id = null,
+        string artist = "",
+        string title = "",
+        float rating = 0,
+        string[] mappers = null,
+        int difficulty = 0,
+        string difficultyName = null,
+        int? length = null,
+        byte[] audioBuffer = null,
+        byte[] coverBuffer = null,
+        byte[] videoBuffer = null,
+        bool ephemeral = false,
+        string artistLink = "",
+        string artistPlatform = ""
+    )
     {
         CacheVersion = 2;
 
@@ -156,22 +180,25 @@ public partial class Map : RefCounted
     public string EncodeMeta()
     {
         string path = $"{MapUtil.MapsFolder}/{Name}";
-        return Json.Stringify(new Godot.Collections.Dictionary()
-        {
-            ["ID"] = Name,
-            ["Artist"] = Artist,
-            ["ArtistLink"] = ArtistLink,
-            ["ArtistPlatform"] = ArtistPlatform,
-            ["Title"] = Title,
-            ["Rating"] = Rating,
-            ["Mappers"] = Mappers,
-            ["Difficulty"] = Difficulty,
-            ["DifficultyName"] = DifficultyName,
-            ["Length"] = Length,
-            ["HasAudio"] = AudioBuffer != null && File.Exists($"{path}/audio.{AudioExt}"),
-            ["HasCover"] = CoverBuffer != null && File.Exists($"{path}/cover.png"),
-            ["HasVideo"] = VideoBuffer != null && File.Exists($"{path}/video.mp4"),
-            ["AudioExt"] = AudioExt
-        }, "\t");
+        return Json.Stringify(
+            new Godot.Collections.Dictionary()
+            {
+                ["ID"] = Name,
+                ["Artist"] = Artist,
+                ["ArtistLink"] = ArtistLink,
+                ["ArtistPlatform"] = ArtistPlatform,
+                ["Title"] = Title,
+                ["Rating"] = Rating,
+                ["Mappers"] = Mappers,
+                ["Difficulty"] = Difficulty,
+                ["DifficultyName"] = DifficultyName,
+                ["Length"] = Length,
+                ["HasAudio"] = AudioBuffer != null && File.Exists($"{path}/audio.{AudioExt}"),
+                ["HasCover"] = CoverBuffer != null && File.Exists($"{path}/cover.png"),
+                ["HasVideo"] = VideoBuffer != null && File.Exists($"{path}/video.mp4"),
+                ["AudioExt"] = AudioExt,
+            },
+            "\t"
+        );
     }
 }

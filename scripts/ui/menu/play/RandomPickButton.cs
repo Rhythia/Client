@@ -5,7 +5,10 @@ public partial class RandomPickButton : Button
 {
     private Random random = new();
 
-    public override void _Pressed() { Pick(); }
+    public override void _Pressed()
+    {
+        Pick();
+    }
 
     public override void _Input(InputEvent @event)
     {

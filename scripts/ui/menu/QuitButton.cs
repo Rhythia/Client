@@ -12,7 +12,10 @@ public partial class QuitButton : Button
         popup.AddOption("Quit", Callable.From(quit));
         popup.AddOption("Cancel", Callable.From(popup.Hide));
 
-        Pressed += () => { popup.Show(); };
+        Pressed += () =>
+        {
+            popup.Show();
+        };
     }
 
     public override void _Input(InputEvent @event)

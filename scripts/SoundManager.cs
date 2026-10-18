@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Godot;
 
@@ -34,6 +35,9 @@ public partial class SoundManager : Node, ISkinnable
     private static ulong lastVolumeChange = 0;
     private static bool? jeeping = null; // we're jeeping (last state of a song)
     private static bool menuMusicPausedByUser = false;
+
+    private static bool offsetPopupShown = false;
+    private static ulong lastOffsetChange = 0;
 
     public override void _Ready()
     {
@@ -76,7 +80,7 @@ public partial class SoundManager : Node, ISkinnable
                     }
                     break;
                 case "SceneResults":
-                    PlayJukebox(JukeboxIndex);  // play skinnable results song here in the future
+                    PlayJukebox(JukeboxIndex); // play skinnable results song here in the future
                     break;
                 default:
                     break;
@@ -84,7 +88,10 @@ public partial class SoundManager : Node, ISkinnable
         };
 
         SettingsManager.Instance.Loaded += UpdateVolume;
-        Lobby.Instance.SpeedChanged += (speed) => { SoundManager.Song.PitchScale = (float)speed; };
+        Lobby.Instance.SpeedChanged += (speed) =>
+        {
+            SoundManager.Song.PitchScale = (float)speed;
+        };
         MapManager.Selected.ValueChanged += (_, _) => RefreshMenuMusicPlayback();
 
         MapManager.MapDeleted += (map) =>
@@ -156,6 +163,14 @@ public partial class SoundManager : Node, ISkinnable
             tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
             tween.TweenProperty(SceneManager.VolumePanel.GetNode<Label>("Label"), "anchor_bottom", 1, 0.35);
         }
+
+        if (offsetPopupShown && Time.GetTicksMsec() - lastOffsetChange >= 1000)
+        {
+            offsetPopupShown = false;
+
+            Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
+            tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
+        }
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -164,7 +179,10 @@ public partial class SoundManager : Node, ISkinnable
 
         if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {
-            if ((eventMouseButton.CtrlPressed || eventMouseButton.AltPressed) && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown))
+            if (
+                (eventMouseButton.CtrlPressed || eventMouseButton.AltPressed)
+                && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown)
+            )
             {
                 switch (eventMouseButton.ButtonIndex)
                 {
@@ -177,7 +195,7 @@ public partial class SoundManager : Node, ISkinnable
                 }
 
                 Label label = SceneManager.VolumePanel.GetNode<Label>("Label");
-                label.Text = settings.VolumeMaster.Value.ToString();
+                label.Text = settings.VolumeMaster.Value.ToString(CultureInfo.CurrentCulture);
 
                 Tween tween = SceneManager.VolumePanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
                 tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffffff"), 0.25);
@@ -188,6 +206,30 @@ public partial class SoundManager : Node, ISkinnable
                 lastVolumeChange = Time.GetTicksMsec();
 
                 UpdateVolume();
+            }
+            if (
+                (eventMouseButton.ShiftPressed)
+                && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown)
+            )
+            {
+                switch (eventMouseButton.ButtonIndex)
+                {
+                    case MouseButton.WheelUp:
+                        settings.LocalOffset.Value = Math.Round(settings.LocalOffset) + 1;
+                        break;
+                    case MouseButton.WheelDown:
+                        settings.LocalOffset.Value = Math.Round(settings.LocalOffset) - 1;
+                        break;
+                }
+
+                Label label = SceneManager.OffsetPanel.GetNode<Label>("Label");
+                label.Text = $"Local Offset: {settings.LocalOffset.Value}ms";
+
+                Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
+                tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffffff"), 0.25);
+
+                offsetPopupShown = true;
+                lastOffsetChange = Time.GetTicksMsec();
             }
         }
     }
@@ -377,13 +419,15 @@ public partial class SoundManager : Node, ISkinnable
 
     public static float ComputeVolumeDb(float volume, float master, float range)
     {
-        if (volume <= 0 || master <= 0) return float.NegativeInfinity;
+        if (volume <= 0 || master <= 0)
+            return float.NegativeInfinity;
         return (float)(-80 + range * Math.Pow(volume / 100, 0.1) * Math.Pow(master / 100, 0.1));
     }
 
     public static float ComputeVolumeFromDb(float db, float master, float range)
     {
-        if (float.IsNegativeInfinity(db) || master <= 0) return 0;
+        if (float.IsNegativeInfinity(db) || master <= 0)
+            return 0;
         return (float)Math.Clamp(100 * Math.Pow((db + 80) / (range * Math.Pow(master / 100, 0.1)), 10), 0, 100);
     }
 

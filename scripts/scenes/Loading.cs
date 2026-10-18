@@ -8,11 +8,20 @@ public partial class Loading : BaseScene
     private Color opaque = new(1, 1, 1, 1);
     private Color transparent = new(1, 1, 1, 0);
 
-    [Export] private ColorRect background;
-    [Export] private TextureRect splash;
-    [Export] private Label progressLabel;
-    [Export] private Panel progressBar;
-    [Export] private Panel progressBarFill;
+    [Export]
+    private ColorRect background;
+
+    [Export]
+    private TextureRect splash;
+
+    [Export]
+    private Label progressLabel;
+
+    [Export]
+    private Panel progressBar;
+
+    [Export]
+    private Panel progressBarFill;
 
     private ShaderMaterial splashMaterial;
 
@@ -69,12 +78,20 @@ public partial class Loading : BaseScene
         inTween.TweenProperty(background, "color", Color.FromHtml("#060509"), 1);
         inTween.TweenProperty(progressLabel, "modulate", opaque, 0.5);
         inTween.TweenProperty(progressBar, "modulate", opaque, 0.5);
-        inTween.SetTrans(Tween.TransitionType.Quint)
+        inTween
+            .SetTrans(Tween.TransitionType.Quint)
             .SetEase(Tween.EaseType.Out)
-            .TweenMethod(Callable.From((float shift) =>
-            {
-                splashMaterial.SetShaderParameter("shift", shift);
-            }), 0.2, 1.0, 1.5);
+            .TweenMethod(
+                Callable.From(
+                    (float shift) =>
+                    {
+                        splashMaterial.SetShaderParameter("shift", shift);
+                    }
+                ),
+                0.2,
+                1.0,
+                1.5
+            );
 
         return inTween;
     }
@@ -83,7 +100,14 @@ public partial class Loading : BaseScene
     {
         var outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
         outTween.TweenProperty(background, "color", Color.Color8(0, 0, 0), 0.25);
-        outTween.Chain().TweenCallback(Callable.From(() => { SceneManager.Load("res://scenes/main_menu.tscn"); }));
+        outTween
+            .Chain()
+            .TweenCallback(
+                Callable.From(() =>
+                {
+                    SceneManager.Load("res://scenes/main_menu.tscn");
+                })
+            );
     }
 
     private void updateStep()
@@ -138,17 +162,19 @@ public partial class Loading : BaseScene
 
         inTween.Chain();
 
-        inTween.TweenCallback(Callable.From(() =>
-        {
-            if (MapManager.Initialized)
+        inTween.TweenCallback(
+            Callable.From(() =>
             {
-                exit();
-            }
-            else
-            {
-                MapManager.MapsInitialized += _ => Callable.From(exit).CallDeferred();
-            }
-        }));
+                if (MapManager.Initialized)
+                {
+                    exit();
+                }
+                else
+                {
+                    MapManager.MapsInitialized += _ => Callable.From(exit).CallDeferred();
+                }
+            })
+        );
     }
 
     private void updateDownloadBar(object _, PropertyChangedEventArgs @event)
