@@ -14,7 +14,7 @@ public class FlickerModifier : Modifier, IObjectRenderModifier<Note>
     {
         double at = attempt.Settings.ApproachTime;
 
-        if (attempt.Progress / 750 / attempt.Speed % at >= at / 2)
+        if (attempt.Progress / 600 / attempt.Speed % at >= at / 2)
         {
             if (note.Index % 2 == 0)
             {
