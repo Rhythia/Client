@@ -113,7 +113,7 @@ public partial class OptionPopup : Control
         );
     }
 
-    public void Hide()
+    public new void Hide()
     {
         Show(false);
     }
