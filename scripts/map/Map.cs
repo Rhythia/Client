@@ -107,6 +107,17 @@ public partial class Map : RefCounted
         }
     }
 
+    public void UnloadCover()
+    {
+        if (cover == DefaultCover)
+        {
+            return;
+        }
+
+        cover.Dispose();
+        cover = DefaultCover;
+    }
+
     private Texture2D getCover()
     {
         string path = $"{MapUtil.MapsFolder}/{Name}";
