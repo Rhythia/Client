@@ -118,5 +118,14 @@ public partial class Attempt : RefCounted
 
         var skin = SkinManager.Instance.Skin;
         int index = (int)(FirstNote - 1) % skin.NoteColors.Length;
+
+        if (Settings.SpaceColor.Value != "Colorset" && !Settings.SpaceHitEffects)
+        {
+            LastHitColour = Util.Misc.ParseColor(SettingsManager.Instance.Settings.SpaceColor.Value, Colors.Black);
+        }
+        else
+        {
+            LastHitColour = skin.NoteColors[^1];
+        }
     }
 }

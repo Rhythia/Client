@@ -9,6 +9,7 @@ public partial class BaseSpace : Node3D
     public WorldEnvironment WorldEnvironment;
     public ImageTexture Cover;
     public Color NoteHitColor = new(0xffffffff);
+    public bool CustomColor;
 
     public override void _Ready()
     {
@@ -61,6 +62,7 @@ public partial class BaseSpace : Node3D
         var skin = SkinManager.Instance.Skin;
         if (SettingsManager.Instance.Settings.SpaceColor.Value != "Colorset" && !SettingsManager.Instance.Settings.SpaceHitEffects)
         {
+            CustomColor = true;
             NoteHitColor = Util.Misc.ParseColor(SettingsManager.Instance.Settings.SpaceColor.Value, Colors.Black);
         }
         else

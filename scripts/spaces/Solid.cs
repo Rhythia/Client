@@ -74,7 +74,7 @@ public partial class Solid : BaseSpace
     private void updateColor(Color color)
     {
         var darkened = color.Darkened(0);
-        if (!Playing || SettingsManager.Instance.Settings.SpaceColor.Value == "Colorset" || SettingsManager.Instance.Settings.SpaceHitEffects)
+        if (!Playing || !CustomColor)
         {
             darkened = color.Darkened(0.9f);
         }
