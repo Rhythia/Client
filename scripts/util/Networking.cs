@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace Util;
+namespace util;
 
 public static class Networking
 {

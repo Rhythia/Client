@@ -131,9 +131,9 @@ public partial class MapManager : Node
 
     public static void Sanitize(Map map)
     {
-        string sanitizedTitle = Util.String.SanitizeZalgo(map.PrettyTitle);
-        string sanitizedMappers = Util.String.SanitizeZalgo(map.PrettyMappers);
-        string sanitizedDiffName = Util.String.SanitizeZalgo(map.DifficultyName);
+        string sanitizedTitle = util.String.SanitizeZalgo(map.PrettyTitle);
+        string sanitizedMappers = util.String.SanitizeZalgo(map.PrettyMappers);
+        string sanitizedDiffName = util.String.SanitizeZalgo(map.DifficultyName);
 
         bool updated = sanitizedTitle != map.PrettyTitle || sanitizedMappers != map.PrettyMappers || sanitizedDiffName != map.DifficultyName;
 

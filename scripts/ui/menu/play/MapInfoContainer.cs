@@ -255,7 +255,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
             int length = Map != null ? Map.Length : 1;
 
             startFromSlider.SetValueNoSignal(startFrom / length);
-            startFromEdit.Text = Util.String.FormatTime(startFrom / 1000);
+            startFromEdit.Text = util.String.FormatTime(startFrom / 1000);
             startButton.Text = $"START{(startFrom > 0 ? $" ({startFromEdit.Text})" : "")}";
         }
 
@@ -438,18 +438,18 @@ public partial class MapInfoContainer : Panel, ISkinnable
         mainLabel.Text = string.Format(
             CultureInfo.CurrentCulture,
             mainLabelFormat,
-            Util.String.SanitizeBBCode(map.PrettyTitle),
+            util.String.SanitizeBBCode(map.PrettyTitle),
             difficultyColor.ToHtml(),
-            Util.String.SanitizeBBCode(map.DifficultyName),
-            Util.String.SanitizeBBCode(map.PrettyMappers)
+            util.String.SanitizeBBCode(map.DifficultyName),
+            util.String.SanitizeBBCode(map.PrettyMappers)
         );
 
         extraLabel.Text = string.Format(
             CultureInfo.CurrentCulture,
             extraLabelFormat,
-            Util.String.FormatTime(map.Length / 1000),
+            util.String.FormatTime(map.Length / 1000),
             map.Notes.Length,
-            Util.String.SanitizeBBCode(map.Name)
+            util.String.SanitizeBBCode(map.Name)
         );
 
         coverBackground.SelfModulate = difficultyColor;
