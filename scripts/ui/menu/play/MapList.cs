@@ -267,6 +267,11 @@ public partial class MapList : Panel, ISkinnable
                     containerCache.Push(parentContainer);
                 }
 
+                if (map.Name != selectedMapID)
+                {
+                    map.UnloadCover();
+                }
+
                 continue;
             }
 
