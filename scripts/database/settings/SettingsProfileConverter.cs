@@ -29,6 +29,9 @@ public class SettingsProfileConverter
                     case Variant.Type.Float:
                         data[property.Name] = Math.Round((float)value, 4);
                         break;
+                    case Variant.Type.Color:
+                        data[property.Name] = value.AsColor().ToHtml();
+                        break;
                     default:
                         data[property.Name] = value;
                         break;

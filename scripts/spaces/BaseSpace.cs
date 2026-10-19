@@ -46,13 +46,21 @@ public partial class BaseSpace : Node3D
     {
         base._Process(delta);
 
+        CustomColor = SettingsManager.Instance.Settings.CustomSpaceColor;
+
         if (Playing)
         {
             if (SettingsManager.Instance.Settings.SpaceHitEffects)
             {
                 NoteHitColor = NoteHitColor.Lerp(Game.Attempt.LastHitColour, Math.Min(1, (float)delta * 8));
             }
+            else if (CustomColor)
+            {
+                NoteHitColor = (Color)SettingsManager.Instance.Settings.SpaceColor.GetVariant();
+            }
         }
+
+
     }
 
     public virtual void OnHit(uint combo) { }
@@ -60,10 +68,9 @@ public partial class BaseSpace : Node3D
     public virtual void Load()
     {
         var skin = SkinManager.Instance.Skin;
-        if (SettingsManager.Instance.Settings.SpaceColor.Value != "Colorset" && !SettingsManager.Instance.Settings.SpaceHitEffects)
+        if (CustomColor)
         {
-            CustomColor = true;
-            NoteHitColor = Util.Misc.ParseColor(SettingsManager.Instance.Settings.SpaceColor.Value, Colors.Black);
+            NoteHitColor = (Color)SettingsManager.Instance.Settings.SpaceColor.GetVariant();
         }
         else
         {
