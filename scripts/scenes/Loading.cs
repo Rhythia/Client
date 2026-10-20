@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Godot;
 using Updatum;
 
@@ -7,6 +9,9 @@ public partial class Loading : BaseScene
 {
     private Color opaque = new(1, 1, 1, 1);
     private Color transparent = new(1, 1, 1, 0);
+
+    [Signal]
+    private delegate void migrationEventHandler();
 
     [Export]
     private ColorRect background;
@@ -158,6 +163,65 @@ public partial class Loading : BaseScene
             };
         }
 
+        migration += migrateDbCallback;
+
+        var maps = DatabaseService.Connection.Table<Map>().ToList();
+        migrateDb(maps);
+    }
+
+    private void migrateDb(List<Map> maps)
+    {
+        if (DatabaseService.UserVersion >= 1)
+        {
+            CallDeferred(GodotObject.MethodName.EmitSignal, SignalName.migration);
+            return;
+        }
+
+        float currentProgress = 0f;
+        float progressStep = 1f / Math.Max(maps.Count, 1f);
+
+        Task.Run(() =>
+        {
+            Callable
+                .From(() =>
+                {
+                    progressLabel.Text = "Migrating DB";
+                    progressBarFill.AnchorRight = 0f;
+                })
+                .CallDeferred();
+
+            DatabaseService.Connection.RunInTransaction(() =>
+            {
+                foreach (var map in maps)
+                {
+                    map.MetadataObjectHash = MapCache.GetSha256Checksum(map.FolderPath);
+                    DatabaseService.Connection.Update(map);
+
+                    currentProgress += progressStep;
+                    Callable
+                        .From(() =>
+                        {
+                            progressBarFill.AnchorRight = currentProgress;
+                        })
+                        .CallDeferred();
+                }
+
+                DatabaseService.UserVersion = 1;
+            });
+
+            CallDeferred(GodotObject.MethodName.EmitSignal, SignalName.migration);
+        });
+
+        Callable
+            .From(() =>
+            {
+                progressBarFill.AnchorRight = 0f;
+            })
+            .CallDeferred();
+    }
+
+    private void migrateDbCallback()
+    {
         var inTween = enter();
 
         inTween.Chain();

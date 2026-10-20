@@ -68,7 +68,7 @@ public partial class MapManager : Node
         Directory.Delete(map.FolderPath);
 
         MapParser.Encode(map);
-        map.FolderPath = MapCache.GetMd5Checksum(map.FolderPath);
+        map.MetadataObjectHash = MapCache.GetSha256Checksum(map.FolderPath);
         Update(map);
     }
 
@@ -87,7 +87,7 @@ public partial class MapManager : Node
         File.Delete(map.FolderPath);
 
         MapParser.Encode(map);
-        map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
+        map.MetadataObjectHash = MapCache.GetSha256Checksum(map.FolderPath);
         Update(map);
     }
 

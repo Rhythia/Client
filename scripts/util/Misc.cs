@@ -70,17 +70,17 @@ public class Misc
 
     public static byte[] HashFiles(string[] paths)
     {
-        using var md5 = MD5.Create();
+        using var sha256 = SHA256.Create();
 
         foreach (string path in paths) // we do not need to order the paths since it will always be the same -fog
         {
             byte[] fileData = File.ReadAllBytes(path);
-            md5.TransformBlock(fileData, 0, fileData.Length, null, 0);
+            sha256.TransformBlock(fileData, 0, fileData.Length, null, 0);
         }
 
-        md5.TransformFinalBlock([], 0, 0);
+        sha256.TransformFinalBlock([], 0, 0);
 
-        return md5.Hash;
+        return sha256.Hash;
     }
 
     public static void CopyReference(Node node, Node reference)

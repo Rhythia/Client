@@ -117,7 +117,7 @@ public static class MapCache
                     continue;
                 }
 
-                string checksum = GetMd5Checksum(mapPath);
+                string checksum = GetSha256Checksum(mapPath);
                 if (map.MetadataObjectHash == checksum)
                 {
                     FilesSynced.Value++;
@@ -228,7 +228,7 @@ public static class MapCache
                 }
 
                 map.FolderPath = BackSlashToForwardSlash(toParseMap);
-                map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
+                map.MetadataObjectHash = GetSha256Checksum(map.FolderPath);
 
                 if (OldCacheFormat)
                 {
@@ -340,7 +340,7 @@ public static class MapCache
         MapManager.Maps = sortedMaps;
     }
 
-    public static string GetMd5Checksum(string path)
+    public static string GetSha256Checksum(string path)
     {
         string metadataPath = Path.Combine(path, "metadata.json");
         string objectsPath = Path.Combine(path, "objects.phxmo");

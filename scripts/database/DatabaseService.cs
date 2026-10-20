@@ -10,6 +10,12 @@ public partial class DatabaseService : Node
 
     public static SQLiteConnection Connection { get; set; }
 
+    public static int UserVersion
+    {
+        get => Connection.ExecuteScalar<int>("PRAGMA user_version;");
+        set => Connection.Execute($"PRAGMA user_version = {value};");
+    }
+
     public override void _Ready()
     {
         Batteries.Init();
