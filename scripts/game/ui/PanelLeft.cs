@@ -58,7 +58,7 @@ public partial class PanelLeft : UIComponent
 
     public void OnStatsUpdated(Attempt attempt)
     {
-        score.Text = Util.String.PadMagnitude(attempt.Score);
+        score.Text = util.String.PadMagnitude(attempt.Score);
         multiplier.Text = $"{attempt.ComboMultiplier}x";
         altCombo.Text = $"{attempt.Combo}";
 

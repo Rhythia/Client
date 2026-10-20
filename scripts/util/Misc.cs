@@ -5,7 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Godot;
 
-namespace Util;
+namespace util;
 
 public class Misc
 {

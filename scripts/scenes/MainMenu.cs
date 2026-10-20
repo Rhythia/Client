@@ -122,7 +122,7 @@ public partial class MainMenu : BaseScene
         }
     }
 
-    public void Transition(Panel menu, bool instant = false)
+    public new void Transition(Panel menu, bool instant = false)
     {
         if (CurrentMenu == menu)
         {

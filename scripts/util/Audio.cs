@@ -1,7 +1,7 @@
 using System.Text;
 using Godot;
 
-namespace Util;
+namespace util;
 
 public class Audio
 {

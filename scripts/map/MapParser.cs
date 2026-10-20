@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
-using Util;
+using util;
 
 public partial class MapParser : Node
 {

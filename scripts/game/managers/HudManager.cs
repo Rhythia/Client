@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Godot;
-using Util;
+using util;
 
 public partial class HudManager : Node
 {

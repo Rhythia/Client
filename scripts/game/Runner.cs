@@ -349,7 +349,7 @@ public partial class Runner : Node3D
 
         if (Attempt.Map.AudioBuffer != null)
         {
-            SoundManager.Song.Stream = Util.Audio.LoadStream(Attempt.Map.AudioBuffer);
+            SoundManager.Song.Stream = util.Audio.LoadStream(Attempt.Map.AudioBuffer);
             SoundManager.Song.PitchScale = (float)Speed;
         }
 
@@ -405,7 +405,7 @@ public partial class Runner : Node3D
 
         foreach (var entry in Attempt.Objects)
         {
-            ObjectIndicesStart[entry.Key] = Util.Misc.BinarySearch(noteTimestamps, ms) + 1;
+            ObjectIndicesStart[entry.Key] = util.Misc.BinarySearch(noteTimestamps, ms) + 1;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
 

@@ -63,7 +63,7 @@ public partial class MapButtonSquare : MapButton
 
         difficulty.Text = map.DifficultyName;
         author.Text = map.PrettyMappers;
-        length.Text = Util.String.FormatTime(map.Length / 1000);
+        length.Text = util.String.FormatTime(map.Length / 1000);
         difficulty.LabelSettings.FontColor = color;
         coverBackground.SelfModulate = color;
     }
