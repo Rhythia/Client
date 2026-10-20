@@ -37,6 +37,13 @@ public partial class TriTunnel : BaseSpace
         }
 
         // Hit VFX
-        tunnelTexture.AlbedoColor = settings.SpaceHitEffects ? NoteHitColor : tunnelColor;
+        if (settings.SpaceHitEffects || CustomColor)
+        {
+            tunnelTexture.AlbedoColor = NoteHitColor;
+        }
+        else
+        {
+            tunnelTexture.AlbedoColor = tunnelColor;
+        }
     }
 }

@@ -9,6 +9,7 @@ public partial class BaseSpace : Node3D
     public WorldEnvironment WorldEnvironment;
     public ImageTexture Cover;
     public Color NoteHitColor = new(0xffffffff);
+    public bool CustomColor;
 
     public override void _Ready()
     {
@@ -45,11 +46,17 @@ public partial class BaseSpace : Node3D
     {
         base._Process(delta);
 
+        CustomColor = SettingsManager.Instance.Settings.CustomSpaceColor;
+
         if (Playing)
         {
             if (SettingsManager.Instance.Settings.SpaceHitEffects)
             {
                 NoteHitColor = NoteHitColor.Lerp(Game.Attempt.LastHitColour, Math.Min(1, (float)delta * 8));
+            }
+            else if (CustomColor)
+            {
+                NoteHitColor = (Color)SettingsManager.Instance.Settings.SpaceColor.GetVariant();
             }
         }
     }
@@ -59,8 +66,14 @@ public partial class BaseSpace : Node3D
     public virtual void Load()
     {
         var skin = SkinManager.Instance.Skin;
-
-        NoteHitColor = skin.NoteColors[^1];
+        if (CustomColor)
+        {
+            NoteHitColor = (Color)SettingsManager.Instance.Settings.SpaceColor.GetVariant();
+        }
+        else
+        {
+            NoteHitColor = skin.NoteColors[^1];
+        }
     }
 
     public virtual void UpdateMap(Map map)

@@ -121,6 +121,18 @@ public partial class SettingsProfile
     public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
+    /// Sets the default color of the space
+    /// </summary>
+    [Order]
+    public SettingsItem<Color> SpaceColor { get; private set; }
+
+    /// <summary>
+    /// Toggles the use of a custom color
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> CustomSpaceColor { get; private set; }
+
+    /// <summary>
     /// Toggles note hit effects for the game space
     /// </summary>
     [Order]
@@ -742,12 +754,42 @@ public partial class SettingsProfile
             },
         };
 
+        SpaceColor = new(Color.Color8(0, 0, 0, 0))
+        {
+            Id = "SpaceColor",
+            Title = "Space Color",
+            Description = "Changes the color of the space (only when space hit effects is off)",
+            Section = SettingsSection.Spaces,
+        };
+
+        CustomSpaceColor = new(false)
+        {
+            Id = "CustomSpaceColor",
+            Title = "Custom Space Color",
+            Description = "Toggles the use of a custom space color",
+            Section = SettingsSection.Spaces,
+            UpdateAction = (_, init) =>
+            {
+                if ((bool)CustomSpaceColor.GetVariant())
+                {
+                    SpaceHitEffects.SetVariant(false);
+                }
+            },
+        };
+
         SpaceHitEffects = new(true)
         {
             Id = "SpaceHitEffects",
             Title = "Space Hit Effects",
             Description = "Toggles note hit effects for the game space",
             Section = SettingsSection.Spaces,
+            UpdateAction = (_, init) =>
+            {
+                if ((bool)SpaceHitEffects.GetVariant())
+                {
+                    CustomSpaceColor.SetVariant(false);
+                }
+            },
         };
 
         SpaceEffects = new(true)

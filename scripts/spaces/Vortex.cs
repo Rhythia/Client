@@ -78,6 +78,10 @@ public partial class Vortex : BaseSpace
             {
                 color = squircleMaterials[i].AlbedoColor.Lerp(lastHitColors[i], Math.Min(1, (float)delta * 6));
             }
+            else if (CustomColor)
+            {
+                color = NoteHitColor;
+            }
 
             squircleMaterials[i].AlbedoColor = color;
         }
