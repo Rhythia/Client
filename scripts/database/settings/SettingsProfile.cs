@@ -754,7 +754,7 @@ public partial class SettingsProfile
             },
         };
 
-        SpaceColor = new(Color.Color8(0,0,0,0))
+        SpaceColor = new(Color.Color8(0, 0, 0, 0))
         {
             Id = "SpaceColor",
             Title = "Space Color",

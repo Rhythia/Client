@@ -59,8 +59,6 @@ public partial class BaseSpace : Node3D
                 NoteHitColor = (Color)SettingsManager.Instance.Settings.SpaceColor.GetVariant();
             }
         }
-
-
     }
 
     public virtual void OnHit(uint combo) { }
