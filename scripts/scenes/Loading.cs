@@ -1,12 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Godot;
+using SQLite;
 using Updatum;
 
 public partial class Loading : BaseScene
 {
     private Color opaque = new(1, 1, 1, 1);
     private Color transparent = new(1, 1, 1, 0);
+
+    [Signal]
+    private delegate void migrationEventHandler();
+
+    private bool mapsDeleted = false;
 
     [Export]
     private ColorRect background;
@@ -98,6 +109,17 @@ public partial class Loading : BaseScene
 
     private void exit()
     {
+        Action loadCallback = null;
+
+        if (mapsDeleted)
+        {
+            loadCallback = () =>
+            {
+                _ = ToastNotification.Notify("Some of your maps were deleted due to them having no objects.", 2);
+            };
+            mapsDeleted = false;
+        }
+
         var outTween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
         outTween.TweenProperty(background, "color", Color.Color8(0, 0, 0), 0.25);
         outTween
@@ -105,7 +127,7 @@ public partial class Loading : BaseScene
             .TweenCallback(
                 Callable.From(() =>
                 {
-                    SceneManager.Load("res://scenes/main_menu.tscn");
+                    SceneManager.Load("res://scenes/main_menu.tscn", callback: loadCallback);
                 })
             );
     }
@@ -158,6 +180,90 @@ public partial class Loading : BaseScene
             };
         }
 
+        migration += migrateDbCallback;
+
+        TableQuery<Map> maps = DatabaseService.Connection.Table<Map>();
+        migrateDb(maps);
+    }
+
+    private void migrateDb(TableQuery<Map> maps)
+    {
+        if (DatabaseService.UserVersion >= 1)
+        {
+            CallDeferred(GodotObject.MethodName.EmitSignal, SignalName.migration);
+            return;
+        }
+
+        int offset = 0;
+        int nMap = maps.Count();
+        int chunkSize = Math.Min(nMap, Math.Clamp(nMap / 100 * 20, 50, 500));
+        List<Map> mapsToDelete = [];
+
+        float currentProgress = 0f;
+        float progressStep = 1f / Math.Max(nMap, 1f);
+
+        Task.Run(() =>
+        {
+            Callable
+                .From(() =>
+                {
+                    progressLabel.Text = "Migrating DB";
+                    progressBarFill.AnchorRight = 0f;
+                })
+                .CallDeferred();
+
+            while (offset < nMap)
+            {
+                TableQuery<Map> chunk = maps.Skip(offset).Take(chunkSize);
+
+                DatabaseService.Connection.RunInTransaction(() =>
+                {
+                    foreach (var map in chunk)
+                    {
+                        try
+                        {
+                            string objPath = Path.Combine(map.FolderPath, "objects.phxmo");
+                            byte[] objectHash = SHA256.HashData(File.ReadAllBytes(objPath));
+                            map.ObjectHash = Convert.ToHexStringLower(objectHash);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            mapsToDelete.Add(map);
+                            continue;
+                        }
+
+                        DatabaseService.Connection.Update(map);
+                    }
+                });
+
+                float step = progressStep * Math.Min(nMap - offset, chunkSize);
+                currentProgress += step;
+                Callable
+                    .From(() =>
+                    {
+                        progressBarFill.AnchorRight = currentProgress;
+                    })
+                    .CallDeferred();
+
+                offset += Math.Min(chunkSize, nMap - offset);
+            }
+
+            if (mapsToDelete.Count > 0)
+            {
+                mapsToDelete.ForEach(map => MapManager.Delete(map, true));
+                mapsDeleted = true;
+                Logger.Log(
+                    $"The following maps were deleted for having no objects file: \n\t{string.Join(",\n\t", mapsToDelete.Select(item => item.Name))}"
+                );
+            }
+
+            DatabaseService.UserVersion = 1;
+            CallDeferred(GodotObject.MethodName.EmitSignal, SignalName.migration);
+        });
+    }
+
+    private void migrateDbCallback()
+    {
         var inTween = enter();
 
         inTween.Chain();

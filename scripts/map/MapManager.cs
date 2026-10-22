@@ -91,14 +91,14 @@ public partial class MapManager : Node
         Update(map);
     }
 
-    public static void Delete(Map map)
+    public static void Delete(Map map, bool quiet = false)
     {
         try
         {
             try
             {
                 Directory.Delete(map.FolderPath, true);
-                if (!Directory.Exists(map.FolderPath))
+                if (!Directory.Exists(map.FolderPath) && !quiet)
                 {
                     Logger.Log($"{map.Title} has been deleted");
                 }
@@ -115,12 +115,16 @@ public partial class MapManager : Node
             MapCache.RemoveMap(map);
             Maps.RemoveAll(x => x.Id == map.Id);
 
-            Callable
-                .From(() =>
-                {
-                    _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
-                })
-                .CallDeferred();
+            if (!quiet)
+            {
+                Callable
+                    .From(() =>
+                    {
+                        _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
+                    })
+                    .CallDeferred();
+            }
+
             Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();
         }
         catch (Exception e)
