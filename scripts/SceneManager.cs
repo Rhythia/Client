@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -46,7 +47,7 @@ public partial class SceneManager : Node
         Load(activeScenePath, true);
     }
 
-    public static void Load(string path, bool skipTransition = false)
+    public static void Load(string path, bool skipTransition = false, Action callback = null)
     {
         bool isSceneLoaded = Scenes.TryGetValue(path, out BaseScene loadedScene);
         var newScene = isSceneLoaded ? loadedScene : (BaseScene)ResourceLoader.Load<PackedScene>(path).Instantiate();
@@ -79,6 +80,8 @@ public partial class SceneManager : Node
                     .CreateTween()
                     .SetTrans(Tween.TransitionType.Quad)
                     .TweenProperty(newScene.Transition, "self_modulate", Color.FromHtml("ffffff00"), skipTransition ? 0 : 0.25);
+
+                callback?.Invoke();
             })
         );
     }
