@@ -4,7 +4,7 @@ public class FlickerModifier : Modifier, IObjectRenderModifier<Note>
 {
     public override string Name => "Flicker";
 
-    public override Color Color => new(0xffe854ff);
+    public override Color Color => new(0xc5ff54ff);
 
     public override bool Rankable => true;
 
