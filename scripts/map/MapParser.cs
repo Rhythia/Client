@@ -718,6 +718,7 @@ public partial class MapParser : Node
             metadata.TryGetValue("ArtistPlatform", out Variant artistPlatform);
 
             byte[] hash = Misc.HashFiles([Path.Combine(path, "metadata.json"), Path.Combine(path, "objects.phxmo")]);
+            byte[] objHash = SHA256.HashData(File.ReadAllBytes(Path.Combine(path, "objects.phxmo")));
 
             DateTime metadataModified = File.GetLastWriteTime(Path.Combine(path, "metadata.json"));
             DateTime objectsModified = File.GetLastWriteTime(Path.Combine(path, "objects.phxmo"));
@@ -742,6 +743,7 @@ public partial class MapParser : Node
             )
             {
                 MetadataObjectHash = Convert.ToHexStringLower(hash),
+                ObjectHash = Convert.ToHexStringLower(objHash),
                 LastModifiedMetadata = metadataModified.ToString("O", CultureInfo.InvariantCulture),
                 LastModifiedNotes = objectsModified.ToString("O", CultureInfo.InvariantCulture),
             };
