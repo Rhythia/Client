@@ -19,6 +19,10 @@ public static class Maps
             query["mapper"] = queryParameters.Mapper;
         if (!string.IsNullOrEmpty(queryParameters.Artist))
             query["artist"] = queryParameters.Artist;
+        if (queryParameters.Difficulties.Length > 0)
+            query["difficulty"] = string.Join(",", queryParameters.Difficulties);
+        if (queryParameters.Status.Length > 0)
+            query["status"] = string.Join(",", queryParameters.Status);
 
         string url = $"/maps?{query}";
 

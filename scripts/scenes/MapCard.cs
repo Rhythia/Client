@@ -122,7 +122,7 @@ public partial class MapCard : PanelContainer
 
         noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString(CultureInfo.InvariantCulture)} notes";
 
-        bool isRanked = map.GetProperty("isRanked").GetBoolean();
+        bool isRanked = map.GetProperty("status").GetString() == "RANKED";
         var rankingPillStyle = (StyleBoxFlat)rankingPill.GetThemeStylebox("panel").Duplicate();
         rankingLabel.Text = isRanked ? "RANKED" : "UNRANKED";
         rankingPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;

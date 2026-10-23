@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +17,12 @@ public partial class MapBrowser : Control
     private VBoxContainer topBar;
     private HBoxContainer searchBar;
     private LineEdit search;
+    private OptionButton sort;
+    private Button direction;
+    private Button refresh;
+    private MenuButton difficulty;
+    private OptionButton ranking;
+    private OptionButton installed;
     private Timer searchTimer;
     private HBoxContainer filters;
     private ScrollContainer results;
@@ -32,6 +39,12 @@ public partial class MapBrowser : Control
         topBar = holder.GetNode<VBoxContainer>("Background/Layout/TopBarBackground/Margin/TopBar");
         searchBar = topBar.GetNode<HBoxContainer>("SearchBar");
         search = searchBar.GetNode<LineEdit>("Search");
+        sort = searchBar.GetNode<OptionButton>("Sort");
+        direction = searchBar.GetNode<Button>("Direction");
+        refresh = searchBar.GetNode<Button>("Refresh");
+        difficulty = topBar.GetNode<HBoxContainer>("Filters").GetNode<MenuButton>("Difficulty");
+        ranking = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Ranking");
+        installed = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Installed");
         searchTimer = GetNode<Timer>("SearchTimer");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
         mapCardTemplate = results.GetNode<MapCard>("RowsMargin/Rows/MapCardTemplate");
@@ -43,6 +56,12 @@ public partial class MapBrowser : Control
 
         search.TextChanged += _ => searchTimer.Start();
         searchTimer.Timeout += onSearchTimerTimeout;
+        sort.ItemSelected += _ => refreshResults();
+        direction.Pressed += toggleDirection;
+        refresh.Pressed += refreshResults;
+        difficulty.GetPopup().IdPressed += toggleDifficulty;
+        ranking.ItemSelected += _ => refreshResults();
+        installed.ItemSelected += _ => refreshResults();
 
         hideButton.Pressed += HideMenu;
     }
@@ -110,7 +129,7 @@ public partial class MapBrowser : Control
             return;
         }
 
-        foreach (var map in maps)
+        foreach (var map in maps.Where(matchesInstalledFilter))
         {
             if (mapCardTemplate.Duplicate() is not MapCard mapCard)
             {
@@ -125,13 +144,71 @@ public partial class MapBrowser : Control
 
     private void onSearchTimerTimeout()
     {
-        clearResults();
-        _ = populate(buildQueryParameters());
+        refreshResults();
+    }
+
+    private void toggleDifficulty(long id)
+    {
+        PopupMenu popup = difficulty.GetPopup();
+        int index = popup.GetItemIndex((int)id);
+        if (index < 0)
+            return;
+
+        popup.SetItemChecked(index, !popup.IsItemChecked(index));
+        refreshResults();
     }
 
     private MapQueryParameters buildQueryParameters()
     {
-        return new MapQueryParameters { Query = search.Text.Trim() };
+        int[] selectedDifficulties = Enumerable.Range(0, difficulty.GetPopup().ItemCount)
+            .Where(index => difficulty.GetPopup().IsItemChecked(index))
+            .Select(index => difficulty.GetPopup().GetItemId(index))
+            .ToArray();
+
+        string[] statuses = ranking.Selected switch
+        {
+            0 => ["UNRANKED"],
+            1 => ["RANKED"],
+            _ => Array.Empty<string>(),
+        };
+
+        return new MapQueryParameters
+        {
+            Query = search.Text.Trim(),
+            SortBy = sort.Selected switch
+            {
+                1 => "length",
+                2 => "difficulty",
+                _ => "createdAt",
+            },
+            SortDirection = direction.ButtonPressed ? "asc" : "desc",
+            Difficulties = selectedDifficulties,
+            Status = statuses,
+        };
+    }
+
+    private bool matchesInstalledFilter(JsonElement map)
+    {
+        int installedFilter = installed.GetSelectedId();
+        if (installedFilter == 2)
+            return true;
+
+        bool downloaded = map.TryGetProperty("noteHash", out var noteHash) &&
+                          MapManager.Maps.Any(localMap => localMap.ObjectHash == noteHash.GetString());
+        return installedFilter == 0 ? downloaded : !downloaded;
+    }
+
+    private void toggleDirection()
+    {
+        direction.ButtonPressed = !direction.ButtonPressed;
+        direction.Text = direction.ButtonPressed ? "Ascending" : "Descending";
+        refreshResults();
+    }
+
+    private void refreshResults()
+    {
+        clearResults();
+        _ = populate(buildQueryParameters());
     }
 
     private void clearResults()

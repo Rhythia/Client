@@ -11,4 +11,6 @@ public class MapQueryParameters : QueryParameters
     public string Query { get; set; }
     public string Mapper { get; set; }
     public string Artist { get; set; }
+    public int[] Difficulties { get; set; } = [];
+    public string[] Status { get; set; } = [];
 }
