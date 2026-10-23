@@ -27,6 +27,13 @@ public partial class MapBrowser : Control
     private HBoxContainer filters;
     private ScrollContainer results;
     private MapCard mapCardTemplate;
+    private SortDirection sortDirection;
+
+    private enum SortDirection
+    {
+        Descending,
+        Ascending,
+    }
 
     private CancellationTokenSource source = new();
 
@@ -53,6 +60,8 @@ public partial class MapBrowser : Control
 
         Shown = false;
         Visible = false;
+        sortDirection = SortDirection.Descending;
+        direction.Text = "Descending";
 
         search.TextChanged += _ => searchTimer.Start();
         searchTimer.Timeout += onSearchTimerTimeout;
@@ -182,7 +191,11 @@ public partial class MapBrowser : Control
                 2 => "difficulty",
                 _ => "createdAt",
             },
-            SortDirection = direction.ButtonPressed ? "asc" : "desc",
+            SortDirection = sortDirection switch
+            {
+                SortDirection.Ascending => "asc",
+                _ => "desc",
+            },
             Difficulties = selectedDifficulties,
             Status = statuses,
         };
@@ -201,8 +214,8 @@ public partial class MapBrowser : Control
 
     private void toggleDirection()
     {
-        direction.ButtonPressed = !direction.ButtonPressed;
-        direction.Text = direction.ButtonPressed ? "Ascending" : "Descending";
+        sortDirection = sortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
+        direction.Text = sortDirection.ToString();
         refreshResults();
     }
 
