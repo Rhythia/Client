@@ -21,7 +21,7 @@ public partial class MapBrowser : Control
     private Button direction;
     private Button refresh;
     private MenuButton difficulty;
-    private OptionButton ranking;
+    private OptionButton status;
     private OptionButton installed;
     private Timer searchTimer;
     private HBoxContainer filters;
@@ -43,7 +43,7 @@ public partial class MapBrowser : Control
         direction = searchBar.GetNode<Button>("Direction");
         refresh = searchBar.GetNode<Button>("Refresh");
         difficulty = topBar.GetNode<HBoxContainer>("Filters").GetNode<MenuButton>("Difficulty");
-        ranking = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Ranking");
+        status = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Status");
         installed = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Installed");
         searchTimer = GetNode<Timer>("SearchTimer");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
@@ -60,7 +60,7 @@ public partial class MapBrowser : Control
         direction.Pressed += toggleDirection;
         refresh.Pressed += refreshResults;
         difficulty.GetPopup().IdPressed += toggleDifficulty;
-        ranking.ItemSelected += _ => refreshResults();
+        status.ItemSelected += _ => refreshResults();
         installed.ItemSelected += _ => refreshResults();
 
         hideButton.Pressed += HideMenu;
@@ -165,7 +165,7 @@ public partial class MapBrowser : Control
             .Select(index => difficulty.GetPopup().GetItemId(index))
             .ToArray();
 
-        string[] statuses = ranking.Selected switch
+        string[] statuses = status.Selected switch
         {
             0 => ["UNRANKED"],
             1 => ["RANKED"],

@@ -20,7 +20,7 @@ public partial class MapCard : PanelContainer
 
     private PanelContainer coverHolder;
     private PanelContainer blurCoverHolder;
-    private PanelContainer rankingPill;
+    private PanelContainer statusPill;
     private PanelContainer notablePill;
 
     private Panel coverDim;
@@ -32,7 +32,7 @@ public partial class MapCard : PanelContainer
     private Label titleLabel;
     private Label difficultyLabel;
     private Label noteCountLabel;
-    private Label rankingLabel;
+    private Label statusLabel;
     private Label durationLabel;
 
     private RichTextLabel mappersLabel;
@@ -75,7 +75,7 @@ public partial class MapCard : PanelContainer
 
         coverHolder = GetNode<PanelContainer>("Row/CoverHolder");
         blurCoverHolder = mapHolder.GetNode<PanelContainer>("BlurCoverHolder");
-        rankingPill = bottomText.GetNode<PanelContainer>("RankingPill");
+        statusPill = bottomText.GetNode<PanelContainer>("StatusPill");
         notablePill = bottomText.GetNode<PanelContainer>("NotablePill");
 
         coverDim = coverHolder.GetNode<Panel>("Dim");
@@ -88,7 +88,7 @@ public partial class MapCard : PanelContainer
         titleLabel = topText.GetNode<Label>("TitleHolder/Title");
         difficultyLabel = topText.GetNode<Label>("Details/VBoxContainer/Difficulty");
         noteCountLabel = topText.GetNode<Label>("Details/VBoxContainer/Notes");
-        rankingLabel = rankingPill.GetNode<Label>("Ranking");
+        statusLabel = statusPill.GetNode<Label>("Status");
         durationLabel = bottomText.GetNode<Label>("Duration");
 
         mappersLabel = topText.GetNode<RichTextLabel>("Details/VBoxContainer/Mapper");
@@ -123,10 +123,10 @@ public partial class MapCard : PanelContainer
         noteCountLabel.Text = $"{map.GetProperty("noteCount").GetInt32().ToString(CultureInfo.InvariantCulture)} notes";
 
         bool isRanked = map.GetProperty("status").GetString() == "RANKED";
-        var rankingPillStyle = (StyleBoxFlat)rankingPill.GetThemeStylebox("panel").Duplicate();
-        rankingLabel.Text = isRanked ? "RANKED" : "UNRANKED";
-        rankingPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;
-        rankingPill.AddThemeStyleboxOverride("panel", rankingPillStyle);
+        var statusPillStyle = (StyleBoxFlat)statusPill.GetThemeStylebox("panel").Duplicate();
+        statusLabel.Text = isRanked ? "RANKED" : "UNRANKED";
+        statusPillStyle.BgColor = isRanked ? Constants.RANKED_COLOR : Constants.UNRANKED_COLOR;
+        statusPill.AddThemeStyleboxOverride("panel", statusPillStyle);
 
         var mapLength = TimeSpan.FromMilliseconds(map.GetProperty("length").GetDouble());
         durationLabel.Text =

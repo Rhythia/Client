@@ -301,7 +301,7 @@ popup/item_5/checkable = 1
 popup/item_5/checked = true
 popup/item_5/id = 5
 
-[node name="Ranking" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=330241703]
+[node name="Status" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=330241703]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
@@ -531,12 +531,12 @@ label_settings = SubResource("LabelSettings_vr0hc")
 layout_mode = 2
 mouse_filter = 2
 
-[node name="RankingPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
+[node name="StatusPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ikspe")
 
-[node name="Ranking" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/RankingPill" unique_id=1500989616]
+[node name="Status" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom/StatusPill" unique_id=1500989616]
 layout_mode = 2
 text = "RANKED"
 label_settings = SubResource("LabelSettings_10mjv")
