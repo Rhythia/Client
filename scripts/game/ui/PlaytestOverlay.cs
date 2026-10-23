@@ -140,12 +140,12 @@ public partial class PlaytestOverlay : Panel
         {
             if (util.Misc.TryParseDoubleInput(split[0], out double minutes))
             {
-                value += minutes * 60; // minutes
+                value += minutes * 60;
             }
 
             if (util.Misc.TryParseDoubleInput(split[1], out double seconds))
             {
-                value += seconds; // seconds
+                value += seconds;
             }
         }
 
