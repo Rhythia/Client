@@ -35,8 +35,6 @@ public partial class GridPreview : MeshInstance3D, ISkinnable
 
     public void UpdateSkin(SkinProfile skin = null)
     {
-        skin ??= SkinManager.Instance.Skin;
-
         var settings = SettingsManager.Instance.Settings;
 
         VisibilityAssist.Visible = settings.VisibilityAssist;

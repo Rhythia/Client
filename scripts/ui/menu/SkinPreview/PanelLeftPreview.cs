@@ -34,8 +34,6 @@ public partial class PanelLeftPreview : UIComponent
         var settings = SettingsManager.Instance.Settings;
         bool isVisible = !settings.SimpleHUD && !settings.SuperSimpleHUD;
 
-        skin ??= SkinManager.Instance.Skin;
-
         Godot.Collections.Array<Node> widgets = viewport.GetChildren();
         foreach (Node widget in widgets)
         {

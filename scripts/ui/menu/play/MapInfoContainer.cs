@@ -430,12 +430,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
             mainLabelFormat,
             util.String.SanitizeBBCode(map.PrettyTitle),
             difficultyColor.ToHtml(),
-            Util.String.SanitizeBBCode(map.DifficultyName),
-            Util.String.SanitizeBBCode(map.PrettyMappers),
-            Util.String.SanitizeBBCode(map.Name)
+            util.String.SanitizeBBCode(map.DifficultyName),
+            util.String.SanitizeBBCode(map.PrettyMappers),
+            util.String.SanitizeBBCode(map.Name)
         );
 
-        extraLabel.Text = string.Format(CultureInfo.CurrentCulture, extraLabelFormat, Util.String.FormatTime(map.Length / 1000), map.Notes.Length);
+        extraLabel.Text = string.Format(CultureInfo.CurrentCulture, extraLabelFormat, util.String.FormatTime(map.Length / 1000), map.Notes.Length);
 
         coverBackground.SelfModulate = difficultyColor;
         cover.Texture = map.Cover;

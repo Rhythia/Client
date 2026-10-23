@@ -32,8 +32,6 @@ public partial class PanelRightPreview : UIComponent
 
     public void UpdateSkin(SkinProfile skin = null)
     {
-        skin ??= SkinManager.Instance.Skin;
-
         var settings = SettingsManager.Instance.Settings;
         bool isVisible = !settings.SimpleHUD && !settings.SuperSimpleHUD;
 

@@ -29,8 +29,6 @@ public partial class HealthBarPreview : UIComponent
 
     public void UpdateSkin(SkinProfile skin = null)
     {
-        skin ??= SkinManager.Instance.Skin;
-
         var settings = SettingsManager.Instance.Settings;
 
         healthBarTexture.Visible = !settings.SuperSimpleHUD;
