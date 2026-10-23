@@ -160,7 +160,8 @@ public partial class MapBrowser : Control
 
     private MapQueryParameters buildQueryParameters()
     {
-        int[] selectedDifficulties = Enumerable.Range(0, difficulty.GetPopup().ItemCount)
+        int[] selectedDifficulties = Enumerable
+            .Range(0, difficulty.GetPopup().ItemCount)
             .Where(index => difficulty.GetPopup().IsItemChecked(index))
             .Select(index => difficulty.GetPopup().GetItemId(index))
             .ToArray();
@@ -193,8 +194,8 @@ public partial class MapBrowser : Control
         if (installedFilter == 2)
             return true;
 
-        bool downloaded = map.TryGetProperty("noteHash", out var noteHash) &&
-                          MapManager.Maps.Any(localMap => localMap.ObjectHash == noteHash.GetString());
+        bool downloaded =
+            map.TryGetProperty("noteHash", out var noteHash) && MapManager.Maps.Any(localMap => localMap.ObjectHash == noteHash.GetString());
         return installedFilter == 0 ? downloaded : !downloaded;
     }
 
