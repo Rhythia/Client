@@ -10,7 +10,7 @@ public partial class SettingsMenu : ColorRect
     public static SettingsMenu Instance;
 
     public bool Shown = false;
-    public bool wasSkinPreviewToggled = false;
+    public bool WasSkinPreviewToggled = false;
 
     private Dictionary<string, Panel> settingPanels = [];
     private Button hideButton;
@@ -261,6 +261,26 @@ public partial class SettingsMenu : ColorRect
         }
     }
 
+    public override void _Draw()
+    {
+        if (WasSkinPreviewToggled)
+        {
+            int offsetPreview = GetWindow().Size[0] / 14;
+            int offsetHolder = GetWindow().Size[0] / -7;
+
+            holder.OffsetLeft = offsetHolder;
+            holder.OffsetRight = offsetHolder;
+
+            skinPreviewPanel.OffsetLeft = offsetPreview;
+            skinPreviewPanel.OffsetRight = offsetPreview;
+        }
+        else
+        {
+            holder.OffsetLeft = 0;
+            holder.OffsetRight = 0;
+        }
+    }
+
     public void ShowMenu(bool show = true)
     {
         Shown = show;
@@ -344,10 +364,10 @@ public partial class SettingsMenu : ColorRect
 
     public void ToggleSkinPreview()
     {
-        var offsetPreview = GetWindow().Size[0] / 14;
-        var offsetHolder = GetWindow().Size[0] / -7;
+        int offsetPreview = GetWindow().Size[0] / 14;
+        int offsetHolder = GetWindow().Size[0] / -7;
 
-        if (!wasSkinPreviewToggled)
+        if (!WasSkinPreviewToggled)
         {
             skinPreviewPanel.Visible = true;
 
@@ -358,7 +378,7 @@ public partial class SettingsMenu : ColorRect
             tween.TweenProperty(holder, "offset_left", offsetHolder, 0.25);
             tween.TweenProperty(holder, "offset_right", offsetHolder, 0.25);
 
-            wasSkinPreviewToggled = true;
+            WasSkinPreviewToggled = true;
         }
         else
         {
@@ -370,7 +390,7 @@ public partial class SettingsMenu : ColorRect
             skinPreviewPanel.OffsetLeft = 0;
             skinPreviewPanel.OffsetRight = 0;
 
-            wasSkinPreviewToggled = false;
+            WasSkinPreviewToggled = false;
             skinPreviewPanel.Visible = false;
         }
     }
