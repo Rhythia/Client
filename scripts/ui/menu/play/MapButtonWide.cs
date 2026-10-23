@@ -47,10 +47,10 @@ public partial class MapButtonWide : MapButton
         extra.Text = string.Format(
             CultureInfo.CurrentCulture,
             "[outline_size=2][outline_color=000000][color=808080]{0} — [color={1}]{2} [color=808080]by [color=b0b0b0]{3}",
-            Util.String.FormatTime(map.Length / 1000),
+            util.String.FormatTime(map.Length / 1000),
             Constants.DIFFICULTY_COLORS[map.Difficulty].ToHtml(),
-            Util.String.SanitizeBBCode(map.DifficultyName),
-            Util.String.SanitizeBBCode(map.PrettyMappers)
+            util.String.SanitizeBBCode(map.DifficultyName),
+            util.String.SanitizeBBCode(map.PrettyMappers)
         );
 
         stickoutOffset = selected ? 0.05f : 0;

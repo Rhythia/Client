@@ -95,6 +95,8 @@ public partial class SettingsMenu : ColorRect
         OptionButton optionButtonTemplate = settingTemplate.GetNode<OptionButton>("OptionButton");
         HBoxContainer buttonHboxTemplate = settingTemplate.GetNode<HBoxContainer>("ButtonHBoxContainer");
         Button buttonTemplate = buttonHboxTemplate.GetNode<Button>("Button");
+        Button colorButtonTemplate = settingTemplate.GetNode<Button>("ColorButton");
+        ColorPicker colorPickerTemplate = settingTemplate.GetNode<ColorPicker>("ColorPicker");
 
         settingTemplate.Visible = false;
 
@@ -183,6 +185,15 @@ public partial class SettingsMenu : ColorRect
                     setupInput(setting, lineEdit);
                     panel.AddChild(lineEdit);
                 }
+                else if (setting.Type == typeof(Color))
+                {
+                    Button colorButton = colorButtonTemplate.Duplicate() as Button;
+                    ColorPicker picker = colorPickerTemplate.Duplicate() as ColorPicker;
+
+                    setupColorPicker(setting, colorButton, picker);
+                    panel.AddChild(colorButton);
+                    panel.AddChild(picker);
+                }
                 else if (setting.List != null)
                 {
                     OptionButton optionButton = optionButtonTemplate.Duplicate() as OptionButton;
@@ -190,7 +201,6 @@ public partial class SettingsMenu : ColorRect
                     setupList(setting, optionButton);
                     panel.AddChild(optionButton);
                 }
-
                 if (setting.Type == typeof(Variant))
                 {
                     var item = setting as SettingsItem<Variant>;
@@ -562,6 +572,27 @@ public partial class SettingsMenu : ColorRect
 
             lastPressedAt = now;
             setting.OnPressed?.Invoke();
+        };
+    }
+
+    private static void setupColorPicker(ISettingsItem setting, Button button, ColorPicker picker)
+    {
+        button.TooltipText = setting.Description;
+        Logger.Log(setting.GetVariant().ToString());
+        picker.Color = (Color)setting.GetVariant();
+
+        button.Pressed += () =>
+        {
+            picker.Visible = !picker.Visible;
+        };
+        button.VisibilityChanged += () =>
+        {
+            picker.Visible = false;
+        };
+
+        picker.ColorChanged += (col) =>
+        {
+            setting.SetVariant(col.ToHtml());
         };
     }
 

@@ -94,7 +94,7 @@ public partial class PlaytestOverlay : Panel
         {
             if (!input.IsValidFloat())
             {
-                valueEdit.Text = Util.String.FormatTime(1.0);
+                valueEdit.Text = util.String.FormatTime(1.0);
             }
 
             double value = 0;
@@ -114,13 +114,13 @@ public partial class PlaytestOverlay : Panel
 
             value = Math.Clamp(value * 1000, 0, map.Length);
 
-            valueEdit.Text = Util.String.FormatTime(value / 1000);
+            valueEdit.Text = util.String.FormatTime(value / 1000);
         }
         else if (!input.Contains(':'))
         {
             if (!input.IsValidFloat())
             {
-                valueEdit.Text = Util.String.FormatTime(1.0);
+                valueEdit.Text = util.String.FormatTime(1.0);
             }
 
             double value = 0.0;
@@ -129,7 +129,7 @@ public partial class PlaytestOverlay : Panel
                 value = inputValue;
             value = Math.Clamp(value, 0, map.Length);
 
-            valueEdit.Text = Util.String.FormatTime(value);
+            valueEdit.Text = util.String.FormatTime(value);
         }
     }
 

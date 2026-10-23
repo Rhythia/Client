@@ -533,6 +533,44 @@ theme = ExtResource("3_tipki")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Button"
 
+[node name="ColorButton" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=84045289]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 4.0
+offset_bottom = -4.0
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 12
+text = "Pick Color"
+clip_text = true
+
+[node name="ColorPicker" type="ColorPicker" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1549088178]
+visible = false
+top_level = true
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.553
+anchor_top = 0.33
+anchor_right = 0.67
+anchor_bottom = 0.362
+offset_right = 70.0
+offset_bottom = 422.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+mouse_filter = 0
+edit_alpha = false
+edit_intensity = false
+deferred_mode = true
+color_modes_visible = false
+presets_visible = false
+
 [node name="Sidebar" type="ScrollContainer" parent="Settings/Holder" unique_id=1655790017]
 layout_mode = 1
 anchors_preset = -1

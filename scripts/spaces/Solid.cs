@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Spaces;
+namespace spaces;
 
 public partial class Solid : BaseSpace
 {
@@ -73,7 +73,11 @@ public partial class Solid : BaseSpace
 
     private void updateColor(Color color)
     {
-        var darkened = color.Darkened(0.9f);
+        var darkened = color.Darkened(0);
+        if (!Playing || !CustomColor)
+        {
+            darkened = color.Darkened(0.9f);
+        }
 
         WorldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
     }

@@ -35,8 +35,8 @@ public partial class Results : BaseScene
         holder.GetNode<Label>("Difficulty").Text = attempt.Map.DifficultyName;
         holder.GetNode<Label>("Mappers").Text = $"by {attempt.Map.PrettyMappers}";
         holder.GetNode<Label>("Accuracy").Text = $"{attempt.Accuracy:F2}%";
-        holder.GetNode<Label>("Score").Text = $"{Util.String.PadMagnitude(attempt.Score)}";
-        holder.GetNode<Label>("Hits").Text = $"{Util.String.PadMagnitude(attempt.Hits)} / {Util.String.PadMagnitude(attempt.Sum)}";
+        holder.GetNode<Label>("Score").Text = $"{util.String.PadMagnitude(attempt.Score)}";
+        holder.GetNode<Label>("Hits").Text = $"{util.String.PadMagnitude(attempt.Hits)} / {util.String.PadMagnitude(attempt.Sum)}";
         holder.GetNode<Label>("Status").Text =
             attempt.IsReplay ? attempt.Replays[0].Status
             : attempt.Alive ? (attempt.Qualifies ? "PASSED" : "DISQUALIFIED")
@@ -51,14 +51,14 @@ public partial class Results : BaseScene
             TextureRect icon = modTemplate.Duplicate() as TextureRect;
 
             icon.Visible = true;
-            icon.Texture = Util.Misc.GetModIcon(mod.Name);
+            icon.Texture = util.Misc.GetModIcon(mod.Name);
 
             modifiersContainer.AddChild(icon);
         }
 
         if (attempt.Map.CoverBuffer != null)
         {
-            Image img = Util.Misc.LoadImageFromBuffer(attempt.Map.CoverBuffer);
+            Image img = util.Misc.LoadImageFromBuffer(attempt.Map.CoverBuffer);
             if (img != null)
             {
                 cover.Texture = ImageTexture.CreateFromImage(img);

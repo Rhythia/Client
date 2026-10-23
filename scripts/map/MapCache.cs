@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Godot;
-using Util;
+using util;
 
 public static class MapCache
 {
@@ -321,38 +320,7 @@ public static class MapCache
     {
         var maps = FetchAll();
 
-        //TODO: not make this terrible
-        Task.Run(() =>
-        {
-            foreach (var map in maps)
-            {
-                string path = $"{MapUtil.MapsFolder}/{map.Name}";
-
-                if (map.Cover == Map.DefaultCover && File.Exists($"{path}/cover.png"))
-                {
-                    byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
-                    if (coverBuffer == null || coverBuffer.Length == 0)
-                    {
-                        continue;
-                    }
-
-                    Image image = Misc.LoadImageFromBuffer(coverBuffer);
-
-                    if (image != null)
-                    {
-                        Callable
-                            .From(() =>
-                            {
-                                if (MapManager.Maps.Contains(map))
-                                {
-                                    map.Cover = ImageTexture.CreateFromImage(image);
-                                }
-                            })
-                            .CallDeferred();
-                    }
-                }
-            }
-        });
+        // only covers on screen are loaded to prevent excessive VRAM usage
 
         if (maps.Count < 1)
         {

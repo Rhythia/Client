@@ -107,6 +107,17 @@ public partial class Map : RefCounted
         }
     }
 
+    public void UnloadCover()
+    {
+        if (cover == DefaultCover)
+        {
+            return;
+        }
+
+        cover.Dispose();
+        cover = DefaultCover;
+    }
+
     private Texture2D getCover()
     {
         string path = $"{MapUtil.MapsFolder}/{Name}";
@@ -114,7 +125,7 @@ public partial class Map : RefCounted
         if (cover == DefaultCover && File.Exists($"{path}/cover.png"))
         {
             byte[] coverBuffer = File.ReadAllBytes($"{path}/cover.png");
-            var image = Util.Misc.LoadImageFromBuffer(coverBuffer);
+            var image = util.Misc.LoadImageFromBuffer(coverBuffer);
 
             if (image != null)
             {
