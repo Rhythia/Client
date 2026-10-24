@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using Godot;
 
 public partial class Game : BaseScene
@@ -224,16 +228,20 @@ public partial class Game : BaseScene
         StartQueued = true;
 
         var parsedMap = MapParser.Decode(map.FolderPath, Rhythia.AudioFilePath);
+        parsedMap.Id = map.Id;
 
-        parsedMap.Id = map.Id; // add lost id
+        string hash = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(map.FolderPath, "objects.phxmo"))));
+        Map mapRow = DatabaseService.Connection.Table<Map>().FirstOrDefault<Map>(row => row.ObjectHash == hash);
 
-        bool mapDisableVideo = DatabaseService.Connection.Get<Map>(map.Id).DisableVideo;
+        bool mapDisableVideo = mapRow != null && mapRow.DisableVideo;
         bool globalVideoDisable = (bool)SettingsManager.Instance.Settings.DisableVideoGlobal;
         bool disableVideo = mapDisableVideo || globalVideoDisable;
 
         Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays, disableVideo: disableVideo);
 
-        bool useVoidSpace = (bool)SettingsManager.Instance.Settings.VideoBgVoidSpace && !disableVideo;
+        var metadata = (Godot.Collections.Dictionary)Json.ParseString(File.ReadAllText($"{map.FolderPath}/metadata.json"));
+        bool hasVideo = (bool)metadata["HasVideo"];
+        bool useVoidSpace = (bool)SettingsManager.Instance.Settings.VideoBgVoidSpace && !disableVideo && hasVideo;
 
         SceneManager.Load("res://scenes/game.tscn", forceVoidBg: useVoidSpace);
     }
@@ -245,9 +253,11 @@ public partial class Game : BaseScene
 
         var oldAttempt = Attempt;
         var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
-        map.Id = oldAttempt.Map.Id;
 
-        // bool mapDisableVideo = DatabaseService.Connection.Get<Map>(map.Id).DisableVideo;
+        // string hash = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(map.FolderPath, "objects.phxmo"))));
+        // Map mapRow = DatabaseService.Connection.Table<Map>().FirstOrDefault<Map>(row => row.ObjectHash == hash);
+
+        // bool mapDisableVideo = mapRow != null && mapRow.DisableVideo;
         // bool globalVideoDisable = (bool)SettingsManager.Instance.Settings.DisableVideoGlobal;
         // bool disableVideo = mapDisableVideo || globalVideoDisable;
 

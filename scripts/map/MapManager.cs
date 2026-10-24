@@ -73,6 +73,7 @@ public partial class MapManager : Node
         MapParser.Encode(map);
         map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
+        MapInfo.Instance.InfoContainer.Refresh(true, true);
     }
 
     public static void RemoveVideo(Map map)
@@ -94,6 +95,7 @@ public partial class MapManager : Node
         MapParser.Encode(map);
         map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
+        MapInfo.Instance.InfoContainer.Refresh(true, true);
     }
 
     public static void Delete(Map map, bool quiet = false)
