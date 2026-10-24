@@ -463,6 +463,12 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
+    /// Hides Notifications, unless they're important
+    /// </summary>
+    public SettingsItem<bool> HideNotifications { get; private set; }
+
+    [Order]
+    /// <summary>
     /// Restarts settings to the game's defaults
     /// </summary>
     public SettingsItem<Variant> ResetToDefaults { get; private set; }
@@ -783,13 +789,6 @@ public partial class SettingsProfile
             Title = "Space Hit Effects",
             Description = "Toggles note hit effects for the game space",
             Section = SettingsSection.Spaces,
-            UpdateAction = (_, init) =>
-            {
-                if ((bool)SpaceHitEffects.GetVariant())
-                {
-                    CustomSpaceColor.SetVariant(false);
-                }
-            },
         };
 
         SpaceEffects = new(true)
@@ -1530,6 +1529,14 @@ public partial class SettingsProfile
             Section = SettingsSection.Other,
         };
 
+        HideNotifications = new(false)
+        {
+            Id = "HideNotifications",
+            Title = "Hide Notifications",
+            Description = "Hides notifications, important ones will still display",
+            Section = SettingsSection.Other,
+        };
+
         ResetToDefaults = new(default)
         {
             Id = "ResetToDefaults",
@@ -1616,6 +1623,38 @@ public partial class SettingsProfile
         }
 
         return meshes;
+    }
+
+    private static List<string> getAvailableSpaces()
+    {
+        List<string> spaces =
+        [
+            "skin",
+            "circulartunnel",
+            "conspiracy",
+            "galaxy",
+            "grid",
+            "relic",
+            "solid",
+            "squircles",
+            "tritunnel",
+            "tunnel",
+            "void",
+            "vortex",
+            "waves",
+        ];
+        string spaceDir = $"{Constants.USER_FOLDER}/spaces";
+
+        if (Directory.Exists(spaceDir))
+        {
+            string[] objFiles = Directory.GetFiles(spaceDir, "*.tscn");
+            foreach (string file in objFiles)
+            {
+                spaces.Add(Path.GetFileNameWithoutExtension(file));
+            }
+        }
+
+        return spaces;
     }
 
     public static void ImportFromNightlySettings(string settingsPath)

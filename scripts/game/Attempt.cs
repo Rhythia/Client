@@ -51,6 +51,7 @@ public partial class Attempt : RefCounted
 
     public Vector2 CursorPosition = Vector2.Zero;
     public Vector2 RawCursorPosition = Vector2.Zero;
+    public Vector2 BufferCursorPosition = Vector2.Zero;
     public double DistanceMM = 0;
 
     public ulong FirstNote = 0;

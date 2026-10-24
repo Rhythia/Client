@@ -54,7 +54,10 @@
 [ext_resource type="Texture2D" uid="uid://cfl8us0rpkpqs" path="res://textures/ui/github_hovered.png" id="43_sgh51"]
 [ext_resource type="Script" uid="uid://c1235cyjfh4rl" path="res://scripts/ui/LinkPopupButton.cs" id="44_ybca7"]
 [ext_resource type="Script" uid="uid://dqi64p5jl23cv" path="res://scripts/ui/menu/VersionLabel.cs" id="45_mb34c"]
+[ext_resource type="Texture2D" uid="uid://dyms3l4x385j" path="res://textures/ui/feedback.png" id="46_41a2d"]
+[ext_resource type="Texture2D" uid="uid://c0gv3fh2rmlcy" path="res://textures/ui/feedback_pressed.png" id="47_f5cck"]
 [ext_resource type="Texture2D" uid="uid://8du82a5dxjdk" path="res://user/skins/default/ui/jukebox_play.png" id="48_q1l3m"]
+[ext_resource type="Texture2D" uid="uid://cya1kdxwisvmc" path="res://textures/ui/feedback_hovered.png" id="48_s4ogs"]
 [ext_resource type="Texture2D" uid="uid://bpsvcunhigs6c" path="res://user/skins/default/ui/jukebox_skip.png" id="49_7u5pb"]
 
 [sub_resource type="SystemFont" id="SystemFont_lsskb"]
@@ -754,9 +757,11 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_18lcc")
 [node name="HBoxContainer" type="HBoxContainer" parent="Menus/Play/SubTopBar" unique_id=613796792]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.5
+anchor_top = 0.179
 anchor_right = 1.0
-anchor_bottom = 0.5
+anchor_bottom = 0.82100004
+offset_top = 17.976
+offset_bottom = -17.976002
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
@@ -764,7 +769,7 @@ alignment = 2
 [node name="Settings" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=384311335]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-tooltip_text = "CTRL + O"
+tooltip_text = "Game settings, can be opened up at anytime using CTRL + O"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -776,6 +781,7 @@ script = ExtResource("8_yxnar")
 [node name="UserFolder" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=1212420658]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+tooltip_text = "Opens up the game's user folder, allows you to manually import or modify files."
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -787,6 +793,7 @@ script = ExtResource("27_eku7s")
 [node name="Import" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=554381373]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+tooltip_text = "Import maps, you can mass import with this"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -1902,9 +1909,32 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 
+[node name="Feedback" type="TextureButton" parent="TopBar/LinkButtons" unique_id=169604797]
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Feedback form"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("46_41a2d")
+texture_pressed = ExtResource("47_f5cck")
+texture_hover = ExtResource("48_s4ogs")
+
+[node name="Button" type="Button" parent="TopBar/LinkButtons/Feedback" unique_id=1650047982]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+flat = true
+script = ExtResource("44_ybca7")
+Link = "https://forms.gle/eyGTBKJskSmAux8P8"
+
 [node name="GitHub" type="TextureButton" parent="TopBar/LinkButtons" unique_id=1795081095]
 layout_mode = 2
 size_flags_vertical = 4
+tooltip_text = "Our GitHub page"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("41_akqfu")
@@ -1926,6 +1956,7 @@ Link = "https://github.com/Rhythia"
 [node name="Discord" type="TextureButton" parent="TopBar/LinkButtons" unique_id=36147158]
 layout_mode = 2
 size_flags_vertical = 4
+tooltip_text = "Our official Discord"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("20_qw82i")

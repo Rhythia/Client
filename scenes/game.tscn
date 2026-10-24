@@ -44,7 +44,7 @@
 [ext_resource type="Script" uid="uid://dlxxg2h4cl5hj" path="res://scripts/game/ui/PauseMenu.cs" id="38_8ool0"]
 [ext_resource type="Script" uid="uid://c24b7vefbxvbh" path="res://scripts/game/ui/PlaytestOverlay.cs" id="40_m4url"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a6jk1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05nbr"]
 resource_name = "Material"
 transparency = 1
 shading_mode = 0
@@ -52,10 +52,10 @@ albedo_texture = ExtResource("2_q78ea")
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_aih2q"]
-material = SubResource("StandardMaterial3D_a6jk1")
+material = SubResource("StandardMaterial3D_05nbr")
 size = Vector2(4, 4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lvhmj"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0sl42"]
 transparency = 1
 shading_mode = 0
 disable_ambient_light = true
@@ -66,7 +66,7 @@ texture_repeat = false
 distance_fade_min_distance = 1076.07
 
 [sub_resource type="QuadMesh" id="QuadMesh_xij4d"]
-material = SubResource("StandardMaterial3D_lvhmj")
+material = SubResource("StandardMaterial3D_0sl42")
 size = Vector2(0.263, 0.263)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ssr8x"]
@@ -78,14 +78,14 @@ vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 albedo_texture = ExtResource("13_6rhgc")
 
-[sub_resource type="QuadMesh" id="QuadMesh_5p2n8"]
+[sub_resource type="QuadMesh" id="QuadMesh_458eo"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_e28va"]
 transform_format = 1
 use_colors = true
-mesh = SubResource("QuadMesh_5p2n8")
+mesh = SubResource("QuadMesh_458eo")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05nbr"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h3rex"]
 resource_name = "Material"
 transparency = 1
 shading_mode = 0
@@ -93,18 +93,18 @@ albedo_texture = ExtResource("12_pr1ej")
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_0sl42"]
-material = SubResource("StandardMaterial3D_05nbr")
+material = SubResource("StandardMaterial3D_h3rex")
 size = Vector2(4, 4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rc4du"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fedci"]
 transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("36_05nbr")
 
 [sub_resource type="QuadMesh" id="QuadMesh_oaba0"]
-material = SubResource("StandardMaterial3D_rc4du")
+material = SubResource("StandardMaterial3D_fedci")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_pl11u"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_qkpxi"]
 viewport_path = NodePath("Runner/HUD/Health/HealthViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4p8vu"]
@@ -112,7 +112,7 @@ resource_local_to_scene = true
 transparency = 1
 shading_mode = 0
 disable_fog = true
-albedo_texture = SubResource("ViewportTexture_pl11u")
+albedo_texture = SubResource("ViewportTexture_qkpxi")
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_b1hbo"]
@@ -120,7 +120,7 @@ resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_4p8vu")
 size = Vector2(10.88, 0.8)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_sww3w"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_tel4y"]
 viewport_path = NodePath("Runner/HUD/PanelLeft/PanelLeftViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nody0"]
@@ -128,7 +128,7 @@ resource_local_to_scene = true
 transparency = 1
 shading_mode = 0
 disable_fog = true
-albedo_texture = SubResource("ViewportTexture_sww3w")
+albedo_texture = SubResource("ViewportTexture_tel4y")
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_ssyve"]
@@ -158,7 +158,7 @@ font_size = 50
 font = ExtResource("21_05nbr")
 font_size = 50
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_suyxu"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_5q0nq"]
 viewport_path = NodePath("Runner/HUD/PanelRight/PanelRightViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ro5ir"]
@@ -166,7 +166,7 @@ resource_local_to_scene = true
 transparency = 1
 shading_mode = 0
 disable_fog = true
-albedo_texture = SubResource("ViewportTexture_suyxu")
+albedo_texture = SubResource("ViewportTexture_5q0nq")
 texture_repeat = false
 
 [sub_resource type="LabelSettings" id="LabelSettings_5bid2"]
@@ -189,7 +189,7 @@ font_size = 50
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gc8yu"]
 shader = ExtResource("14_3xchs")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_bhx41"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_dgi5k"]
 viewport_path = NodePath("Runner/HUD/ProgressBar/ProgressBarViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1h21"]
@@ -197,7 +197,7 @@ resource_local_to_scene = true
 transparency = 1
 shading_mode = 0
 disable_fog = true
-albedo_texture = SubResource("ViewportTexture_bhx41")
+albedo_texture = SubResource("ViewportTexture_dgi5k")
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_7mook"]
@@ -281,12 +281,13 @@ CursorManager = NodePath("CursorManager")
 UseGameSpace = true
 AddSpaceAsChild = true
 
-[node name="CursorManager" type="Node" parent="." unique_id=862696440 node_paths=PackedStringArray("runner", "playerInputController", "replayManager", "cursorMesh", "camera")]
+[node name="CursorManager" type="Node" parent="." unique_id=862696440 node_paths=PackedStringArray("runner", "playerInputController", "replayManager", "cursorMesh", "bufferCursor", "camera")]
 script = ExtResource("2_nepv3")
 runner = NodePath("../Runner")
 playerInputController = NodePath("../PlayerInputController")
 replayManager = NodePath("../ReplayManager")
 cursorMesh = NodePath("../Runner/HUD/Grid/Cursor")
+bufferCursor = NodePath("../Runner/HUD/Grid/BufferCursor")
 camera = NodePath("../Runner/Camera3D")
 
 [node name="TrailRenderer" type="Node" parent="CursorManager" unique_id=2058712869 node_paths=PackedStringArray("cursor", "cursorTrail", "runner")]
@@ -324,6 +325,12 @@ script = ExtResource("27_js0lu")
 [node name="Cursor" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=292067677]
 mesh = SubResource("QuadMesh_xij4d")
 skeleton = NodePath("../../../..")
+
+[node name="BufferCursor" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=703771191]
+visible = false
+transparency = 1.0
+mesh = SubResource("QuadMesh_xij4d")
+skeleton = NodePath("../../..")
 
 [node name="CursorTrail" type="MultiMeshInstance3D" parent="Runner/HUD/Grid" unique_id=913051903]
 material_override = SubResource("StandardMaterial3D_ssr8x")
@@ -405,9 +412,9 @@ anchor_top = 0.65
 anchor_right = 0.5
 anchor_bottom = 0.65
 offset_left = -128.0
-offset_top = -128.0
+offset_top = -166.25
 offset_right = 128.0
-offset_bottom = 128.0
+offset_bottom = 89.75128
 theme_override_styles/panel = SubResource("StyleBoxFlat_56f8v")
 
 [node name="Score" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1330190508]
@@ -416,10 +423,10 @@ anchor_left = 0.5
 anchor_top = 0.35
 anchor_right = 0.5
 anchor_bottom = 0.35
-offset_left = -14.5
-offset_top = -28.5
-offset_right = 14.5
-offset_bottom = 28.5
+offset_left = -15.0
+offset_top = -34.5
+offset_right = 15.0
+offset_bottom = 34.500122
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_rvp5o")
@@ -433,6 +440,10 @@ anchor_left = 0.5
 anchor_top = 0.65
 anchor_right = 0.5
 anchor_bottom = 0.65
+offset_left = -28.5
+offset_top = -71.25
+offset_right = 28.5
+offset_bottom = -2.2499695
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_rvp5o")
@@ -441,16 +452,15 @@ label_settings = SubResource("LabelSettings_pr1ej")
 horizontal_alignment = 1
 
 [node name="ComboCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
-visible = false
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.86
 anchor_right = 0.5
 anchor_bottom = 0.86
 offset_left = -90.0
-offset_top = -18.0
+offset_top = -34.5
 offset_right = 90.0
-offset_bottom = 18.0
+offset_bottom = 34.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "0"

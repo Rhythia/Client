@@ -8,8 +8,29 @@
 [ext_resource type="Texture2D" uid="uid://men3chmi3esy" path="res://textures/ui/add.png" id="6_ya4ey"]
 [ext_resource type="Shader" uid="uid://rngh60dyh10b" path="res://scripts/shaders/outline.gdshader" id="7_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://3e1tjlr4m0wt" path="res://user/skins/default/game/cursor.png" id="8_85g3d"]
+[ext_resource type="Texture2D" uid="uid://b3g4aw54n6bow" path="res://user/skins/default/game/grid.png" id="8_dgi5k"]
+[ext_resource type="Script" uid="uid://nwvon7h1bvhc" path="res://scripts/ui/menu/SkinPreview/TitlePreview.cs" id="9_5q0nq"]
 [ext_resource type="Script" uid="uid://carutkgoqpr4e" path="res://scripts/ui/MenuCursor.cs" id="9_choun"]
 [ext_resource type="Script" uid="uid://bmq7ajx48l7ng" path="res://scripts/ui/FPSCounter.cs" id="10_choun"]
+[ext_resource type="Script" uid="uid://bxshhmy8fg6nh" path="res://scripts/ui/menu/SkinPreview/PanelLeftPreview.cs" id="10_qkpxi"]
+[ext_resource type="Texture2D" uid="uid://dw2gxd3m24h4m" path="res://user/skins/default/game/hits.png" id="11_kmb1v"]
+[ext_resource type="Texture2D" uid="uid://ccdaf14yq65jf" path="res://user/skins/default/game/grid_guides.png" id="12_fuf3a"]
+[ext_resource type="Texture2D" uid="uid://bc0w1ujoshiyk" path="res://user/skins/default/game/visibility_assist.png" id="13_pibwh"]
+[ext_resource type="Texture2D" uid="uid://cxv6ey5xb6b0f" path="res://user/skins/default/game/health_background.png" id="15_5he1u"]
+[ext_resource type="Script" uid="uid://cv27mk2qd18i2" path="res://scripts/ui/menu/SkinPreview/PanelRightPreview.cs" id="15_dgi5k"]
+[ext_resource type="Texture2D" uid="uid://4x2vfpyjkri6" path="res://user/skins/default/game/health.png" id="16_5poiv"]
+[ext_resource type="Texture2D" uid="uid://80bitp5weqrb" path="res://user/skins/default/game/panel_left_background.png" id="18_chjal"]
+[ext_resource type="Shader" uid="uid://bx4888tau78tk" path="res://scripts/shaders/combo_progress.gdshader" id="19_cjqg0"]
+[ext_resource type="Script" uid="uid://c3xaw5hps8bel" path="res://scripts/ui/menu/SkinPreview/ProgressBarPreview.cs" id="20_j8jky"]
+[ext_resource type="FontFile" uid="uid://dhyog1pif7c5i" path="res://fonts/Nunito/Nunito-Bold.ttf" id="20_vchkt"]
+[ext_resource type="FontFile" uid="uid://b0ru0lfde5a21" path="res://fonts/Nunito/Nunito-SemiBold.ttf" id="21_txyw0"]
+[ext_resource type="Texture2D" uid="uid://diba7c3s8as4s" path="res://user/skins/default/game/panel_right_background.png" id="23_nvyfr"]
+[ext_resource type="Script" uid="uid://cfavwgar504b0" path="res://scripts/ui/menu/SkinPreview/HealthBarPreview.cs" id="24_kmb1v"]
+[ext_resource type="Texture2D" uid="uid://c3x2cp3tx4vqt" path="res://user/skins/default/game/misses.png" id="24_ty1g6"]
+[ext_resource type="Shader" uid="uid://bp2sv5ynsubi2" path="res://scripts/shaders/alpha_gradient.gdshader" id="25_j2jfr"]
+[ext_resource type="Script" uid="uid://c0of2i2mjcd3r" path="res://scripts/ui/menu/SkinPreview/GridPreview.cs" id="28_fuf3a"]
+[ext_resource type="Texture2D" uid="uid://dmc5f6ajp8xv1" path="res://user/skins/default/game/progress_background.png" id="28_o7ddy"]
+[ext_resource type="Texture2D" uid="uid://d3s17ehomjscd" path="res://user/skins/default/game/progress.png" id="29_0loja"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1q06g"]
 bg_color = Color(0, 0, 0, 0.8784314)
@@ -104,6 +125,187 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tel4y"]
+bg_color = Color(0.16565639, 0.16565642, 0.16565639, 0.8784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_152kg"]
+viewport_path = NodePath("Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft/PanelLeftViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r4e17"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+disable_fog = true
+albedo_texture = SubResource("ViewportTexture_152kg")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_tel4y"]
+size = Vector2(4, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mlv25"]
+shader = ExtResource("19_cjqg0")
+shader_parameter/progress = 0.8870000421325
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/background_colour = Color(0.155, 0.155, 0.155, 1)
+shader_parameter/sides = 8
+shader_parameter/thickness = 3.0
+shader_parameter/size = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a82wo"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_gdvew"]
+font = ExtResource("20_vchkt")
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_kjtvk"]
+font = ExtResource("21_txyw0")
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_xrs0c"]
+font = ExtResource("21_txyw0")
+font_size = 50
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_fp3uj"]
+viewport_path = NodePath("Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j4bwh"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+disable_fog = true
+albedo_texture = SubResource("ViewportTexture_fp3uj")
+texture_repeat = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qkpxi"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_y57op"]
+material = SubResource("StandardMaterial3D_qkpxi")
+size = Vector2(4, 10)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ksmap"]
+font = ExtResource("21_txyw0")
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_ygd8o"]
+font = ExtResource("21_txyw0")
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_2s0kr"]
+font = ExtResource("21_txyw0")
+font_size = 50
+font_color = Color(1, 1, 1, 0.768627)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xaipn"]
+font = ExtResource("21_txyw0")
+font_size = 50
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ndrjj"]
+shader = ExtResource("25_j2jfr")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_rc4du"]
+viewport_path = NodePath("Settings/SkinPreviewPanel/SkinPreview/SubViewport/ProgressBar/ProgressBarViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_11yus"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+disable_fog = true
+albedo_texture = SubResource("ViewportTexture_rc4du")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_b6ruc"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_11yus")
+size = Vector2(10.88, 0.8)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_od4ux"]
+viewport_path = NodePath("Settings/SkinPreviewPanel/SkinPreview/SubViewport/Health/HealthViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xhfw6"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+disable_fog = true
+albedo_texture = SubResource("ViewportTexture_od4ux")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_1epgm"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_xhfw6")
+size = Vector2(10.88, 0.8)
+
+[sub_resource type="Environment" id="Environment_gdxgs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a6jk1"]
+resource_name = "Material"
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("8_dgi5k")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_augu2"]
+material = SubResource("StandardMaterial3D_a6jk1")
+size = Vector2(4, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lvhmj"]
+transparency = 1
+shading_mode = 0
+disable_ambient_light = true
+disable_fog = true
+albedo_texture = ExtResource("8_85g3d")
+texture_filter = 5
+texture_repeat = false
+distance_fade_min_distance = 1076.07
+
+[sub_resource type="QuadMesh" id="QuadMesh_tm6hj"]
+material = SubResource("StandardMaterial3D_lvhmj")
+size = Vector2(0.263, 0.263)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kf5aa"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+albedo_texture = ExtResource("11_kmb1v")
+
+[sub_resource type="QuadMesh" id="QuadMesh_5p2n8"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_t5ykj"]
+transform_format = 1
+use_colors = true
+mesh = SubResource("QuadMesh_5p2n8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05nbr"]
+resource_name = "Material"
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("12_fuf3a")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_e755i"]
+material = SubResource("StandardMaterial3D_05nbr")
+size = Vector2(4, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rc4du"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("13_pibwh")
+
+[sub_resource type="QuadMesh" id="QuadMesh_ro3en"]
+material = SubResource("StandardMaterial3D_rc4du")
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o6xl0"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_tipki"]
@@ -160,8 +362,13 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.25
 anchor_top = 0.25
-anchor_right = 0.75
-anchor_bottom = 0.75
+anchor_right = 0.75000006
+anchor_bottom = 0.75000006
+offset_right = -6.1035156e-05
+offset_bottom = -6.1035156e-05
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_visual_only = false
 theme = ExtResource("3_tipki")
 theme_override_styles/panel = SubResource("StyleBoxFlat_1q06g")
 
@@ -418,6 +625,30 @@ text = "SETTINGS"
 label_settings = SubResource("LabelSettings_osuri")
 vertical_alignment = 1
 
+[node name="RefreshSkinPreview" type="Button" parent="Settings/Holder/Header" unique_id=693048162]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.27800003
+anchor_top = 0.15
+anchor_right = 0.48600003
+anchor_bottom = 0.9250001
+offset_left = 0.07998657
+offset_right = -0.040008545
+theme = ExtResource("3_tipki")
+text = "Refresh Preview"
+
+[node name="ShowSkinPreview" type="Button" parent="Settings/Holder/Header" unique_id=558443082]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.499
+anchor_top = 0.15
+anchor_right = 0.75500005
+anchor_bottom = 0.9250001
+offset_left = -0.1000061
+offset_right = -11.940033
+theme = ExtResource("3_tipki")
+text = "Show Skin Preview"
+
 [node name="Profiles" type="OptionButton" parent="Settings/Holder/Header" unique_id=716644348]
 layout_mode = 1
 anchors_preset = -1
@@ -478,7 +709,7 @@ caret_blink = true
 [node name="Outline" type="Panel" parent="Settings/Holder" unique_id=1227163057]
 material = SubResource("ShaderMaterial_3poq1")
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -498,6 +729,415 @@ title = "Open a Directory"
 file_mode = 2
 access = 2
 use_native_dialog = true
+
+[node name="SkinPreviewPanel" type="Panel" parent="Settings" unique_id=499692920]
+visible = false
+modulate = Color(1, 1, 1, 0)
+light_mask = 512
+visibility_layer = 512
+z_index = 1
+z_as_relative = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55200005
+anchor_top = 0.279
+anchor_right = 0.919
+anchor_bottom = 0.72400004
+offset_left = -0.5600586
+offset_top = 0.11999512
+offset_right = 0.34692383
+offset_bottom = -0.2800293
+offset_transform_enabled = true
+offset_transform_pivot_ratio = Vector2(1, 1)
+offset_transform_visual_only = false
+focus_behavior_recursive = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_tel4y")
+
+[node name="Label" type="Label" parent="Settings/SkinPreviewPanel" unique_id=742694072]
+z_index = 3
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -1.0
+offset_top = -12.0
+offset_right = -1.0
+offset_bottom = 11.0
+grow_horizontal = 2
+text = "SKIN PREVIEW"
+horizontal_alignment = 1
+
+[node name="SkinPreview" type="SubViewportContainer" parent="Settings/SkinPreviewPanel" unique_id=2122293191]
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Settings/SkinPreviewPanel/SkinPreview" unique_id=732895320]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 1
+scaling_3d_scale = 1.5
+anisotropic_filtering_level = 1
+size = Vector2i(470, 320)
+render_target_update_mode = 0
+
+[node name="Combo" type="Node3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=385833504]
+
+[node name="Label" type="Label3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Combo" unique_id=372830576]
+transform = Transform3D(7, 0, 0, 0, 6.89365, -1.21554, 0, 1.21554, 6.89365, 0, 3.5, -10)
+pixel_size = 0.0025
+modulate = Color(1, 1, 1, 0)
+outline_modulate = Color(1, 1, 1, 0.39215687)
+text = "999"
+font = ExtResource("5_choun")
+font_size = 64
+outline_size = 4
+
+[node name="Title" type="Node3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=840531691]
+script = ExtResource("9_5q0nq")
+
+[node name="Label" type="Label3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Title" unique_id=2059982806]
+transform = Transform3D(2, 0, 0, 0, 1.93185, -0.517638, 0, 0.517638, 1.93185, 0, 8.25, -10)
+outline_modulate = Color(0, 0, 0, 0)
+text = "N/A - N/A"
+font = ExtResource("20_vchkt")
+font_size = 64
+autowrap_mode = 3
+width = 2500.0
+
+[node name="PanelLeft" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=1497917243]
+transform = Transform3D(0.984808, 0, 0.173648, 0, 0.99999994, 0, -0.173648, 0, 0.98480797, -7.5, 9.536743e-07, -9.000001)
+material_override = SubResource("StandardMaterial3D_r4e17")
+mesh = SubResource("QuadMesh_tel4y")
+script = ExtResource("10_qkpxi")
+
+[node name="PanelLeftViewport" type="SubViewport" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft" unique_id=1517733272]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(250, 625)
+
+[node name="Background" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft/PanelLeftViewport" unique_id=1252591779]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_chjal")
+
+[node name="MultiplierProgress" type="Panel" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft/PanelLeftViewport" unique_id=403597694]
+clip_children = 2
+material = SubResource("ShaderMaterial_mlv25")
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.65
+anchor_right = 0.5
+anchor_bottom = 0.65
+offset_left = -128.0
+offset_top = -166.25
+offset_right = 128.0
+offset_bottom = 89.75128
+theme_override_styles/panel = SubResource("StyleBoxFlat_a82wo")
+
+[node name="Score" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft/PanelLeftViewport" unique_id=117882971]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.35
+anchor_right = 0.5
+anchor_bottom = 0.35
+offset_left = -30.0
+offset_top = -34.5
+offset_right = 30.0
+offset_bottom = 34.500122
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_tipki")
+text = "0"
+label_settings = SubResource("LabelSettings_gdvew")
+horizontal_alignment = 1
+
+[node name="Multiplier" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft/PanelLeftViewport" unique_id=1512976271]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.65
+anchor_right = 0.5
+anchor_bottom = 0.65
+offset_left = -28.5
+offset_top = -71.25
+offset_right = 28.5
+offset_bottom = -2.2499695
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_tipki")
+text = "1x"
+label_settings = SubResource("LabelSettings_kjtvk")
+horizontal_alignment = 1
+
+[node name="ComboCount" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelLeft/PanelLeftViewport" unique_id=132983092]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.86
+anchor_right = 0.5
+anchor_bottom = 0.86
+offset_left = -90.0
+offset_top = -34.5
+offset_right = 90.0
+offset_bottom = 34.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_xrs0c")
+horizontal_alignment = 1
+
+[node name="PanelRight" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=1186413604]
+transform = Transform3D(0.984808, 0, -0.173648, 0, 1, 0, 0.173648, 0, 0.984808, 7.5, 0, -9)
+material_override = SubResource("StandardMaterial3D_j4bwh")
+mesh = SubResource("QuadMesh_y57op")
+script = ExtResource("15_dgi5k")
+
+[node name="PanelRightViewport" type="SubViewport" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight" unique_id=353250979]
+process_mode = 3
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(250, 625)
+
+[node name="Background" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=519398642]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_nvyfr")
+
+[node name="Accuracy" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=1917390646]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.35
+anchor_right = 0.5
+anchor_bottom = 0.35
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_tipki")
+text = "100.00%"
+label_settings = SubResource("LabelSettings_gdvew")
+horizontal_alignment = 1
+
+[node name="Hits" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=163179924]
+modulate = Color(1, 1, 1, 0.627451)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.625
+anchor_right = 0.5
+anchor_bottom = 0.625
+offset_right = -25.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_tipki")
+text = "0"
+label_settings = SubResource("LabelSettings_ksmap")
+horizontal_alignment = 2
+
+[node name="Misses" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=1997376473]
+modulate = Color(1, 1, 1, 0.627451)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.625
+anchor_right = 0.5
+anchor_bottom = 0.625
+offset_left = 25.0
+offset_bottom = -4.0
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_tipki")
+text = "0"
+label_settings = SubResource("LabelSettings_ygd8o")
+
+[node name="SimpleMisses" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=678419666]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_tipki")
+text = "0"
+label_settings = SubResource("LabelSettings_2s0kr")
+
+[node name="Sum" type="Label" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=1801663974]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.7
+anchor_right = 0.5
+anchor_bottom = 0.7
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_tipki")
+text = "0"
+label_settings = SubResource("LabelSettings_xaipn")
+horizontal_alignment = 1
+
+[node name="HitsIcon" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=744614831]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.625
+anchor_right = 0.5
+anchor_bottom = 0.625
+offset_top = -12.0
+offset_right = -2.0
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("3_tipki")
+texture = ExtResource("11_kmb1v")
+expand_mode = 2
+
+[node name="MissesIcon" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=350489808]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.625
+anchor_right = 0.5
+anchor_bottom = 0.625
+offset_left = 2.0
+offset_top = -12.0
+offset_bottom = 7.0
+grow_vertical = 2
+theme = ExtResource("3_tipki")
+texture = ExtResource("24_ty1g6")
+expand_mode = 2
+
+[node name="Line" type="ColorRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/PanelRight/PanelRightViewport" unique_id=282594885]
+material = SubResource("ShaderMaterial_ndrjj")
+anchors_preset = -1
+anchor_top = 0.65
+anchor_right = 1.0
+anchor_bottom = 0.65
+offset_left = 16.0
+offset_right = -16.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=2054063058]
+transform = Transform3D(1, -3.7252903e-09, 0, 0, 0.965926, -0.258819, 1.4901161e-08, 0.258819, 0.965926, 4.7683716e-07, 6.3, -10)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_b6ruc")
+script = ExtResource("20_j8jky")
+
+[node name="Progress" type="Node3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/ProgressBar" unique_id=734363712]
+transform = Transform3D(1, 0, 0, 0, 0.96592563, 0.25881892, 0, -0.25881892, 0.96592563, 0, -3.4971423, 11.289815)
+
+[node name="Label" type="Label3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/ProgressBar/Progress" unique_id=72322109]
+transform = Transform3D(3.5, 0, 0, 0, 3.38074, -0.905867, 0, 0.905867, 3.38074, 0, 7, -10)
+pixel_size = 0.0025
+modulate = Color(1, 1, 1, 0.74509805)
+outline_modulate = Color(0, 0, 0, 0)
+text = "0:00 / 0:00"
+font = ExtResource("21_txyw0")
+font_size = 64
+
+[node name="ProgressBarViewport" type="SubViewport" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/ProgressBar" unique_id=992979397]
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(544, 40)
+size_2d_override = Vector2i(1088, 80)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Background" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/ProgressBar/ProgressBarViewport" unique_id=204557992]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("28_o7ddy")
+
+[node name="Main" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/ProgressBar/ProgressBarViewport" unique_id=242643232]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("29_0loja")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Health" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=1898914194]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -6.3, -10)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_1epgm")
+script = ExtResource("24_kmb1v")
+
+[node name="HealthViewport" type="SubViewport" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Health" unique_id=1286049907]
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(544, 40)
+size_2d_override = Vector2i(1088, 80)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Background" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Health/HealthViewport" unique_id=1346647656]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_5he1u")
+
+[node name="Main" type="TextureRect" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Health/HealthViewport" unique_id=94707981]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_5poiv")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Camera3D" type="Camera3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=1275593072]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.75)
+environment = SubResource("Environment_gdxgs")
+current = true
+fov = 70.0
+size = 5.0
+
+[node name="Grid" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport" unique_id=379266135]
+mesh = SubResource("QuadMesh_augu2")
+script = ExtResource("28_fuf3a")
+
+[node name="Cursor" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Grid" unique_id=1140205940]
+mesh = SubResource("QuadMesh_tm6hj")
+skeleton = NodePath("../..")
+
+[node name="CursorTrail" type="MultiMeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Grid" unique_id=1031907347]
+material_override = SubResource("StandardMaterial3D_kf5aa")
+multimesh = SubResource("MultiMesh_t5ykj")
+
+[node name="GridGuides" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Grid" unique_id=880461795]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, -0.2)
+visible = false
+mesh = SubResource("QuadMesh_e755i")
+skeleton = NodePath("../..")
+
+[node name="VisibilityAssist" type="MeshInstance3D" parent="Settings/SkinPreviewPanel/SkinPreview/SubViewport/Grid" unique_id=2848380]
+transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0, 0, -140)
+transparency = 0.25
+mesh = SubResource("QuadMesh_ro3en")
+skeleton = NodePath("")
 
 [node name="Volume" type="Panel" parent="." unique_id=1219254705]
 modulate = Color(1, 1, 1, 0)
