@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Linq;
 using Godot;
 
 public partial class ScorePanel : Panel
 {
+    public Map Map;
+
     public Leaderboard.Score Score;
 
     public Button Button;
@@ -89,6 +93,11 @@ public partial class ScorePanel : Panel
         {
             Replay replay = new(replayPath);
             var map = MapParser.Decode(replay.MapFilePath);
+
+            string hash = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(map.FolderPath, "objects.phxmo"))));
+            Map mapRow = DatabaseService.Connection.Table<Map>().FirstOrDefault<Map>(row => row.ObjectHash == hash);
+
+            map.DisableVideo = mapRow != null && mapRow.DisableVideo;
 
             Game.Play(map, replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
         }
