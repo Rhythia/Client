@@ -189,6 +189,24 @@ public class Misc
         return fallback;
     }
 
+    public static double ParseDoubleInput(string input, double fallback = 0.0)
+    {
+        return TryParseDoubleInput(input, out double result) ? result : fallback;
+    }
+
+    public static bool TryParseDoubleInput(string input, out double result)
+    {
+        result = 0;
+
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return false;
+        }
+
+        string normalized = input.Trim().Replace(',', '.');
+        return double.TryParse(normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out result);
+    }
+
     public static int BinarySearch(double[] values, double time)
     {
         int left = 0,
