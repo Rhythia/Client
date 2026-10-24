@@ -114,6 +114,7 @@ public partial class Results : BaseScene
                 Replay replay = new(path);
                 Map replayMap = MapParser.Decode(replay.MapFilePath);
                 replayMap.Id = Game.Attempt.Map.Id;
+                replayMap.DisableVideo = Game.Attempt.Map.DisableVideo;
                 SoundManager.Song.Stop();
 
                 Game.Play(replayMap, replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
@@ -180,6 +181,7 @@ public partial class Results : BaseScene
         Map map = MapParser.Decode(attempt.Map.FolderPath);
         map.Ephemeral = attempt.Map.Ephemeral;
         map.Id = attempt.Map.Id;
+        map.DisableVideo = attempt.Map.DisableVideo;
         SoundManager.Song.Stop();
 
         Game.Play(map, attempt.Speed, attempt.StartFrom, attempt.CameraMode, attempt.Modifiers);
