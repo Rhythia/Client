@@ -92,6 +92,13 @@ public static class MapCache
         {
             string mapPath = BackSlashToForwardSlash(map.FolderPath);
 
+            // Older entries can have mixed separators, store them normalized so path lookups match
+            if (map.FolderPath != mapPath)
+            {
+                map.FolderPath = mapPath;
+                UpdateMap(map);
+            }
+
             if (OldCacheFormat && map.Favorite)
             {
                 // The new cache re-writes it from scratch with a new format, so we will need to store these for later
@@ -132,15 +139,9 @@ public static class MapCache
                 }
                 catch (Exception ex)
                 {
+                    // Never delete the user's files here, a failed parse is not proof the map is broken
                     Logger.Error(ex);
-                    if (File.Exists(mapPath))
-                    {
-                        File.Delete(mapPath);
-                    }
-                    else if (Directory.Exists(mapPath))
-                    {
-                        Directory.Delete(mapPath, true);
-                    }
+                    Logger.Log($"Failed to re-sync cached map {mapPath}, removing it from the cache");
                     DatabaseService.Connection.Delete(map);
 
                     FilesSynced.Value++;
@@ -195,7 +196,7 @@ public static class MapCache
         var maps = FetchAll();
 
         HashSet<string> hashSet = [];
-        maps.ForEach(map => hashSet.Add(map.FolderPath));
+        maps.ForEach(map => hashSet.Add(BackSlashToForwardSlash(map.FolderPath)));
 
         // Maps that need to be parsed - maps in database cache
         FilesToSync.Value = toParseMaps.Length - maps.Count;
@@ -227,7 +228,8 @@ public static class MapCache
                     continue;
                 }
 
-                map.FolderPath = BackSlashToForwardSlash(toParseMap);
+                // .phxm files are extracted to a folder by the parser, so keep the folder path it returned
+                map.FolderPath = BackSlashToForwardSlash(map.FolderPath ?? toParseMap);
                 map.MetadataObjectHash = GetMd5Checksum(map.FolderPath);
 
                 if (OldCacheFormat)
@@ -279,8 +281,8 @@ public static class MapCache
                 return -1;
             }
 
-            string newPath = Path.Combine(MapUtil.MapsFolder, map.Name);
-            string existingPath = Path.Combine(MapUtil.MapsFolder, existing?.FolderPath ?? updated.FolderPath);
+            string newPath = BackSlashToForwardSlash(Path.Combine(MapUtil.MapsFolder, map.Name));
+            string existingPath = BackSlashToForwardSlash(Path.Combine(MapUtil.MapsFolder, existing?.FolderPath ?? updated.FolderPath));
 
             if (existingPath != newPath)
             {
