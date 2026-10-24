@@ -29,6 +29,8 @@
   - [Windows](#windows)
   - [Linux](#linux)
   - [Linux Troubleshooting](#linux-troubleshooting)
+  - [macOS](#macos)
+  - [macOS Troubleshooting](#macos-troubleshooting)
 - [User Folder](#user-folder)
 - [Getting Maps](#getting-maps)
 - [Development](#development)
@@ -64,6 +66,7 @@ You can view all releases on the [Rewrite releases page](https://github.com/Rhyt
 |---|---|
 | **Windows** | [Download](https://github.com/Rhythia/Client/releases/latest/download/windows.zip) |
 | **Linux** | [Download](https://github.com/Rhythia/Client/releases/latest/download/linux.zip) |
+| **macOS** | [Download](https://github.com/Rhythia/Client/releases/latest/download/macOS.zip) |
 
 You can view the Rewrite source code [here](https://github.com/Rhythia/Client).
 
@@ -138,6 +141,41 @@ sudo chmod +x Rhythia.x86_64
 
 Still having issues? Visit the **#support** channel in our [Discord](https://discord.gg/rhythia).
 
+### macOS
+
+> [!NOTE]
+> Requires macOS 11 (Big Sur) or later on Intel, or macOS 13 (Ventura) or later on Apple Silicon.
+
+1. Download `macOS.zip` for your chosen client above.
+2. Double-click the downloaded file to extract `Rhythia.app`.
+3. Move `Rhythia.app` to your **Applications** folder.
+4. Open `Rhythia.app`. The first launch will be blocked, see below.
+
+#### Allowing Rhythia to Open
+
+Rhythia is not signed with an Apple Developer ID, so macOS blocks it the first time you open it. You only need to do this once; in-game updates keep working afterwards.
+
+**System Settings:**
+
+1. Try to open `Rhythia.app` and close the warning that appears.
+2. Open **System Settings** → **Privacy & Security**.
+3. Scroll down to the message about Rhythia being blocked and click **Open Anyway**.
+4. Confirm with your password, then open Rhythia again.
+
+**Terminal:**
+
+```bash
+xattr -dr com.apple.quarantine /Applications/Rhythia.app
+```
+
+### macOS Troubleshooting
+
+If macOS says the app **is damaged and can't be opened**, run the Terminal command above; it removes the download flag macOS adds to files from the internet.
+
+If the game won't open at all, check that you are using a release newer than 0.2.0; the 0.2.0 `macOS.zip` and earlier builds were signed incorrectly and are killed by macOS on launch.
+
+Still having issues? Visit the **#support** channel in our [Discord](https://discord.gg/rhythia).
+
 ---
 
 ## User Folder
@@ -148,6 +186,7 @@ Your maps, replays, skins, and settings are stored separately from the game inst
 |---|---|
 | **Windows** | `%appdata%\Rhythia` |
 | **Linux** | `~/.local/share/Rhythia` |
+| **macOS** | `~/Library/Application Support/Rhythia` |
 
 You can also access the user folder from within the game via the **User Folder** button on the top bar.
 
@@ -210,7 +249,7 @@ We ❤️ developers! Contributions are welcome — whether it's bug fixes, feat
 | Software | Notes |
 |---|---|
 | [Godot 4.7 Stable (.NET)](https://godotengine.org/download) | The C# / .NET build is required |
-| [Git](https://git-scm.com/downloads) | Windows: Git for Windows · Linux: `git` package |
+| [Git](https://git-scm.com/downloads) | Windows: Git for Windows · Linux: `git` package · macOS: `xcode-select --install` or `brew install git` |
 | [GitHub Account](https://github.com/signup) | Needed to fork and open pull requests |
 
 **Optional:** [Visual Studio Code](https://code.visualstudio.com/) with the [godot-tools](https://marketplace.visualstudio.com/items?itemName=geequlim.godot-tools) extension.
@@ -249,6 +288,17 @@ dotnet tool restore
 2. Click **Import**.
 3. Browse to your cloned repository folder and select `project.godot`.
 4. Click **Open**.
+
+#### 4. Exporting a Build (Optional)
+
+Release builds are exported automatically by the [Release workflow](.github/workflows/release.yml) when a release is published. To export locally, install the matching [export templates](https://godotengine.org/download) and use **Project** → **Export**, or:
+
+```bash
+godot --headless --export-release "macOS" build/macOS/Rhythia.zip
+```
+
+> [!NOTE]
+> The macOS preset signs with Apple's `codesign`, so macOS builds must be exported on a Mac.
 
 ### Submitting Your Changes
 

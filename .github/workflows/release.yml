@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    name: Export ${{ matrix.preset }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: Windows Desktop
+            asset: Windows.zip
+            runner: ubuntu-latest
+            extras: opengl3-compatibility.bat
+            binary: Rhythia.exe
+            export: Rhythia.zip
+          - preset: Linux
+            asset: Linux.zip
+            runner: ubuntu-latest
+            extras: opengl3-compatibility.sh
+            binary: Rhythia.x86_64
+            export: Rhythia.x86_64.zip
+          # macOS must export on a Mac: the preset signs with Xcode codesign,
+          # Godot's built-in signer produces apps that are killed at launch
+          - preset: macOS
+            asset: macOS.zip
+            runner: macos-latest
+            extras: ""
+            binary: Rhythia.app/Contents/MacOS/Rhythia
+            export: Rhythia.zip
+    runs-on: ${{ matrix.runner }}
+    env:
+      GODOT_CACHE: ${{ github.workspace }}/../godot-cache
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # Checkout v4
+
+      - name: Setup
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # Dotnet 4.0.2
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache Godot
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # Cache v4
+        with:
+          path: ${{ env.GODOT_CACHE }}
+          key: godot-${{ runner.os }}-${{ hashFiles('.github/godot_version.txt') }}
+
+      - name: Install Godot
+        run: .github/scripts/install-godot.sh
+
+      - name: Restore dependencies
+        run: dotnet restore --locked-mode
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Import project
+        run: '"$GODOT" --headless --path . --import'
+
+      # Godot names the executable after the export file, so export under the binary's name and rename
+      - name: Export
+        run: |
+          mkdir -p build/export
+          "$GODOT" --headless --path . --export-release "${{ matrix.preset }}" "build/export/${{ matrix.export }}"
+          mv "build/export/${{ matrix.export }}" "build/${{ matrix.asset }}"
+
+      - name: Add launch scripts
+        if: matrix.extras != ''
+        working-directory: .github/release-extras
+        run: zip -X "../../build/${{ matrix.asset }}" ${{ matrix.extras }}
+
+      - name: Verify archive layout
+        run: unzip -Z1 "build/${{ matrix.asset }}" | grep -x "${{ matrix.binary }}" > /dev/null
+
+      - name: Verify macOS app launches
+        if: matrix.preset == 'macOS'
+        run: |
+          mkdir -p build/verify
+          ditto -x -k build/macOS.zip build/verify
+          codesign --verify --deep --strict build/verify/Rhythia.app
+          build/verify/Rhythia.app/Contents/MacOS/Rhythia --headless --version
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # Upload Artifact v4
+        with:
+          name: ${{ matrix.asset }}
+          path: build/${{ matrix.asset }}
+          if-no-files-found: error
+
+      - name: Upload to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "build/${{ matrix.asset }}" --clobber
