@@ -93,6 +93,7 @@ public partial class Map : RefCounted
 
     public bool DisableVideo { get; set; }
 
+    [Ignore]
     public string VideoExt { get; set; } = string.Empty;
 
     private Note[] notes;
