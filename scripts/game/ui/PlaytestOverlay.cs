@@ -56,13 +56,13 @@ public partial class PlaytestOverlay : Panel
         if (!PlaytestInit && SettingsManager.Instance.Settings.OptionalPlaytestParameters)
         {
             // start from init
-            double.TryParse(Rhythia.StartFromParameter, CultureInfo.InvariantCulture, out double sfInit);
+            double sfInit = util.Misc.ParseDoubleInput(Rhythia.StartFromParameter);
             string sfSeconds = (sfInit /= 1000).ToString(CultureInfo.InvariantCulture);
             ApplyStartFrom(sfSeconds, Attempt.Map, startFromEdit);
 
             // speed init
-            double.TryParse(Rhythia.SpeedParameter, CultureInfo.InvariantCulture, out double spInit);
-            speedEdit.Text = spInit.ToString(CultureInfo.CurrentCulture);
+            double spInit = util.Misc.ParseDoubleInput(Rhythia.SpeedParameter, 1.0);
+            speedEdit.Text = spInit.ToString(CultureInfo.InvariantCulture);
         }
 
         if (!show)
@@ -70,12 +70,7 @@ public partial class PlaytestOverlay : Panel
             var oldAttempt = Attempt;
             Runner.Stop(false);
 
-            double speedValue = 1.0;
-
-            if (double.TryParse(speedEdit.Text, out double speedDouble))
-            {
-                speedValue = speedDouble;
-            }
+            double speedValue = util.Misc.ParseDoubleInput(speedEdit.Text, 1.0);
 
             var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
 
@@ -92,7 +87,7 @@ public partial class PlaytestOverlay : Panel
 
         if (input.Contains(':')) // time conversion (ex. 1:25)
         {
-            if (!input.IsValidFloat())
+            if (!util.Misc.TryParseDoubleInput(input.Replace(":", ""), out _))
             {
                 valueEdit.Text = util.String.FormatTime(1.0);
             }
@@ -101,11 +96,11 @@ public partial class PlaytestOverlay : Panel
             string[] split = input.Split(":");
             split.Reverse();
 
-            if (split.Length > 1 && split[1].IsValidFloat())
+            if (split.Length > 1 && util.Misc.TryParseDoubleInput(split[1], out double minutes))
             {
-                value += 60 * split[1].ToFloat();
+                value += 60 * minutes;
             }
-            if (double.TryParse(split[0], CultureInfo.InvariantCulture, out double inputValue))
+            if (util.Misc.TryParseDoubleInput(split[0], out double inputValue))
             {
                 if (inputValue < 1)
                     inputValue *= map.Length / 1000;
@@ -118,15 +113,12 @@ public partial class PlaytestOverlay : Panel
         }
         else if (!input.Contains(':'))
         {
-            if (!input.IsValidFloat())
+            if (!util.Misc.TryParseDoubleInput(input, out _))
             {
                 valueEdit.Text = util.String.FormatTime(1.0);
             }
 
-            double value = 0.0;
-
-            if (double.TryParse(input, out double inputValue))
-                value = inputValue;
+            double value = util.Misc.ParseDoubleInput(input);
             value = Math.Clamp(value, 0, map.Length);
 
             valueEdit.Text = util.String.FormatTime(value);
@@ -142,19 +134,18 @@ public partial class PlaytestOverlay : Panel
 
         if (split.Length == 1)
         {
-            if (split[0].IsValidFloat())
-                value = split[0].ToFloat();
+            value = util.Misc.ParseDoubleInput(split[0]);
         }
         else
         {
-            if (split[0].IsValidFloat())
+            if (util.Misc.TryParseDoubleInput(split[0], out double minutes))
             {
-                value += split[0].ToFloat() * 60; // minutes
+                value += minutes * 60;
             }
 
-            if (split[1].IsValidFloat())
+            if (util.Misc.TryParseDoubleInput(split[1], out double seconds))
             {
-                value += split[1].ToFloat(); // seconds
+                value += seconds;
             }
         }
 
