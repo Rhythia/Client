@@ -18,4 +18,24 @@
     <PackageReference Include="Tomlyn" Version="0.20.0" />
     <PackageReference Include="Updatum" Version="1.3.2" />
   </ItemGroup>
+  <PropertyGroup>
+    <AddonBuildVersion>0.1.0</AddonBuildVersion>
+    <AddonUrl>https://github.com/Rhythia/gde_gozen/releases/download/v$(AddonBuildVersion)/GDE_GoZen_v9.7_csharp.zip</AddonUrl>
+    <ZipAddonName>GdeGozen_v9.7.zip</ZipAddonName>
+  </PropertyGroup>
+  <Target Name="CheckAddon" BeforeTargets="BeforeBuild">
+    <ReadLinesFromFile File="addons/gde_gozen/version.txt" Condition="Exists('addons/gde_gozen/version.txt')">
+      <Output TaskParameter="Lines" PropertyName="InstalledAddonVersion" />
+    </ReadLinesFromFile>
+    <CallTarget Targets="DownloadAddon" Condition="!Exists('addons/gde_gozen') Or '$(InstalledAddonVersion.Trim())' != '$(AddonBuildVersion)'" />
+  </Target>
+  <Target Name="DownloadAddon">
+    <Message Text="Downloading addon. This may take a while." Importance="high" />
+    <DownloadFile DestinationFolder=".tmp/" DestinationFileName="$(ZipAddonName)" SourceUrl="$(AddonUrl)" />
+    <RemoveDir Directories="addons" />
+    <Unzip SourceFiles=".tmp/$(ZipAddonName)" DestinationFolder="addons" OverwriteReadOnlyFiles="true" />
+    <WriteLinesToFile File="addons/gde_gozen/version.txt" Lines="$(AddonBuildVersion)" Overwrite="true" />
+    <RemoveDir Directories=".tmp" />
+    <Error Text="Addon downloaded. Please restart your godot editor and re-run the build now that the addon is present." Condition="Exists('addons/gde_gozen')" />
+  </Target>
 </Project>

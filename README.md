@@ -205,6 +205,9 @@ We ❤️ developers! Contributions are welcome — whether it's bug fixes, feat
 > [!WARNING]
 > **Nightly is no longer actively maintained.** This guide is for contributing to the **Rewrite** client. The contribution process is the same, but you'll be working with the [Rewrite repository](https://github.com/Rhythia/Client).
 
+> [!WARNING]
+> **The first build will fail** because it downloads the addon, just restart godot and rerun the build and it should work.
+
 ### Required Software
 
 | Software | Notes |
