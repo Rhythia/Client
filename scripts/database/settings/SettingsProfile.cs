@@ -950,8 +950,8 @@ public partial class SettingsProfile
             {
                 Step = 1,
                 MinValue = 0,
-                MaxValue = 100
-            }
+                MaxValue = 100,
+            },
         };
 
         // VideoRenderScale = new(100)

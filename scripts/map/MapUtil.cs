@@ -14,10 +14,13 @@ internal static class MapUtil
 
         FileInfo[] filesInfo = dirInfo.GetFiles();
         Dictionary<string, string> extPath = [];
-        
+
         foreach (FileInfo file in filesInfo)
         {
-            if (Path.GetFileNameWithoutExtension(file.FullName) == "video" && Constants.SUPPORTED_VIDEO_EXTENSIONS.Contains(file.Extension.TrimStart('.')))
+            if (
+                Path.GetFileNameWithoutExtension(file.FullName) == "video"
+                && Constants.SUPPORTED_VIDEO_EXTENSIONS.Contains(file.Extension.TrimStart('.'))
+            )
             {
                 extPath.TryAdd(file.Extension.TrimStart('.'), file.FullName);
             }
@@ -25,7 +28,10 @@ internal static class MapUtil
 
         for (int i = 0; i < Constants.SUPPORTED_VIDEO_EXTENSIONS.Length; i++)
         {
-            if (extPath.TryGetValue(Constants.SUPPORTED_VIDEO_EXTENSIONS[i], out string fullPath)) { return fullPath; }
+            if (extPath.TryGetValue(Constants.SUPPORTED_VIDEO_EXTENSIONS[i], out string fullPath))
+            {
+                return fullPath;
+            }
         }
 
         return null;

@@ -17,7 +17,7 @@ public partial class ContextMenu : Panel
     private static bool dialogHasAction = false;
 
     private Button favoriteButton;
-    
+
     private Button deleteButton;
 
     private Button videoButton;
@@ -71,19 +71,23 @@ public partial class ContextMenu : Panel
         deleteButton?.QueueFree();
         videoButton?.QueueFree();
 
-        favoriteButton = Map.Favorite ? createButton("Unfavorite", Color.Color8(255, 255, 128), Color.Color8(255, 255, 196), unfavoriteMap, templateButton) : createButton("Favorite", Color.Color8(255, 255, 128), Color.Color8(255, 255, 196), favoriteMap, templateButton);
+        favoriteButton = Map.Favorite
+            ? createButton("Unfavorite", Color.Color8(255, 255, 128), Color.Color8(255, 255, 196), unfavoriteMap, templateButton)
+            : createButton("Favorite", Color.Color8(255, 255, 128), Color.Color8(255, 255, 196), favoriteMap, templateButton);
 
         deleteButton = createButton("Delete Map", Color.Color8(255, 128, 128), Color.Color8(255, 196, 196), deleteMap, templateButton);
 
         bool hasVideo = File.Exists(MapUtil.GetMapVideoPath(Map));
 
-        videoButton = hasVideo ? createButton("Remove Video", Color.Color8(128, 128, 255), Color.Color8(196, 196, 255), removeVideo, templateButton) : createButton("Add Video", Color.Color8(128, 128, 255), Color.Color8(196, 196, 255), addVideo, templateButton);
+        videoButton = hasVideo
+            ? createButton("Remove Video", Color.Color8(128, 128, 255), Color.Color8(196, 196, 255), removeVideo, templateButton)
+            : createButton("Add Video", Color.Color8(128, 128, 255), Color.Color8(196, 196, 255), addVideo, templateButton);
 
         if (!dialogHasAction)
         {
             List<string> filters = [.. Constants.SUPPORTED_VIDEO_EXTENSIONS];
             filters = filters.Select(item => "*." + item).ToList();
-            
+
             videoDialog.Filters = filters.ToArray<string>();
             videoDialog.FileSelected += insertVideo;
             dialogHasAction = true;
@@ -96,7 +100,10 @@ public partial class ContextMenu : Panel
 
     public static void Show(Vector2 pos, Map map, bool show = true)
     {
-        if (!show) { Hide(); }
+        if (!show)
+        {
+            Hide();
+        }
 
         Shown = show;
         Map = map;
@@ -113,14 +120,21 @@ public partial class ContextMenu : Panel
         }
     }
 
-    public new static void Hide()
+    public static new void Hide()
     {
         Shown = false;
         Instance.Visible = false;
         MapList.Instance?.ToggleSelectionCursor(false, false);
     }
 
-    private static Button createButton(string text, Color fontColor, Color fontHoverColor, Action clickAction, Button template = null, bool makeVisible = true)
+    private static Button createButton(
+        string text,
+        Color fontColor,
+        Color fontHoverColor,
+        Action clickAction,
+        Button template = null,
+        bool makeVisible = true
+    )
     {
         Button button = template != null ? (Button)template.Duplicate() : new Button();
 
@@ -130,14 +144,20 @@ public partial class ContextMenu : Panel
 
         addPressedAction(button, clickAction);
 
-        if (makeVisible) { button.Visible = true; }
+        if (makeVisible)
+        {
+            button.Visible = true;
+        }
 
         return button;
     }
 
     private static void addPressedAction(Button button, Action action)
     {
-        if (subscriptions.ContainsKey(button)) { clearPressedAction(button); }
+        if (subscriptions.ContainsKey(button))
+        {
+            clearPressedAction(button);
+        }
 
         button.Pressed += action;
         subscriptions.Add(button, action);

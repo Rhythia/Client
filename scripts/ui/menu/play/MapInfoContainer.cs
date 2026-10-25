@@ -471,9 +471,11 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             videoButton.Disabled = false;
             videoButton.TooltipText = Map.DisableVideo ? "Enable Video Background" : "Disable Video Background";
-            videoButton.Icon = Map.DisableVideo ? SkinManager.Instance.Skin.VideoDisabledButtonImage : SkinManager.Instance.Skin.VideoEnabledButtonImage;
+            videoButton.Icon = Map.DisableVideo
+                ? SkinManager.Instance.Skin.VideoDisabledButtonImage
+                : SkinManager.Instance.Skin.VideoEnabledButtonImage;
         }
-        else 
+        else
         {
             videoButton.Disabled = true;
             videoButton.TooltipText = "Map Has No Video";

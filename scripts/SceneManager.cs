@@ -101,7 +101,10 @@ public partial class SceneManager : Node
                 BaseSpace voidSpace = GD.Load<PackedScene>("res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;
                 addSpace(voidSpace, scene.AddSpaceAsChild);
             }
-            else { addSpace(scene.GetSpace(), scene.AddSpaceAsChild); }
+            else
+            {
+                addSpace(scene.GetSpace(), scene.AddSpaceAsChild);
+            }
         }
 
         Instance.AddChild(scene);

@@ -708,7 +708,9 @@ public partial class MapParser : Node
 
             if ((bool)metadata["HasVideo"])
             {
-                string videoPath = File.Exists($"{path}/video.{metadata["VideoExt"]}") ? $"{path}/video.{metadata["VideoExt"]}" : MapUtil.GetMapVideoPath(path);
+                string videoPath = File.Exists($"{path}/video.{metadata["VideoExt"]}")
+                    ? $"{path}/video.{metadata["VideoExt"]}"
+                    : MapUtil.GetMapVideoPath(path);
                 videoBuffer = File.ReadAllBytes(videoPath);
             }
 

@@ -566,7 +566,10 @@ public partial class MapList : Panel, ISkinnable
         {
             if (hovered)
             {
-                if (!SelectionCursorLockDisplay) { hoveredButton = button; }
+                if (!SelectionCursorLockDisplay)
+                {
+                    hoveredButton = button;
+                }
                 if (Layout == ListLayout.List)
                 {
                     ToggleSelectionCursor(true);
@@ -605,7 +608,10 @@ public partial class MapList : Panel, ISkinnable
 
     public void ToggleSelectionCursor(bool display, bool? lockDisplay = null)
     {
-        if (lockDisplay != null) { SelectionCursorLockDisplay = lockDisplay.Value; }
+        if (lockDisplay != null)
+        {
+            SelectionCursorLockDisplay = lockDisplay.Value;
+        }
 
         if (SelectionCursorLockDisplay || DisplaySelectionCursor == display)
         {
