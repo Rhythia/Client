@@ -220,8 +220,8 @@ public partial class SettingsProfile
     /// <summary>
     /// Adjusts the scale of the video background
     /// </summary>
-    [Order]
-    public SettingsItem<double> VideoRenderScale { get; private set; }
+    // [Order]
+    // public SettingsItem<double> VideoRenderScale { get; private set; }
 
     /// <summary>
     /// Disables video bg for all maps
@@ -954,19 +954,19 @@ public partial class SettingsProfile
             }
         };
 
-        VideoRenderScale = new(100)
-        {
-            Id = "VideoRenderScale",
-            Title = "Video BG Render Scale",
-            Description = "Adjusts the scale of the video background",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 1,
-                MinValue = 0,
-                MaxValue = 100
-            }
-        };
+        // VideoRenderScale = new(100)
+        // {
+        //     Id = "VideoRenderScale",
+        //     Title = "Video BG Render Scale",
+        //     Description = "Adjusts the scale of the video background",
+        //     Section = SettingsSection.Visual,
+        //     Slider = new()
+        //     {
+        //         Step = 1,
+        //         MinValue = 0,
+        //         MaxValue = 100
+        //     }
+        // };
 
         DisableVideoGlobal = new(false)
         {
