@@ -36,6 +36,9 @@
     <Unzip SourceFiles=".tmp/$(ZipAddonName)" DestinationFolder="addons" OverwriteReadOnlyFiles="true" />
     <WriteLinesToFile File="addons/gde_gozen/version.txt" Lines="$(AddonBuildVersion)" Overwrite="true" />
     <RemoveDir Directories=".tmp" />
-    <Error Text="Addon downloaded. Please restart your godot editor and re-run the build now that the addon is present." Condition="Exists('addons/gde_gozen')" />
+    <Error
+      Text="Addon downloaded. Please restart your godot editor and re-run the build now that the addon is present."
+      Condition="Exists('addons/gde_gozen')"
+    />
   </Target>
 </Project>

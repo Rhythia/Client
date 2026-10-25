@@ -400,7 +400,10 @@ public partial class Runner : Node3D
             VideoMesh.Visible = true;
 
             Tween fadeIn = VideoMesh.CreateTween();
-            fadeIn.TweenProperty(VideoMesh, "transparency", (float)(double)settings.VideoDim / 100f, Math.Abs(Attempt.Progress) / 1000).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In); // assuming Attempt.Progress < 0
+            fadeIn
+                .TweenProperty(VideoMesh, "transparency", (float)(double)settings.VideoDim / 100f, Math.Abs(Attempt.Progress) / 1000)
+                .SetTrans(Tween.TransitionType.Quad)
+                .SetEase(Tween.EaseType.In); // assuming Attempt.Progress < 0
             fadeIn.Play();
         }
 
@@ -426,8 +429,14 @@ public partial class Runner : Node3D
 
         if (!Attempt.DisableVideo && Attempt.Map.VideoBuffer != null && Attempt.Progress >= 0 && VideoPlayer != null && VideoPlayer.IsOpen())
         {
-            if (Playing) { VideoPlayer.Play(); }
-            else if (!Playing) { VideoPlayer.Pause(); }
+            if (Playing)
+            {
+                VideoPlayer.Play();
+            }
+            else if (!Playing)
+            {
+                VideoPlayer.Pause();
+            }
         }
 
         if (Playing)
@@ -778,11 +787,7 @@ public partial class Runner : Node3D
             return;
         }
 
-        VideoPlayback player = new VideoPlayback
-        {
-            Name = "VideoPlayer",
-            EnableAudio = false
-        };
+        VideoPlayback player = new VideoPlayback { Name = "VideoPlayer", EnableAudio = false };
 
         player.SetAnchorsPreset(Control.LayoutPreset.FullRect);
 
