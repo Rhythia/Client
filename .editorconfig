@@ -121,7 +121,7 @@ csharp_style_var_elsewhere = true:silent
 
 #Style - modifiers
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
-csharp_preferred_modifier_order = public,private,protected,internal,new,abstract,virtual,sealed,override,static,readonly,extern,unsafe,volatile,async:warning
+csharp_preferred_modifier_order = public,private,protected,internal,abstract,virtual,sealed,override,static,new,readonly,extern,unsafe,volatile,async:warning
 
 #Style - parentheses
 # Skipped because roslyn cannot separate +-*/ with << >>

@@ -152,7 +152,7 @@ public partial class MapParser : Node
             if (decodedMap.CoverBuffer != null)
                 addAsset($"cover.png", decodedMap.CoverBuffer);
             if (decodedMap.VideoBuffer != null)
-                addAsset($"video.mp4", decodedMap.VideoBuffer);
+                addAsset($"video{Path.GetExtension(MapUtil.GetMapVideoPath(decodedMap))}", decodedMap.VideoBuffer);
         }
 
         File.WriteAllBytes(exportFilePath, ms.ToArray());
@@ -229,7 +229,7 @@ public partial class MapParser : Node
         if (map.CoverBuffer != null)
             addAsset($"cover.png", map.CoverBuffer);
         if (map.VideoBuffer != null)
-            addAsset($"video.mp4", map.VideoBuffer);
+            addAsset($"video{Path.GetExtension(MapUtil.GetMapVideoPath(map))}", map.VideoBuffer);
 
         File.WriteAllText(Path.Combine(mapFolderPath, "metadata.json"), map.EncodeMeta());
 
@@ -708,7 +708,10 @@ public partial class MapParser : Node
 
             if ((bool)metadata["HasVideo"])
             {
-                videoBuffer = File.ReadAllBytes($"{path}/video.mp4");
+                string videoPath = File.Exists($"{path}/video.{metadata["VideoExt"]}")
+                    ? $"{path}/video.{metadata["VideoExt"]}"
+                    : MapUtil.GetMapVideoPath(path);
+                videoBuffer = File.ReadAllBytes(videoPath);
             }
 
             var notes = DecodePHXMO(objectsBuffer);

@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://b38n4irr1f443" path="res://user/skins/default/ui/play/map_button_cover.gdshader" id="3_d10q8"]
 [ext_resource type="Texture2D" uid="uid://cacq7g5ijo7sy" path="res://user/skins/default/ui/play/favorite.png" id="4_ew23d"]
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="5_mpifo"]
+[ext_resource type="Texture2D" uid="uid://degvlg4p0if70" path="res://user/skins/default/ui/buttons/add_video.png" id="6_84wsl"]
 [ext_resource type="Shader" uid="uid://d0g8fej0676c" path="res://scripts/shaders/linear_alpha_gradient.gdshader" id="6_frxlp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4823j"]
@@ -49,8 +50,8 @@ shader = ExtResource("6_frxlp")
 
 [node name="MapButtonWide" type="Control" unique_id=807495564]
 self_modulate = Color(0, 0, 0, 0.8784314)
-clip_contents = true
 custom_minimum_size = Vector2(0, 90)
+clip_contents = true
 layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
@@ -98,23 +99,6 @@ grow_horizontal = 0
 grow_vertical = 2
 expand_mode = 2
 stretch_mode = 6
-
-[node name="Favorited" type="TextureRect" parent="Holder" unique_id=922682128]
-visible = false
-texture_filter = 6
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-grow_horizontal = 0
-pivot_offset = Vector2(12, 12)
-texture = ExtResource("4_ew23d")
-expand_mode = 1
 
 [node name="Title" type="Label" parent="Holder" unique_id=704763863]
 layout_mode = 1
@@ -177,3 +161,38 @@ focus_mode = 0
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 flat = true
+
+[node name="IconContainer" type="HBoxContainer" parent="Holder" unique_id=1116304380]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 32.0
+grow_horizontal = 0
+theme_override_constants/separation = 8
+
+[node name="Video" type="TextureRect" parent="Holder/IconContainer" unique_id=1926918097]
+visible = false
+texture_filter = 6
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("6_84wsl")
+expand_mode = 1
+
+[node name="FavoriteParent" type="Control" parent="Holder/IconContainer" unique_id=1211224476]
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="Favorited" type="TextureRect" parent="Holder/IconContainer/FavoriteParent" unique_id=922682128]
+texture_filter = 6
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("4_ew23d")
+expand_mode = 1

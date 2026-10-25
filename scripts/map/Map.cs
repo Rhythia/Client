@@ -90,6 +90,12 @@ public partial class Map : RefCounted
 
     [Ignore]
     public byte[] VideoBuffer { get; set; } = [];
+
+    public bool DisableVideo { get; set; }
+
+    [Ignore]
+    public string VideoExt { get; set; } = string.Empty;
+
     private Note[] notes;
 
     [Ignore]
@@ -186,6 +192,8 @@ public partial class Map : RefCounted
     public string EncodeMeta()
     {
         string path = $"{MapUtil.MapsFolder}/{Name}";
+        string? videoPath = MapUtil.GetMapVideoPath(path);
+        string videoExt = videoPath != null ? Path.GetExtension(videoPath).TrimStart('.') : VideoExt;
         return Json.Stringify(
             new Godot.Collections.Dictionary()
             {
@@ -201,8 +209,9 @@ public partial class Map : RefCounted
                 ["Length"] = Length,
                 ["HasAudio"] = AudioBuffer != null && File.Exists($"{path}/audio.{AudioExt}"),
                 ["HasCover"] = CoverBuffer != null && File.Exists($"{path}/cover.png"),
-                ["HasVideo"] = VideoBuffer != null && File.Exists($"{path}/video.mp4"),
+                ["HasVideo"] = VideoBuffer != null && videoPath != null && File.Exists(videoPath),
                 ["AudioExt"] = AudioExt,
+                ["VideoExt"] = videoExt,
             },
             "\t"
         );

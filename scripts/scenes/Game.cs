@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using Godot;
 
 public partial class Game : BaseScene
@@ -224,9 +228,22 @@ public partial class Game : BaseScene
         StartQueued = true;
 
         var parsedMap = MapParser.Decode(map.FolderPath, Rhythia.AudioFilePath);
-        Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays);
+        parsedMap.Id = map.Id;
 
-        SceneManager.Load("res://scenes/game.tscn");
+        string hash = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(map.FolderPath, "objects.phxmo"))));
+        Map mapRow = DatabaseService.Connection.Table<Map>().FirstOrDefault<Map>(row => row.ObjectHash == hash);
+
+        bool mapDisableVideo = mapRow != null && mapRow.DisableVideo;
+        bool globalVideoDisable = (bool)SettingsManager.Instance.Settings.DisableVideoGlobal;
+        bool disableVideo = mapDisableVideo || globalVideoDisable;
+
+        Attempt = new(parsedMap, speed, startFrom, cameraMode, mods, players, replays, disableVideo: disableVideo);
+
+        var metadata = (Godot.Collections.Dictionary)Json.ParseString(File.ReadAllText($"{map.FolderPath}/metadata.json"));
+        bool hasVideo = (bool)metadata["HasVideo"];
+        bool useVoidSpace = (bool)SettingsManager.Instance.Settings.VideoBgVoidSpace && !disableVideo && hasVideo;
+
+        SceneManager.Load("res://scenes/game.tscn", forceVoidBg: useVoidSpace);
     }
 
     public void Restart()
@@ -236,6 +253,14 @@ public partial class Game : BaseScene
 
         var oldAttempt = Attempt;
         var map = MapParser.Decode(oldAttempt.Map.FolderPath, Rhythia.AudioFilePath);
+
+        // string hash = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(map.FolderPath, "objects.phxmo"))));
+        // Map mapRow = DatabaseService.Connection.Table<Map>().FirstOrDefault<Map>(row => row.ObjectHash == hash);
+
+        // bool mapDisableVideo = mapRow != null && mapRow.DisableVideo;
+        // bool globalVideoDisable = (bool)SettingsManager.Instance.Settings.DisableVideoGlobal;
+        // bool disableVideo = mapDisableVideo || globalVideoDisable;
+
         Attempt = new(
             map,
             oldAttempt.Speed,
@@ -243,9 +268,13 @@ public partial class Game : BaseScene
             oldAttempt.CameraMode,
             oldAttempt.Modifiers,
             oldAttempt.Players,
-            oldAttempt.Replays
+            oldAttempt.Replays,
+            oldAttempt.DisableVideo
         );
 
-        SceneManager.ReloadCurrentScene();
+        bool useVoidSpace =
+            (bool)SettingsManager.Instance.Settings.VideoBgVoidSpace && !oldAttempt.DisableVideo && File.Exists(MapUtil.GetMapVideoPath(map));
+
+        SceneManager.Load("res://scenes/game.tscn", skipTransition: true, forceVoidBg: useVoidSpace);
     }
 }

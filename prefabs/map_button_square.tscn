@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cacq7g5ijo7sy" path="res://user/skins/default/ui/play/favorite.png" id="2_ywqiq"]
 [ext_resource type="Texture2D" uid="uid://bp468b5qqj4l1" path="res://user/skins/default/ui/play/grid_cover_background.png" id="3_ii2dr"]
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="3_xysv8"]
+[ext_resource type="Texture2D" uid="uid://degvlg4p0if70" path="res://user/skins/default/ui/buttons/add_video.png" id="6_ii2dr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ywqiq"]
 bg_color = Color(1, 1, 1, 1)
@@ -115,23 +116,6 @@ grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
 
-[node name="Favorited" type="TextureRect" parent="Holder" unique_id=2076074980]
-visible = false
-texture_filter = 6
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -18.0
-offset_top = 2.0
-offset_right = -2.0
-offset_bottom = 18.0
-grow_horizontal = 0
-pivot_offset = Vector2(8, 8)
-texture = ExtResource("2_ywqiq")
-expand_mode = 1
-
 [node name="Separator2" type="ColorRect" parent="Holder" unique_id=972899073]
 layout_mode = 1
 anchors_preset = -1
@@ -189,16 +173,15 @@ anchors_preset = -1
 anchor_top = 0.657
 anchor_right = 0.721
 anchor_bottom = 0.88900006
-offset_left = 39.0
+offset_left = 15.0
 offset_top = 3.0199966
-offset_right = 0.05999756
+offset_right = -23.940002
 offset_bottom = -8.460007
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("3_xysv8")
 text = "0:00"
 label_settings = SubResource("LabelSettings_hc3kw")
-horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
@@ -249,3 +232,41 @@ offset_right = 15.703194
 offset_bottom = -6.6200027
 rotation = 1.5707964
 color = Color(1, 1, 1, 0.23529412)
+
+[node name="IconContainer" type="HBoxContainer" parent="Holder" unique_id=2048061899]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.93600005
+anchor_top = 0.693
+anchor_right = 0.93600005
+anchor_bottom = 0.693
+offset_left = -34.04001
+offset_top = -0.020004272
+offset_right = -0.040008545
+offset_bottom = 15.979996
+grow_horizontal = 0
+theme_override_constants/separation = 2
+alignment = 2
+
+[node name="Video" type="TextureRect" parent="Holder/IconContainer" unique_id=542011967]
+visible = false
+texture_filter = 6
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("6_ii2dr")
+expand_mode = 1
+
+[node name="FavoriteParent" type="Control" parent="Holder/IconContainer" unique_id=1380362991]
+visible = false
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+
+[node name="Favorited" type="TextureRect" parent="Holder/IconContainer/FavoriteParent" unique_id=2116415263]
+texture_filter = 6
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_ywqiq")
+expand_mode = 1

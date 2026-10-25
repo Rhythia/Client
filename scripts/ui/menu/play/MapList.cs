@@ -64,6 +64,7 @@ public partial class MapList : Panel, ISkinnable
     public bool DragScroll = false;
     public bool MouseScroll = false;
     public bool DisplaySelectionCursor = false;
+    public bool SelectionCursorLockDisplay = false;
     public string SearchQuery = "";
     public string AuthorQuery = "";
     public Bindable<bool> Ascending = new(true);
@@ -73,6 +74,8 @@ public partial class MapList : Panel, ISkinnable
     /// Queried and ordered maps to display in the list
     /// </summary>
     public List<Map> Maps = [];
+
+    private Panel contextMenu;
 
     private TextureRect mask;
     private TextureRect selectionCursor;
@@ -107,6 +110,7 @@ public partial class MapList : Panel, ISkinnable
     {
         Instance = this;
 
+        contextMenu = Owner.GetNode<Panel>("ContextMenu");
         mask = GetNode<TextureRect>("Mask");
         selectionCursor = GetNode<TextureRect>("SelectionCursor");
         scrollBar = GetNode<Panel>("ScrollBar");
@@ -124,7 +128,7 @@ public partial class MapList : Panel, ISkinnable
 
         MouseExited += () =>
         {
-            toggleSelectionCursor(false);
+            ToggleSelectionCursor(false);
         };
         Resized += clear;
         SkinManager.Instance.Loaded += UpdateSkin;
@@ -562,10 +566,13 @@ public partial class MapList : Panel, ISkinnable
         {
             if (hovered)
             {
-                hoveredButton = button;
+                if (!SelectionCursorLockDisplay)
+                {
+                    hoveredButton = button;
+                }
                 if (Layout == ListLayout.List)
                 {
-                    toggleSelectionCursor(true);
+                    ToggleSelectionCursor(true);
                 }
             }
 
@@ -574,21 +581,39 @@ public partial class MapList : Panel, ISkinnable
                 button.UpdateOutline(hovered ? 0.5f : 0);
             }
         };
-        button.Pressed += () =>
+
+        button.GuiInput += action =>
         {
-            if (dragDistance < 500 && Select(button.Map))
+            if (action is InputEventMouseButton mouseButton && mouseButton.Pressed)
             {
-                button.Select();
-                button.UpdateOutline(1.0f);
+                if (mouseButton.ButtonIndex == MouseButton.Left)
+                {
+                    if (dragDistance < 500 && Select(button.Map))
+                    {
+                        button.Select();
+                        button.UpdateOutline(1.0f);
+                    }
+                }
+                if (mouseButton.ButtonIndex == MouseButton.Right)
+                {
+                    ContextMenu.Show(mouseButton.GlobalPosition, button.Map);
+                    ToggleSelectionCursor(true, true);
+                    GetViewport().SetInputAsHandled();
+                }
             }
         };
 
         return button;
     }
 
-    private void toggleSelectionCursor(bool display)
+    public void ToggleSelectionCursor(bool display, bool? lockDisplay = null)
     {
-        if (DisplaySelectionCursor == display)
+        if (lockDisplay != null)
+        {
+            SelectionCursorLockDisplay = lockDisplay.Value;
+        }
+
+        if (SelectionCursorLockDisplay || DisplaySelectionCursor == display)
         {
             return;
         }
