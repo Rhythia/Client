@@ -177,8 +177,8 @@ public partial class ReplayManager : Node
 
         seekerTimeline.ValueChanged += value =>
         {
-            string current = $"{Util.String.FormatTime(value * ReplayLength / 1000)}";
-            string end = $"{Util.String.FormatTime(ReplayLength / 1000)}";
+            string current = $"{util.String.FormatTime(value * ReplayLength / 1000)}";
+            string end = $"{util.String.FormatTime(ReplayLength / 1000)}";
             seekerTime.Text = $"{current} / {end}";
         };
 

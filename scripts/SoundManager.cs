@@ -261,7 +261,7 @@ public partial class SoundManager : Node, ISkinnable
 
         JukeboxIndex = MapManager.Maps.FindIndex(x => x.Id == map.Id);
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play();
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -320,7 +320,7 @@ public partial class SoundManager : Node, ISkinnable
             }
         }
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play(0);
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -469,10 +469,10 @@ public partial class SoundManager : Node, ISkinnable
 
     public void UpdateSkin(SkinProfile skin)
     {
-        HitSound.Stream = Util.Audio.LoadStream(skin.HitSoundBuffer);
-        MissSound.Stream = Util.Audio.LoadStream(skin.MissSoundBuffer);
-        FailSound.Stream = Util.Audio.LoadStream(skin.FailSoundBuffer);
-        MenuMusic.Stream = Util.Audio.LoadStream(skin.MenuMusicBuffer);
+        HitSound.Stream = util.Audio.LoadStream(skin.HitSoundBuffer);
+        MissSound.Stream = util.Audio.LoadStream(skin.MissSoundBuffer);
+        FailSound.Stream = util.Audio.LoadStream(skin.FailSoundBuffer);
+        MenuMusic.Stream = util.Audio.LoadStream(skin.MenuMusicBuffer);
 
         RefreshMenuMusicPlayback();
     }

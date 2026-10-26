@@ -42,7 +42,7 @@ public partial class Modifiers : Panel
 
             button.Name = mod.Name;
             button.TooltipText = mod.Name;
-            button.Icon = Util.Misc.GetModIcon(mod.Name);
+            button.Icon = util.Misc.GetModIcon(mod.Name);
             button.AddThemeColorOverride("icon_pressed_color", mod.Color);
             button.AddThemeColorOverride("icon_hover_pressed_color", mod.Color);
 

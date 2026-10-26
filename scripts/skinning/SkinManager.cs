@@ -157,7 +157,7 @@ public partial class SkinManager : Node
 
             for (int i = 0; i < split.Length; i++)
             {
-                colors[i] = Util.Misc.ParseColor(split[i], Colors.White);
+                colors[i] = util.Misc.ParseColor(split[i], Colors.White);
             }
 
             skin.NoteColors = colors;
@@ -241,7 +241,7 @@ public partial class SkinManager : Node
         string mtlPath = path.TrimSuffix(".obj") + ".mtl";
 
         return resourceExists(path)
-            ? Util.Misc.OBJParser.Call("load_obj", path, resourceExists(mtlPath) ? mtlPath : null).As<ArrayMesh>()
+            ? util.Misc.OBJParser.Call("load_obj", path, resourceExists(mtlPath) ? mtlPath : null).As<ArrayMesh>()
             : GD.Load<ArrayMesh>("res://user/meshes/squircle.obj");
     }
 

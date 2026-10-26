@@ -56,15 +56,15 @@ public partial class ScorePanel : Panel
         playerLabel.Text = score.Player;
         accuracyLabel.Text = $"{score.Accuracy:F2}%";
         speedLabel.Text = $"{score.Speed:F2}x";
-        timeLabel.Text = Util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
+        timeLabel.Text = util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
 
         if (score.Qualifies)
         {
-            scoreLabel.Text = Util.String.PadMagnitude(score.Value);
+            scoreLabel.Text = util.String.PadMagnitude(score.Value);
         }
         else
         {
-            scoreLabel.Text = $"{Util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {Util.String.FormatTime(score.MapLength / 1000)}";
+            scoreLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
             scoreLabel.LabelSettings = scoreLabel.LabelSettings.Duplicate() as LabelSettings;
             scoreLabel.LabelSettings.FontColor = Color.Color8(160, 160, 160);
         }
@@ -74,7 +74,7 @@ public partial class ScorePanel : Panel
             if (entry.Value)
             {
                 TextureRect mod = modifierTemplate.Duplicate() as TextureRect;
-                mod.Texture = Util.Misc.GetModIcon(entry.Key);
+                mod.Texture = util.Misc.GetModIcon(entry.Key);
                 mod.Visible = true;
                 modifiers.AddChild(mod);
             }
