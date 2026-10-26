@@ -342,10 +342,27 @@ theme_override_font_sizes/font_size = 12
 text = "Pick Color"
 clip_text = true
 
+[node name="PickerHide" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1783564195]
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+top_level = true
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+action_mode = 0
+button_mask = 3
+
 [node name="ColorPicker" type="ColorPicker" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1549088178]
 visible = false
 top_level = true
-z_index = 1
+z_index = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.553

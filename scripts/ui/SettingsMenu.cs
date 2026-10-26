@@ -90,6 +90,7 @@ public partial class SettingsMenu : ColorRect
         Button buttonTemplate = buttonHboxTemplate.GetNode<Button>("Button");
         Button colorButtonTemplate = settingTemplate.GetNode<Button>("ColorButton");
         ColorPicker colorPickerTemplate = settingTemplate.GetNode<ColorPicker>("ColorPicker");
+        Button hidePickerTemplate = settingTemplate.GetNode<Button>("PickerHide");
 
         settingTemplate.Visible = false;
 
@@ -182,10 +183,12 @@ public partial class SettingsMenu : ColorRect
                 {
                     Button colorButton = colorButtonTemplate.Duplicate() as Button;
                     ColorPicker picker = colorPickerTemplate.Duplicate() as ColorPicker;
+                    Button pickerHider = hidePickerTemplate.Duplicate() as Button;
 
-                    setupColorPicker(setting, colorButton, picker);
+                    setupColorPicker(setting, colorButton, picker, pickerHider);
                     panel.AddChild(colorButton);
                     panel.AddChild(picker);
+                    panel.AddChild(pickerHider);
                 }
                 else if (setting.List != null)
                 {
@@ -528,7 +531,7 @@ public partial class SettingsMenu : ColorRect
         };
     }
 
-    private static void setupColorPicker(ISettingsItem setting, Button button, ColorPicker picker)
+    private static void setupColorPicker(ISettingsItem setting, Button button, ColorPicker picker, Button hideButton)
     {
         button.TooltipText = setting.Description;
         Logger.Log(setting.GetVariant().ToString());
@@ -537,6 +540,15 @@ public partial class SettingsMenu : ColorRect
         button.Pressed += () =>
         {
             picker.Visible = !picker.Visible;
+            if (picker.Visible)
+            {
+                hideButton.Visible = true;
+            }
+        };
+        hideButton.Pressed += () =>
+        {
+            picker.Visible = false;
+            hideButton.Visible = false;
         };
         button.VisibilityChanged += () =>
         {
