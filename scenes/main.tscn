@@ -326,6 +326,21 @@ theme = ExtResource("3_tipki")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Button"
 
+[node name="PickerHide" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=787866892]
+self_modulate = Color(1, 1, 1, 0)
+top_level = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_right = 4.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+action_mode = 0
+button_mask = 3
+
 [node name="ColorButton" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=84045289]
 layout_mode = 1
 anchors_preset = -1
@@ -343,7 +358,6 @@ text = "Pick Color"
 clip_text = true
 
 [node name="ColorPicker" type="ColorPicker" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1549088178]
-visible = false
 top_level = true
 z_index = 1
 layout_mode = 1

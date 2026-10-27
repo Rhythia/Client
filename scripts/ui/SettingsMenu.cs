@@ -89,6 +89,7 @@ public partial class SettingsMenu : ColorRect
         HBoxContainer buttonHboxTemplate = settingTemplate.GetNode<HBoxContainer>("ButtonHBoxContainer");
         Button buttonTemplate = buttonHboxTemplate.GetNode<Button>("Button");
         Button colorButtonTemplate = settingTemplate.GetNode<Button>("ColorButton");
+        Button pickerHiderTemplate = settingTemplate.GetNode<Button>("PickerHide");
         ColorPicker colorPickerTemplate = settingTemplate.GetNode<ColorPicker>("ColorPicker");
 
         settingTemplate.Visible = false;
@@ -182,9 +183,11 @@ public partial class SettingsMenu : ColorRect
                 {
                     Button colorButton = colorButtonTemplate.Duplicate() as Button;
                     ColorPicker picker = colorPickerTemplate.Duplicate() as ColorPicker;
+                    Button pickerHider = pickerHiderTemplate.Duplicate() as Button;
 
-                    setupColorPicker(setting, colorButton, picker);
+                    setupColorPicker(setting, colorButton, picker, pickerHider);
                     panel.AddChild(colorButton);
+                    panel.AddChild(pickerHider);
                     panel.AddChild(picker);
                 }
                 else if (setting.List != null)
@@ -528,7 +531,7 @@ public partial class SettingsMenu : ColorRect
         };
     }
 
-    private static void setupColorPicker(ISettingsItem setting, Button button, ColorPicker picker)
+    private static void setupColorPicker(ISettingsItem setting, Button button, ColorPicker picker, Button pickerHider)
     {
         button.TooltipText = setting.Description;
         Logger.Log(setting.GetVariant().ToString());
@@ -537,10 +540,17 @@ public partial class SettingsMenu : ColorRect
         button.Pressed += () =>
         {
             picker.Visible = !picker.Visible;
+            pickerHider.Visible = picker.Visible;
         };
         button.VisibilityChanged += () =>
         {
             picker.Visible = false;
+            pickerHider.Visible = false;
+        };
+        pickerHider.Pressed += () =>
+        {
+            picker.Visible = false;
+            pickerHider.Visible = false;
         };
 
         picker.ColorChanged += (col) =>
