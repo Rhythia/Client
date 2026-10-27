@@ -20,12 +20,14 @@ public partial class SceneManager : Node
     public static BaseSpace Space;
 
     public static Panel VolumePanel;
+    public static Panel OffsetPanel;
 
     public override void _EnterTree()
     {
         Instance = this;
         Root = GetTree().Root;
         VolumePanel = GetNode<Panel>("Volume");
+        OffsetPanel = GetNode<Panel>("Offset");
     }
 
     public override void _Ready()

@@ -123,6 +123,43 @@ public partial class CursorManager : Node
         attempt.CameraMode.Process(attempt, replayManager, camera, cursors[cursorIndex], inputDelta, sensitivity);
     }
 
+    public void UpdateAutoplayCursor(Vector2 position)
+    {
+        if (!position.IsFinite())
+            return;
+
+        EmitSignalOnCursorUpdated(position);
+
+        var attempt = runner.Attempt;
+        position = position.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
+
+        if (attempt.CameraMode is CameraSpin)
+        {
+            Vector3 target = new(position.X, position.Y, 0);
+            Vector3 previousCursor = new(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
+            var origin = new Vector3(0, 0, 3.5f) + previousCursor * (float)attempt.Settings.CameraParallax;
+
+            var targetRotation = Basis.LookingAt(target - origin, Vector3.Up);
+            var targetEuler = targetRotation.GetEuler();
+            float pitch = targetEuler.X - camera.Rotation.X;
+            float yaw = Mathf.AngleDifference(camera.Rotation.Y, targetEuler.Y);
+
+            var mouseDelta = new Vector2(-yaw, -pitch) * (120f * Mathf.Pi);
+
+            attempt.CameraMode.Process(attempt, replayManager, camera, cursors[0], mouseDelta, 1f);
+            return;
+        }
+
+        attempt.RawCursorPosition = position;
+        attempt.CursorPosition = position;
+
+        Vector3 cursorPosition = new(position.X, position.Y, 0);
+        camera.Position = new Vector3(0, 0, 3.76f) + cursorPosition * (float)settings.CameraParallax;
+        camera.Rotation = Vector3.Zero;
+
+        cursors[0].Position = cursorPosition;
+    }
+
     // Reset everything to zero so it doesn't have infinite sensitivity
     private void repositionAbsolute()
     {

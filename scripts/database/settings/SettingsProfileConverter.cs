@@ -29,6 +29,9 @@ public class SettingsProfileConverter
                     case Variant.Type.Float:
                         data[property.Name] = Math.Round((float)value, 4);
                         break;
+                    case Variant.Type.Color:
+                        data[property.Name] = value.AsColor().ToHtml();
+                        break;
                     default:
                         data[property.Name] = value;
                         break;
@@ -49,9 +52,17 @@ public class SettingsProfileConverter
             {
                 object value = property.GetValue(profile);
 
-                if (value is ISettingsItem item && item.SaveToDisk && data.ContainsKey(property.Name))
+                if (value is not ISettingsItem { SaveToDisk: true } item)
+                {
+                    continue;
+                }
+                if (data.ContainsKey(property.Name))
                 {
                     item.SetVariant(data[property.Name]);
+                }
+                else
+                {
+                    item.Reset();
                 }
             }
         }

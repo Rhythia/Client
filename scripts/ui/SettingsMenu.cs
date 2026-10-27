@@ -27,6 +27,9 @@ public partial class SettingsMenu : ColorRect
     [Export]
     public FileDialog ImportNightlyDialog;
 
+    [Export]
+    public FileDialog UserFolderDialog;
+
     public override void _Ready()
     {
         Instance = this;
@@ -83,7 +86,11 @@ public partial class SettingsMenu : ColorRect
         LineEdit sliderLineEditTemplate = settingTemplate.GetNode<LineEdit>("SliderLineEdit");
         LineEdit lineEditTemplate = settingTemplate.GetNode<LineEdit>("LineEdit");
         OptionButton optionButtonTemplate = settingTemplate.GetNode<OptionButton>("OptionButton");
-        Button buttonTemplate = settingTemplate.GetNode<Button>("Button");
+        HBoxContainer buttonHboxTemplate = settingTemplate.GetNode<HBoxContainer>("ButtonHBoxContainer");
+        Button buttonTemplate = buttonHboxTemplate.GetNode<Button>("Button");
+        Button colorButtonTemplate = settingTemplate.GetNode<Button>("ColorButton");
+        Button pickerHiderTemplate = settingTemplate.GetNode<Button>("PickerHide");
+        ColorPicker colorPickerTemplate = settingTemplate.GetNode<ColorPicker>("ColorPicker");
 
         settingTemplate.Visible = false;
 
@@ -172,6 +179,17 @@ public partial class SettingsMenu : ColorRect
                     setupInput(setting, lineEdit);
                     panel.AddChild(lineEdit);
                 }
+                else if (setting.Type == typeof(Color))
+                {
+                    Button colorButton = colorButtonTemplate.Duplicate() as Button;
+                    ColorPicker picker = colorPickerTemplate.Duplicate() as ColorPicker;
+                    Button pickerHider = pickerHiderTemplate.Duplicate() as Button;
+
+                    setupColorPicker(setting, colorButton, picker, pickerHider);
+                    panel.AddChild(colorButton);
+                    panel.AddChild(pickerHider);
+                    panel.AddChild(picker);
+                }
                 else if (setting.List != null)
                 {
                     OptionButton optionButton = optionButtonTemplate.Duplicate() as OptionButton;
@@ -179,17 +197,19 @@ public partial class SettingsMenu : ColorRect
                     setupList(setting, optionButton);
                     panel.AddChild(optionButton);
                 }
-
                 if (setting.Type == typeof(Variant))
                 {
                     var item = setting as SettingsItem<Variant>;
                     if (item?.Buttons != null)
                     {
+                        HBoxContainer hbox = buttonHboxTemplate.Duplicate() as HBoxContainer;
+                        panel.AddChild(hbox);
+
                         foreach (var settingButton in item.Buttons)
                         {
                             Button button = buttonTemplate.Duplicate() as Button;
                             setupButton(settingButton, button);
-                            panel.AddChild(button);
+                            hbox.AddChild(button);
                         }
                     }
                 }
@@ -207,6 +227,7 @@ public partial class SettingsMenu : ColorRect
 
         hideButton.Pressed += HideMenu;
         ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
+        UserFolderDialog.DirSelected += SettingsProfile.ConfigureSetUserFolderPath;
     }
 
     // Adding GetViewport().SetInputAsHandled() will prevent the Quit popup from appearing when clicking ESC in settings
@@ -412,6 +433,11 @@ public partial class SettingsMenu : ColorRect
             }
         }
 
+        if (setting.Placeholder != "")
+        {
+            lineEdit.PlaceholderText = setting.Placeholder;
+        }
+
         lineEdit.FocusExited += applyLineEdit;
         lineEdit.TextSubmitted += (_) =>
         {
@@ -486,6 +512,7 @@ public partial class SettingsMenu : ColorRect
 
     private static void setupButton(SettingsButton setting, Button button)
     {
+        button.Visible = true;
         button.Text = setting.Title;
         button.TooltipText = setting.Description;
         button.Visible = true;
@@ -501,6 +528,34 @@ public partial class SettingsMenu : ColorRect
 
             lastPressedAt = now;
             setting.OnPressed?.Invoke();
+        };
+    }
+
+    private static void setupColorPicker(ISettingsItem setting, Button button, ColorPicker picker, Button pickerHider)
+    {
+        button.TooltipText = setting.Description;
+        Logger.Log(setting.GetVariant().ToString());
+        picker.Color = (Color)setting.GetVariant();
+
+        button.Pressed += () =>
+        {
+            picker.Visible = !picker.Visible;
+            pickerHider.Visible = picker.Visible;
+        };
+        button.VisibilityChanged += () =>
+        {
+            picker.Visible = false;
+            pickerHider.Visible = false;
+        };
+        pickerHider.Pressed += () =>
+        {
+            picker.Visible = false;
+            pickerHider.Visible = false;
+        };
+
+        picker.ColorChanged += (col) =>
+        {
+            setting.SetVariant(col.ToHtml());
         };
     }
 

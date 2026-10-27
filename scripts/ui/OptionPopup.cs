@@ -35,7 +35,7 @@ public partial class OptionPopup : Control
 
     public OptionPopup(string header, string info)
     {
-        Util.Misc.CopyReference(this, template.Instantiate<OptionPopup>());
+        util.Misc.CopyReference(this, template.Instantiate<OptionPopup>());
 
         Header = header;
         Info = info;
@@ -113,7 +113,7 @@ public partial class OptionPopup : Control
         );
     }
 
-    public void Hide()
+    public new void Hide()
     {
         Show(false);
     }

@@ -36,6 +36,9 @@ public partial class SoundManager : Node, ISkinnable
     private static bool? jeeping = null; // we're jeeping (last state of a song)
     private static bool menuMusicPausedByUser = false;
 
+    private static bool offsetPopupShown = false;
+    private static ulong lastOffsetChange = 0;
+
     public override void _Ready()
     {
         Instance = this;
@@ -160,6 +163,14 @@ public partial class SoundManager : Node, ISkinnable
             tween.TweenProperty(SceneManager.VolumePanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
             tween.TweenProperty(SceneManager.VolumePanel.GetNode<Label>("Label"), "anchor_bottom", 1, 0.35);
         }
+
+        if (offsetPopupShown && Time.GetTicksMsec() - lastOffsetChange >= 1000)
+        {
+            offsetPopupShown = false;
+
+            Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
+            tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffff00"), 0.25);
+        }
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -196,6 +207,30 @@ public partial class SoundManager : Node, ISkinnable
 
                 UpdateVolume();
             }
+            if (
+                (eventMouseButton.ShiftPressed)
+                && (eventMouseButton.ButtonIndex == MouseButton.WheelUp || eventMouseButton.ButtonIndex == MouseButton.WheelDown)
+            )
+            {
+                switch (eventMouseButton.ButtonIndex)
+                {
+                    case MouseButton.WheelUp:
+                        settings.LocalOffset.Value = Math.Round(settings.LocalOffset) + 1;
+                        break;
+                    case MouseButton.WheelDown:
+                        settings.LocalOffset.Value = Math.Round(settings.LocalOffset) - 1;
+                        break;
+                }
+
+                Label label = SceneManager.OffsetPanel.GetNode<Label>("Label");
+                label.Text = $"Local Offset: {settings.LocalOffset.Value}ms";
+
+                Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
+                tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffffff"), 0.25);
+
+                offsetPopupShown = true;
+                lastOffsetChange = Time.GetTicksMsec();
+            }
         }
     }
 
@@ -226,7 +261,7 @@ public partial class SoundManager : Node, ISkinnable
 
         JukeboxIndex = MapManager.Maps.FindIndex(x => x.Id == map.Id);
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play();
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -285,7 +320,7 @@ public partial class SoundManager : Node, ISkinnable
             }
         }
 
-        Song.Stream = Util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
+        Song.Stream = util.Audio.LoadFromFile($"{MapUtil.MapsFolder}/{map.Name}/audio.{map.AudioExt}");
         Song.Play(0);
 
         Instance.JukeboxPlayed?.Invoke(map);
@@ -434,10 +469,10 @@ public partial class SoundManager : Node, ISkinnable
 
     public void UpdateSkin(SkinProfile skin)
     {
-        HitSound.Stream = Util.Audio.LoadStream(skin.HitSoundBuffer);
-        MissSound.Stream = Util.Audio.LoadStream(skin.MissSoundBuffer);
-        FailSound.Stream = Util.Audio.LoadStream(skin.FailSoundBuffer);
-        MenuMusic.Stream = Util.Audio.LoadStream(skin.MenuMusicBuffer);
+        HitSound.Stream = util.Audio.LoadStream(skin.HitSoundBuffer);
+        MissSound.Stream = util.Audio.LoadStream(skin.MissSoundBuffer);
+        FailSound.Stream = util.Audio.LoadStream(skin.FailSoundBuffer);
+        MenuMusic.Stream = util.Audio.LoadStream(skin.MenuMusicBuffer);
 
         RefreshMenuMusicPlayback();
     }

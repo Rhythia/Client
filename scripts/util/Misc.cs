@@ -5,7 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Godot;
 
-namespace Util;
+namespace util;
 
 public class Misc
 {
@@ -20,6 +20,9 @@ public class Misc
         {
             case "NoFail":
                 tex = skin.ModNoFailImage;
+                break;
+            case "Autoplay":
+                tex = skin.ModAutoplayImage;
                 break;
             case "Ghost":
                 tex = skin.ModGhostImage;
@@ -184,6 +187,24 @@ public class Misc
         }
 
         return fallback;
+    }
+
+    public static double ParseDoubleInput(string input, double fallback = 0.0)
+    {
+        return TryParseDoubleInput(input, out double result) ? result : fallback;
+    }
+
+    public static bool TryParseDoubleInput(string input, out double result)
+    {
+        result = 0;
+
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return false;
+        }
+
+        string normalized = input.Trim().Replace(',', '.');
+        return double.TryParse(normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out result);
     }
 
     public static int BinarySearch(double[] values, double time)

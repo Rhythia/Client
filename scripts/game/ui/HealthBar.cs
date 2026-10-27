@@ -36,7 +36,7 @@ public partial class HealthBar : UIComponent
 
     public override void _PhysicsProcess(double delta)
     {
-        currentSize = currentSize.Lerp(targetSize, (float)delta * 30f);
+        currentSize = currentSize.Lerp(targetSize, (float)delta * Math.Clamp((float)Runner.Attempt.Settings.HPLerpValue.Value, 10f, 100f));
         healthBarTexture.Size = currentSize;
     }
 

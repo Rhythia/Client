@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace Spaces;
+namespace spaces;
 
 public partial class Conspiracy : BaseSpace
 {
@@ -47,9 +47,6 @@ public partial class Conspiracy : BaseSpace
                 scrollingText.Position = scrollingTextStartPos;
             }
         }
-        else
-        {
-            scrollingText.Visible = settings.SpaceEffects;
-        }
+        scrollingText.Visible = settings.SpaceEffects;
     }
 }

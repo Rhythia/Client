@@ -136,6 +136,14 @@ public partial class Attempt : RefCounted
         var skin = SkinManager.Instance.Skin;
         int index = (int)(FirstNote - 1) % skin.NoteColors.Length;
 
-        LastHitColour = skin.NoteColors[index >= 0 ? index : ^Math.Abs(index)];
+        if (Settings.CustomSpaceColor)
+        {
+            LastHitColour = Settings.SpaceColor;
+        }
+        else
+        {
+            LastHitColour = skin.NoteColors[^1];
+        }
+        LastHitColour = skin.NoteColors[^1];
     }
 }

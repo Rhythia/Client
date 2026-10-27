@@ -2,7 +2,10 @@ public enum SettingsSection
 {
     None,
     Gameplay,
-    Visual,
+    Spaces,
+    Notes,
+    Cursor,
+    HUD,
     Audio,
     Video,
     Other,

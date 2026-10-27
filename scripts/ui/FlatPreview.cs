@@ -68,7 +68,7 @@ public partial class FlatPreview : Panel
 
         if (Time < oldTime)
         {
-            lastPassedNote = Util.Misc.BinarySearch(noteTimestamps, Time);
+            lastPassedNote = util.Misc.BinarySearch(noteTimestamps, Time);
         }
 
         for (int i = Math.Clamp(lastPassedNote + 1, 0, Math.Max(0, Map.Notes.Length - 1)); i < Map.Notes.Length; i++)
@@ -108,6 +108,6 @@ public partial class FlatPreview : Panel
 
         Time = seek;
 
-        lastPassedNote = Util.Misc.BinarySearch(noteTimestamps, seek);
+        lastPassedNote = util.Misc.BinarySearch(noteTimestamps, seek);
     }
 }

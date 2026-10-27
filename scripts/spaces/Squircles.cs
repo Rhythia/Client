@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Spaces;
+namespace spaces;
 
 public partial class Squircles : BaseSpace
 {
@@ -81,7 +81,11 @@ public partial class Squircles : BaseSpace
 
     private void updateColor(Color color)
     {
-        Color darkened = color.Darkened(0.9f);
+        var darkened = color.Darkened(0);
+        if (!Playing || !CustomColor)
+        {
+            darkened = color.Darkened(0.9f);
+        }
 
         WorldEnvironment.Environment.BackgroundColor = Playing ? darkened : (Cover != null ? darkened : defaultEnvironmentColor);
         particlesNear.Color = color.Lightened(0.1f);

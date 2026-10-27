@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Godot;
 
-namespace Util;
+namespace util;
 
 public class String
 {

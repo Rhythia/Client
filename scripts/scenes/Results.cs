@@ -51,14 +51,14 @@ public partial class Results : BaseScene
             TextureRect icon = modTemplate.Duplicate() as TextureRect;
 
             icon.Visible = true;
-            icon.Texture = Util.Misc.GetModIcon(mod.Name);
+            icon.Texture = util.Misc.GetModIcon(mod.Name);
 
             modifiersContainer.AddChild(icon);
         }
 
         if (attempt.Map.CoverBuffer != null)
         {
-            Image img = Util.Misc.LoadImageFromBuffer(attempt.Map.CoverBuffer);
+            Image img = util.Misc.LoadImageFromBuffer(attempt.Map.CoverBuffer);
             if (img != null)
             {
                 cover.Texture = ImageTexture.CreateFromImage(img);
@@ -143,10 +143,6 @@ public partial class Results : BaseScene
                     Replay();
                     break;
             }
-        }
-        else if (@event is InputEventMouseMotion eventMouseMotion)
-        {
-            MousePosition = eventMouseMotion.Position;
         }
         else if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.Pressed)
         {

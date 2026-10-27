@@ -8,6 +8,11 @@ using Godot;
 public partial class SettingsProfile
 {
     #region Gameplay
+    /// <summary>
+    /// Selected skin for the game
+    /// </summary>
+    [Order]
+    public SettingsItem<string> Skin { get; private set; }
 
     /// <summary>
     /// Adjusts cursor sensitivity
@@ -93,15 +98,15 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<double> FoV { get; private set; }
 
-    #endregion
-
-    #region Visual
-
     /// <summary>
-    /// Selected skin for the game
+    /// Auto restarts on death
     /// </summary>
     [Order]
-    public SettingsItem<string> Skin { get; private set; }
+    public SettingsItem<bool> AutoRestartOnDeath { get; private set; }
+
+    #endregion
+
+    #region Space
 
     /// <summary>
     /// Overrides the skin's background space for the menu
@@ -116,6 +121,18 @@ public partial class SettingsProfile
     public SettingsItem<string> GameSpace { get; private set; }
 
     /// <summary>
+    /// Sets the default color of the space
+    /// </summary>
+    [Order]
+    public SettingsItem<Color> SpaceColor { get; private set; }
+
+    /// <summary>
+    /// Toggles the use of a custom color
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> CustomSpaceColor { get; private set; }
+
+    /// <summary>
     /// Toggles note hit effects for the game space
     /// </summary>
     [Order]
@@ -128,10 +145,32 @@ public partial class SettingsProfile
     public SettingsItem<bool> SpaceEffects { get; private set; }
 
     /// <summary>
+    /// Enables a dark radial fade to help visibility
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> VisibilityAssist { get; private set; }
+
+    #endregion
+
+    #region Notes
+
+    /// <summary>
     /// Overrides the skin's colorset
     /// </summary>
     [Order]
     public SettingsItem<string> NoteColors { get; private set; }
+
+    /// <summary>
+    /// Overrides the skin's note mesh
+    /// </summary>
+    [Order]
+    public SettingsItem<string> NoteMesh { get; private set; }
+
+    /// <summary>
+    /// Sets the size of the notes
+    /// </summary>
+    [Order]
+    public SettingsItem<double> NoteSize { get; private set; }
 
     /// <summary>
     /// Sets the maximum opacity of the notes
@@ -145,17 +184,9 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<double> NoteOpacityExponent { get; private set; }
 
-    /// <summary>
-    /// Overrides the skin's note mesh
-    /// </summary>
-    [Order]
-    public SettingsItem<string> NoteMesh { get; private set; }
+    #endregion
 
-    /// <summary>
-    /// Sets the size of the notes
-    /// </summary>
-    [Order]
-    public SettingsItem<double> NoteSize { get; private set; }
+    #region Cursor
 
     /// <summary>
     /// Adjusts the cursor scale
@@ -199,6 +230,15 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<bool> UseCursorInMenus { get; private set; }
 
+    #endregion
+
+    #region HUD
+    /// <summary>
+    /// Adjusts the easing when the HP Bar is updated
+    /// </summary>
+    [Order]
+    public SettingsItem<double> HPLerpValue { get; private set; }
+
     /// <summary>
     /// Adjusts the video background dim
     /// </summary>
@@ -234,12 +274,6 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<bool> AltComboCounter { get; private set; }
-
-    /// <summary>
-    /// Enables a dark radial fade to help visibility
-    /// </summary>
-    [Order]
-    public SettingsItem<bool> VisibilityAssist { get; private set; }
 
     /// <summary>
     /// Toggles a popup on a hit
@@ -286,6 +320,12 @@ public partial class SettingsProfile
     /// </summary>
     [Order]
     public SettingsItem<bool> VSyncMenus { get; private set; }
+
+    /// <summary>
+    /// Sets the MSAA value in the viewport
+    /// </summary>
+    [Order]
+    public SettingsItem<string> AntiAliasing { get; private set; }
 
     #endregion
 
@@ -369,6 +409,18 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
+    /// Sets a custom user folder
+    /// <summary>
+    public SettingsItem<string> SetUserFolderPath { get; private set; }
+
+    [Order]
+    /// <summary>
+    /// File dialog for the user folder path selection
+    /// <summary>
+    public SettingsItem<Variant> SetUserFolderDialog { get; private set; }
+
+    [Order]
+    /// <summary>
     /// Toggles the framerate counter in the corner
     /// </summary>
     public SettingsItem<bool> DisplayFPS { get; private set; }
@@ -423,6 +475,34 @@ public partial class SettingsProfile
     public SettingsProfile()
     {
         #region Gameplay
+
+        Skin = new("default")
+        {
+            Id = "Skin",
+            Title = "Skin",
+            Description = "Selected skin for the game",
+            Section = SettingsSection.Gameplay,
+            UpdateAction = (_, init) =>
+            {
+                if (!init)
+                {
+                    SkinManager.Load();
+                }
+            },
+            Buttons =
+            [
+                new()
+                {
+                    Title = "Skin Folder",
+                    Description = "Open the skin folder",
+                    OnPressed = () =>
+                    {
+                        OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}");
+                    },
+                },
+            ],
+            List = new("default") { Values = ["default"] },
+        };
 
         Sensitivity = new(0.5f)
         {
@@ -594,44 +674,24 @@ public partial class SettingsProfile
             },
         };
 
+        AutoRestartOnDeath = new(false)
+        {
+            Id = "AutoRestartOnDeath",
+            Title = "Auto Restart On Death",
+            Description = "On death, automatically restart the run instead of going to the results screen",
+            Section = SettingsSection.Gameplay,
+        };
+
         #endregion
 
-        #region Visual
-
-        Skin = new("default")
-        {
-            Id = "Skin",
-            Title = "Skin",
-            Description = "Selected skin for the game",
-            Section = SettingsSection.Visual,
-            UpdateAction = (_, init) =>
-            {
-                if (!init)
-                {
-                    SkinManager.Load();
-                }
-            },
-            Buttons =
-            [
-                new()
-                {
-                    Title = "Skin Folder",
-                    Description = "Open the skin folder",
-                    OnPressed = () =>
-                    {
-                        OS.ShellOpen($"{Constants.USER_FOLDER}/skins/{SettingsManager.Instance.Settings.Skin}");
-                    },
-                },
-            ],
-            List = new("default") { Values = ["default"] },
-        };
+        #region Spaces
 
         MenuSpace = new("skin")
         {
             Id = "MenuSpace",
             Title = "Menu Space",
             Description = "Overrides the skin's background space for the menu",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -665,7 +725,7 @@ public partial class SettingsProfile
             Id = "GameSpace",
             Title = "Game Space",
             Description = "Overrides the skin's background space for gameplay",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -694,12 +754,42 @@ public partial class SettingsProfile
             },
         };
 
+        SpaceColor = new(Color.Color8(0, 0, 0, 0))
+        {
+            Id = "SpaceColor",
+            Title = "Space Color",
+            Description = "Changes the color of the space (only when space hit effects is off)",
+            Section = SettingsSection.Spaces,
+        };
+
+        CustomSpaceColor = new(false)
+        {
+            Id = "CustomSpaceColor",
+            Title = "Custom Space Color",
+            Description = "Toggles the use of a custom space color",
+            Section = SettingsSection.Spaces,
+            UpdateAction = (_, init) =>
+            {
+                if ((bool)CustomSpaceColor.GetVariant())
+                {
+                    SpaceHitEffects.SetVariant(false);
+                }
+            },
+        };
+
         SpaceHitEffects = new(true)
         {
             Id = "SpaceHitEffects",
             Title = "Space Hit Effects",
             Description = "Toggles note hit effects for the game space",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
+            UpdateAction = (_, init) =>
+            {
+                if ((bool)SpaceHitEffects.GetVariant())
+                {
+                    CustomSpaceColor.SetVariant(false);
+                }
+            },
         };
 
         SpaceEffects = new(true)
@@ -707,15 +797,27 @@ public partial class SettingsProfile
             Id = "SpaceEffects",
             Title = "Space Effects",
             Description = "Toggles non-hit effects for the game space",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
         };
+
+        VisibilityAssist = new(false)
+        {
+            Id = "VisibilityAssist",
+            Title = "Visibility Assist",
+            Description = "Enables a dark radial fade to help with visibility (impacts performance significantly)",
+            Section = SettingsSection.Spaces,
+        };
+
+        #endregion
+
+        #region Notes
 
         NoteColors = new("skin")
         {
             Id = "Colors",
             Title = "Colors",
             Description = "Overrides the skin's colorset",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Notes,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -726,40 +828,12 @@ public partial class SettingsProfile
             List = new("skin") { Values = ["skin", "default"] },
         };
 
-        NoteOpacity = new(1)
-        {
-            Id = "NoteOpacity",
-            Title = "Note Opacity",
-            Description = "Sets the maximum opacity for the notes",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 0.05f,
-                MinValue = 0,
-                MaxValue = 1,
-            },
-        };
-
-        NoteOpacityExponent = new(1.25)
-        {
-            Id = "NoteOpacityExponent",
-            Title = "Note Opacity Exponent",
-            Description = "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly",
-            Section = SettingsSection.Visual,
-            Slider = new()
-            {
-                Step = 0.05f,
-                MinValue = 1,
-                MaxValue = 2,
-            },
-        };
-
         NoteMesh = new("skin")
         {
             Id = "NoteMesh",
             Title = "Note Mesh",
             Description = "Overrides the skin's note mesh",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Notes,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -775,7 +849,7 @@ public partial class SettingsProfile
             Id = "NoteSize",
             Title = "Note Size",
             Description = "Sets the size of the notes, does not change hitboxes",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Notes,
             Slider = new()
             {
                 Step = 0.025f,
@@ -784,20 +858,44 @@ public partial class SettingsProfile
             },
         };
 
-        GridGuides = new(true)
+        NoteOpacity = new(1)
         {
-            Id = "GridGuides",
-            Title = "Grid Guides",
-            Description = "Enables grid guides",
-            Section = SettingsSection.Visual,
+            Id = "NoteOpacity",
+            Title = "Note Opacity",
+            Description = "Sets the maximum opacity for the notes",
+            Section = SettingsSection.Notes,
+            Slider = new()
+            {
+                Step = 0.05f,
+                MinValue = 0,
+                MaxValue = 1,
+            },
         };
+
+        NoteOpacityExponent = new(1.25)
+        {
+            Id = "NoteOpacityExponent",
+            Title = "Note Opacity Exponent",
+            Description = "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly",
+            Section = SettingsSection.Notes,
+            Slider = new()
+            {
+                Step = 0.05f,
+                MinValue = 1,
+                MaxValue = 2,
+            },
+        };
+
+        #endregion
+
+        #region Cursor
 
         CursorScale = new(1)
         {
             Id = "CursorScale",
             Title = "Cursor Scale",
             Description = "Adjusts the cursor scale, does not change hitboxes",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 0.025f,
@@ -811,7 +909,7 @@ public partial class SettingsProfile
             Id = "CursorOpacity",
             Title = "Cursor Opacity",
             Description = "Adjusts the cursor opacity",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 0.05f,
@@ -825,7 +923,7 @@ public partial class SettingsProfile
             Id = "CursorRotation",
             Title = "Cursor Rotation",
             Description = "Degrees to rotate the cursor by every second",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 1,
@@ -839,7 +937,7 @@ public partial class SettingsProfile
             Id = "CursorTrail",
             Title = "Cursor Trail",
             Description = "Toggles a trail for your cursor",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
         };
 
         TrailTime = new(0.05f)
@@ -847,7 +945,7 @@ public partial class SettingsProfile
             Id = "TrailTime",
             Title = "Cursor Trail Time",
             Description = "Adjusts trail visibility time",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 0.01f,
@@ -861,7 +959,7 @@ public partial class SettingsProfile
             Id = "TrailDetail",
             Title = "Cursor Trail Detail",
             Description = "Adjusts the detail for the trail, a high value may impact performance",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
             Slider = new()
             {
                 Step = 1f,
@@ -875,7 +973,33 @@ public partial class SettingsProfile
             Id = "UseCursorInMenus",
             Title = "Use Cursor in Menus",
             Description = "Uses the skin's cursor instead of the native cursor",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Cursor,
+        };
+
+        #endregion
+
+        #region HUD
+
+        GridGuides = new(true)
+        {
+            Id = "GridGuides",
+            Title = "Grid Guides",
+            Description = "Enables grid guides",
+            Section = SettingsSection.HUD,
+        };
+
+        HPLerpValue = new(60f)
+        {
+            Id = "HPLerpValue",
+            Title = "HP Bar Easing Value",
+            Description = "Adjusts how smooth, or harsh, the HP Bar eases in while it updates",
+            Section = SettingsSection.HUD,
+            Slider = new()
+            {
+                Step = 1f,
+                MinValue = 10,
+                MaxValue = 100,
+            },
         };
 
         //VideoDim = new(80)
@@ -915,7 +1039,7 @@ public partial class SettingsProfile
             Id = "SimpleHUD",
             Title = "Simple HUD",
             Description = "Hides the regular left and right panels, and instead displays a simple miss counter on the right",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         SuperSimpleHUD = new(false)
@@ -923,7 +1047,7 @@ public partial class SettingsProfile
             Id = "SuperSimpleHUD",
             Title = "Super Simple HUD",
             Description = "Hides health bar, song duration, and song name",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         AltComboCounter = new(false)
@@ -931,15 +1055,7 @@ public partial class SettingsProfile
             Id = "AltComboCounter",
             Title = "Alt. Combo Counter",
             Description = "Moves the Combo Counter to the HUD",
-            Section = SettingsSection.Visual,
-        };
-
-        VisibilityAssist = new(false)
-        {
-            Id = "VisibilityAssist",
-            Title = "Visibility Assist",
-            Description = "Enables a dark radial fade to help with visibility",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         HitPopups = new(true)
@@ -947,7 +1063,7 @@ public partial class SettingsProfile
             Id = "HitPopups",
             Title = "Hit Score Popups",
             Description = "Toggles a popup on a hit",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
 
         MissPopups = new(true)
@@ -955,8 +1071,12 @@ public partial class SettingsProfile
             Id = "MissPopups",
             Title = "Miss Popups",
             Description = "Toggles a popup on a miss",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.HUD,
         };
+
+        #endregion
+
+        #region Video
 
         Fullscreen = new(true)
         {
@@ -1013,6 +1133,27 @@ public partial class SettingsProfile
                     DisplayServer.WindowSetVsyncMode(value ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Disabled);
                 }
             },
+        };
+
+        AntiAliasing = new("Off (roughest)")
+        {
+            Id = "AntiAliasing",
+            Title = "Anti Aliasing",
+            Description = "Smoothes edges, at the cost of performance",
+            Section = SettingsSection.Video,
+            UpdateAction = (value, _) =>
+            {
+                var root = (Engine.GetMainLoop() as SceneTree)?.Root;
+                root?.Msaa3D = value switch
+                {
+                    "Off (roughest)" => Viewport.Msaa.Disabled,
+                    "2x (rough)" => Viewport.Msaa.Msaa2X,
+                    "4x (smooth)" => Viewport.Msaa.Msaa4X,
+                    "8x (smoothest)" => Viewport.Msaa.Msaa8X,
+                    _ => Viewport.Msaa.Disabled,
+                };
+            },
+            List = new("Off (roughest)") { Values = ["Off (roughest)", "2x (rough)", "4x (smooth)", "8x (smoothest)"] },
         };
 
         #endregion
@@ -1301,6 +1442,70 @@ public partial class SettingsProfile
             SaveToDisk = false,
         };
 
+        SetUserFolderPath = new(Constants.USER_FOLDER)
+        {
+            Id = "SetUserFolderPath",
+            Title = "Path To User Folder",
+            Description = "Set the path where Rhythia stores it's files",
+            Section = SettingsSection.Other,
+            Placeholder = Constants.DEFAULT_USER_FOLDER,
+            UpdateAction = (value, _) =>
+            {
+                SettingsManager.SetUserFolder(value);
+            },
+            SaveToDisk = false,
+        };
+
+        SetUserFolderDialog = new(default)
+        {
+            Id = "SetUserFolderDialog",
+            Title = "", // belongs to the field above
+            Description = "",
+            Section = SettingsSection.Other,
+            Buttons =
+            [
+                new()
+                {
+                    Title = "Open Previous User Folder",
+                    Description = "Open the path to the previously used User Folder",
+                    OnPressed = () =>
+                    {
+                        if (Constants.PREVIOUS_USER_FOLDER == "")
+                        {
+                            var popup = new OptionPopup(
+                                "No Previous User Folder Found",
+                                "You have no previous user folder. Either you didn't change your User Folder (and that's fine) or the record of it got deleted."
+                            );
+
+                            popup.AddOption(
+                                "Ok",
+                                Callable.From(() =>
+                                {
+                                    SettingsMenu.Instance.Show();
+                                })
+                            );
+
+                            SettingsMenu.Instance.Hide();
+                            popup.Show();
+                        }
+                        else
+                        {
+                            OS.ShellShowInFileManager(Constants.PREVIOUS_USER_FOLDER);
+                        }
+                    },
+                },
+                new()
+                {
+                    Title = "Set User Folder Path",
+                    Description = "Choose the path to the User Folder",
+                    OnPressed = () =>
+                    {
+                        SettingsMenu.Instance.UserFolderDialog.PopupCentered();
+                    },
+                },
+            ],
+        };
+
         DisplayFPS = new(true)
         {
             Id = "DisplayFPS",
@@ -1543,6 +1748,11 @@ public partial class SettingsProfile
         SettingsMenu.Instance.UpdateProfileSelection();
 
         ToastNotification.Notify($"Created profile '{profileName}'");
+    }
+
+    public static void ConfigureSetUserFolderPath(string userFolderPath)
+    {
+        SettingsManager.Instance.Settings.SetUserFolderPath.Value = userFolderPath;
     }
 
     private static void importColorsetsFromNightly()

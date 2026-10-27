@@ -30,9 +30,12 @@ public partial class Runner : Node3D
     public bool StopQueued = false;
 
     private SettingsProfile settings;
+    private AutoplayHandler autoplayHandler;
     private double lastFrame = Time.GetTicksUsec();
     private bool firstFrame = true;
     private bool eventsConnected = false;
+    private bool autoplayEnabled = false;
+    private double? hitResultProgressOverride = null;
     private double[] noteTimestamps;
 
     [ExportCategory("Settings")]
@@ -103,8 +106,14 @@ public partial class Runner : Node3D
 
         // Save replay frame
 
+        if (autoplayEnabled)
+        {
+            Game.Instance.CursorManager.UpdateAutoplayCursor(autoplayHandler.GetCursorPosition(Attempt.Progress));
+            processAutoplayHits();
+        }
+
         // if not paused & record replays on & not a temporary map & time from now and last replay frame was 60 frames apart
-        if (!Attempt.Stopped && settings.RecordReplays && !Attempt.Map.Ephemeral && now - Attempt.LastReplayFrame >= 1000000 / 60)
+        if (!autoplayEnabled && !Attempt.Stopped && settings.RecordReplays && !Attempt.Map.Ephemeral && now - Attempt.LastReplayFrame >= 1000000 / 60)
         {
             if (
                 Attempt.ReplayFrames.Count == 0
@@ -216,6 +225,43 @@ public partial class Runner : Node3D
         }
     }
 
+    private void processAutoplayHits()
+    {
+        if (!autoplayEnabled || Attempt.IsReplay || !Attempt.Objects.TryGetValue(typeof(Note), out var objects))
+        {
+            return;
+        }
+
+        int startIndex = ObjectIndicesStart[typeof(Note)];
+
+        for (int i = startIndex; i < objects.Count; i++)
+        {
+            Note note = (Note)objects[i];
+
+            if (note.Millisecond > Attempt.Progress)
+            {
+                break;
+            }
+
+            if (note.Millisecond < Attempt.StartFrom || note.LastResult != HitResult.None)
+            {
+                continue;
+            }
+
+            note.Hittable = true;
+
+            try
+            {
+                hitResultProgressOverride = note.Millisecond;
+                note.Hit(this);
+            }
+            finally
+            {
+                hitResultProgressOverride = null;
+            }
+        }
+    }
+
     public void Play()
     {
         if (Attempt == null)
@@ -264,6 +310,26 @@ public partial class Runner : Node3D
             }
         }
 
+        autoplayEnabled = Attempt.Modifiers.Any(mod => mod is AutoplayModifier) && !Attempt.IsReplay;
+
+        if (autoplayEnabled)
+        {
+            foreach (var mod in Attempt.Modifiers.Where(mod => mod is AutoplayModifier))
+            {
+                mod.Activate(Attempt);
+
+                if (!NotesOnly)
+                {
+                    HudManager.DisplayModifier(mod);
+                }
+            }
+
+            autoplayHandler = new(Attempt);
+        }
+        else
+        {
+            autoplayHandler = null;
+        }
         settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
         Camera.Fov = (float)(double)settings.FoV;
 
@@ -283,7 +349,7 @@ public partial class Runner : Node3D
 
         if (Attempt.Map.AudioBuffer != null)
         {
-            SoundManager.Song.Stream = Util.Audio.LoadStream(Attempt.Map.AudioBuffer);
+            SoundManager.Song.Stream = util.Audio.LoadStream(Attempt.Map.AudioBuffer);
             SoundManager.Song.PitchScale = (float)Speed;
         }
 
@@ -335,10 +401,11 @@ public partial class Runner : Node3D
     public void Seek(double ms)
     {
         Attempt.Progress = ms;
+        autoplayHandler?.Reset(Attempt.Progress);
 
         foreach (var entry in Attempt.Objects)
         {
-            ObjectIndicesStart[entry.Key] = Util.Misc.BinarySearch(noteTimestamps, ms) + 1;
+            ObjectIndicesStart[entry.Key] = util.Misc.BinarySearch(noteTimestamps, ms) + 1;
             ObjectIndicesEnd[entry.Key] = entry.Value.Count;
         }
 
@@ -407,7 +474,7 @@ public partial class Runner : Node3D
         }
 
         // dont want an infinite dependency loop so im just going to do this -fog
-        if (!Attempt.IsReplay && Game.Instance.ReplayManager.CurrentMode == ReplayManager.Mode.RECORD)
+        if (!autoplayEnabled && !Attempt.IsReplay && Game.Instance.ReplayManager.CurrentMode == ReplayManager.Mode.RECORD)
         {
             Game.Instance.ReplayManager.SaveReplay(Attempt);
         }
@@ -417,7 +484,7 @@ public partial class Runner : Node3D
             Stats.Instance.GamePlaytime += (Time.GetTicksUsec() - Attempt.TimeStarted) / 1000000;
             Stats.Instance.TotalDistance += (ulong)Attempt.DistanceMM;
 
-            if (Attempt.StartFrom == 0)
+            if (Attempt.StartFrom == 0 && !autoplayEnabled)
             {
                 if (!File.Exists($"{Constants.USER_FOLDER}/pbs/{Attempt.Map.Name}"))
                 {
@@ -481,9 +548,10 @@ public partial class Runner : Node3D
 
     private void onHitResultChanged(int noteIndex, HitResult hitResult)
     {
+        double judgmentProgress = hitResultProgressOverride ?? Attempt.Progress;
         float lateness = Attempt.IsReplay
             ? Attempt.HitsInfo[noteIndex]
-            : (float)(((int)Attempt.Progress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
+            : (float)(((int)judgmentProgress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
         float factor = 1 - Math.Max(0, lateness - 25) / 150f;
         double hitScore = Attempt.UnitHitScore * Attempt.ComboMultiplier * factor;
 
@@ -544,10 +612,22 @@ public partial class Runner : Node3D
 
             if (!Attempt.IsReplay && Attempt.Health <= 0 && Attempt.Alive)
             {
-                Fail();
+                if (Attempt.Settings.AutoRestartOnDeath && checkFail(hit, Attempt.Health))
+                {
+                    SoundManager.FailSound.Play();
+
+                    Attempt.Alive = false;
+                    Attempt.Qualifies = false;
+
+                    Results.Replay();
+                }
+                else
+                {
+                    Fail();
+                }
             }
 
-            if (checkFail(hit, Attempt.Health))
+            if (!Attempt.Settings.AutoRestartOnDeath && checkFail(hit, Attempt.Health))
             {
                 QueueStop();
             }

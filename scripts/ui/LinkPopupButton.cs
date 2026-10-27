@@ -60,7 +60,7 @@ public partial class LinkPopupButton : Button
                 button.TooltipText = link;
             }
 
-            popup.UpdateInfo(string.Format(CultureInfo.CurrentCulture, InfoTemplate, link));
+            popup.UpdateInfo(string.Format(CultureInfo.InvariantCulture, InfoTemplate, link));
         }
     }
 }
