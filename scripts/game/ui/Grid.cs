@@ -68,28 +68,29 @@ public partial class Grid : MeshInstance3D, IUIComponent
         float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 30) / 82f, 1);
         double hitScore = Math.Truncate(Runner.Attempt.UnitHitScore * Runner.Attempt.ComboMultiplier * factor);
 
-        string[] listOfJudgements = { "Perfect", "Great", "Bad" };
-        string judgement = "hi";
+        string[] listOfJudgements = { "perfect", "great", "okay", "bad" };
+        string judgement = "";
 
         switch (result)
         {
             case HitResult.Hit:
+                switch (factor) // judgements
+                {
+                    case 1f:
+                        judgement = listOfJudgements[0]; // pawfect
+                        break;
 
-                if (factor == 1)
-                {
-                    judgement = listOfJudgements[0];
-                }
-                else if (factor <= 0.9 && factor > 0.8)
-                {
-                    judgement = listOfJudgements[1];
-                }
-                else if (factor <= 0.8 && factor > 0.7)
-                {
-                    judgement = listOfJudgements[2];
-                }
-                else if (factor <= 0.7)
-                {
-                    judgement = listOfJudgements[3];
+                    case 0.9f:
+                        judgement = listOfJudgements[1]; // gewd
+                        break;
+
+                    case 0.8f:
+                        judgement = listOfJudgements[2]; // okay
+                        break;
+
+                    case 0.7f:
+                        judgement = listOfJudgements[3]; // bad
+                        break;
                 }
                 spawnHitIcon(noteIndex, hitScore, judgement);
                 break;
