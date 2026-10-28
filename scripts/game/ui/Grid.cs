@@ -11,6 +11,8 @@ public partial class Grid : MeshInstance3D, IUIComponent
     public MeshInstance3D GridGuides { get; set; }
     public MeshInstance3D VisibilityAssist { get; set; }
 
+    private string popupLabelFormat;
+
     private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
     private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
     private int hitPopups,
@@ -63,13 +65,33 @@ public partial class Grid : MeshInstance3D, IUIComponent
         float lateness = Runner.Attempt.IsReplay
             ? Runner.Attempt.HitsInfo[noteIndex]
             : (float)(((int)Runner.Attempt.Progress - Runner.Attempt.Map.Notes[noteIndex].Millisecond) / Runner.Speed);
-        float factor = 1 - Math.Max(0, lateness - 25) / 150f;
-        uint hitScore = (uint)Runner.Attempt.UnitHitScore * (uint)Runner.Attempt.ComboMultiplier * (uint)factor;
+        float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 30) / 82f, 1);
+        double hitScore = Math.Truncate(Runner.Attempt.UnitHitScore * Runner.Attempt.ComboMultiplier * factor);
+
+        string[] listOfJudgements = { "Perfect", "Great", "Bad" };
+        string judgement = "hi";
 
         switch (result)
         {
             case HitResult.Hit:
-                spawnHitIcon(noteIndex, hitScore);
+
+                if (factor == 1)
+                {
+                    judgement = listOfJudgements[0];
+                }
+                else if (factor <= 0.9 && factor > 0.8)
+                {
+                    judgement = listOfJudgements[1];
+                }
+                else if (factor <= 0.8 && factor > 0.7)
+                {
+                    judgement = listOfJudgements[2];
+                }
+                else if (factor <= 0.7)
+                {
+                    judgement = listOfJudgements[3];
+                }
+                spawnHitIcon(noteIndex, hitScore, judgement);
                 break;
             case HitResult.Miss:
                 spawnMissIcon(noteIndex);
@@ -77,17 +99,20 @@ public partial class Grid : MeshInstance3D, IUIComponent
         }
     }
 
-    private void spawnHitIcon(int objIndex, uint hitScore)
+    private void spawnHitIcon(int objIndex, double hitScore, string judgement)
     {
-        if (!Runner.Attempt.Settings.HitPopups || hitPopups >= 64)
+        if (!Runner.Attempt.Settings.HitPopups || hitPopups >= 8)
             return;
 
         hitPopups++;
 
         Label3D popup = hit_feedback.Instantiate<Label3D>();
         AddChild(popup);
+        popupLabelFormat = popup.Text;
+
+        popup.Text = string.Format(CultureInfo.CurrentCulture, popupLabelFormat, hitScore.ToString(CultureInfo.CurrentCulture), judgement);
         popup.GlobalPosition = new Vector3(Runner.Attempt.Map.Notes[objIndex].X, -1.4f, 0);
-        popup.Text = hitScore.ToString(CultureInfo.CurrentCulture);
+        // popup.Text = hitScore.ToString(CultureInfo.CurrentCulture);
         Tween tween = popup.CreateTween();
         tween.TweenProperty(popup, "transparency", 1, 0.25f);
         tween
