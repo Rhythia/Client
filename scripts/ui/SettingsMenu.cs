@@ -238,7 +238,7 @@ public partial class SettingsMenu : ColorRect
             switch (eventKey.Keycode)
             {
                 case Key.O:
-                    if (eventKey.CtrlPressed)
+                    if (eventKey.IsCommandOrControlPressed())
                     {
                         ShowMenu(!Shown);
                         GetViewport().SetInputAsHandled();
