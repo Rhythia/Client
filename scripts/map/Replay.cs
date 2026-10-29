@@ -141,6 +141,9 @@ public struct Replay
                     case "Chaos":
                         Modifiers.Add(new ChaosModifier());
                         break;
+                    case "Flicker":
+                        Modifiers.Add(new FlickerModifier());
+                        break;
                     case "Earthquake":
                         Modifiers.Add(new EarthquakeModifier());
                         break;

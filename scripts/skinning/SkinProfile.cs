@@ -119,6 +119,8 @@ public partial class SkinProfile : RefCounted
 
     public ImageTexture ModStrobeImage { get; set; } = new();
 
+    public ImageTexture ModFlickerImage { get; set; } = new();
+
     public ImageTexture ModChaosImage { get; set; } = new();
 
     public ImageTexture ModVortexImage { get; set; } = new();
