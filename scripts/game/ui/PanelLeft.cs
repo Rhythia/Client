@@ -64,7 +64,7 @@ public partial class PanelLeft : UIComponent
 
         targetMultiplierProgress = (float)attempt.ComboMultiplierProgress / attempt.ComboMultiplierIncrement;
 
-        if (attempt.ComboMultiplier == 8)
+        if (attempt.ComboMultiplier == 6)
         {
             targetMultiplierColour = Color.Color8(255, 140, 0);
         }

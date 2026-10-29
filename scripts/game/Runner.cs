@@ -559,6 +559,24 @@ public partial class Runner : Node3D
         {
             case HitResult.Hit:
                 Attempt.Hits++;
+                switch (factor) // judgements
+                {
+                    case 1f:
+                        Attempt.Perfects++; // pawfect
+                        break;
+
+                    case 0.9f:
+                        Attempt.Greats++; // gewd
+                        break;
+
+                    case 0.8f:
+                        Attempt.Okays++; // okay
+                        break;
+
+                    case 0.7f:
+                        Attempt.Bads++; // bad
+                        break;
+                }
                 Attempt.Sum++;
                 Attempt.Accuracy = Math.Floor((float)Attempt.Hits / Attempt.Sum * 10000) / 100;
                 Attempt.Combo++;
@@ -577,9 +595,9 @@ public partial class Runner : Node3D
 
                 if (Attempt.ComboMultiplierProgress == Attempt.ComboMultiplierIncrement)
                 {
-                    if (Attempt.ComboMultiplier < 8)
+                    if (Attempt.ComboMultiplier < 6)
                     {
-                        Attempt.ComboMultiplierProgress = Attempt.ComboMultiplier == 7 ? Attempt.ComboMultiplierIncrement : 0;
+                        Attempt.ComboMultiplierProgress = Attempt.ComboMultiplier == 5 ? Attempt.ComboMultiplierIncrement : 0;
                         Attempt.ComboMultiplier++;
                     }
                 }

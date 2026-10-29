@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Godot;
 
 public partial class Results : BaseScene
@@ -9,6 +10,7 @@ public partial class Results : BaseScene
     private static Panel footer;
     private static Panel holder;
     private static TextureRect cover;
+    private string judgementsLabelFormat;
 
     public static double LastFrame = 0;
     public static Vector2 MousePosition = Vector2.Zero;
@@ -42,6 +44,16 @@ public partial class Results : BaseScene
             : attempt.Alive ? (attempt.Qualifies ? "PASSED" : "DISQUALIFIED")
             : "FAILED";
         holder.GetNode<Label>("Speed").Text = $"{attempt.Speed:F2}x";
+        judgementsLabelFormat = holder.GetNode<Label>("Judgements").Text;
+
+        holder.GetNode<Label>("Judgements").Text = string.Format(
+            CultureInfo.CurrentCulture,
+            judgementsLabelFormat,
+            $"Perfects: {attempt.Perfects}",
+            $"Greats: {attempt.Greats}",
+            $"Okays: {attempt.Okays}",
+            $"Bads: {attempt.Bads}"
+        );
 
         HBoxContainer modifiersContainer = holder.GetNode("Modifiers").GetNode<HBoxContainer>("HBoxContainer");
         TextureRect modTemplate = modifiersContainer.GetNode<TextureRect>("ModifierTemplate");

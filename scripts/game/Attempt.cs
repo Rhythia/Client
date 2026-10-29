@@ -36,6 +36,10 @@ public partial class Attempt : RefCounted
     public uint Hits = 0;
     public uint Misses = 0;
     public uint Sum = 0;
+    public double Perfects = 0;
+    public double Greats = 0;
+    public double Okays = 0;
+    public double Bads = 0;
     public double Score = 0;
     public double UnitHitScore = 0;
     public uint NoteWeight;
@@ -92,7 +96,7 @@ public partial class Attempt : RefCounted
         Objects[typeof(Note)] = [.. map.Notes];
         HitsInfo = IsReplay ? Replays[0].Notes : new float[Map.Notes.Length];
 
-        uint noteWeightIterations = (uint)Math.Clamp(Math.Floor((double)Map.Notes.Length / ComboMultiplierIncrement), 1, 7);
+        uint noteWeightIterations = (uint)Math.Clamp(Math.Floor((double)Map.Notes.Length / ComboMultiplierIncrement), 1, 5);
         NoteWeight += Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * (1 + noteWeightIterations) * noteWeightIterations / 2;
         NoteWeight +=
             ((uint)Map.Notes.Length - Math.Min(ComboMultiplierIncrement, (uint)Map.Notes.Length) * noteWeightIterations) * (noteWeightIterations + 1);
