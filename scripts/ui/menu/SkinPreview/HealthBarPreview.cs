@@ -24,6 +24,9 @@ public partial class HealthBarPreview : UIComponent
         viewport.GetNode<TextureRect>("Main").Texture = SkinManager.Instance.Skin.HealthImage;
         viewport.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.HealthBackgroundImage;
 
+        healthBarTexture.Visible = !settings.SuperSimpleHUD;
+        healthBarBGTexture.Visible = !settings.SuperSimpleHUD;
+
         SkinManager.Instance.Loaded += UpdateSkin;
     }
 

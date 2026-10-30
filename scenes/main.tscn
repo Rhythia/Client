@@ -647,7 +647,7 @@ anchor_bottom = 0.9250001
 offset_left = -0.1000061
 offset_right = -11.940033
 theme = ExtResource("3_tipki")
-text = "Show Skin Preview"
+text = "Toggle Skin Preview"
 
 [node name="Profiles" type="OptionButton" parent="Settings/Holder/Header" unique_id=716644348]
 layout_mode = 1
@@ -751,8 +751,6 @@ offset_transform_enabled = true
 offset_transform_pivot_ratio = Vector2(1, 1)
 offset_transform_visual_only = false
 focus_behavior_recursive = 2
-mouse_filter = 2
-mouse_behavior_recursive = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_tel4y")
 
 [node name="Label" type="Label" parent="Settings/SkinPreviewPanel" unique_id=742694072]

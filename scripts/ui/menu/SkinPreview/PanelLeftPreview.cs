@@ -21,9 +21,15 @@ public partial class PanelLeftPreview : UIComponent
         multiplier = viewport.GetNode<Label>("Multiplier");
         altCombo = viewport.GetNode<Label>("ComboCount");
 
+        // this once is for init purposes, updateskin ofc only reflects the skin once its updated
+        Godot.Collections.Array<Node> widgets = viewport.GetChildren();
+        foreach (Node widget in widgets)
+        {
+            (widget as CanvasItem).Visible = isVisible;
+        }
+
         altCombo.Visible = isVisible && settings.AltComboCounter;
 
-        // this once is for init purposes, updateskin ofc only reflects the skin once its updated
         viewport.GetNode<TextureRect>("Background").Texture = SkinManager.Instance.Skin.PanelLeftBackgroundImage;
 
         SkinManager.Instance.Loaded += UpdateSkin;
