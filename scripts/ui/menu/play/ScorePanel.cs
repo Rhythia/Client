@@ -10,7 +10,7 @@ public partial class ScorePanel : Panel
     public Button Button;
 
     private Label playerLabel;
-    private Label scoreLabel;
+    private Label timerLabel;
     private Label accuracyLabel;
     private Label speedLabel;
     private Label timeLabel;
@@ -22,7 +22,7 @@ public partial class ScorePanel : Panel
         Button = GetNode<Button>("Button");
 
         playerLabel = GetNode<Label>("Player");
-        scoreLabel = GetNode<Label>("Score");
+        timerLabel = GetNode<Label>("Timer");
         accuracyLabel = GetNode<Label>("Accuracy");
         speedLabel = GetNode<Label>("Speed");
         timeLabel = GetNode<Label>("Time");
@@ -54,20 +54,11 @@ public partial class ScorePanel : Panel
         Score = score;
 
         playerLabel.Text = score.Player;
-        accuracyLabel.Text = $"{score.Accuracy:F2}%";
+        accuracyLabel.Text = $"{util.String.PadMagnitude(score.Value)} | {score.Accuracy:F2}%";
         speedLabel.Text = $"{score.Speed:F2}x";
         timeLabel.Text = util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
 
-        if (score.Qualifies)
-        {
-            scoreLabel.Text = util.String.PadMagnitude(score.Value);
-        }
-        else
-        {
-            scoreLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
-            scoreLabel.LabelSettings = scoreLabel.LabelSettings.Duplicate() as LabelSettings;
-            scoreLabel.LabelSettings.FontColor = Color.Color8(160, 160, 160);
-        }
+        timerLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
 
         foreach (KeyValuePair<string, bool> entry in score.Modifiers)
         {

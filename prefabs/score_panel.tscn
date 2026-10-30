@@ -52,8 +52,8 @@ shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="ScorePanel" type="Panel" unique_id=1580355860]
-clip_contents = true
 custom_minimum_size = Vector2(0, 100)
+clip_contents = true
 anchors_preset = 10
 anchor_right = 1.0
 size_flags_horizontal = 3
@@ -84,7 +84,7 @@ label_settings = SubResource("LabelSettings_ddh1n")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
-[node name="Score" type="Label" parent="." unique_id=1064018268]
+[node name="Timer" type="Label" parent="." unique_id=1064018268]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.6

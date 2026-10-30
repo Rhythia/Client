@@ -609,7 +609,7 @@ public partial class Runner : Node3D
                 Attempt.Accuracy = Mathf.Floor((float)Attempt.Hits / Attempt.Sum * 10000) / 100;
                 Attempt.Combo = 0;
                 Attempt.ComboMultiplierProgress = 0;
-                Attempt.ComboMultiplier = Math.Max(1, Attempt.ComboMultiplier - 1);
+                Attempt.ComboMultiplier = Math.Max(1, Attempt.ComboMultiplier - (uint)Math.Truncate((double)Attempt.ComboMultiplier / 2));
 
                 if (!Attempt.IsReplay)
                 {
