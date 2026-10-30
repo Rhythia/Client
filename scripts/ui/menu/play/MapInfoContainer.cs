@@ -30,9 +30,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
     private TextureRect cover;
 
     [Export]
-    private Control infoSubholder;
-
-    [Export]
     private RichTextLabel mainLabel;
     private string mainLabelFormat;
 
@@ -173,13 +170,6 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             MapManager.Delete(Map);
         };
-
-        void updateOffset()
-        {
-            infoSubholder.OffsetLeft = coverBackground.Size.X + 8;
-        }
-
-        coverBackground.Connect("resized", Callable.From(updateOffset));
 
         Modulate = Color.Color8(255, 255, 255, 0);
 
@@ -441,16 +431,11 @@ public partial class MapInfoContainer : Panel, ISkinnable
             util.String.SanitizeBBCode(map.PrettyTitle),
             difficultyColor.ToHtml(),
             util.String.SanitizeBBCode(map.DifficultyName),
-            util.String.SanitizeBBCode(map.PrettyMappers)
-        );
-
-        extraLabel.Text = string.Format(
-            CultureInfo.CurrentCulture,
-            extraLabelFormat,
-            util.String.FormatTime(map.Length / 1000),
-            map.Notes.Length,
+            util.String.SanitizeBBCode(map.PrettyMappers),
             util.String.SanitizeBBCode(map.Name)
         );
+
+        extraLabel.Text = string.Format(CultureInfo.CurrentCulture, extraLabelFormat, util.String.FormatTime(map.Length / 1000), map.Notes.Length);
 
         coverBackground.SelfModulate = difficultyColor;
         cover.Texture = map.Cover;
