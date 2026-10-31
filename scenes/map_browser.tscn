@@ -490,16 +490,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="Mapper" type="RichTextLabel" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=2078438243]
+[node name="Mapper" type="HBoxContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=2078438243]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="By" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer/Mapper" unique_id=1938475021]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.39215687)
-theme_override_constants/shadow_outline_size = 1
 theme_override_constants/shadow_offset_y = 2
-bbcode_enabled = true
-text = "[color=#c8c8c8]by[/color] Mapper "
-fit_content = true
-autowrap_mode = 0
+theme_override_constants/shadow_outline_size = 1
+text = "by"
 
 [node name="Difficulty" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Top/Text/Details/VBoxContainer" unique_id=2103154130]
 layout_mode = 2
