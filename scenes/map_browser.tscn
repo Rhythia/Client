@@ -327,6 +327,7 @@ popup/item_5/checked = true
 popup/item_5/id = 5
 
 [node name="Status" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=330241703]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
@@ -525,6 +526,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="StatusPill" type="PanelContainer" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=359816098]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ikspe")
