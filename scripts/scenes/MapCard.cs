@@ -52,7 +52,14 @@ public partial class MapCard : PanelContainer
 
     private Map downloadedMap;
 
+    private static readonly Gradient notableGradient = new()
+    {
+        Offsets = [0, 1],
+        Colors = [new Color(0xffa5b1ff), new Color(0xff2846ff)],
+    };
+
     private string[] mapperNames = [];
+    private string[] notableMapperNames = [];
 
     private DownloadState state = DownloadState.NotDownloaded;
 
@@ -111,6 +118,10 @@ public partial class MapCard : PanelContainer
     {
         titleLabel.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title").GetString()}";
         mapperNames = [.. map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString())];
+        notableMapperNames =
+        [
+            .. map.GetProperty("mappers").EnumerateArray().Where(x => x.GetProperty("isNotable").GetBoolean()).Select(x => x.GetProperty("name").GetString()),
+        ];
         mapperBox.Resized += updateMappers;
         updateMappers();
         notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
@@ -274,6 +285,35 @@ public partial class MapCard : PanelContainer
             string text = i == 0 ? $" {mapperNames[i]}" : $", {mapperNames[i]}";
             float width = font.GetStringSize(text, HorizontalAlignment.Left, -1, fontSize).X;
 
+            if (notableMapperNames.Contains(mapperNames[i]))
+            {
+                var notable = new RichTextLabel
+                {
+                    BbcodeEnabled = true,
+                    FitContent = true,
+                    ScrollActive = false,
+                    AutowrapMode = TextServer.AutowrapMode.Off,
+                    MouseFilter = MouseFilterEnum.Ignore,
+                    ClipContents = true,
+                    Text = i == 0 ? " " + gradientText(mapperNames[i]) : $"[color=#c8c8c8],[/color] {gradientText(mapperNames[i])}",
+                };
+                notable.AddThemeFontSizeOverride("normal_font_size", fontSize);
+                notable.AddThemeColorOverride("font_shadow_color", by.GetThemeColor("font_shadow_color"));
+                notable.AddThemeConstantOverride("shadow_offset_x", by.GetThemeConstant("shadow_offset_x"));
+                notable.AddThemeConstantOverride("shadow_offset_y", by.GetThemeConstant("shadow_offset_y"));
+                notable.AddThemeConstantOverride("shadow_outline_size", by.GetThemeConstant("shadow_outline_size"));
+                mapperBox.AddChild(notable);
+
+                if (width > remaining)
+                {
+                    notable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+                    break;
+                }
+
+                remaining -= width;
+                continue;
+            }
+
             var name = (Label)by.Duplicate();
             name.RemoveThemeColorOverride("font_color");
             name.Text = text;
@@ -289,6 +329,20 @@ public partial class MapCard : PanelContainer
 
             remaining -= width;
         }
+    }
+
+    private static string gradientText(string text)
+    {
+        var result = new System.Text.StringBuilder();
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            float progress = text.Length > 1 ? i / (float)(text.Length - 1) : 1;
+            string character = text[i] == '[' ? "[lb]" : text[i].ToString();
+            result.Append("[color=#").Append(notableGradient.Sample(progress).ToHtml(false)).Append(']').Append(character).Append("[/color]");
+        }
+
+        return result.ToString();
     }
 
     public void SetHovered(bool hovered)
