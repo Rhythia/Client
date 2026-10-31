@@ -557,9 +557,11 @@ vertical_alignment = 1
 
 [node name="Duration" type="Label" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row/Map/Content/Info/Bottom" unique_id=1613545318]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
 text = "00:00"
 label_settings = SubResource("LabelSettings_vofg3")
+vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="RightPanel" type="Control" parent="Holder/Background/Layout/Results/RowsMargin/Rows/MapCardTemplate/Row" unique_id=1150644064]
