@@ -314,6 +314,17 @@ popup/item_1/id = 1
 popup/item_2/text = "Both"
 popup/item_2/id = 2
 
+[node name="Verified" type="CheckBox" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=3268424]
+layout_mode = 2
+tooltip_text = "Maps that have been manually picked for beginners"
+button_pressed = true
+text = "Verified only"
+
+[node name="Notable" type="CheckBox" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/Filters" unique_id=400853412]
+layout_mode = 2
+tooltip_text = "Maps made by at least one notable mapper"
+text = "Notable only"
+
 [node name="ActiveFilters" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1401022026]
 visible = false
 layout_mode = 2

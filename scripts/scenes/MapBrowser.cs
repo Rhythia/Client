@@ -23,6 +23,8 @@ public partial class MapBrowser : Control
     private Button refresh;
     private MenuButton difficulty;
     private OptionButton status;
+    private CheckBox verified;
+    private CheckBox notable;
     private Timer searchTimer;
     private HBoxContainer filters;
     private ScrollContainer results;
@@ -79,6 +81,8 @@ public partial class MapBrowser : Control
         refresh = searchBar.GetNode<Button>("Refresh");
         difficulty = topBar.GetNode<HBoxContainer>("Filters").GetNode<MenuButton>("Difficulty");
         status = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Status");
+        verified = topBar.GetNode<HBoxContainer>("Filters").GetNode<CheckBox>("Verified");
+        notable = topBar.GetNode<HBoxContainer>("Filters").GetNode<CheckBox>("Notable");
         searchTimer = GetNode<Timer>("SearchTimer");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
         mapCardTemplate = results.GetNode<MapCard>("RowsMargin/Rows/MapCardTemplate");
@@ -107,6 +111,8 @@ public partial class MapBrowser : Control
         results.GuiInput += onResultsInput;
         difficulty.GetPopup().IdPressed += toggleDifficulty;
         status.ItemSelected += _ => refreshResults();
+        verified.Toggled += _ => refreshResults();
+        notable.Toggled += _ => refreshResults();
         previous.Pressed += () => changePage(-page_size);
         next.Pressed += () => changePage(page_size);
 
@@ -382,6 +388,8 @@ public partial class MapBrowser : Control
         return new MapQueryParameters
         {
             Limit = page_size,
+            Notable = notable.ButtonPressed,
+            Verified = verified.ButtonPressed,
             Offset = offset,
             Query = search.Text.Trim(),
             SortBy = sort.Selected switch

@@ -24,6 +24,10 @@ public static class Maps
             query["difficulty"] = string.Join(",", queryParameters.Difficulties);
         if (queryParameters.Status.Length > 0)
             query["status"] = string.Join(",", queryParameters.Status);
+        if (queryParameters.Notable)
+            query["notable"] = "true";
+        if (queryParameters.Verified)
+            query["verified"] = "true";
 
         string url = $"/maps?{query}";
 
