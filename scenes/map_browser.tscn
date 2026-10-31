@@ -325,38 +325,6 @@ layout_mode = 2
 tooltip_text = "Maps made by at least one notable mapper"
 text = "Notable only"
 
-[node name="ActiveFilters" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1401022026]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters" unique_id=1844162903]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Scroll" type="ScrollContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters" unique_id=882056051]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Tags" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters/Scroll" unique_id=403074119]
-layout_mode = 2
-
-[node name="Clear" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/ActiveFilters" unique_id=1284947479]
-layout_mode = 2
-text = "Clear filters"
-
-[node name="DownloadStatus" type="HBoxContainer" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar" unique_id=1484611059]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/DownloadStatus" unique_id=1525450065]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Retry" type="Button" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/DownloadStatus" unique_id=1000402623]
-layout_mode = 2
-text = "Retry failed"
-
 [node name="Results" type="ScrollContainer" parent="Holder/Background/Layout" unique_id=716497821]
 layout_mode = 2
 size_flags_vertical = 3
