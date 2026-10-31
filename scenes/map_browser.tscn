@@ -8,13 +8,14 @@
 [ext_resource type="Script" uid="uid://cexyomdgasvme" path="res://scripts/scenes/MapCard.cs" id="5_vr0hc"]
 [ext_resource type="FontFile" uid="uid://dwojpwm7o4l1a" path="res://fonts/Nunito/Nunito-Black.ttf" id="6_ueqk1"]
 [ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="7_ueqk1"]
+[ext_resource type="Shader" uid="uid://rngh60dyh10b" path="res://scripts/shaders/outline.gdshader" id="9_vjpuo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
 bg_color = Color(0, 0, 0, 0.8784314)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5ncw"]
 bg_color = Color(0, 0, 0, 0.98039216)
@@ -161,6 +162,30 @@ corner_radius_bottom_left = 5
 bg_color = Color(0, 0, 0, 0.39215687)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_27haj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jydku"]
+shader = ExtResource("9_vjpuo")
+shader_parameter/outline_color = Color(0.05, 0.05, 0.05, 1)
+shader_parameter/outline_opacity = 1.0
+shader_parameter/light_color = Color(0.79, 0, 0.27, 1)
+shader_parameter/cursor_light_color = Color(0.15, 0.15, 0.15, 1)
+shader_parameter/fill = 0.0
+shader_parameter/glow_radius = 350.0
+shader_parameter/glow_exponent = 2.0
+shader_parameter/light_position = Vector2(-10000, 0)
+shader_parameter/cursor_position = Vector2(0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u7sc7"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="Map Browser" type="ColorRect" unique_id=1634674963]
 anchors_preset = 15
@@ -665,6 +690,17 @@ horizontal_alignment = 1
 layout_mode = 2
 disabled = true
 text = "Next →"
+
+[node name="Outline" type="Panel" parent="Holder" unique_id=688247658]
+material = SubResource("ShaderMaterial_jydku")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u7sc7")
 
 [node name="SearchTimer" type="Timer" parent="." unique_id=1241663088]
 wait_time = 0.3
