@@ -11,7 +11,7 @@ public partial class MapBrowser : Control
 
     public bool Shown;
 
-    public bool IsDragging => dragging;
+    public bool IsDragging { get; private set; }
 
     private Button hideButton;
     private Panel holder;
@@ -42,7 +42,6 @@ public partial class MapBrowser : Control
     private double scrollTarget;
     private double scrollPosition;
     private bool dragCandidate;
-    private bool dragging;
     private float dragStartY;
     private float lastDragY;
     private bool isScrolling => browseMode.Selected == 1;
@@ -144,13 +143,13 @@ public partial class MapBrowser : Control
             {
                 float mouseY = GetViewport().GetMousePosition().Y;
 
-                if (!dragging && Math.Abs(mouseY - dragStartY) > drag_threshold)
+                if (!IsDragging && Math.Abs(mouseY - dragStartY) > drag_threshold)
                 {
-                    dragging = true;
+                    IsDragging = true;
                     updateCardHover();
                 }
 
-                if (dragging)
+                if (IsDragging)
                     scrollMomentum += (lastDragY - mouseY) * drag_scroll_factor;
 
                 lastDragY = mouseY;
@@ -195,10 +194,10 @@ public partial class MapBrowser : Control
 
     private void endDrag()
     {
-        bool wasDragging = dragging;
+        bool wasDragging = IsDragging;
 
         dragCandidate = false;
-        dragging = false;
+        IsDragging = false;
 
         if (wasDragging)
             updateCardHover();
@@ -211,7 +210,7 @@ public partial class MapBrowser : Control
         foreach (Node child in mapCardTemplate.GetParent().GetChildren())
         {
             if (child is MapCard card && card != mapCardTemplate)
-                card.SetHovered(!dragging && card.GetGlobalRect().HasPoint(mousePosition));
+                card.SetHovered(!IsDragging && card.GetGlobalRect().HasPoint(mousePosition));
         }
     }
 
