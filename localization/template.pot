@@ -1,0 +1,957 @@
+# Translation notes:
+# {n} are placeholders. What they contain will be written in a comment next to the translation key.
+# To add literal curly braces to a translation that has placeholders use double curly braces.
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Rhythia-v0.2.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "(AD) Approach distance of hit objects, adjusts how far away hit objects spawn (bigger # = further)"
+msgstr ""
+
+msgid "(AR) Approach rate of hit objects, adjusts how fast hit objects come to the playfield (bigger # = faster)"
+msgstr ""
+
+msgid "(Not implemented) Adjusts the HUD parallax"
+msgstr ""
+
+msgid "2x (rough)"
+msgstr ""
+
+msgid "4x (smooth)"
+msgstr ""
+
+msgid "8x (smoothest)"
+msgstr ""
+
+msgid "Absolute Input"
+msgstr ""
+
+msgid "Absolute Sensitivity"
+msgstr ""
+
+msgid "Add Video"
+msgstr ""
+
+msgid "Adjusted to 1000 DPI"
+msgstr ""
+
+msgid "Adjusts absolute area scale"
+msgstr ""
+
+msgid "Adjusts audio offset in milliseconds"
+msgstr ""
+
+msgid "Adjusts cursor sensitivity"
+msgstr ""
+
+msgid "Adjusts how smooth, or harsh, the HP Bar eases in while it updates"
+msgstr ""
+
+msgid "Adjusts maximum frames per second, we recommend this being 2x your refresh rate"
+msgstr ""
+
+msgid "Adjusts the camera parallax"
+msgstr ""
+
+msgid "Adjusts the cursor opacity"
+msgstr ""
+
+msgid "Adjusts the cursor scale, does not change hitboxes"
+msgstr ""
+
+msgid "Adjusts the detail for the trail, a high value may impact performance"
+msgstr ""
+
+msgid "Adjusts the field of view"
+msgstr ""
+
+msgid "Adjusts the note opacity curve, a higher value will make any sort of transparency appear more quickly"
+msgstr ""
+
+msgid "Adjusts trail visibility time"
+msgstr ""
+
+msgid "Alphabetical"
+msgstr ""
+
+msgid "Alt. Combo Counter"
+msgstr ""
+
+msgid "Always Play Hit Sound"
+msgstr ""
+
+msgid "Anti Aliasing"
+msgstr ""
+
+msgid "Approach Distance"
+msgstr ""
+
+msgid "Approach Rate"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Attempts"
+msgstr ""
+
+msgid "Audio control for hit sound"
+msgstr ""
+
+msgid "Audio control for menu music"
+msgstr ""
+
+msgid "Audio control for miss sound"
+msgstr ""
+
+msgid "Audio control for other sound effects"
+msgstr ""
+
+msgid "Audio control for the music"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Auto Restart On Death"
+msgstr ""
+
+msgid "Automatically import settings from nightly"
+msgstr ""
+
+msgid "Automatically plays the jukebox on start"
+msgstr ""
+
+msgid "Autoplay Jukebox"
+msgstr ""
+
+#. {0} = author link
+msgid "Available on {0}"
+msgstr ""
+
+msgid "Average Accuracy"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Button"
+msgstr ""
+
+msgid "CATEGORY"
+msgstr ""
+
+msgid "CONTRIBUTORS"
+msgstr ""
+
+msgid "CTRL + O"
+msgstr ""
+
+msgid "Camera Mode"
+msgstr ""
+
+msgid "Camera Parallax"
+msgstr ""
+
+msgid "CameraMode"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Change the game's language"
+msgstr ""
+
+msgid "Changes how the window is displayed, Borderless may fix some issues with drawing tablets"
+msgstr ""
+
+msgid "Changes the color of the space (only when space hit effects is off)"
+msgstr ""
+
+msgid "Choose file"
+msgstr ""
+
+msgid "Choose the path to the User Folder"
+msgstr ""
+
+msgid "Colors"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+#. {0} = name of the skin
+msgid "Could not find skin {0}"
+msgstr ""
+
+msgid "Could not set port, defaulting to {0}"
+msgstr ""
+
+msgid "Create Profile"
+msgstr ""
+
+#. {0} = profile name
+msgid "Created profile '{0}'"
+msgstr ""
+
+msgid "Cursor Drift"
+msgstr ""
+
+msgid "Cursor Opacity"
+msgstr ""
+
+msgid "Cursor Rotation"
+msgstr ""
+
+msgid "Cursor Scale"
+msgstr ""
+
+msgid "Cursor Trail"
+msgstr ""
+
+msgid "Cursor Trail Detail"
+msgstr ""
+
+msgid "Cursor Trail Time"
+msgstr ""
+
+msgid "Custom Space Color"
+msgstr ""
+
+msgid "DISQUALIFIED"
+msgstr ""
+
+msgid "Degrees to rotate the cursor by every second"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+#. {0} = map pretty title
+msgid "Deleted {0}!"
+msgstr ""
+
+msgid "Difficulty"
+msgstr ""
+
+msgid "Display FPS"
+msgstr ""
+
+msgid "Done!"
+msgstr ""
+
+msgid "Done! Opening export..."
+msgstr ""
+
+#. {0} = download progress in percentage
+msgid "Downloading {0} %"
+msgstr ""
+
+msgid "EXPAND"
+msgstr ""
+
+msgid "EXTRAS"
+msgstr ""
+
+msgid "Enable Hit Sound"
+msgstr ""
+
+msgid "Enable Menu Music"
+msgstr ""
+
+msgid "Enable Miss Sound"
+msgstr ""
+
+msgid "Enables a dark radial fade to help with visibility (impacts performance significantly)"
+msgstr ""
+
+msgid "Enables grid guides"
+msgstr ""
+
+msgid "Enables hit sound playback"
+msgstr ""
+
+msgid "Enables menu music playback when the menu is quiet"
+msgstr ""
+
+msgid "Enables miss sound playback"
+msgstr ""
+
+#. {0} = export file path
+msgid "Exporting to {0}"
+msgstr ""
+
+msgid "Exports map into a .phxm file to share easily"
+msgstr ""
+
+msgid "Extras"
+msgstr ""
+
+msgid "FAILED"
+msgstr ""
+
+msgid "FPS"
+msgstr ""
+
+msgid "Fade In"
+msgstr ""
+
+msgid "Fade Out"
+msgstr ""
+
+msgid "Favorite"
+msgstr ""
+
+msgid "Favourite Map"
+msgstr ""
+
+msgid "Field of View"
+msgstr ""
+
+#. {0} = number of maps
+msgid "Finished importing {0} map"
+msgid_plural "Finished importing {0} maps"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Full Combos"
+msgstr ""
+
+msgid "GIVE UP"
+msgstr ""
+
+msgid "Game Playtime"
+msgstr ""
+
+msgid "Game Space"
+msgstr ""
+
+msgid "Games Opened"
+msgstr ""
+
+msgid "Grid Guides"
+msgstr ""
+
+msgid "HP Bar Easing Value"
+msgstr ""
+
+msgid "HUD Parallax"
+msgstr ""
+
+#. Hex as in hexadecimal
+msgid "Hex"
+msgstr ""
+
+msgid "Hide Notifications"
+msgstr ""
+
+msgid "Hides health bar, song duration, and song name"
+msgstr ""
+
+msgid "Hides notifications, important ones will still display"
+msgstr ""
+
+msgid "Hides the regular left and right panels, and instead displays a simple miss counter on the right"
+msgstr ""
+
+msgid "Highest Combo"
+msgstr ""
+
+msgid "Highest Score"
+msgstr ""
+
+msgid "Hit Score Popups"
+msgstr ""
+
+msgid "Hit Sound Volume"
+msgstr ""
+
+msgid "Hold R to Quit"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import Nightly Colorsets"
+msgstr ""
+
+msgid "Import Nightly Meshes"
+msgstr ""
+
+msgid "Import Nightly Settings"
+msgstr ""
+
+msgid "Import manually from a nightly settings file"
+msgstr ""
+
+#. {0} = imported count (colorsets)
+msgid "Imported {0} colorsets from nightly"
+msgstr ""
+
+#. {0} = imported count (meshes)
+msgid "Imported {0} meshes from nightly"
+msgstr ""
+
+#. {0} = number of maps
+msgid "Importing {0} map"
+msgid_plural "Importing {0} maps"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Imports colorsets from the nightly folder"
+msgstr ""
+
+msgid "Imports meshes from the nightly folder"
+msgstr ""
+
+msgid "Imports settings from the nightly client"
+msgstr ""
+
+msgid "Information goes here"
+msgstr ""
+
+#. {0} = maps synced
+#. {1} = total maps that have to be synced
+msgid "Initializing maps ({0}/{1})"
+msgstr ""
+
+msgid "Inspired by "
+msgstr ""
+
+msgid "Installing"
+msgstr ""
+
+msgid "Invalid User Path. Setting has not been changed."
+msgstr ""
+
+msgid "Invalid map path"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+#. {0} = name of the loaded profile
+msgid "Loaded profile [{0}]"
+msgstr ""
+
+#. {0} = skin name
+msgid "Loaded skin [{0}]"
+msgstr ""
+
+msgid "Local Offset"
+msgstr ""
+
+msgid "Local Offset: {0}ms"
+msgstr ""
+
+msgid "Lock"
+msgstr ""
+
+msgid "Lock FPS"
+msgstr ""
+
+msgid "Locks maximum frames per second"
+msgstr ""
+
+msgid "Map file corrupted aaaaa"
+msgstr ""
+
+msgid "Mappers"
+msgstr ""
+
+msgid "Master Volume"
+msgstr ""
+
+msgid "Master volume control for all audio"
+msgstr ""
+
+msgid "Menu Music Volume"
+msgstr ""
+
+msgid "Menu Space"
+msgstr ""
+
+msgid "Miss Popups"
+msgstr ""
+
+msgid "Miss Sound Volume"
+msgstr ""
+
+msgid "Modifiers"
+msgstr ""
+
+msgid "Moves the Combo Counter to the HUD"
+msgstr ""
+
+msgid "Music Volume"
+msgstr ""
+
+msgid "NOTE: Pausing disqualifies your pass"
+msgstr ""
+
+msgid "Nightly settings not found, choose the settings file manually."
+msgstr ""
+
+msgid "No Previous User Folder Found"
+msgstr ""
+
+msgid "Note Mesh"
+msgstr ""
+
+msgid "Note Opacity"
+msgstr ""
+
+msgid "Note Opacity Exponent"
+msgstr ""
+
+msgid "Note Size"
+msgstr ""
+
+msgid "Notes Hit"
+msgstr ""
+
+msgid "Notes Missed"
+msgstr ""
+
+msgid "Off (roughest)"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "On death, automatically restart the run instead of going to the results screen"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Open File(s)"
+msgstr ""
+
+msgid "Open Link"
+msgstr ""
+
+msgid "Open Previous User Folder"
+msgstr ""
+
+msgid "Open a Directory"
+msgstr ""
+
+msgid "Open a File"
+msgstr ""
+
+msgid "Open the path to the previously used User Folder"
+msgstr ""
+
+msgid "Open the skin folder"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Overrides the skin's background space for gameplay"
+msgstr ""
+
+msgid "Overrides the skin's background space for the menu"
+msgstr ""
+
+msgid "Overrides the skin's colorset"
+msgstr ""
+
+msgid "Overrides the skin's note mesh"
+msgstr ""
+
+msgid "PAUSED"
+msgstr ""
+
+msgid "PLAY"
+msgstr ""
+
+#. {0} = translation for "Settings"
+#. {1} = translation for "Other"
+#. {2} = translation for "Open Previous User Folder"
+msgid "PS: you can find the old folder in {0} > {1} > {2}"
+msgstr ""
+
+msgid "Passes"
+msgstr ""
+
+msgid "Path To User Folder"
+msgstr ""
+
+msgid "Pick Color"
+msgstr ""
+
+msgid "Play"
+msgstr ""
+
+msgid "Play (Space)"
+msgstr ""
+
+msgid "Playtesting Menu"
+msgstr ""
+
+msgid "Popup Header"
+msgstr ""
+
+msgid "Press F2 to hide replay UI, F3 to hide orthogonal camera, F to toggle note fade out, P to toggle note pushback"
+msgstr ""
+
+msgid "Press Space to complete"
+msgstr ""
+
+msgid "Press Space to skip"
+msgstr ""
+
+msgid "Preview"
+msgstr ""
+
+msgid "Pushback"
+msgstr ""
+
+msgid "QUIT"
+msgstr ""
+
+msgid "Quit"
+msgstr ""
+
+msgid "RELEASE NOTES"
+msgstr ""
+
+msgid "RESTART"
+msgstr ""
+
+msgid "RESULTS"
+msgstr ""
+
+msgid "RESUME"
+msgstr ""
+
+msgid "RHM file corrupted"
+msgstr ""
+
+msgid "Rage Quits"
+msgstr ""
+
+msgid "Random"
+msgstr ""
+
+msgid "Record Replays"
+msgstr ""
+
+msgid "Refresh Preview"
+msgstr ""
+
+msgid "Replay file corrupted"
+msgstr ""
+
+msgid "Replay map not found"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Reset to Defaults"
+msgstr ""
+
+msgid "Resets all settings to default values"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Restart And Copy"
+msgstr ""
+
+msgid "Restart required."
+msgstr ""
+
+msgid "Rhythia"
+msgstr ""
+
+msgid "SETTINGS"
+msgstr ""
+
+msgid "SFX Volume"
+msgstr ""
+
+msgid "SKIN PREVIEW"
+msgstr ""
+
+msgid "SSMapV1 file corrupted"
+msgstr ""
+
+msgid "SSPM file corrupted"
+msgstr ""
+
+msgid "SSPMV1 file corrupted"
+msgstr ""
+
+msgid "SSPMV2 file corrupted"
+msgstr ""
+
+msgid "START"
+msgstr ""
+
+msgid "STATISTICS"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Seek forward to skip"
+msgstr ""
+
+msgid "Selected skin for the game"
+msgstr ""
+
+msgid "Sensitivity"
+msgstr ""
+
+msgid "Set User Folder Path"
+msgstr ""
+
+msgid "Set the path where Rhythia stores it's files"
+msgstr ""
+
+msgid "Sets the maximum opacity for the notes"
+msgstr ""
+
+msgid "Sets the size of the notes, does not change hitboxes"
+msgstr ""
+
+msgid "Setting"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Settings file corrupted"
+msgstr ""
+
+msgid "Settings reset to default successfully!"
+msgstr ""
+
+msgid "Simple HUD"
+msgstr ""
+
+msgid "Skin"
+msgstr ""
+
+msgid "Skin Folder"
+msgstr ""
+
+msgid "Smoothes edges, at the cost of performance"
+msgstr ""
+
+msgid "Space Color"
+msgstr ""
+
+msgid "Space Effects"
+msgstr ""
+
+msgid "Space Hit Effects"
+msgstr ""
+
+msgid "Speed"
+msgstr ""
+
+msgid "Spin"
+msgstr ""
+
+msgid "Start From"
+msgstr ""
+
+msgid "Starting from when hit objects spawn in, the distance required to travel before becoming fully opaque"
+msgstr ""
+
+msgid "Super Simple HUD"
+msgstr ""
+
+msgid "Takes \"Start From\" and \"Speed\" from external editors like the SSQE when using the \"Playtest\" button"
+msgstr ""
+
+msgid "The nightly colorsets folder doesn't exist"
+msgstr ""
+
+msgid "The nightly meshes folder doesn't exist"
+msgstr ""
+
+msgid "The transparency of hit objects when going past the playfield"
+msgstr ""
+
+#. {0} = link
+msgid "This will open the following link:{0}"
+msgstr ""
+
+msgid "This will overwrite the contents of the new folder and double the game in size unless you remove the old files."
+msgstr ""
+
+msgid "Time spent strictly being in a map"
+msgstr ""
+
+msgid "Toggle Skin Preview"
+msgstr ""
+
+msgid "Toggles V-Sync when in menus"
+msgstr ""
+
+msgid "Toggles a popup on a hit"
+msgstr ""
+
+msgid "Toggles a popup on a miss"
+msgstr ""
+
+msgid "Toggles a trail for your cursor"
+msgstr ""
+
+msgid "Toggles absolute inputs"
+msgstr ""
+
+msgid "Toggles cursor drift"
+msgstr ""
+
+msgid "Toggles hit sound to always play"
+msgstr ""
+
+msgid "Toggles non-hit effects for the game space"
+msgstr ""
+
+msgid "Toggles note hit effects for the game space"
+msgstr ""
+
+msgid "Toggles recording for replays"
+msgstr ""
+
+msgid "Toggles the framerate counter in the corner"
+msgstr ""
+
+msgid "Toggles the use of a custom space color"
+msgstr ""
+
+msgid "Toggles whether hit objects are visible past the playfield or not"
+msgstr ""
+
+msgid "Total Distance"
+msgstr ""
+
+msgid "Total Playtime"
+msgstr ""
+
+msgid "Total Score"
+msgstr ""
+
+msgid "Unsupported file format"
+msgstr ""
+
+msgid "Update Found"
+msgstr ""
+
+msgid "Use Cursor in Menus"
+msgstr ""
+
+msgid "Use Editor Playtest Settings"
+msgstr ""
+
+msgid "User Folder"
+msgstr ""
+
+msgid "Uses the skin's cursor instead of the native cursor"
+msgstr ""
+
+msgid "V-Sync in Menus"
+msgstr ""
+
+msgid "VIEW"
+msgstr ""
+
+msgid "Visibility Assist"
+msgstr ""
+
+msgid "WARNING: THIS RESETS YOUR CURRENT PROFILE"
+msgstr ""
+
+msgid "Watch Replay"
+msgstr ""
+
+msgid "Window Mode"
+msgstr ""
+
+msgid "Would you like to download the new version?"
+msgstr ""
+
+msgid "Would you like to restart the game?"
+msgstr ""
+
+msgid "You have no previous user folder. Either you didn't change your User Folder (and that's fine) or the record of it got deleted."
+msgstr ""
+
+#. {0} = mapper
+msgid "by {0}"
+msgstr ""
+
+msgid "default"
+msgstr ""
+
+msgid "input"
+msgstr ""
+
+msgid "of which you are right now..."
+msgstr ""
+
+msgid "profile name"
+msgstr ""
+
+msgid "skin"
+msgstr ""
+
+#. {0} = number of days
+msgid "{0} day ago"
+msgid_plural "{0} days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#. {0} = number of hours
+msgid "{0} hour ago"
+msgid_plural "{0} hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#. {0} = imported PHXM folder
+msgid "{0} is not the proper format!"
+msgstr ""
+
+#. {0} = number of minutes
+msgid "{0} minute ago"
+msgid_plural "{0} minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#. {0} = number of notes
+msgid "{0} notes"
+msgstr ""
+
+#. {0} = number of seconds
+msgid "{0} second ago"
+msgid_plural "{0} seconds ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#. {0} = time
+#. {1} = difficulty
+#. {2} = mappers
+msgid "{0} — {1} by {2}"
+msgstr ""

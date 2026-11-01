@@ -22,6 +22,10 @@ public interface ISettingsItem
 
     string Placeholder { get; }
 
+    bool LineTranslation { get; }
+
+    bool ListTranslation { get; }
+
     ISettingsList List { get; }
 
     SettingsSlider Slider { get; }

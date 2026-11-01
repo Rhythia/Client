@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Godot;
 
@@ -45,4 +46,12 @@ public partial class Constants : Node
         new(0x9d6effff),
         new(0x0094fcff),
     ];
+
+    public static readonly string[] SUPPORTED_LANGUAGES = ["en_US"]; // first is default
+
+    public static readonly Dictionary<string, string> ALIAS_TO_LANGCODE = new()
+    {
+        { "English (United States)", "en_US" },
+        { "Italian (Italy)", "it_IT" },
+    };
 }
