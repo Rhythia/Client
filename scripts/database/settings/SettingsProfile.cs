@@ -292,16 +292,10 @@ public partial class SettingsProfile
     #region Video
 
     /// <summary>
-    /// Toggles the window to Fullsceen
+    /// Changes how the window is displayed
     /// </summary>
     [Order]
-    public SettingsItem<bool> Fullscreen { get; private set; }
-
-    /// <summary>
-    /// Toggles Borderless Fullscreen mode if Fullscreen is enabled
-    /// </summary>
-    [Order]
-    public SettingsItem<bool> BorderlessFullscreen { get; private set; }
+    public SettingsItem<string> WindowMode { get; private set; }
 
     /// <summary>
     /// Locks maximum frames per second
@@ -1077,22 +1071,14 @@ public partial class SettingsProfile
 
         #region Video
 
-        Fullscreen = new(true)
+        WindowMode = new(nameof(WindowDisplayMode.Fullscreen))
         {
-            Id = "Fullscreen",
-            Title = "Fullscreen",
-            Description = "Toggles the window to fullscreen",
+            Id = "WindowMode",
+            Title = "Window Mode",
+            Description = "Changes how the window is displayed, Borderless may fix some issues with drawing tablets",
             Section = SettingsSection.Video,
             UpdateAction = (_, _) => updateWindowMode(),
-        };
-
-        BorderlessFullscreen = new(false)
-        {
-            Id = "BorderlessFullscreen",
-            Title = "Borderless Fullscreen",
-            Description = "Alters the Fullscreen toggle to use Borderless fullscreen instead of Exclusive, may fix some issues with drawing tablets",
-            Section = SettingsSection.Video,
-            UpdateAction = (_, _) => updateWindowMode(),
+            List = new(nameof(WindowDisplayMode.Fullscreen)) { Values = [.. Enum.GetNames<WindowDisplayMode>()] },
         };
 
         LockFPS = new(false)
@@ -1601,11 +1587,14 @@ public partial class SettingsProfile
 
     private void updateWindowMode()
     {
-        var windowMode = Fullscreen
-            ? (!BorderlessFullscreen ? DisplayServer.WindowMode.ExclusiveFullscreen : DisplayServer.WindowMode.Fullscreen)
-            : DisplayServer.WindowMode.Windowed;
-
-        DisplayServer.WindowSetMode(windowMode);
+        DisplayServer.WindowSetMode(
+            Enum.Parse<WindowDisplayMode>(WindowMode.Value) switch
+            {
+                WindowDisplayMode.Fullscreen => DisplayServer.WindowMode.ExclusiveFullscreen,
+                WindowDisplayMode.Borderless => DisplayServer.WindowMode.Fullscreen,
+                _ => DisplayServer.WindowMode.Windowed,
+            }
+        );
     }
 
     private static List<string> getAvailableMeshes()
@@ -1734,7 +1723,10 @@ public partial class SettingsProfile
             ["SimpleHUD"] = () => getSetting<bool>("simple_hud") ?? nightlyProfile.SimpleHUD,
             ["HitPopups"] = () => getSetting<bool>("score_popup") ?? nightlyProfile.HitPopups,
             ["MissPopups"] = () => getSetting<bool>("show_miss_effect") ?? nightlyProfile.MissPopups,
-            ["Fullscreen"] = () => getSetting<bool>("window_fullscreen") ?? nightlyProfile.Fullscreen,
+            ["WindowMode"] = () =>
+                getSetting<bool>("window_fullscreen") is bool fullscreen
+                    ? (fullscreen ? nameof(WindowDisplayMode.Fullscreen) : nameof(WindowDisplayMode.Windowed))
+                    : nightlyProfile.WindowMode,
             ["FPS"] = () => getSetting<int>("target_fps") ?? nightlyProfile.FPS,
             ["VolumeMaster"] = () => 100,
             ["VolumeMusic"] = () => importVolume("music_volume", 70),
