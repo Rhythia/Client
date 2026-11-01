@@ -52,7 +52,7 @@ public partial class MapCard : PanelContainer
 
     private Map downloadedMap;
 
-    private static readonly Gradient notableGradient = new() { Offsets = [0, 1], Colors = [new Color(0xffa5b1ff), new Color(0xff2846ff)] };
+    private static readonly Gradient notable_gradient = new() { Offsets = [0, 1], Colors = [new Color(0xffa5b1ff), new Color(0xff2846ff)] };
 
     private string[] mapperNames = [];
     private string[] notableMapperNames = [];
@@ -338,7 +338,7 @@ public partial class MapCard : PanelContainer
         {
             float progress = text.Length > 1 ? i / (float)(text.Length - 1) : 1;
             string character = text[i] == '[' ? "[lb]" : text[i].ToString();
-            result.Append("[color=#").Append(notableGradient.Sample(progress).ToHtml(false)).Append(']').Append(character).Append("[/color]");
+            result.Append("[color=#").Append(notable_gradient.Sample(progress).ToHtml(false)).Append(']').Append(character).Append("[/color]");
         }
 
         return result.ToString();
