@@ -47,7 +47,7 @@ public partial class Constants : Node
         new(0x0094fcff),
     ];
 
-    public static readonly string[] SUPPORTED_LANGUAGES = ["en_US"]; // first is default
+    public static readonly string[] SUPPORTED_LANGUAGES = ["en_US", "it_IT"]; // first is default
 
     public static readonly Dictionary<string, string> ALIAS_TO_LANGCODE = new()
     {
