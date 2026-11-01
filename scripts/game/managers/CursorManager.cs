@@ -20,6 +20,9 @@ public partial class CursorManager : Node
     private MeshInstance3D cursorMesh;
 
     [Export]
+    private MeshInstance3D bufferCursor;
+
+    [Export]
     private Camera3D camera;
 
     private SettingsProfile settings;
@@ -35,6 +38,7 @@ public partial class CursorManager : Node
         defaultCameraTransform = camera.Transform;
 
         cursorMesh ??= GetNode<MeshInstance3D>("Cursor");
+        bufferCursor ??= GetNode<MeshInstance3D>("BufferCursor");
         playerInputController ??= GetNode<PlayerInputController>("/PlayerInputController");
         replayManager ??= GetNode<ReplayManager>("ReplayManager");
     }
@@ -120,7 +124,7 @@ public partial class CursorManager : Node
 
         var attempt = runner.Attempt;
 
-        attempt.CameraMode.Process(attempt, replayManager, camera, cursors[cursorIndex], inputDelta, sensitivity);
+        attempt.CameraMode.Process(attempt, replayManager, camera, cursors[cursorIndex], bufferCursor, inputDelta, sensitivity);
     }
 
     public void UpdateAutoplayCursor(Vector2 position)
@@ -146,18 +150,20 @@ public partial class CursorManager : Node
 
             var mouseDelta = new Vector2(-yaw, -pitch) * (120f * Mathf.Pi);
 
-            attempt.CameraMode.Process(attempt, replayManager, camera, cursors[0], mouseDelta, 1f);
+            attempt.CameraMode.Process(attempt, replayManager, camera, cursors[0], bufferCursor, mouseDelta, 1f);
             return;
         }
 
         attempt.RawCursorPosition = position;
         attempt.CursorPosition = position;
+        attempt.BufferCursorPosition = position;
 
         Vector3 cursorPosition = new(position.X, position.Y, 0);
         camera.Position = new Vector3(0, 0, 3.76f) + cursorPosition * (float)settings.CameraParallax;
         camera.Rotation = Vector3.Zero;
 
         cursors[0].Position = cursorPosition;
+        bufferCursor.Position = cursorPosition;
     }
 
     // Reset everything to zero so it doesn't have infinite sensitivity
@@ -166,6 +172,7 @@ public partial class CursorManager : Node
         camera.Rotation = Vector3.Zero;
         runner.Attempt.RawCursorPosition = Vector2.Zero;
         runner.Attempt.CursorPosition = Vector2.Zero;
+        runner.Attempt.BufferCursorPosition = Vector2.Zero;
     }
 
     private void updateCursorRotation(double delta) =>
