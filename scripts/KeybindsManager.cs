@@ -58,9 +58,9 @@ public partial class KeybindsManager : Node
                 {
                     if (eventKey.Keycode == Key.F11 || (eventKey.AltPressed && (eventKey.Keycode == Key.Enter || eventKey.Keycode == Key.KpEnter)))
                     {
-                        bool value = DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed;
+                        bool windowed = DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed;
 
-                        settings.Fullscreen.Value = value;
+                        settings.WindowMode.Value = (windowed ? WindowDisplayMode.Fullscreen : WindowDisplayMode.Windowed).ToString();
                     }
                     break;
                 }
