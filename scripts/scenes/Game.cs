@@ -28,6 +28,12 @@ public partial class Game : BaseScene
     public static Attempt Attempt;
     public static bool StartQueued = false;
     private static double fadeoutToggleValue = -1;
+    private Panel quitOverlay;
+    private ColorRect quitProgressBar;
+    private Tween quitTween;
+    private double quitHoldTime;
+    private bool rKeyHeld;
+    private const double quit_hold_duration = 1;
 
     public override void _Ready()
     {
@@ -38,6 +44,8 @@ public partial class Game : BaseScene
         ReplayManager ??= GetNode<ReplayManager>("ReplayManager");
         CursorManager ??= GetNode<CursorManager>("CursorManager");
         PlayerInputController ??= GetNode<PlayerInputController>("PlayerInputController");
+        quitOverlay = GetNode<Panel>("QuitOverlay");
+        quitProgressBar = quitOverlay.GetNode<ColorRect>("Holder/ProgressBackground/ProgressBar");
 
         if (CursorManager == null)
             Logger.Error("No CursorManager found!");
@@ -69,6 +77,8 @@ public partial class Game : BaseScene
 
         PlayerInputController.OnTogglePaused += () =>
         {
+            resetQuitHold();
+
             if (Runner.ObjectIndicesStart[typeof(Note)] > 0 && Attempt.Progress < Attempt.Map.Notes[^1].Millisecond)
             {
                 Attempt.Qualifies = false;
@@ -149,11 +159,86 @@ public partial class Game : BaseScene
 
         PlayerInputController.OnTogglePushback += () => Attempt.Settings.Pushback.Value = !Attempt.Settings.Pushback;
         PlayerInputController.OnRestartPressed += Restart;
+        PlayerInputController.OnQuitPressed += () =>
+        {
+            if (!canHoldQuit() || rKeyHeld)
+                return;
+
+            resetQuitHold();
+            rKeyHeld = true;
+            quitOverlay.Show();
+            quitTween = CreateTween();
+            quitTween.TweenProperty(quitOverlay, "modulate", Colors.White, 0.15);
+        };
+        PlayerInputController.OnQuitReleased += resetQuitHold;
+    }
+
+    public override void _Process(double delta)
+    {
+        if (!rKeyHeld)
+            return;
+
+        if (!canHoldQuit())
+        {
+            resetQuitHold();
+            return;
+        }
+
+        quitHoldTime += delta;
+        float progress = (float)System.Math.Clamp(quitHoldTime / quit_hold_duration, 0, 1);
+        float width = quitProgressBar.GetParent<Control>().Size.X;
+        quitProgressBar.Size = new Vector2(width * progress, quitProgressBar.Size.Y);
+
+        if (quitHoldTime >= quit_hold_duration)
+        {
+            resetQuitHold();
+            Runner.GiveUp();
+        }
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationApplicationFocusOut)
+            resetQuitHold();
+    }
+
+    public override void Unload()
+    {
+        resetQuitHold();
+        base.Unload();
+    }
+
+    private bool canHoldQuit()
+    {
+        return Attempt != null
+            && !Attempt.Stopped
+            && !Attempt.IsReplay
+            && Runner.Playing
+            && !Menu.Shown
+            && !SettingsManager.Shown
+            && PlayerInputController.IsEnabled
+            && (!Rhythia.TempMode || PlaytestOverlay.PlaytestInit);
+    }
+
+    private void resetQuitHold()
+    {
+        rKeyHeld = false;
+        quitHoldTime = 0;
+        quitTween?.Kill();
+        quitTween = null;
+
+        if (quitOverlay != null)
+        {
+            quitOverlay.Hide();
+            quitOverlay.Modulate = new Color(1, 1, 1, 0);
+            quitProgressBar.Size = new Vector2(0, quitProgressBar.Size.Y);
+        }
     }
 
     public override void Load()
     {
         base.Load();
+        resetQuitHold();
 
         DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 
