@@ -12,6 +12,7 @@ public class CameraLock : CameraMode
         ReplayManager replayManager,
         Camera3D camera,
         MeshInstance3D cursor,
+        MeshInstance3D bufferCursor,
         Vector2 mouseDelta,
         float sensitivity
     )
@@ -29,6 +30,7 @@ public class CameraLock : CameraMode
         {
             attempt.RawCursorPosition = attempt.IsReplay ? replayManager.CursorPosition : attempt.RawCursorPosition + delta;
             attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
+            attempt.BufferCursorPosition = attempt.IsReplay ? replayManager.CursorPosition : attempt.BufferCursorPosition + delta;
         }
 
         var origin = new Vector3(0, 0, 3.75f);
@@ -45,10 +47,12 @@ public class CameraLock : CameraMode
         camera.Rotation = Vector3.Zero;
 
         Vector3 cursorPos = new(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
+        Vector3 bufferCursorPos = new(attempt.BufferCursorPosition.X, attempt.BufferCursorPosition.Y, 0);
 
         if (cursorPos.IsFinite())
         {
             cursor.Position = cursorPos;
+            bufferCursor.Position = bufferCursorPos;
         }
     }
 }

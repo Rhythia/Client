@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Godot;
 
 public class CameraSpin : CameraMode
@@ -12,6 +12,7 @@ public class CameraSpin : CameraMode
         ReplayManager replayManager,
         Camera3D camera,
         MeshInstance3D cursor,
+        MeshInstance3D bufferCursor,
         Vector2 mouseDelta,
         float sensitivity
     )
@@ -48,13 +49,16 @@ public class CameraSpin : CameraMode
 
         // Project Cursor from Camera's "ray cast"
         attempt.RawCursorPosition = cameraVector2 - lookVector2 * Mathf.Abs(camera.Position.Z / lookVector.Z);
+        attempt.BufferCursorPosition = attempt.RawCursorPosition;
         attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
 
         Vector3 cursorPos = new(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
+        Vector3 bufferCursorPos = new(attempt.BufferCursorPosition.X, attempt.BufferCursorPosition.Y, 0);
 
         if (cursorPos.IsFinite())
         {
             cursor.Position = cursorPos;
+            bufferCursor.Position = bufferCursorPos;
         }
     }
 }

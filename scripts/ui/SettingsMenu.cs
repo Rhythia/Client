@@ -10,11 +10,15 @@ public partial class SettingsMenu : ColorRect
     public static SettingsMenu Instance;
 
     public bool Shown = false;
+    public bool WasSkinPreviewToggled = false;
 
     private Dictionary<string, Panel> settingPanels = [];
     private Button hideButton;
+    private Button showSkinPreview;
+    private Button refreshPreview;
     private Panel holder;
     private Panel header;
+    private Panel skinPreviewPanel;
     private OptionButton profilesButton;
     private VBoxContainer sidebar;
     private Panel categories;
@@ -36,7 +40,10 @@ public partial class SettingsMenu : ColorRect
 
         hideButton = GetNode<Button>("Hide");
         holder = GetNode<Panel>("Holder");
+        skinPreviewPanel = GetNode<Panel>("SkinPreviewPanel");
         header = holder.GetNode<Panel>("Header");
+        showSkinPreview = header.GetNode<Button>("ShowSkinPreview");
+        refreshPreview = header.GetNode<Button>("RefreshSkinPreview");
         profilesButton = header.GetNode<OptionButton>("Profiles");
         sidebar = holder.GetNode("Sidebar").GetNode<VBoxContainer>("Container");
         categories = holder.GetNode<Panel>("Categories");
@@ -227,6 +234,8 @@ public partial class SettingsMenu : ColorRect
 
         hideButton.Pressed += HideMenu;
         ImportNightlyDialog.FileSelected += SettingsProfile.ImportFromNightlySettings;
+        showSkinPreview.Pressed += ToggleSkinPreview;
+        refreshPreview.Pressed += RefreshPreview;
         UserFolderDialog.DirSelected += SettingsProfile.ConfigureSetUserFolderPath;
     }
 
@@ -252,6 +261,26 @@ public partial class SettingsMenu : ColorRect
                     }
                     break;
             }
+        }
+    }
+
+    public override void _Draw()
+    {
+        if (WasSkinPreviewToggled)
+        {
+            int offsetPreview = GetWindow().Size[0] / 14;
+            int offsetHolder = GetWindow().Size[0] / -7;
+
+            holder.OffsetLeft = offsetHolder;
+            holder.OffsetRight = offsetHolder;
+
+            skinPreviewPanel.OffsetLeft = offsetPreview;
+            skinPreviewPanel.OffsetRight = offsetPreview;
+        }
+        else
+        {
+            holder.OffsetLeft = 0;
+            holder.OffsetRight = 0;
         }
     }
 
@@ -334,6 +363,44 @@ public partial class SettingsMenu : ColorRect
                 profilesButton.Select(i);
             }
         }
+    }
+
+    public void ToggleSkinPreview()
+    {
+        int offsetPreview = GetWindow().Size[0] / 14;
+        int offsetHolder = GetWindow().Size[0] / -7;
+
+        if (!WasSkinPreviewToggled)
+        {
+            skinPreviewPanel.Visible = true;
+
+            Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
+            tween.TweenProperty(skinPreviewPanel, "modulate", Color.Color8(255, 255, 255, 255), 0.25);
+            tween.TweenProperty(skinPreviewPanel, "offset_left", offsetPreview, 0.25);
+            tween.TweenProperty(skinPreviewPanel, "offset_right", offsetPreview, 0.25);
+            tween.TweenProperty(holder, "offset_left", offsetHolder, 0.25);
+            tween.TweenProperty(holder, "offset_right", offsetHolder, 0.25);
+
+            WasSkinPreviewToggled = true;
+        }
+        else
+        {
+            Tween tween = CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out).SetParallel();
+            tween.TweenProperty(skinPreviewPanel, "modulate", Color.Color8(0, 0, 0, 0), 0.25);
+            tween.TweenProperty(holder, "offset_left", 0, 0.25);
+            tween.TweenProperty(holder, "offset_right", 0, 0.25);
+
+            skinPreviewPanel.OffsetLeft = 0;
+            skinPreviewPanel.OffsetRight = 0;
+
+            WasSkinPreviewToggled = false;
+            skinPreviewPanel.Visible = false;
+        }
+    }
+
+    public void RefreshPreview()
+    {
+        SkinManager.Load();
     }
 
     private static void setupToggle(ISettingsItem setting, CheckButton button)
