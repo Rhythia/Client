@@ -5,12 +5,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 
+public record MapSearchResult(JsonElement[] Maps, int Total);
+
 public static class MapBrowserService
 {
-    public static async Task<JsonElement[]> Search(MapQueryParameters queryParameters)
+    public static async Task<MapSearchResult> Search(MapQueryParameters queryParameters)
     {
         using var result = await Maps.Search(queryParameters);
-        return [.. result.RootElement.GetProperty("maps").EnumerateArray().Select(e => e.Clone())];
+        JsonElement[] maps = [.. result.RootElement.GetProperty("maps").EnumerateArray().Select(e => e.Clone())];
+
+        return new MapSearchResult(maps, result.RootElement.GetProperty("total").GetInt32());
     }
 
     public static async Task<byte[]> GetMapFile(string fileUrl, CancellationToken token)

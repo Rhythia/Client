@@ -13,4 +13,6 @@ public class MapQueryParameters : QueryParameters
     public string Artist { get; set; }
     public int[] Difficulties { get; set; } = [];
     public string[] Status { get; set; } = [];
+    public bool Notable { get; set; }
+    public bool Verified { get; set; }
 }

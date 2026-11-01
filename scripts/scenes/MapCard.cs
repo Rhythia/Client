@@ -35,7 +35,7 @@ public partial class MapCard : PanelContainer
     private Label statusLabel;
     private Label durationLabel;
 
-    private RichTextLabel mappersLabel;
+    private HBoxContainer mapperBox;
 
     private TextureRect coverImage;
     private TextureRect blurCoverImage;
@@ -51,6 +51,11 @@ public partial class MapCard : PanelContainer
     private StyleBoxFlat downloadButtonStyle;
 
     private Map downloadedMap;
+
+    private static readonly Gradient notable_gradient = new() { Offsets = [0, 1], Colors = [new Color(0xffa5b1ff), new Color(0xff2846ff)] };
+
+    private string[] mapperNames = [];
+    private string[] notableMapperNames = [];
 
     private DownloadState state = DownloadState.NotDownloaded;
 
@@ -91,7 +96,7 @@ public partial class MapCard : PanelContainer
         statusLabel = statusPill.GetNode<Label>("Status");
         durationLabel = bottomText.GetNode<Label>("Duration");
 
-        mappersLabel = topText.GetNode<RichTextLabel>("Details/VBoxContainer/Mapper");
+        mapperBox = topText.GetNode<HBoxContainer>("Details/VBoxContainer/Mapper");
 
         coverImage = coverHolder.GetNode<TextureRect>("Cover");
         blurCoverImage = mapHolder.GetNode<TextureRect>("BlurCoverHolder/BlurCover");
@@ -108,8 +113,16 @@ public partial class MapCard : PanelContainer
     public void Bind(JsonElement map, CancellationTokenSource source)
     {
         titleLabel.Text = $"{map.GetProperty("artist").GetString()} - {map.GetProperty("title").GetString()}";
-        mappersLabel.Text =
-            $"[color=#c8c8c8]by[/color] {string.Join(", ", map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString()))}";
+        mapperNames = [.. map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString())];
+        notableMapperNames =
+        [
+            .. map.GetProperty("mappers")
+                .EnumerateArray()
+                .Where(x => x.GetProperty("isNotable").GetBoolean())
+                .Select(x => x.GetProperty("name").GetString()),
+        ];
+        mapperBox.Resized += updateMappers;
+        updateMappers();
         notablePill.Visible = map.GetProperty("mappers").EnumerateArray().Any(x => x.GetProperty("isNotable").GetBoolean());
 
         int difficulty = map.GetProperty("difficulty").GetInt32();
@@ -142,7 +155,7 @@ public partial class MapCard : PanelContainer
 
         MouseEntered += () =>
         {
-            if (state == DownloadState.Downloading)
+            if (state == DownloadState.Downloading || MapBrowser.Instance is { IsDragging: true })
                 return;
 
             mapCardTween?.Kill();
@@ -241,7 +254,105 @@ public partial class MapCard : PanelContainer
             tweenRightPanelColor(rightPanel, rightPanelCorners, state);
         };
 
-        _ = loadCover(map.GetProperty("covers").GetProperty("128"), coverImage, blurCoverImage, source);
+        JsonElement coverUrl =
+            map.TryGetProperty("covers", out var covers) && covers.ValueKind == JsonValueKind.Object && covers.TryGetProperty("128", out var cover128)
+                ? cover128
+                : default;
+
+        _ = loadCover(coverUrl, coverImage, blurCoverImage, Constants.DIFFICULTY_COLORS[difficulty], source);
+    }
+
+    private void updateMappers()
+    {
+        Label by = mapperBox.GetNode<Label>("By");
+
+        foreach (Node child in mapperBox.GetChildren())
+        {
+            if (child == by)
+                continue;
+
+            mapperBox.RemoveChild(child);
+            child.QueueFree();
+        }
+
+        Font font = by.GetThemeFont("font");
+        int fontSize = by.GetThemeFontSize("font_size");
+        float remaining = mapperBox.Size.X - by.GetMinimumSize().X;
+
+        for (int i = 0; i < mapperNames.Length; i++)
+        {
+            string text = i == 0 ? $" {mapperNames[i]}" : $", {mapperNames[i]}";
+            float width = font.GetStringSize(text, HorizontalAlignment.Left, -1, fontSize).X;
+
+            if (notableMapperNames.Contains(mapperNames[i]))
+            {
+                var notable = new RichTextLabel
+                {
+                    BbcodeEnabled = true,
+                    FitContent = true,
+                    ScrollActive = false,
+                    AutowrapMode = TextServer.AutowrapMode.Off,
+                    MouseFilter = MouseFilterEnum.Ignore,
+                    ClipContents = true,
+                    Text = i == 0 ? " " + gradientText(mapperNames[i]) : $"[color=#c8c8c8],[/color] {gradientText(mapperNames[i])}",
+                };
+                notable.AddThemeFontSizeOverride("normal_font_size", fontSize);
+                notable.AddThemeColorOverride("font_shadow_color", by.GetThemeColor("font_shadow_color"));
+                notable.AddThemeConstantOverride("shadow_offset_x", by.GetThemeConstant("shadow_offset_x"));
+                notable.AddThemeConstantOverride("shadow_offset_y", by.GetThemeConstant("shadow_offset_y"));
+                notable.AddThemeConstantOverride("shadow_outline_size", by.GetThemeConstant("shadow_outline_size"));
+                mapperBox.AddChild(notable);
+
+                if (width > remaining)
+                {
+                    notable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+                    break;
+                }
+
+                remaining -= width;
+                continue;
+            }
+
+            var name = (Label)by.Duplicate();
+            name.RemoveThemeColorOverride("font_color");
+            name.Text = text;
+            mapperBox.AddChild(name);
+
+            if (width > remaining)
+            {
+                name.ClipText = true;
+                name.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
+                name.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+                break;
+            }
+
+            remaining -= width;
+        }
+    }
+
+    private static string gradientText(string text)
+    {
+        var result = new System.Text.StringBuilder();
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            float progress = text.Length > 1 ? i / (float)(text.Length - 1) : 1;
+            string character = text[i] == '[' ? "[lb]" : text[i].ToString();
+            result.Append("[color=#").Append(notable_gradient.Sample(progress).ToHtml(false)).Append(']').Append(character).Append("[/color]");
+        }
+
+        return result.ToString();
+    }
+
+    public void SetHovered(bool hovered)
+    {
+        if (state == DownloadState.Downloading)
+            return;
+
+        mapCardTween?.Kill();
+        mapCardTween = tweenMapCard(this, blurCoverDim, rightPanel, contentContainer, downloadIcon, hovered);
+
+        downloadButton.SetMouseFilter(hovered ? MouseFilterEnum.Stop : MouseFilterEnum.Ignore);
     }
 
     private static async Task<Map> downloadMap(JsonElement fileUrl, string mapId, CancellationTokenSource source)
@@ -277,17 +388,28 @@ public partial class MapCard : PanelContainer
         }
     }
 
-    private static async Task loadCover(JsonElement coverUrl, TextureRect coverTexture, TextureRect blurCoverTexture, CancellationTokenSource source)
+    private static async Task loadCover(
+        JsonElement coverUrl,
+        TextureRect coverTexture,
+        TextureRect blurCoverTexture,
+        Color placeholderTint,
+        CancellationTokenSource source
+    )
     {
         var token = source.Token;
-        Texture2D cover = null;
+        Texture2D cover = SkinManager.Instance.Skin.MapListGridCoverBackgroundImage;
+        Color tint = placeholderTint;
 
         try
         {
-            if (!token.IsCancellationRequested && coverUrl.ValueKind != JsonValueKind.Null)
+            if (!token.IsCancellationRequested && coverUrl.ValueKind == JsonValueKind.String)
             {
                 var coverImage = await MapBrowserService.GetCoverImage(coverUrl.GetString(), token);
-                cover = ImageTexture.CreateFromImage(coverImage);
+                if (coverImage != null)
+                {
+                    cover = ImageTexture.CreateFromImage(coverImage);
+                    tint = Colors.White;
+                }
             }
         }
         catch (Exception exception)
@@ -300,7 +422,9 @@ public partial class MapCard : PanelContainer
             return;
 
         coverTexture.Texture = cover;
+        coverTexture.SelfModulate = tint;
         blurCoverTexture.Texture = cover;
+        blurCoverTexture.SelfModulate = tint;
     }
 
     private static Map getDownloadedMap(string hash)

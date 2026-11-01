@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,10 +24,18 @@ public static class Maps
             query["difficulty"] = string.Join(",", queryParameters.Difficulties);
         if (queryParameters.Status.Length > 0)
             query["status"] = string.Join(",", queryParameters.Status);
+        if (queryParameters.Notable)
+            query["notable"] = "true";
+        if (queryParameters.Verified)
+            query["verified"] = "true";
 
         string url = $"/maps?{query}";
 
         var response = await ApiClient.CLIENT.GetAsync(url);
+
+        if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            throw new RateLimitedException(response.Headers.RetryAfter?.Delta);
+
         response.EnsureSuccessStatusCode();
         string json = await response.Content.ReadAsStringAsync();
         return JsonDocument.Parse(json);

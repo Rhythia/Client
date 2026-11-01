@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Godot;
@@ -12,6 +11,8 @@ public partial class MapBrowser : Control
 
     public bool Shown;
 
+    public bool IsDragging { get; private set; }
+
     private Button hideButton;
     private Panel holder;
     private VBoxContainer topBar;
@@ -22,12 +23,28 @@ public partial class MapBrowser : Control
     private Button refresh;
     private MenuButton difficulty;
     private OptionButton status;
-    private OptionButton installed;
+    private CheckBox verified;
+    private CheckBox notable;
     private Timer searchTimer;
     private HBoxContainer filters;
     private ScrollContainer results;
     private MapCard mapCardTemplate;
+    private OptionButton browseMode;
+    private HBoxContainer pagination;
+    private Button previous;
+    private Button next;
+    private Label page;
     private SortDirection sortDirection;
+    private int offset;
+    private int total;
+    private bool stalled;
+    private double scrollMomentum;
+    private double scrollTarget;
+    private double scrollPosition;
+    private bool dragCandidate;
+    private float dragStartY;
+    private float lastDragY;
+    private bool isScrolling => browseMode.Selected == 1;
 
     private enum SortDirection
     {
@@ -35,7 +52,19 @@ public partial class MapBrowser : Control
         Ascending,
     }
 
+    // multiple of 3 because the results grid has 3 columns
+    private const int page_size = 18;
+
+    private const int load_more_margin = 240;
+
+    private const float scroll_step = 1500;
+    private const float scroll_friction = 20;
+    private const float scroll_smoothing = 12;
+    private const float drag_threshold = 6;
+    private const float drag_scroll_factor = 30;
+
     private CancellationTokenSource source = new();
+    private CancellationTokenSource loadingSource;
 
     public override void _Ready()
     {
@@ -51,12 +80,19 @@ public partial class MapBrowser : Control
         refresh = searchBar.GetNode<Button>("Refresh");
         difficulty = topBar.GetNode<HBoxContainer>("Filters").GetNode<MenuButton>("Difficulty");
         status = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Status");
-        installed = topBar.GetNode<HBoxContainer>("Filters").GetNode<OptionButton>("Installed");
+        verified = topBar.GetNode<HBoxContainer>("Filters").GetNode<CheckBox>("Verified");
+        notable = topBar.GetNode<HBoxContainer>("Filters").GetNode<CheckBox>("Notable");
         searchTimer = GetNode<Timer>("SearchTimer");
         results = holder.GetNode<ScrollContainer>("Background/Layout/Results");
         mapCardTemplate = results.GetNode<MapCard>("RowsMargin/Rows/MapCardTemplate");
+        browseMode = searchBar.GetNode<OptionButton>("BrowseMode");
+        pagination = holder.GetNode<HBoxContainer>("Background/Layout/Pagination");
+        previous = pagination.GetNode<Button>("Previous");
+        next = pagination.GetNode<Button>("Next");
+        page = pagination.GetNode<Label>("Page");
 
         mapCardTemplate.Visible = false;
+        pagination.Visible = !isScrolling;
 
         Shown = false;
         Visible = false;
@@ -67,16 +103,129 @@ public partial class MapBrowser : Control
         searchTimer.Timeout += onSearchTimerTimeout;
         sort.ItemSelected += _ => refreshResults();
         direction.Pressed += toggleDirection;
-        refresh.Pressed += refreshResults;
+        refresh.Pressed += onRefresh;
+        browseMode.ItemSelected += _ => onBrowseModeChanged();
+        results.GetVScrollBar().ValueChanged += _ => loadMoreIfNeeded();
+        results.GetVScrollBar().Changed += loadMoreIfNeeded;
+        results.GuiInput += onResultsInput;
         difficulty.GetPopup().IdPressed += toggleDifficulty;
         status.ItemSelected += _ => refreshResults();
-        installed.ItemSelected += _ => refreshResults();
+        verified.Toggled += _ => refreshResults();
+        notable.Toggled += _ => refreshResults();
+        previous.Pressed += () => changePage(-page_size);
+        next.Pressed += () => changePage(page_size);
 
         hideButton.Pressed += HideMenu;
     }
 
+    public override void _Process(double delta)
+    {
+        if (!Visible)
+            return;
+
+        var scrollBar = results.GetVScrollBar();
+
+        if (Math.Abs(results.ScrollVertical - scrollPosition) > 1)
+        {
+            scrollPosition = results.ScrollVertical;
+            scrollTarget = scrollPosition;
+            scrollMomentum = 0;
+            return;
+        }
+
+        if (dragCandidate)
+        {
+            if (!Input.IsMouseButtonPressed(MouseButton.Left))
+            {
+                endDrag();
+            }
+            else
+            {
+                float mouseY = GetViewport().GetMousePosition().Y;
+
+                if (!IsDragging && Math.Abs(mouseY - dragStartY) > drag_threshold)
+                {
+                    IsDragging = true;
+                    updateCardHover();
+                }
+
+                if (IsDragging)
+                    scrollMomentum += (lastDragY - mouseY) * drag_scroll_factor;
+
+                lastDragY = mouseY;
+            }
+        }
+
+        scrollMomentum = Mathf.Lerp(scrollMomentum, 0, Math.Min(1, scroll_friction * delta));
+        scrollTarget = Math.Clamp(scrollTarget + scrollMomentum * delta, 0, Math.Max(0, scrollBar.MaxValue - scrollBar.Page));
+        scrollPosition = Mathf.Lerp(scrollPosition, scrollTarget, Math.Min(1, scroll_smoothing * delta));
+        results.ScrollVertical = (int)scrollPosition;
+    }
+
+    private void onResultsInput(InputEvent @event)
+    {
+        if (@event is not InputEventMouseButton { Pressed: true } mouseButton)
+            return;
+
+        switch (mouseButton.ButtonIndex)
+        {
+            case MouseButton.WheelDown:
+                scrollMomentum += scroll_step;
+                break;
+            case MouseButton.WheelUp:
+                scrollMomentum -= scroll_step;
+                break;
+            default:
+                return;
+        }
+
+        GetViewport().SetInputAsHandled();
+    }
+
+    private void startDrag(Vector2 position)
+    {
+        if (!Shown || !results.GetGlobalRect().HasPoint(position) || results.GetVScrollBar().GetGlobalRect().HasPoint(position))
+            return;
+
+        dragCandidate = true;
+        dragStartY = position.Y;
+        lastDragY = position.Y;
+    }
+
+    private void endDrag()
+    {
+        bool wasDragging = IsDragging;
+
+        dragCandidate = false;
+        IsDragging = false;
+
+        if (wasDragging)
+            updateCardHover();
+    }
+
+    private void updateCardHover()
+    {
+        Vector2 mousePosition = GetViewport().GetMousePosition();
+
+        foreach (Node child in mapCardTemplate.GetParent().GetChildren())
+        {
+            if (child is MapCard card && card != mapCardTemplate)
+                card.SetHovered(!IsDragging && card.GetGlobalRect().HasPoint(mousePosition));
+        }
+    }
+
     public override void _Input(InputEvent @event)
     {
+        if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left } click)
+        {
+            if (click.Pressed)
+                startDrag(click.GlobalPosition);
+            else
+                endDrag();
+
+            return;
+        }
+
         if (@event is not InputEventKey { Pressed: true, Echo: false, Keycode: Key.Escape })
             return;
         if (!Shown)
@@ -98,6 +247,10 @@ public partial class MapBrowser : Control
             holder.OffsetTop = 10;
             holder.OffsetBottom = 10;
 
+            if (isScrolling)
+                offset = 0;
+
+            stalled = false;
             clearResults();
             _ = populate(buildQueryParameters());
         }
@@ -121,24 +274,64 @@ public partial class MapBrowser : Control
         ShowMenu(false);
     }
 
-    private async Task populate(MapQueryParameters queryParameters)
+    private async Task populate(MapQueryParameters queryParameters, bool append = false)
     {
-        source = new CancellationTokenSource();
-
-        JsonElement[] maps;
+        CancellationTokenSource populationSource = append ? source : new();
+        source = populationSource;
+        loadingSource = populationSource;
 
         try
         {
-            maps = await MapBrowserService.Search(queryParameters);
+            await loadResults(queryParameters, populationSource);
+        }
+        finally
+        {
+            if (loadingSource == populationSource)
+                loadingSource = null;
+        }
+    }
+
+    private async Task loadResults(MapQueryParameters queryParameters, CancellationTokenSource populationSource)
+    {
+        MapSearchResult searchResult;
+
+        try
+        {
+            searchResult = await MapBrowserService.Search(queryParameters);
+        }
+        catch (OperationCanceledException) when (populationSource.IsCancellationRequested)
+        {
+            return;
+        }
+        catch (RateLimitedException exception)
+        {
+            stalled = true;
+            updatePaginationButtons();
+
+            string wait = exception.RetryAfter is { } retryAfter ? $"in {(int)Math.Ceiling(retryAfter.TotalSeconds)}s" : "later";
+            _ = ToastNotification.Notify($"Rate limited, try again {wait}", 2);
+            return;
         }
         catch (Exception exception)
         {
-            await ToastNotification.Notify("Failed to load maps", 2);
+            stalled = true;
+            updatePaginationButtons();
+            _ = ToastNotification.Notify("Failed to load maps", 2);
             Logger.Error(exception);
             return;
         }
 
-        foreach (var map in maps.Where(matchesInstalledFilter))
+        if (populationSource.IsCancellationRequested)
+            return;
+
+        total = searchResult.Total;
+
+        if (isScrolling)
+            offset += searchResult.Maps.Length;
+        else
+            updatePagination(searchResult.Maps.Length);
+
+        foreach (var map in searchResult.Maps)
         {
             if (mapCardTemplate.Duplicate() is not MapCard mapCard)
             {
@@ -147,7 +340,16 @@ public partial class MapBrowser : Control
 
             mapCard.Visible = true;
             mapCardTemplate.GetParent().AddChild(mapCard);
-            mapCard.Bind(map, source);
+
+            try
+            {
+                mapCard.Bind(map, populationSource);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                mapCard.QueueFree();
+            }
         }
     }
 
@@ -184,6 +386,10 @@ public partial class MapBrowser : Control
 
         return new MapQueryParameters
         {
+            Limit = page_size,
+            Notable = notable.ButtonPressed,
+            Verified = verified.ButtonPressed,
+            Offset = offset,
             Query = search.Text.Trim(),
             SortBy = sort.Selected switch
             {
@@ -201,17 +407,6 @@ public partial class MapBrowser : Control
         };
     }
 
-    private bool matchesInstalledFilter(JsonElement map)
-    {
-        int installedFilter = installed.GetSelectedId();
-        if (installedFilter == 2)
-            return true;
-
-        bool downloaded =
-            map.TryGetProperty("noteHash", out var noteHash) && MapManager.Maps.Any(localMap => localMap.ObjectHash == noteHash.GetString());
-        return installedFilter == 0 ? downloaded : !downloaded;
-    }
-
     private void toggleDirection()
     {
         sortDirection = sortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
@@ -221,8 +416,63 @@ public partial class MapBrowser : Control
 
     private void refreshResults()
     {
+        offset = 0;
+        loadPage();
+    }
+
+    private void changePage(int delta)
+    {
+        offset = Math.Max(offset + delta, 0);
+        loadPage();
+    }
+
+    private void onRefresh()
+    {
+        if (isScrolling)
+            refreshResults();
+        else
+            loadPage();
+    }
+
+    private void onBrowseModeChanged()
+    {
+        pagination.Visible = !isScrolling;
+        refreshResults();
+    }
+
+    private void loadMoreIfNeeded()
+    {
+        if (!isScrolling || stalled || loadingSource != null || offset >= total)
+            return;
+
+        var scrollBar = results.GetVScrollBar();
+        if (scrollBar.Value + scrollBar.Page < scrollBar.MaxValue - load_more_margin)
+            return;
+
+        _ = populate(buildQueryParameters(), true);
+    }
+
+    private void loadPage()
+    {
+        stalled = false;
+        previous.Disabled = true;
+        next.Disabled = true;
+        results.ScrollVertical = 0;
+
         clearResults();
         _ = populate(buildQueryParameters());
+    }
+
+    private void updatePaginationButtons()
+    {
+        previous.Disabled = offset == 0;
+        next.Disabled = offset + page_size >= total;
+    }
+
+    private void updatePagination(int shown)
+    {
+        updatePaginationButtons();
+        page.Text = shown == 0 ? "0-0 of 0" : $"{offset + 1}-{offset + shown} of {total}";
     }
 
     private void clearResults()
