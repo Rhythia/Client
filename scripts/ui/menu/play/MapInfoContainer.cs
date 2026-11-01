@@ -53,8 +53,8 @@ public partial class MapInfoContainer : Panel, ISkinnable
     [Export]
     private Button videoButton;
 
-    [Export]
-    private FileDialog videoDialog;
+    // [Export]
+    // private FileDialog videoDialog;
 
     [Export]
     private Button copyButton;
@@ -148,15 +148,23 @@ public partial class MapInfoContainer : Panel, ISkinnable
             favoriteButton.Icon = Map.Favorite ? skin.UnfavoriteButtonImage : skin.FavoriteButtonImage;
         };
 
-        //videoButton.Pressed += () =>
-        //{
-        //    videoDialog.Popup();
-        //};
+        videoButton.Pressed += () =>
+        {
+            Map.DisableVideo = !Map.DisableVideo;
+            MapManager.Update(Map);
 
-        //videoDialog.FileSelected += (file) =>
-        //{
+            var skin = SkinManager.Instance.Skin;
+
+            videoButton.TooltipText = Map.DisableVideo ? "Enable Video Background" : "Disable Video Background";
+            videoButton.Icon = Map.DisableVideo ? skin.VideoDisabledButtonImage : skin.VideoEnabledButtonImage;
+
+            // videoDialog.Popup();
+        };
+
+        // videoDialog.FileSelected += (file) =>
+        // {
         //    MapManager.InsertVideo(Map, file);
-        //};
+        // };
 
         // copyButton.Pressed += () =>
         // {
@@ -395,12 +403,12 @@ public partial class MapInfoContainer : Panel, ISkinnable
         }
     }
 
-    public void Setup(Map map)
+    public void Setup(Map map, bool force = false, bool skipAnim = false)
     {
         if (map == null)
             return;
 
-        if (Name == map.Name)
+        if (Name == map.Name && !force)
         {
             return;
         }
@@ -410,26 +418,28 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         // Transition
 
-        Position = Vector2.Zero;
-        Scale = Vector2.One;
+        if (!skipAnim)
+        {
+            Position = Vector2.Zero;
+            Scale = Vector2.One;
 
-        info.OffsetLeft -= 64;
-        info.OffsetRight -= 64;
-        actions.OffsetLeft -= 80;
-        actions.OffsetRight -= 80;
-        leaderboard.OffsetLeft -= 96;
-        leaderboard.OffsetRight -= 96;
+            info.OffsetLeft -= 64;
+            info.OffsetRight -= 64;
+            actions.OffsetLeft -= 80;
+            actions.OffsetRight -= 80;
+            leaderboard.OffsetLeft -= 96;
+            leaderboard.OffsetRight -= 96;
 
-        Tween inTween = CreateTween().SetEase(Tween.EaseType.Out).SetParallel();
-        inTween.SetTrans(Tween.TransitionType.Quint).TweenProperty(info, "offset_left", 0, 0.5);
-        inTween.TweenProperty(info, "offset_right", 0, 0.5);
-        inTween.SetTrans(Tween.TransitionType.Quart).TweenProperty(actions, "offset_left", 0, 0.6);
-        inTween.TweenProperty(actions, "offset_right", 0, 0.6);
-        inTween.SetTrans(Tween.TransitionType.Cubic).TweenProperty(leaderboard, "offset_left", 0, 0.7);
-        inTween.TweenProperty(leaderboard, "offset_right", 0, 0.7);
-
-        OffsetRight = 0;
-        Position += Vector2.Left * 64;
+            Tween inTween = CreateTween().SetEase(Tween.EaseType.Out).SetParallel();
+            inTween.SetTrans(Tween.TransitionType.Quint).TweenProperty(info, "offset_left", 0, 0.5);
+            inTween.TweenProperty(info, "offset_right", 0, 0.5);
+            inTween.SetTrans(Tween.TransitionType.Quart).TweenProperty(actions, "offset_left", 0, 0.6);
+            inTween.TweenProperty(actions, "offset_right", 0, 0.6);
+            inTween.SetTrans(Tween.TransitionType.Cubic).TweenProperty(leaderboard, "offset_left", 0, 0.7);
+            inTween.TweenProperty(leaderboard, "offset_right", 0, 0.7);
+            OffsetRight = 0;
+            Position += Vector2.Left * 64;
+        }
 
         // Info
 
@@ -457,6 +467,20 @@ public partial class MapInfoContainer : Panel, ISkinnable
         favoriteButton.TooltipText = map.Favorite ? "Unfavorite" : "Favorite";
         favoriteButton.Icon = map.Favorite ? SkinManager.Instance.Skin.UnfavoriteButtonImage : SkinManager.Instance.Skin.FavoriteButtonImage;
 
+        if (File.Exists(MapUtil.GetMapVideoPath(Map)))
+        {
+            videoButton.Disabled = false;
+            videoButton.TooltipText = Map.DisableVideo ? "Enable Video Background" : "Disable Video Background";
+            videoButton.Icon = Map.DisableVideo
+                ? SkinManager.Instance.Skin.VideoDisabledButtonImage
+                : SkinManager.Instance.Skin.VideoEnabledButtonImage;
+        }
+        else
+        {
+            videoButton.Disabled = true;
+            videoButton.TooltipText = "Map Has No Video";
+        }
+
         artistLink.Visible = map.ArtistLink != "";
         artistLink.Text = string.Format(CultureInfo.CurrentCulture, artistLinkFormat, map.ArtistPlatform);
 
@@ -471,9 +495,9 @@ public partial class MapInfoContainer : Panel, ISkinnable
         preview.Setup(map, true);
     }
 
-    public void Refresh()
+    public void Refresh(bool force = false, bool skipAnim = false)
     {
-        Setup(Map);
+        Setup(Map, force, skipAnim);
         LoadLeaderboard(Map);
     }
 
@@ -500,6 +524,7 @@ public partial class MapInfoContainer : Panel, ISkinnable
         {
             ScorePanel panel = leaderboardScoreTemplate.Instantiate<ScorePanel>();
 
+            panel.Map = map;
             lbContainer.AddChild(panel);
             panel.Setup(Leaderboard.Scores[i]);
             panel.GetNode<ColorRect>("Background").Color = Color.Color8(255, 255, 255, (byte)(i % 2 * 8));

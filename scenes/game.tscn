@@ -220,7 +220,6 @@ texture_filter = 1
 texture_repeat = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_3p7x2"]
-size = Vector2(258.3, 210)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d5aou"]
 
@@ -708,8 +707,7 @@ fov = 70.0
 size = 5.0
 
 [node name="Video" type="MeshInstance3D" parent="Runner" unique_id=1036410191]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.479675, -0.459572, -99.9929)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
 material_override = SubResource("StandardMaterial3D_rj3ky")
 transparency = 1.0
 cast_shadow = 0

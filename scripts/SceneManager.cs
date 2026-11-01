@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Spaces;
 
 public partial class SceneManager : Node
 {
@@ -47,7 +48,7 @@ public partial class SceneManager : Node
         Load(activeScenePath, true);
     }
 
-    public static void Load(string path, bool skipTransition = false, Action callback = null)
+    public static void Load(string path, bool skipTransition = false, bool forceVoidBg = false, Action callback = null)
     {
         bool isSceneLoaded = Scenes.TryGetValue(path, out BaseScene loadedScene);
         var newScene = isSceneLoaded ? loadedScene : (BaseScene)ResourceLoader.Load<PackedScene>(path).Instantiate();
@@ -73,7 +74,7 @@ public partial class SceneManager : Node
                 activeScenePath = path;
                 Scene = newScene;
 
-                addScene(newScene);
+                addScene(newScene, forceVoidBg: forceVoidBg);
 
                 newScene.Transition.SelfModulate = Color.FromHtml("ffffffff");
                 Instance
@@ -86,7 +87,7 @@ public partial class SceneManager : Node
         );
     }
 
-    private static void addScene(BaseScene scene, bool updateSpace = true)
+    private static void addScene(BaseScene scene, bool updateSpace = true, bool forceVoidBg = false)
     {
         if (scene == null || scene.GetParent() == Instance)
         {
@@ -95,7 +96,15 @@ public partial class SceneManager : Node
 
         if (updateSpace)
         {
-            addSpace(scene.GetSpace(), scene.AddSpaceAsChild);
+            if (forceVoidBg)
+            {
+                BaseSpace voidSpace = GD.Load<PackedScene>("res://prefabs/spaces/void.tscn").Instantiate<Node3D>() as BaseSpace;
+                addSpace(voidSpace, scene.AddSpaceAsChild);
+            }
+            else
+            {
+                addSpace(scene.GetSpace(), scene.AddSpaceAsChild);
+            }
         }
 
         Instance.AddChild(scene);

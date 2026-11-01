@@ -56,6 +56,7 @@
 [ext_resource type="Script" uid="uid://dqi64p5jl23cv" path="res://scripts/ui/menu/VersionLabel.cs" id="45_mb34c"]
 [ext_resource type="Texture2D" uid="uid://8du82a5dxjdk" path="res://user/skins/default/ui/jukebox_play.png" id="48_q1l3m"]
 [ext_resource type="Texture2D" uid="uid://bpsvcunhigs6c" path="res://user/skins/default/ui/jukebox_skip.png" id="49_7u5pb"]
+[ext_resource type="Script" uid="uid://crvc85t37oayi" path="res://scripts/ui/menu/play/ContextMenu.cs" id="57_sgh51"]
 
 [sub_resource type="SystemFont" id="SystemFont_lsskb"]
 font_names = PackedStringArray("Ubuntu")
@@ -2105,11 +2106,13 @@ grow_vertical = 0
 mouse_filter = 2
 alignment = 2
 
-[node name="ContextMenu" type="Panel" parent="." unique_id=836062335]
+[node name="ContextMenu" type="Panel" parent="." unique_id=836062335 node_paths=PackedStringArray("videoDialog")]
 visible = false
 offset_right = 150.0
 offset_bottom = 120.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_t0m3h")
+script = ExtResource("57_sgh51")
+videoDialog = NodePath("../VideoDialog")
 
 [node name="Background" type="Panel" parent="ContextMenu" unique_id=1072032974]
 layout_mode = 1
@@ -2130,45 +2133,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="Favorite" type="Button" parent="ContextMenu/Container" unique_id=1524374689]
+[node name="TemplateButton" type="Button" parent="ContextMenu/Container" unique_id=704183841]
+visible = false
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
-theme_override_colors/font_color = Color(1, 1, 0.501961, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 0.768627, 1)
 theme_override_fonts/font = ExtResource("19_c6nra")
-text = "Favorite"
-flat = true
-alignment = 0
-
-[node name="Delete" type="Button" parent="ContextMenu/Container" unique_id=559400908]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource("6_engjn")
-theme_override_colors/font_color = Color(1, 0.501961, 0.501961, 1)
-theme_override_colors/font_hover_color = Color(1, 0.768627, 0.768627, 1)
-theme_override_fonts/font = ExtResource("19_c6nra")
-text = "Delete"
-flat = true
-alignment = 0
-
-[node name="Video" type="Button" parent="ContextMenu/Container" unique_id=16155190]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource("6_engjn")
-theme_override_colors/font_color = Color(0.501961, 0.501961, 1, 1)
-theme_override_colors/font_hover_color = Color(0.768627, 0.768627, 1, 1)
-theme_override_fonts/font = ExtResource("19_c6nra")
-text = "Add Video"
+text = "Button"
 flat = true
 alignment = 0
 

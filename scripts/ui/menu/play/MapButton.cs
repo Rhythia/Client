@@ -50,6 +50,8 @@ public partial class MapButton : Control, ISkinnable
     public Label Title;
     public TextureRect Cover;
     public TextureRect Favorited;
+    public Control FavoriteParent;
+    public TextureRect VideoIcon;
     public Button Button;
     public ShaderMaterial OutlineShader;
 
@@ -61,8 +63,11 @@ public partial class MapButton : Control, ISkinnable
         Button = Holder.GetNode<Button>("Button");
         Title = Holder.GetNode<Label>("Title");
         Cover = Holder.GetNode<TextureRect>("Cover");
-        Favorited = Holder.GetNode<TextureRect>("Favorited");
+        FavoriteParent = Holder.GetNode<Control>("IconContainer/FavoriteParent");
+        Favorited = Holder.GetNode<TextureRect>("IconContainer/FavoriteParent/Favorited");
+        VideoIcon = Holder.GetNode<TextureRect>("IconContainer/Video");
         Favorited.Texture = (Texture2D)Favorited.Texture.Duplicate();
+        VideoIcon.Texture = (Texture2D)VideoIcon.Texture.Duplicate();
 
         Panel outline = Holder.GetNode<Panel>("Outline");
 
@@ -137,9 +142,11 @@ public partial class MapButton : Control, ISkinnable
         Name = map.Name;
 
         Title.Text = map.PrettyTitle;
-        Favorited.Visible = map.Favorite;
+        FavoriteParent.Visible = map.Favorite;
+        VideoIcon.Visible = File.Exists(MapUtil.GetMapVideoPath(map));
         Cover.Texture = map.Cover;
         Favorited.SelfModulate = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
+        VideoIcon.SelfModulate = map.DisableVideo ? Color.Color8(102, 102, 102) : Color.Color8(255, 255, 255);
 
         if (selected)
         {
@@ -165,6 +172,10 @@ public partial class MapButton : Control, ISkinnable
         if (IsInstanceValid(Favorited) && Favorited.IsInsideTree())
         {
             Favorited.Texture = skin.FavoriteImage;
+        }
+        if (IsInstanceValid(VideoIcon) && VideoIcon.IsInsideTree())
+        {
+            VideoIcon.Texture = skin.VideoEnabledButtonImage;
         }
     }
 
