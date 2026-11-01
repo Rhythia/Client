@@ -52,11 +52,7 @@ public partial class MapCard : PanelContainer
 
     private Map downloadedMap;
 
-    private static readonly Gradient notableGradient = new()
-    {
-        Offsets = [0, 1],
-        Colors = [new Color(0xffa5b1ff), new Color(0xff2846ff)],
-    };
+    private static readonly Gradient notableGradient = new() { Offsets = [0, 1], Colors = [new Color(0xffa5b1ff), new Color(0xff2846ff)] };
 
     private string[] mapperNames = [];
     private string[] notableMapperNames = [];
@@ -120,7 +116,10 @@ public partial class MapCard : PanelContainer
         mapperNames = [.. map.GetProperty("mappers").EnumerateArray().Select(x => x.GetProperty("name").GetString())];
         notableMapperNames =
         [
-            .. map.GetProperty("mappers").EnumerateArray().Where(x => x.GetProperty("isNotable").GetBoolean()).Select(x => x.GetProperty("name").GetString()),
+            .. map.GetProperty("mappers")
+                .EnumerateArray()
+                .Where(x => x.GetProperty("isNotable").GetBoolean())
+                .Select(x => x.GetProperty("name").GetString()),
         ];
         mapperBox.Resized += updateMappers;
         updateMappers();
