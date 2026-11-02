@@ -60,6 +60,12 @@ public partial class ScorePanel : Panel
 
         timerLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
 
+        if (!Score.Qualifies)
+        {
+            timerLabel.LabelSettings = timerLabel.LabelSettings.Duplicate() as LabelSettings;
+            timerLabel.LabelSettings.FontColor = Color.Color8(160, 160, 160);
+        }
+
         foreach (KeyValuePair<string, bool> entry in score.Modifiers)
         {
             if (entry.Value)

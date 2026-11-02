@@ -1905,7 +1905,6 @@ text = "Watch Replay"
 flat = true
 
 [node name="Transition" type="ColorRect" parent="." unique_id=529428316]
-visible = false
 self_modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
