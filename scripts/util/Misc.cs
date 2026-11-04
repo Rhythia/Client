@@ -30,6 +30,9 @@ public class Misc
             case "Strobe":
                 tex = skin.ModStrobeImage;
                 break;
+            case "Flicker":
+                tex = skin.ModFlickerImage;
+                break;
             case "Chaos":
                 tex = skin.ModChaosImage;
                 break;
@@ -135,16 +138,16 @@ public class Misc
 
         Logger.Log(
             $"""
-            Couldn't load image from buffer
-                Type: {(
-                isPng ? "PNG"
-                : isJpeg ? "JPG"
-                : isBmp ? "BMP"
-                : isWebp ? "WEBP"
-                : "Unknown"
-            )};
-                Size: {buffer.Length}
-            """
+				Couldn't load image from buffer
+				Type: {(
+				isPng ? "PNG"
+				: isJpeg ? "JPG"
+				: isBmp ? "BMP"
+				: isWebp ? "WEBP"
+				: "Unknown"
+			)};
+				Size: {buffer.Length}
+			"""
         );
 
         return null;
