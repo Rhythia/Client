@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Godot;
 using Godot.Collections;
+using util;
 
 [GlobalClass]
 public partial class SettingsManager : Node
@@ -269,11 +270,10 @@ public partial class SettingsManager : Node
                 OS.CreateProcess("powershell.exe", ["-Command", $"Wait-Process -Id {pid}; Start-Process '{executablePath}'"]);
                 break;
             case "macOS":
-                string executablePathMac = Path.Combine(executablePath, "../..");
-                OS.CreateProcess("/bin/sh", [$"while kill -0 {pid} 2>/dev/null; do sleep 0.1; done; open {executablePathMac}"]);
+                OS.CreateProcess("/bin/sh", ["-c", $"{Platform.WaitForExitScript}; open {Platform.ShellQuote(Platform.MacAppBundlePath)}"]);
                 break;
             case "Linux":
-                OS.CreateProcess("/bin/sh", [$"while kill -0 {pid} 2>/dev/null; do sleep 0.1; done; exec {executablePath}"]);
+                OS.CreateProcess("/bin/sh", ["-c", $"{Platform.WaitForExitScript}; exec {Platform.ShellQuote(executablePath)}"]);
                 break;
         }
 
