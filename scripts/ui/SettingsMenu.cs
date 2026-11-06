@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using Godot;
 
 public partial class SettingsMenu : ColorRect
@@ -92,8 +93,9 @@ public partial class SettingsMenu : ColorRect
         HSlider sliderTemplate = settingTemplate.GetNode<HSlider>("Slider");
         LineEdit sliderLineEditTemplate = settingTemplate.GetNode<LineEdit>("SliderLineEdit");
         LineEdit lineEditTemplate = settingTemplate.GetNode<LineEdit>("LineEdit");
-        OptionButton optionButtonTemplate = settingTemplate.GetNode<OptionButton>("OptionButton");
         HBoxContainer buttonHboxTemplate = settingTemplate.GetNode<HBoxContainer>("ButtonHBoxContainer");
+        HBoxContainer optionButtonHboxTemplate = settingTemplate.GetNode<HBoxContainer>("OptionButtonHBoxContainer");
+        OptionButton optionButtonTemplate = optionButtonHboxTemplate.GetNode<OptionButton>("OptionButton");
         Button buttonTemplate = buttonHboxTemplate.GetNode<Button>("Button");
         Button colorButtonTemplate = settingTemplate.GetNode<Button>("ColorButton");
         Button pickerHiderTemplate = settingTemplate.GetNode<Button>("PickerHide");
@@ -199,10 +201,12 @@ public partial class SettingsMenu : ColorRect
                 }
                 else if (setting.List != null)
                 {
-                    OptionButton optionButton = optionButtonTemplate.Duplicate() as OptionButton;
+                    HBoxContainer hbox = optionButtonHboxTemplate.Duplicate() as HBoxContainer;
+                    panel.AddChild(hbox);
 
+                    OptionButton optionButton = optionButtonTemplate.Duplicate() as OptionButton;
                     setupList(setting, optionButton);
-                    panel.AddChild(optionButton);
+                    hbox.AddChild(optionButton);
                 }
                 if (setting.Type == typeof(Variant))
                 {
@@ -490,6 +494,12 @@ public partial class SettingsMenu : ColorRect
 
     private void setupInput(ISettingsItem setting, LineEdit lineEdit)
     {
+        if (!setting.LineTranslation)
+        {
+            lineEdit.AutoTranslateMode = AutoTranslateModeEnum.Disabled;
+            lineEdit.TooltipAutoTranslateMode = AutoTranslateModeEnum.Disabled;
+        }
+
         void applyLineEdit()
         {
             string value = (lineEdit.Text == "" ? lineEdit.PlaceholderText : lineEdit.Text);
@@ -531,6 +541,14 @@ public partial class SettingsMenu : ColorRect
 
     private static void setupList(ISettingsItem setting, OptionButton optionButton)
     {
+        optionButton.Visible = true;
+
+        if (!setting.ListTranslation)
+        {
+            optionButton.AutoTranslateMode = AutoTranslateModeEnum.Disabled;
+            optionButton.TooltipAutoTranslateMode = AutoTranslateModeEnum.Disabled;
+        }
+
         foreach (Variant item in setting.List.Values)
         {
             optionButton.AddItem((string)item);

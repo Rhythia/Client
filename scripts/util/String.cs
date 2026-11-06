@@ -19,14 +19,12 @@ public class String
 
     public static string FormatUnixTimePretty(double now, double time)
     {
-        string formatted;
         double seconds,
             minutes,
             hours,
             days;
         double difference = now - time;
-        string prefix = difference < 0 ? "in " : "";
-        string suffix = difference > 0 ? " ago" : "";
+        bool future = difference < 0;
 
         seconds = Math.Floor(difference);
         minutes = Math.Floor(seconds / 60);
@@ -35,26 +33,22 @@ public class String
 
         if (days > 0)
         {
-            formatted = $"{PadMagnitude(days)} day" + (days > 1 ? "s" : "");
+            return formatTimeString(days, future, "{0} day ago", "{0} days ago", "in {0} day", "in {0} days");
         }
         else if (hours > 0)
         {
-            formatted = $"{PadMagnitude(hours)} hour" + (hours > 1 ? "s" : "");
+            return formatTimeString(hours, future, "{0} hour ago", "{0} hours ago", "in {0} hour", "in {0} hours");
         }
-        else if (minutes > 0)
+        if (minutes > 0)
         {
-            formatted = $"{PadMagnitude(minutes)} minute" + (minutes > 1 ? "s" : "");
+            return formatTimeString(minutes, future, "{0} minute ago", "{0} minutes ago", "in {0} minute", "in {0} minutes");
         }
-        else if (seconds > 0)
+        if (seconds > 0)
         {
-            formatted = $"{PadMagnitude(seconds)} second" + (seconds > 1 ? "s" : "");
-        }
-        else
-        {
-            formatted = "just now";
+            return formatTimeString(seconds, future, "{0} second ago", "{0} seconds ago", "in {0} second", "in {0} seconds");
         }
 
-        return $"{prefix}{formatted}{suffix}";
+        return I18n.Tr("just now");
     }
 
     public static string PadMagnitude(double value)
@@ -72,5 +66,19 @@ public class String
     public static string SanitizeBBCode(string input)
     {
         return input.Replace("[", "[lb]");
+    }
+
+    private static string formatTimeString(
+        double units,
+        bool future,
+        string pastSingular,
+        string pastPlural,
+        string futureSingular,
+        string futurePlural
+    )
+    {
+        string formatted = future ? I18n.TrN(futureSingular, futurePlural, (int)units) : I18n.TrN(pastSingular, pastPlural, (int)units);
+
+        return string.Format(I18n.LocaleCulture, formatted, PadMagnitude(units));
     }
 }

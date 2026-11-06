@@ -29,7 +29,7 @@ public static class Networking
         }
         catch
         {
-            ToastNotification.Notify($"Could not set port, defaulting to {DefaultPort}", 1);
+            ToastNotification.Notify(I18n.Tr("Could not set port, defaulting to {0}", DefaultPort), 1);
         }
 
         return DefaultPort;
