@@ -31,6 +31,8 @@
 [ext_resource type="Texture2D" uid="uid://d3buklvnhgqcy" path="res://textures/ui/discord_hovered.png" id="22_01xyg"]
 [ext_resource type="Texture2D" uid="uid://1fj6g1xt5b0" path="res://user/skins/default/ui/buttons/open_folder.png" id="22_ew011"]
 [ext_resource type="Script" uid="uid://bdxxohkj7wy22" path="res://scripts/ui/menu/play/MapInfo.cs" id="22_qw82i"]
+[ext_resource type="Texture2D" uid="uid://j252oaw5ady1" path="res://user/skins/legacy/ui/buttons/import.png" id="22_s4ogs"]
+[ext_resource type="Script" uid="uid://dbar0cu3s0sbd" path="res://scenes/MapBrowserButton.cs" id="23_f5cck"]
 [ext_resource type="Texture2D" uid="uid://bvjkhxgqjmg7y" path="res://user/skins/default/ui/buttons/import.png" id="24_tcyl8"]
 [ext_resource type="Script" uid="uid://c31515lg0ihgs" path="res://scripts/ui/menu/UserFolderButton.cs" id="27_eku7s"]
 [ext_resource type="Shader" uid="uid://cxckrd6xtplnx" path="res://scripts/shaders/jukebox_progress.gdshader" id="27_engjn"]
@@ -765,6 +767,18 @@ offset_bottom = -17.976002
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
+
+[node name="MapBrowser" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=1148273307]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+tooltip_text = "Map browser, can be opened up at anytime using CTRL + B"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("6_engjn")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Map Browser"
+icon = ExtResource("22_s4ogs")
+script = ExtResource("23_f5cck")
 
 [node name="Settings" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=384311335]
 custom_minimum_size = Vector2(0, 36)
