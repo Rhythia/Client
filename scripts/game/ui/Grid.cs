@@ -65,7 +65,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
         float lateness = Runner.Attempt.IsReplay
             ? Runner.Attempt.HitsInfo[noteIndex]
             : (float)(((int)Runner.Attempt.Progress - Runner.Attempt.Map.Notes[noteIndex].Millisecond) / Runner.Speed);
-        float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 30) / 82f, 1);
+        float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 30) / 104f, 1);
         double hitScore = Math.Truncate(Runner.Attempt.UnitHitScore * Runner.Attempt.ComboMultiplier * factor);
 
         string[] listOfJudgements = { "perfect", "great", "okay", "bad" };

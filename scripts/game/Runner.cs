@@ -513,6 +513,7 @@ public partial class Runner : Node3D
                         Attempt.Progress,
                         Attempt.Map.Length,
                         Speed,
+                        Attempt.Version,
                         mods
                     )
                 );
@@ -552,7 +553,7 @@ public partial class Runner : Node3D
         float lateness = Attempt.IsReplay
             ? Attempt.HitsInfo[noteIndex]
             : (float)(((int)judgmentProgress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
-        float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 30) / 82f, 1);
+        float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 27) / 104f, 1);
         double hitScore = Attempt.UnitHitScore * Attempt.ComboMultiplier * factor;
 
         switch (hitResult)

@@ -56,7 +56,7 @@ public partial class ScorePanel : Panel
         playerLabel.Text = score.Player;
         accuracyLabel.Text = $"{util.String.PadMagnitude(score.Value)} | {score.Accuracy:F2}%";
         speedLabel.Text = $"{score.Speed:F2}x";
-        timeLabel.Text = util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
+        timeLabel.Text = $"{util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time)} | Score Version: {score.Version}";
 
         timerLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
 

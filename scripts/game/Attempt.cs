@@ -69,6 +69,8 @@ public partial class Attempt : RefCounted
     public uint ReplayFrameCountOffset = 0;
     public uint ReplayAttemptStatusOffset = 0;
 
+    public double Version = 2;
+
     public Attempt(
         Map map,
         double speed,
