@@ -116,6 +116,13 @@ public partial class MapBrowser : Control
         next.Pressed += () => changePage(page_size);
 
         hideButton.Pressed += HideMenu;
+        holder.GuiInput += consumeWheel;
+    }
+
+    private void consumeWheel(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp or MouseButton.WheelDown })
+            GetViewport().SetInputAsHandled();
     }
 
     public override void _Process(double delta)
