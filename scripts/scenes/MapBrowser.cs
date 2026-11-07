@@ -108,6 +108,7 @@ public partial class MapBrowser : Control
         results.GetVScrollBar().ValueChanged += _ => loadMoreIfNeeded();
         results.GetVScrollBar().Changed += loadMoreIfNeeded;
         results.GuiInput += onResultsInput;
+        difficulty.GetPopup().HideOnCheckableItemSelection = false;
         difficulty.GetPopup().IdPressed += toggleDifficulty;
         status.ItemSelected += _ => refreshResults();
         verified.Toggled += _ => refreshResults();
