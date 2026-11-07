@@ -141,6 +141,30 @@ public partial class Rhythia : Node
 
                                         replays.Add(replay);
                                         break;
+
+                                    case "rhs":
+                                        try
+                                        {
+                                            string skinName = RhsImporter.Import(file);
+
+                                            if (skinName != null)
+                                            {
+                                                var settings = SettingsManager.Instance.Settings;
+
+                                                if (settings.Skin.List.Values.IndexOf(skinName) == -1)
+                                                {
+                                                    settings.Skin.List.Values.Add(skinName);
+                                                }
+
+                                                settings.Skin.Value = skinName;
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.Error(ex);
+                                            ToastNotification.Notify($"Failed to import skin: {ex.Message}", 2);
+                                        }
+                                        break;
                                 }
                             }
                         }
