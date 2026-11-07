@@ -1,0 +1,52 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.2
+          use-dotnet: true
+          include-templates: true
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build
+
+      - name: Export Windows
+        run: |
+          mkdir -p build/windows
+          godot --headless --export-release "Windows Desktop" build/windows/Rhythia.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rhythia-Windows
+          path: build/windows/Rhythia.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: rhs-import
+          name: "Rhythia + .rhs Skin Import"
+          body: |
+            Modified Rhythia Client with .rhs skin file drag-and-drop support.
+
+            Drop any .rhs skin file onto the game window to import it — extracts cursor, grid, colorset, hit sound, and composites background layers automatically.
+          files: build/windows/Rhythia.zip
+          draft: false
+          prerelease: true
