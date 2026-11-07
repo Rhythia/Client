@@ -770,7 +770,7 @@ public partial class SettingsProfile
             Id = "VideoBgVoidSpace",
             Title = "Use Void Space For Video Backgrounds",
             Description = "Use the void game space when video background is visible",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
         };
 
         SpaceHitEffects = new(true)
@@ -980,7 +980,7 @@ public partial class SettingsProfile
             Id = "VideoDim",
             Title = "Video BG Dim",
             Description = "Adjusts the video background dim",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
             Slider = new()
             {
                 Step = 1,
@@ -1008,7 +1008,7 @@ public partial class SettingsProfile
             Id = "DisableVideoGlobal",
             Title = "Disable All Video Backgrounds",
             Description = "Don't show video backgrounds for any map",
-            Section = SettingsSection.Visual,
+            Section = SettingsSection.Spaces,
         };
 
         SimpleHUD = new(false)
