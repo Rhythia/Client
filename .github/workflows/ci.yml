@@ -65,6 +65,12 @@ jobs:
       with:
         dotnet-version: 10.0.x
         cache: true
+    - name: Download gde_gozen
+      run: |
+        dotnet msbuild -getProperty:GdeGozenUrl Rhythia.csproj | wget -i - -O gde_gozen.zip
+        mkdir addons
+        unzip -o gde_gozen.zip -d addons/
+        rm gde_gozen.zip
     - name: Restore dependencies
       run: dotnet restore --locked-mode
     - name: Restore tools
