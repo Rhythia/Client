@@ -30,11 +30,13 @@ public static class MapCache
         {
             Directory.CreateDirectory(MapUtil.MapsFolder);
 
+            EnumerationOptions options = new() { RecurseSubdirectories = true, MaxRecursionDepth = 1 };
+
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
             List<string> mapsList =
             [
-                .. Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories),
-                .. Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories),
+                .. Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", options),
+                .. Directory.GetDirectories(MapUtil.MapsFolder, "*", options).Where(isMapFolder),
             ];
 
             string[] toParseMaps = [.. mapsList];
@@ -63,6 +65,9 @@ public static class MapCache
             OrderAndSetMaps();
         }
     }
+
+    private static bool isMapFolder(string path) =>
+        File.Exists(Path.Combine(path, "metadata.json")) && File.Exists(Path.Combine(path, "objects.phxmo"));
 
     private static void syncFiles(string[] toParseMaps)
     {
