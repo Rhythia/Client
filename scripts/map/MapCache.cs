@@ -28,6 +28,8 @@ public static class MapCache
 
         try
         {
+            Directory.CreateDirectory(MapUtil.MapsFolder);
+
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
             List<string> mapsList =
             [
@@ -55,8 +57,9 @@ public static class MapCache
 
             OrderAndSetMaps();
         }
-        catch
+        catch (Exception exception)
         {
+            Logger.Error(exception);
             OrderAndSetMaps();
         }
     }
@@ -319,6 +322,12 @@ public static class MapCache
     public static void OrderAndSetMaps()
     {
         var maps = FetchAll();
+
+        foreach (var missing in maps.Where(x => !Directory.Exists(x.FolderPath) && !File.Exists(x.FolderPath)).ToList())
+        {
+            RemoveMap(missing);
+            maps.Remove(missing);
+        }
 
         // only covers on screen are loaded to prevent excessive VRAM usage
 
