@@ -43,6 +43,7 @@ public static class MapCache
 
             if (fullSync)
             {
+                removeDuplicateMaps();
                 syncFiles(toParseMaps);
                 addNonCachedFiles(toParseMaps);
 
@@ -68,6 +69,23 @@ public static class MapCache
 
     private static bool isMapFolder(string path) =>
         File.Exists(Path.Combine(path, "metadata.json")) && File.Exists(Path.Combine(path, "objects.phxmo"));
+
+    private static void removeDuplicateMaps()
+    {
+        foreach (var duplicates in FetchAll().GroupBy(x => x.FolderPath).Where(x => x.Count() > 1))
+        {
+            var kept = duplicates.OrderBy(x => x.Id).First();
+
+            foreach (var duplicate in duplicates.Where(x => x != kept))
+            {
+                kept.Favorite |= duplicate.Favorite;
+                kept.PlayCount += duplicate.PlayCount;
+                RemoveMap(duplicate);
+            }
+
+            UpdateMap(kept);
+        }
+    }
 
     private static void syncFiles(string[] toParseMaps)
     {

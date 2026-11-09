@@ -34,7 +34,11 @@ public partial class Map : RefCounted
     [Ignore]
     public MapSet MapSet { get; set; }
 
-    public string FolderPath { get; set; } = string.Empty;
+    public string FolderPath
+    {
+        get;
+        set => field = value?.Replace('\\', '/');
+    } = string.Empty;
 
     public bool Favorite { get; set; }
 
