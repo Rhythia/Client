@@ -15,6 +15,10 @@ public partial class PanelLeft : UIComponent
         multiplier;
     private Label altCombo;
 
+    private RichTextLabel grade;
+
+    private string Grade = "??";
+
     public override void _ExitTree()
     {
         if (Runner.Attempt == null)
@@ -29,6 +33,7 @@ public partial class PanelLeft : UIComponent
         score = viewport.GetNode<Label>("Score");
         multiplier = viewport.GetNode<Label>("Multiplier");
         altCombo = viewport.GetNode<Label>("ComboCount");
+        grade = viewport.GetNode<RichTextLabel>("Grade");
 
         multiplierProgressMaterial = viewport.GetNode<Panel>("MultiplierProgress").Material as ShaderMaterial;
         multiplierProgressMaterial.SetShaderParameter("progress", targetMultiplierProgress);
@@ -60,6 +65,10 @@ public partial class PanelLeft : UIComponent
     {
         score.Text = util.String.PadMagnitude(Math.Round(attempt.Score));
         multiplier.Text = $"{attempt.ComboMultiplier}x";
+
+        getGrade(attempt);
+        grade.Text = attempt.Misses == 0 ? $"[color=#fbe8c4]{Grade}+" : $"{Grade}";
+
         altCombo.Text = $"{attempt.Combo}";
 
         targetMultiplierProgress = (float)attempt.ComboMultiplierProgress / attempt.ComboMultiplierIncrement;
@@ -78,5 +87,30 @@ public partial class PanelLeft : UIComponent
         // multiplierTween = CreateTween().SetParallel(true);
         // multiplierTween.TweenProperty(multiplierProgressMaterial, "shader_parameter/progress", targetMultiplierProgress, 0.2f);
         // multiplierTween.TweenProperty(multiplierProgressMaterial, "shader_parameter/colour", targetMultiplierColour, 0.2f);
+    }
+
+    private void getGrade(Attempt attempt)
+    {
+        switch (attempt.Grade)
+        {
+            case >= 0.95:
+                Grade = "S";
+                break;
+            case >= 0.9:
+                Grade = "A";
+                break;
+            case >= 0.8:
+                Grade = "B";
+                break;
+            case >= 0.7:
+                Grade = "C";
+                break;
+            case >= 0.6:
+                Grade = "D";
+                break;
+            case <= 0.5:
+                Grade = "F";
+                break;
+        }
     }
 }

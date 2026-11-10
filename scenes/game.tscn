@@ -134,6 +134,10 @@ texture_repeat = false
 [sub_resource type="QuadMesh" id="QuadMesh_ssyve"]
 size = Vector2(4, 10)
 
+[sub_resource type="LabelSettings" id="LabelSettings_pr1ej"]
+font = ExtResource("21_05nbr")
+font_size = 50
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x2xye"]
 shader = ExtResource("14_y51pe")
 shader_parameter/progress = 0.8870000421325
@@ -150,9 +154,69 @@ bg_color = Color(0, 0, 0, 0)
 font = ExtResource("20_pr1ej")
 font_size = 50
 
-[sub_resource type="LabelSettings" id="LabelSettings_pr1ej"]
-font = ExtResource("21_05nbr")
-font_size = 50
+[sub_resource type="FontFile" id="FontFile_rc4du"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="FontFile_ay2bh"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="FontFile_ag8t5"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="FontFile_3jteb"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_pause_counter_title"]
 font = ExtResource("21_05nbr")
@@ -388,7 +452,7 @@ transparent_bg = true
 canvas_item_default_texture_filter = 2
 size = Vector2i(250, 625)
 
-[node name="Background" type="TextureRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1374853699]
+[node name="Background" type="TextureRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=634060823]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -396,7 +460,24 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("11_sdncv")
 
-[node name="MultiplierProgress" type="Panel" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1067613329]
+[node name="Multiplier" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=845485554]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.65
+anchor_right = 0.5
+anchor_bottom = 0.65
+offset_left = -28.5
+offset_top = -171.25
+offset_right = 28.5
+offset_bottom = -102.25
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_rvp5o")
+text = "1x"
+label_settings = SubResource("LabelSettings_pr1ej")
+horizontal_alignment = 1
+
+[node name="MultiplierProgress" type="Panel" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=502870620]
 clip_children = 2
 material = SubResource("ShaderMaterial_x2xye")
 anchors_preset = -1
@@ -405,52 +486,69 @@ anchor_top = 0.65
 anchor_right = 0.5
 anchor_bottom = 0.65
 offset_left = -128.0
-offset_top = -128.0
+offset_top = -267.125
 offset_right = 128.0
-offset_bottom = 128.0
+offset_bottom = -11.125
 theme_override_styles/panel = SubResource("StyleBoxFlat_56f8v")
 
-[node name="Score" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1330190508]
+[node name="Score" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1332908445]
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.35
 anchor_right = 0.5
 anchor_bottom = 0.35
-offset_left = -14.5
-offset_top = -28.5
-offset_right = 14.5
-offset_bottom = 28.5
+offset_left = -96.0
+offset_top = -126.625
+offset_right = 96.0
+offset_bottom = -57.62497
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_rvp5o")
-text = "0"
+text = "100,000"
 label_settings = SubResource("LabelSettings_usmyc")
 horizontal_alignment = 1
 
-[node name="Multiplier" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1660490363]
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.65
-anchor_right = 0.5
-anchor_bottom = 0.65
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("4_rvp5o")
-text = "1x"
-label_settings = SubResource("LabelSettings_pr1ej")
-horizontal_alignment = 1
-
-[node name="ComboCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
-visible = false
+[node name="Grade" type="RichTextLabel" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=325733819]
+clip_contents = false
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.86
 anchor_right = 0.5
 anchor_bottom = 0.86
 offset_left = -90.0
-offset_top = -18.0
+offset_top = -167.5
 offset_right = 90.0
-offset_bottom = 18.0
+offset_bottom = -64.49988
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8627451)
+theme_override_fonts/normal_font = ExtResource("20_pr1ej")
+theme_override_fonts/bold_font = SubResource("FontFile_rc4du")
+theme_override_fonts/bold_italics_font = SubResource("FontFile_ay2bh")
+theme_override_fonts/italics_font = SubResource("FontFile_ag8t5")
+theme_override_fonts/mono_font = SubResource("FontFile_3jteb")
+theme_override_font_sizes/normal_font_size = 60
+bbcode_enabled = true
+text = "??"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ComboCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=2093196584]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.86
+anchor_right = 0.5
+anchor_bottom = 0.86
+offset_left = -90.0
+offset_top = -47.5
+offset_right = 90.0
+offset_bottom = 21.500244
 grow_horizontal = 2
 grow_vertical = 2
 text = "0"

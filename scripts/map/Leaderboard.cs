@@ -44,7 +44,7 @@ public struct Leaderboard
         catch (Exception exception)
         {
             Logger.Error(exception);
-            GD.Print("Score(s) at ", Path, " are corrupted or outdated. Resetting."); // i added a score version but dont really know how to handle previous scores that dont have any version value, so its just gonna spew a bunch of errors so i added this so people dont report this
+            ToastNotification.Notify($"Score(s) at {Path} are corrupted or outdated. Resetting.", 1); // i added a score version but dont really know how to handle previous scores that dont have any version value, so its just gonna spew a bunch of errors so i added this so people dont report this
             Reset();
         }
 
@@ -100,6 +100,7 @@ public struct Leaderboard
             file.Store8((byte)(score.Qualifies ? 1 : 0));
             file.Store64(score.Value);
             file.StoreDouble(score.Accuracy);
+            file.StoreDouble(score.Grade);
             file.StoreDouble(score.Time);
             file.StoreDouble(score.Progress);
             file.StoreDouble(score.MapLength);
@@ -148,6 +149,7 @@ public struct Leaderboard
         public bool Qualifies;
         public ulong Value;
         public double Accuracy;
+        public double Grade;
         public double Time;
         public double Progress;
         public double MapLength;
@@ -170,6 +172,7 @@ public struct Leaderboard
             Qualifies = FileBuffer.GetBool();
             Value = FileBuffer.GetUInt64();
             Accuracy = FileBuffer.GetDouble();
+            Grade = FileBuffer.GetDouble();
             Time = FileBuffer.GetDouble();
             Progress = FileBuffer.GetDouble();
             MapLength = FileBuffer.GetDouble();
@@ -195,6 +198,7 @@ public struct Leaderboard
             bool qualifies,
             ulong value,
             double accuracy,
+            double grade,
             double time,
             double progress,
             double mapLength,
@@ -208,6 +212,7 @@ public struct Leaderboard
             Qualifies = qualifies;
             Value = value;
             Accuracy = accuracy;
+            Grade = grade;
             Time = time;
             Progress = progress;
             MapLength = mapLength;

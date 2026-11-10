@@ -29,6 +29,7 @@ public partial class Attempt : RefCounted
     public double Length;
 
     public double Accuracy = 100;
+    public double Grade = 0;
     public double Health = 100;
     public double HealthStep = 15;
     public bool HasHealthModifier = false;
@@ -69,7 +70,7 @@ public partial class Attempt : RefCounted
     public uint ReplayFrameCountOffset = 0;
     public uint ReplayAttemptStatusOffset = 0;
 
-    public double Version = 2;
+    public double Version = 1;
 
     public Attempt(
         Map map,

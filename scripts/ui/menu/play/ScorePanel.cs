@@ -11,11 +11,13 @@ public partial class ScorePanel : Panel
 
     private Label playerLabel;
     private Label timerLabel;
-    private Label accuracyLabel;
+    private RichTextLabel accuracyLabel;
     private Label speedLabel;
     private Label timeLabel;
     private HBoxContainer modifiers;
     private TextureRect modifierTemplate;
+
+    private string Grade;
 
     public override void _Ready()
     {
@@ -23,7 +25,7 @@ public partial class ScorePanel : Panel
 
         playerLabel = GetNode<Label>("Player");
         timerLabel = GetNode<Label>("Timer");
-        accuracyLabel = GetNode<Label>("Accuracy");
+        accuracyLabel = GetNode<RichTextLabel>("Accuracy");
         speedLabel = GetNode<Label>("Speed");
         timeLabel = GetNode<Label>("Time");
         modifiers = GetNode<HBoxContainer>("Modifiers");
@@ -53,8 +55,10 @@ public partial class ScorePanel : Panel
     {
         Score = score;
 
+        getGrade(score);
+
         playerLabel.Text = score.Player;
-        accuracyLabel.Text = $"{util.String.PadMagnitude(score.Value)} | {score.Accuracy:F2}%";
+        accuracyLabel.Text = $"{Grade}[color=#a0a0a0] | {util.String.PadMagnitude(score.Value)} | {score.Accuracy:F2}%";
         speedLabel.Text = $"{score.Speed:F2}x";
         timeLabel.Text = $"{util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time)} | Score Version: {score.Version}";
 
@@ -88,6 +92,35 @@ public partial class ScorePanel : Panel
             var map = MapParser.Decode(replay.MapFilePath);
 
             Game.Play(map, replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
+        }
+    }
+
+    private void getGrade(Leaderboard.Score score)
+    {
+        switch (score.Grade)
+        {
+            case >= 0.95:
+                Grade = "[color=a0a064]S";
+                break;
+            case >= 0.9:
+                Grade = "[color=a06485]A";
+                break;
+            case >= 0.8:
+                Grade = "[color=647da0]B";
+                break;
+            case >= 0.7:
+                Grade = "[color=64a078]C";
+                break;
+            case >= 0.6:
+                Grade = "[color=a06464]D";
+                break;
+            case <= 0.5:
+                Grade = "F";
+                break;
+        }
+        if (score.Accuracy == 100)
+        {
+            Grade = $"{Grade}+";
         }
     }
 }

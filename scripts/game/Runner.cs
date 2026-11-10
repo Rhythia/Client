@@ -509,6 +509,7 @@ public partial class Runner : Node3D
                         Attempt.Qualifies,
                         (ulong)Math.Round(Attempt.Score),
                         Attempt.Accuracy,
+                        Attempt.Grade,
                         Time.GetUnixTimeFromSystem(),
                         Attempt.Progress,
                         Attempt.Map.Length,
@@ -559,27 +560,11 @@ public partial class Runner : Node3D
         switch (hitResult)
         {
             case HitResult.Hit:
+                judgementCheck(factor);
                 Attempt.Hits++;
-                switch (factor) // judgements
-                {
-                    case 1f:
-                        Attempt.Perfects++; // pawfect
-                        break;
-
-                    case 0.9f:
-                        Attempt.Greats++; // gewd
-                        break;
-
-                    case 0.8f:
-                        Attempt.Okays++; // okay
-                        break;
-
-                    case 0.7f:
-                        Attempt.Bads++; // bad
-                        break;
-                }
                 Attempt.Sum++;
                 Attempt.Accuracy = Math.Floor((float)Attempt.Hits / Attempt.Sum * 10000) / 100;
+                Attempt.Grade = Math.Clamp(Attempt.Accuracy / 100 * Math.Clamp(Attempt.Score / 1000000, 0, 1), 0, 1);
                 Attempt.Combo++;
                 Attempt.ComboMultiplierProgress++;
                 Attempt.LastHitColour = SkinManager.Instance.Skin.NoteColors[noteIndex % SkinManager.Instance.Skin.NoteColors.Length];
@@ -608,6 +593,7 @@ public partial class Runner : Node3D
                 Attempt.Misses++;
                 Attempt.Sum++;
                 Attempt.Accuracy = Mathf.Floor((float)Attempt.Hits / Attempt.Sum * 10000) / 100;
+                Attempt.Grade = Math.Clamp(Attempt.Accuracy / 100 * Math.Clamp(Attempt.Score / 1000000, 0, 1), 0, 1);
                 Attempt.Combo = 0;
                 Attempt.ComboMultiplierProgress = 0;
                 Attempt.ComboMultiplier = Math.Max(1, Attempt.ComboMultiplier - (uint)Math.Truncate((double)Attempt.ComboMultiplier / 2));
@@ -723,6 +709,28 @@ public partial class Runner : Node3D
 
             SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
             // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
+        }
+    }
+
+    private void judgementCheck(float factor)
+    {
+        switch (factor) // judgements
+        {
+            case 1f:
+                Attempt.Perfects++; // pawfect
+                break;
+
+            case 0.9f:
+                Attempt.Greats++; // gewd
+                break;
+
+            case 0.8f:
+                Attempt.Okays++; // okay
+                break;
+
+            case 0.7f:
+                Attempt.Bads++; // bad
+                break;
         }
     }
 }
