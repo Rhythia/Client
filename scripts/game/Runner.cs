@@ -37,6 +37,10 @@ public partial class Runner : Node3D
     private bool autoplayEnabled = false;
     private double? hitResultProgressOverride = null;
     private double[] noteTimestamps;
+    private double panelOffset = 0;
+    private Vector2 gridOriginalSize;
+    private QuadMesh gridMesh;
+    private QuadMesh gridGuidesMesh;
 
     [ExportCategory("Settings")]
     [Export]
@@ -53,6 +57,15 @@ public partial class Runner : Node3D
     public MeshInstance3D Grid;
 
     [Export]
+    public MeshInstance3D GridGuides;
+
+    [Export]
+    public MeshInstance3D PanelLeft;
+
+    [Export]
+    public MeshInstance3D PanelRight;
+
+    [Export]
     public MeshInstance3D Cursor;
 
     // [Export] public VideoStreamPlayer VideoStreamPlayer;
@@ -65,8 +78,14 @@ public partial class Runner : Node3D
         Camera ??= GetNode<Camera3D>("Camera3D");
         Renderers ??= GetNode<Godot.Collections.Array<Renderer>>("Renderers");
         Grid ??= HudManager.GetNode<MeshInstance3D>("Grid");
+        GridGuides ??= Grid.GetNode<MeshInstance3D>("GridGuides");
+        PanelLeft ??= HudManager.GetNode<MeshInstance3D>("PanelLeft");
+        PanelRight ??= HudManager.GetNode<MeshInstance3D>("PanelRight");
         Cursor ??= GetNode<MeshInstance3D>("Cursor");
         // VideoStreamPlayer ??= GetNode<VideoStreamPlayer>("Video/VideoViewport/VideoStreamPlayer");
+
+        gridMesh = (QuadMesh)Grid.Mesh;
+        gridGuidesMesh = (QuadMesh)GridGuides.Mesh;
     }
 
     public override void _Process(double delta)
@@ -294,11 +313,27 @@ public partial class Runner : Node3D
             EmitSignal(SignalName.AttemptStatsUpdated, Attempt);
         }
 
+        settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
+
+        QuadMesh leftPanelMesh = (QuadMesh)PanelLeft.Mesh;
+        gridOriginalSize = gridMesh.Size;
+
+        var windowSize = DisplayServer.WindowGetSize();
+
+        double panelSectionHeight = 2 * (PanelLeft.Position.Z - Camera.Position.Z) * Math.Tan((double)settings.FoV * Math.PI / 180 / 2);
+        double panelSectionWidth = windowSize.X / windowSize.Y * panelSectionHeight;
+
+        double gridSectionHeight = 2 * (Grid.Position.Z - Camera.Position.Z) * Math.Tan((double)settings.FoV * Math.PI / 180 / 2);
+        double gridSectionWidth = windowSize.X / windowSize.Y * gridSectionHeight;
+
+        double panelOffsetPerc =
+            (PanelLeft.Position.X + leftPanelMesh.Size.X / 2) / panelSectionWidth - (Grid.Position.X - gridMesh.Size.X / 2) / gridSectionWidth;
+
         foreach (var mod in Attempt.Modifiers)
         {
             mod.Active = false;
 
-            if (mod is IMapModifier || mod is IObjectRenderModifier<Note>)
+            if (mod is IMapModifier || mod is IObjectRenderModifier<Note> || mod is IHudObjectModifier)
             {
                 mod.Activate(Attempt);
                 HudManager.DisplayModifier(mod);
@@ -307,8 +342,22 @@ public partial class Runner : Node3D
                 {
                     mapMod.ModifyMap(Attempt.Map, Attempt);
                 }
+
+                if (mod is IHudObjectModifier meshMod)
+                {
+                    meshMod.ModifyGrid(Grid);
+                    meshMod.ModifyGridGuides(GridGuides);
+                }
             }
         }
+
+        double offsetPerc =
+            (PanelLeft.Position.X + leftPanelMesh.Size.X / 2) / panelSectionWidth - (Grid.Position.X - gridMesh.Size.X / 2) / gridSectionWidth;
+        panelOffset = (panelOffsetPerc - offsetPerc) * panelSectionWidth;
+
+        // this assumes right panel has the same gap as the left just in the opposite direction
+        PanelLeft.Translate(new Vector3((float)panelOffset, 0, 0));
+        PanelRight.Translate(new Vector3(-(float)panelOffset, 0, 0));
 
         autoplayEnabled = Attempt.Modifiers.Any(mod => mod is AutoplayModifier) && !Attempt.IsReplay;
 
@@ -330,7 +379,6 @@ public partial class Runner : Node3D
         {
             autoplayHandler = null;
         }
-        settings = Attempt.IsReplay ? Attempt.Replays[0].Settings : SettingsManager.Instance.Settings;
         Camera.Fov = (float)(double)settings.FoV;
 
         // temp until skinning support
@@ -466,6 +514,8 @@ public partial class Runner : Node3D
         Playing = false;
         StopQueued = false;
         Attempt.Stopped = true;
+
+        resetHudItems();
 
         if (eventsConnected)
         {
@@ -619,6 +669,8 @@ public partial class Runner : Node3D
                     Attempt.Alive = false;
                     Attempt.Qualifies = false;
 
+                    resetHudItems();
+
                     Results.Replay();
                 }
                 else
@@ -705,5 +757,16 @@ public partial class Runner : Node3D
             SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
             // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
         }
+    }
+
+    /// <summary>
+    /// Resets grid size and panels positions
+    /// </summary>
+    private void resetHudItems()
+    {
+        PanelLeft.Translate(new Vector3(-(float)panelOffset, 0, 0));
+        PanelRight.Translate(new Vector3((float)panelOffset, 0, 0));
+        gridMesh.Size = gridOriginalSize;
+        gridGuidesMesh.Size = gridOriginalSize;
     }
 }

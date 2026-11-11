@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-public partial class PanelRight : UIComponent
+public partial class PanelRight : MeshUIComponent3D
 {
     private SubViewport viewport;
     private Label accuracy,

@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-public partial class PanelLeft : UIComponent
+public partial class PanelLeft : MeshUIComponent3D
 {
     private SubViewport viewport;
     private ShaderMaterial multiplierProgressMaterial;
