@@ -203,6 +203,7 @@ public partial class Rhythia : Node
             new EarthquakeModifier(),
             new HorizontalFlipModifier(),
             new VerticalFlipModifier(),
+            new HardrockModifier(),
         ];
     }
 

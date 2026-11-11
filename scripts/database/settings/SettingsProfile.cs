@@ -287,6 +287,12 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<bool> MissPopups { get; private set; }
 
+    /// <summary>
+    /// Expand hud elements when hardrock mod is enabled
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> HrVisualAssist { get; private set; }
+
     #endregion
 
     #region Video
@@ -1064,6 +1070,14 @@ public partial class SettingsProfile
             Id = "MissPopups",
             Title = "Miss Popups",
             Description = "Toggles a popup on a miss",
+            Section = SettingsSection.HUD,
+        };
+
+        HrVisualAssist = new(true)
+        {
+            Id = "HrVisualAssist",
+            Title = "Hard Rock Visual Assist",
+            Description = "Expands the grid visually when the Hard Rock modifier is enabled",
             Section = SettingsSection.HUD,
         };
 
