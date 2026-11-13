@@ -34,7 +34,11 @@ public partial class Map : RefCounted
     [Ignore]
     public MapSet MapSet { get; set; }
 
-    public string FolderPath { get; set; } = string.Empty;
+    public string FolderPath
+    {
+        get;
+        set => field = value?.Replace('\\', '/');
+    } = string.Empty;
 
     public bool Favorite { get; set; }
 
@@ -103,7 +107,7 @@ public partial class Map : RefCounted
     {
         try
         {
-            notes = MapParser.DecodePHXMO($"{MapUtil.MapsFolder}/{Name}/objects.phxmo");
+            notes = MapParser.DecodePHXMO($"{FolderPath}/objects.phxmo");
             return notes;
         }
         catch
@@ -125,7 +129,7 @@ public partial class Map : RefCounted
 
     private Texture2D getCover()
     {
-        string path = $"{MapUtil.MapsFolder}/{Name}";
+        string path = FolderPath;
 
         if (cover == DefaultCover && File.Exists($"{path}/cover.png"))
         {
