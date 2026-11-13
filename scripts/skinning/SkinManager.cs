@@ -123,6 +123,7 @@ public partial class SkinManager : Node
         skin.ModAutoplayImage = loadTexture("modifiers/autoplay.png");
         skin.ModGhostImage = loadTexture("modifiers/ghost.png");
         skin.ModStrobeImage = loadTexture("modifiers/strobe.png");
+        skin.ModFlickerImage = loadTexture("modifiers/flicker.png");
         skin.ModChaosImage = loadTexture("modifiers/chaos.png");
         skin.ModVortexImage = loadTexture("modifiers/vortex.png");
         skin.ModEarthquakeImage = loadTexture("modifiers/earthquake.png");
