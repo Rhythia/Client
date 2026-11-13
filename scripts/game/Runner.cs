@@ -507,14 +507,12 @@ public partial class Runner : Node3D
                         Attempt.ID,
                         "You",
                         Attempt.Qualifies,
-                        (ulong)Math.Round(Attempt.Score),
+                        Attempt.Score,
                         Attempt.Accuracy,
-                        Attempt.Grade,
                         Time.GetUnixTimeFromSystem(),
                         Attempt.Progress,
                         Attempt.Map.Length,
                         Speed,
-                        Attempt.Version,
                         mods
                     )
                 );
@@ -523,7 +521,7 @@ public partial class Runner : Node3D
                 if (Attempt.Qualifies)
                 {
                     Stats.Instance.Passes++;
-                    Stats.Instance.TotalScore += (ulong)Math.Round(Attempt.Score);
+                    Stats.Instance.TotalScore += Attempt.Score;
 
                     if (Attempt.Accuracy == 100)
                     {
@@ -532,7 +530,7 @@ public partial class Runner : Node3D
 
                     if (Attempt.Score > Stats.Instance.HighestScore)
                     {
-                        Stats.Instance.HighestScore = (ulong)Math.Round(Attempt.Score);
+                        Stats.Instance.HighestScore = Attempt.Score;
                     }
 
                     Stats.Instance.AverageAccuracy = (Stats.Instance.AverageAccuracy + Attempt.Accuracy) / Stats.Instance.Passes;
@@ -554,17 +552,15 @@ public partial class Runner : Node3D
         float lateness = Attempt.IsReplay
             ? Attempt.HitsInfo[noteIndex]
             : (float)(((int)judgmentProgress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
-        float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 27) / 104f, 1);
-        double hitScore = Attempt.UnitHitScore * Attempt.ComboMultiplier * factor;
+        float factor = 1 - Math.Max(0, lateness - 25) / 150f;
+        uint hitScore = (uint)(100 * Attempt.ComboMultiplier * Attempt.ModsMultiplier * factor * ((Speed - 1) / 2.5 + 1));
 
         switch (hitResult)
         {
             case HitResult.Hit:
-                judgementCheck(factor);
                 Attempt.Hits++;
                 Attempt.Sum++;
                 Attempt.Accuracy = Math.Floor((float)Attempt.Hits / Attempt.Sum * 10000) / 100;
-                Attempt.Grade = Math.Clamp(Attempt.Accuracy / 100 * Math.Clamp(Attempt.Score / 1000000, 0, 1), 0, 1);
                 Attempt.Combo++;
                 Attempt.ComboMultiplierProgress++;
                 Attempt.LastHitColour = SkinManager.Instance.Skin.NoteColors[noteIndex % SkinManager.Instance.Skin.NoteColors.Length];
@@ -581,9 +577,9 @@ public partial class Runner : Node3D
 
                 if (Attempt.ComboMultiplierProgress == Attempt.ComboMultiplierIncrement)
                 {
-                    if (Attempt.ComboMultiplier < 6)
+                    if (Attempt.ComboMultiplier < 8)
                     {
-                        Attempt.ComboMultiplierProgress = Attempt.ComboMultiplier == 5 ? Attempt.ComboMultiplierIncrement : 0;
+                        Attempt.ComboMultiplierProgress = Attempt.ComboMultiplier == 7 ? Attempt.ComboMultiplierIncrement : 0;
                         Attempt.ComboMultiplier++;
                     }
                 }
@@ -593,10 +589,9 @@ public partial class Runner : Node3D
                 Attempt.Misses++;
                 Attempt.Sum++;
                 Attempt.Accuracy = Mathf.Floor((float)Attempt.Hits / Attempt.Sum * 10000) / 100;
-                Attempt.Grade = Math.Clamp(Attempt.Accuracy / 100 * Math.Clamp(Attempt.Score / 1000000, 0, 1), 0, 1);
                 Attempt.Combo = 0;
                 Attempt.ComboMultiplierProgress = 0;
-                Attempt.ComboMultiplier = Math.Max(1, Attempt.ComboMultiplier - (uint)Math.Truncate((double)Attempt.ComboMultiplier / 2));
+                Attempt.ComboMultiplier = Math.Max(1, Attempt.ComboMultiplier - 1);
 
                 if (!Attempt.IsReplay)
                 {
@@ -709,28 +704,6 @@ public partial class Runner : Node3D
 
             SoundManager.Song.Seek((float)(Attempt.Progress - Attempt.Settings.LocalOffset) / 1000);
             // VideoStreamPlayer.StreamPosition = (float)Attempt.Progress / 1000;
-        }
-    }
-
-    private void judgementCheck(float factor)
-    {
-        switch (factor) // judgements
-        {
-            case 1f:
-                Attempt.Perfects++; // pawfect
-                break;
-
-            case 0.9f:
-                Attempt.Greats++; // gewd
-                break;
-
-            case 0.8f:
-                Attempt.Okays++; // okay
-                break;
-
-            case 0.7f:
-                Attempt.Bads++; // bad
-                break;
         }
     }
 }

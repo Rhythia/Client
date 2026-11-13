@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b0k0ltu15bart" path="res://user/skins/default/modifiers/nofail.png" id="4_ngxw4"]
 [ext_resource type="Theme" uid="uid://dhuhu3mmaew1a" path="res://themes/theme.tres" id="5_ngxw4"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ngxw4"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bfkib"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ddh1n"]
 font = ExtResource("2_ngxw4")
@@ -52,13 +52,13 @@ shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="ScorePanel" type="Panel" unique_id=1580355860]
-custom_minimum_size = Vector2(0, 100)
 clip_contents = true
+custom_minimum_size = Vector2(0, 100)
 anchors_preset = 10
 anchor_right = 1.0
 size_flags_horizontal = 3
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxEmpty_ngxw4")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bfkib")
 script = ExtResource("1_rwxrw")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1143150021]
@@ -84,7 +84,7 @@ label_settings = SubResource("LabelSettings_ddh1n")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
-[node name="Timer" type="Label" parent="." unique_id=1064018268]
+[node name="Score" type="Label" parent="." unique_id=1064018268]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.6
@@ -98,8 +98,7 @@ label_settings = SubResource("LabelSettings_i1p2f")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Accuracy1" type="Label" parent="." unique_id=696162467]
-visible = false
+[node name="Accuracy" type="Label" parent="." unique_id=696162467]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.6
@@ -111,30 +110,6 @@ offset_top = 4.0
 offset_right = -16.0
 text = "100.00%"
 label_settings = SubResource("LabelSettings_exmec")
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="Accuracy" type="RichTextLabel" parent="." unique_id=1126934800]
-clip_contents = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.6
-anchor_top = 0.4
-anchor_right = 1.0
-anchor_bottom = 0.4
-offset_left = 4.0
-offset_top = 4.0
-offset_right = -16.0
-offset_bottom = 25.0
-focus_mode = 0
-mouse_filter = 2
-theme_override_fonts/normal_font = ExtResource("3_314mk")
-theme_override_font_sizes/normal_font_size = 18
-bbcode_enabled = true
-text = "[color=#a0a0a0] ?? [color=#a0a0a0] | 100,000 | 100%"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -150,7 +125,7 @@ offset_top = 4.0
 offset_right = -16.0
 offset_bottom = -8.0
 grow_vertical = 0
-text = "1,000 days ago | Version : #"
+text = "1,000 days ago"
 label_settings = SubResource("LabelSettings_58c0b")
 horizontal_alignment = 2
 vertical_alignment = 1
