@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using util;
 
 public partial class QuitButton : Button
 {
@@ -7,10 +8,10 @@ public partial class QuitButton : Button
 
     public override void _Ready()
     {
-        popup = new("Quit", "[center]Are you sure?");
+        popup = new(I18n.Tr("Quit"), $"[center]{I18n.Tr("Are you sure?")}", true);
 
-        popup.AddOption("Quit", Callable.From(quit));
-        popup.AddOption("Cancel", Callable.From(popup.Hide));
+        popup.AddOption(I18n.Tr("Quit"), Callable.From(quit));
+        popup.AddOption(I18n.Tr("Cancel"), Callable.From(popup.Hide));
 
         Pressed += () =>
         {

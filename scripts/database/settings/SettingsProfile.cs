@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Godot;
+using util;
 
 public partial class SettingsProfile
 {
@@ -421,6 +422,12 @@ public partial class SettingsProfile
 
     [Order]
     /// <summary>
+    /// Changes game's language
+    /// </summary>
+    public SettingsItem<string> Language { get; private set; }
+
+    [Order]
+    /// <summary>
     /// Import settings from previous (nightly) version
     /// </summary>
     public SettingsItem<Variant> ImportNightlyProfile { get; private set; }
@@ -482,6 +489,7 @@ public partial class SettingsProfile
             Title = "Skin",
             Description = "Selected skin for the game",
             Section = SettingsSection.Gameplay,
+            ListTranslation = false,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -692,6 +700,7 @@ public partial class SettingsProfile
             Title = "Menu Space",
             Description = "Overrides the skin's background space for the menu",
             Section = SettingsSection.Spaces,
+            ListTranslation = false,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -726,6 +735,7 @@ public partial class SettingsProfile
             Title = "Game Space",
             Description = "Overrides the skin's background space for gameplay",
             Section = SettingsSection.Spaces,
+            ListTranslation = false,
             UpdateAction = (_, init) =>
             {
                 if (!init)
@@ -1336,6 +1346,21 @@ public partial class SettingsProfile
 
         #region Other
 
+        // hmm, this all looks kinda clunky
+        Language = new(Constants.SUPPORTED_LANGUAGES[0])
+        {
+            Id = "Language",
+            Title = "Language",
+            Description = "Change the game's language",
+            Section = SettingsSection.Other,
+            ListTranslation = false,
+            UpdateAction = (value, _) =>
+            {
+                I18n.Locale = Constants.ALIAS_TO_LANGCODE.GetValueOrDefault(value) ?? Constants.SUPPORTED_LANGUAGES[0];
+            },
+            List = new(Constants.SUPPORTED_LANGUAGES[0]) { Values = Constants.ALIAS_TO_LANGCODE.Keys.ToList() },
+        };
+
         ImportNightlyProfile = new(default)
         {
             Id = "ImportNightlyProfile",
@@ -1434,6 +1459,7 @@ public partial class SettingsProfile
             Description = "Set the path where Rhythia stores it's files",
             Section = SettingsSection.Other,
             Placeholder = Constants.DEFAULT_USER_FOLDER,
+            LineTranslation = false,
             UpdateAction = (value, _) =>
             {
                 SettingsManager.SetUserFolder(value);
@@ -1778,7 +1804,7 @@ public partial class SettingsProfile
         SettingsManager.Load();
         SettingsMenu.Instance.UpdateProfileSelection();
 
-        ToastNotification.Notify($"Created profile '{profileName}'");
+        ToastNotification.Notify(I18n.Tr("Created profile '{0}'", profileName), autoTraslate: false);
     }
 
     public static void ConfigureSetUserFolderPath(string userFolderPath)
@@ -1812,7 +1838,7 @@ public partial class SettingsProfile
             }
         }
 
-        ToastNotification.Notify($"Imported {importedCount} colorsets from nightly");
+        ToastNotification.Notify(I18n.Tr("Imported {0} colorsets from nightly", importedCount), autoTraslate: false);
     }
 
     private static void importMeshesFromNightly()
@@ -1848,6 +1874,6 @@ public partial class SettingsProfile
             }
         }
 
-        ToastNotification.Notify($"Imported {importedCount} meshes from nightly");
+        ToastNotification.Notify(I18n.Tr("Imported {0} meshes from nightly", importedCount), autoTraslate: false);
     }
 }

@@ -1,6 +1,7 @@
 using System.IO;
 using Godot;
 using Tomlyn;
+using util;
 
 [GlobalClass]
 public partial class SkinManager : Node
@@ -173,7 +174,7 @@ public partial class SkinManager : Node
 
         if (!SettingsManager.HideNotifications)
         {
-            ToastNotification.Notify($"Loaded skin [{settings.Skin.Value}]");
+            ToastNotification.Notify(I18n.Tr("Loaded skin [{0}]", settings.Skin.Value), autoTraslate: false);
         }
 
         Logger.Log($"Loaded skin {settings.Skin.Value}");

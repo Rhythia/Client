@@ -33,7 +33,6 @@
 [ext_resource type="Script" uid="uid://bjc8qp66nisos" path="res://scripts/game/ui/Title.cs" id="22_02fa5"]
 [ext_resource type="Texture2D" uid="uid://lfj8i1bi6kfs" path="res://textures/ui/pause.png" id="23_7silw"]
 [ext_resource type="FontFile" uid="uid://dotb3skhwouha" path="res://fonts/Roboto/Roboto-Bold.ttf" id="23_wf21h"]
-[ext_resource type="FontFile" uid="uid://rs2mb33nd3b1" path="res://fonts/Roboto/Roboto-Italic.ttf" id="24_j6p10"]
 [ext_resource type="Script" uid="uid://dhrqgv44b65ls" path="res://scripts/game/ui/Skip.cs" id="25_nepv3"]
 [ext_resource type="Script" uid="uid://ddtnij8m4eipl" path="res://scripts/game/ui/Grid.cs" id="27_js0lu"]
 [ext_resource type="Script" uid="uid://b7jvxorkr4xfi" path="res://scripts/game/ui/Speed.cs" id="28_gxtfn"]
@@ -266,10 +265,6 @@ Button/styles/hover = SubResource("StyleBoxFlat_6kbgk")
 Button/styles/normal = SubResource("StyleBoxEmpty_jlnvv")
 Button/styles/pressed = SubResource("StyleBoxFlat_y08lf")
 
-[sub_resource type="LabelSettings" id="LabelSettings_tjduq"]
-font = ExtResource("24_j6p10")
-font_size = 18
-
 [node name="SceneGame" type="Node" unique_id=909809067 node_paths=PackedStringArray("Runner", "Menu", "PlaytestOverlay", "ReplayManager", "PlayerInputController", "CursorManager")]
 script = ExtResource("1_m4url")
 Runner = NodePath("Runner")
@@ -404,6 +399,7 @@ grow_vertical = 2
 texture = ExtResource("11_sdncv")
 
 [node name="MultiplierProgress" type="Panel" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1067613329]
+auto_translate_mode = 2
 clip_children = 2
 material = SubResource("ShaderMaterial_x2xye")
 anchors_preset = -1
@@ -415,9 +411,11 @@ offset_left = -128.0
 offset_top = -166.25
 offset_right = 128.0
 offset_bottom = 89.75128
+tooltip_auto_translate_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_56f8v")
 
 [node name="Score" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1330190508]
+auto_translate_mode = 2
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.35
@@ -429,12 +427,14 @@ offset_right = 15.0
 offset_bottom = 34.500122
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "0"
 label_settings = SubResource("LabelSettings_usmyc")
 horizontal_alignment = 1
 
 [node name="Multiplier" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1660490363]
+auto_translate_mode = 2
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.65
@@ -446,12 +446,14 @@ offset_right = 28.5
 offset_bottom = -2.2499695
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "1x"
 label_settings = SubResource("LabelSettings_pr1ej")
 horizontal_alignment = 1
 
 [node name="ComboCount" type="Label" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=531787894]
+auto_translate_mode = 2
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.86
@@ -463,6 +465,7 @@ offset_right = 90.0
 offset_bottom = 34.5
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_pause_counter_title")
 horizontal_alignment = 1
@@ -490,6 +493,7 @@ grow_vertical = 2
 texture = ExtResource("12_whe6p")
 
 [node name="Accuracy" type="Label" parent="Runner/HUD/PanelRight/PanelRightViewport" unique_id=1669266042]
+auto_translate_mode = 2
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.35
@@ -497,12 +501,14 @@ anchor_right = 0.5
 anchor_bottom = 0.35
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "100.00%"
 label_settings = SubResource("LabelSettings_usmyc")
 horizontal_alignment = 1
 
 [node name="Hits" type="Label" parent="Runner/HUD/PanelRight/PanelRightViewport" unique_id=2096630009]
+auto_translate_mode = 2
 modulate = Color(1, 1, 1, 0.627451)
 anchors_preset = -1
 anchor_left = 0.5
@@ -514,12 +520,14 @@ offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 4
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "0"
 label_settings = SubResource("LabelSettings_5bid2")
 horizontal_alignment = 2
 
 [node name="Misses" type="Label" parent="Runner/HUD/PanelRight/PanelRightViewport" unique_id=1379241442]
+auto_translate_mode = 2
 modulate = Color(1, 1, 1, 0.627451)
 anchors_preset = -1
 anchor_left = 0.5
@@ -530,11 +538,13 @@ offset_left = 25.0
 offset_bottom = -4.0
 grow_vertical = 2
 size_flags_horizontal = 4
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "0"
 label_settings = SubResource("LabelSettings_v63ri")
 
 [node name="SimpleMisses" type="Label" parent="Runner/HUD/PanelRight/PanelRightViewport" unique_id=1871751782]
+auto_translate_mode = 2
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -544,11 +554,13 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "0"
 label_settings = SubResource("LabelSettings_g4ffu")
 
 [node name="Sum" type="Label" parent="Runner/HUD/PanelRight/PanelRightViewport" unique_id=150248329]
+auto_translate_mode = 2
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.7
@@ -557,6 +569,7 @@ anchor_bottom = 0.7
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_rvp5o")
 text = "0"
 label_settings = SubResource("LabelSettings_s1j5a")
@@ -641,6 +654,7 @@ stretch_mode = 1
 script = ExtResource("21_twgab")
 
 [node name="Label" type="Label3D" parent="Runner/HUD/Progress" unique_id=496335082]
+auto_translate_mode = 2
 transform = Transform3D(3.5, 0, 0, 0, 3.38074, -0.905867, 0, 0.905867, 3.38074, 0, 7, -10)
 pixel_size = 0.0025
 modulate = Color(1, 1, 1, 0.74509805)
@@ -653,6 +667,7 @@ font_size = 64
 script = ExtResource("22_02fa5")
 
 [node name="Label" type="Label3D" parent="Runner/HUD/Title" unique_id=841289409]
+auto_translate_mode = 2
 transform = Transform3D(2, 0, 0, 0, 1.93185, -0.517638, 0, 0.517638, 1.93185, 0, 8.25, -10)
 outline_modulate = Color(0, 0, 0, 0)
 text = "N/A - N/A"
@@ -665,6 +680,7 @@ width = 2500.0
 script = ExtResource("20_suyxu")
 
 [node name="Label" type="Label3D" parent="Runner/HUD/Combo" unique_id=1330017059]
+auto_translate_mode = 2
 transform = Transform3D(7, 0, 0, 0, 6.89365, -1.21554, 0, 1.21554, 6.89365, 0, 3.5, -10)
 pixel_size = 0.0025
 modulate = Color(1, 1, 1, 0)
@@ -679,6 +695,7 @@ transform = Transform3D(7, 0, 0, 0, 6.76148, 1.81173, 0, -1.81173, 6.76148, 0, -
 script = ExtResource("28_gxtfn")
 
 [node name="Label" type="Label3D" parent="Runner/HUD/Speed" unique_id=1294863906]
+auto_translate_mode = 2
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 pixel_size = 0.0025
 modulate = Color(1, 1, 1, 0.39215687)
@@ -690,6 +707,7 @@ font = ExtResource("21_05nbr")
 script = ExtResource("25_nepv3")
 
 [node name="Label" type="Label3D" parent="Runner/HUD/Skip" unique_id=1231864437]
+auto_translate_mode = 1
 transform = Transform3D(7, 0, 0, 0, 6.76148, 1.81173, 0, -1.81173, 6.76148, 0, -5, -10)
 pixel_size = 0.0025
 modulate = Color(1, 1, 1, 0)
@@ -759,7 +777,9 @@ grow_vertical = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="QuitOverlay/Holder" unique_id=1425722822]
+auto_translate_mode = 1
 layout_mode = 2
+tooltip_auto_translate_mode = 1
 text = "Hold R to Quit"
 label_settings = SubResource("LabelSettings_r7xjp")
 horizontal_alignment = 1
@@ -855,14 +875,17 @@ size = 4.5
 far = 139.0
 
 [node name="Tip" type="Label" parent="ReplayViewer" unique_id=919285545]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 offset_right = 40.0
 grow_vertical = 0
+tooltip_auto_translate_mode = 1
 text = "Press F2 to hide replay UI, F3 to hide orthogonal camera, F to toggle note fade out, P to toggle note pushback"
 label_settings = SubResource("LabelSettings_a70tm")
 
 [node name="Time" type="Label" parent="ReplayViewer" unique_id=1277133470]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 1.0
@@ -870,6 +893,7 @@ offset_left = 64.0
 offset_top = 12.0
 offset_right = 164.0
 offset_bottom = -12.0
+tooltip_auto_translate_mode = 2
 text = "0:00 / 0:00"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1012,6 +1036,7 @@ grow_horizontal = 2
 color = Color(1, 1, 1, 0.078431375)
 
 [node name="Resume" type="Button" parent="Menu/Holder" unique_id=616429602]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.23400001
@@ -1021,12 +1046,14 @@ offset_left = 1.0
 offset_top = -0.040008545
 offset_right = 1.0
 offset_bottom = -0.040008545
+tooltip_auto_translate_mode = 1
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
 text = "RESUME"
 
 [node name="Restart" type="Button" parent="Menu/Holder" unique_id=865082248]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.384
@@ -1034,12 +1061,14 @@ anchor_right = 1.0
 anchor_bottom = 0.53400004
 offset_top = -0.040008545
 offset_bottom = -0.040008545
+tooltip_auto_translate_mode = 1
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
 text = "RESTART"
 
 [node name="Settings" type="Button" parent="Menu/Holder" unique_id=730914507]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.53400004
@@ -1047,12 +1076,14 @@ anchor_right = 1.0
 anchor_bottom = 0.684
 offset_top = -0.040008545
 offset_bottom = -0.040008545
+tooltip_auto_translate_mode = 1
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
 text = "SETTINGS"
 
 [node name="Quit" type="Button" parent="Menu/Holder" unique_id=225658949]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.684
@@ -1060,6 +1091,7 @@ anchor_right = 1.0
 anchor_bottom = 0.83400005
 offset_top = -0.040008545
 offset_bottom = -0.040039063
+tooltip_auto_translate_mode = 1
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_e1j6l")
 theme_override_font_sizes/font_size = 28
@@ -1078,21 +1110,8 @@ offset_bottom = -0.120025635
 grow_horizontal = 2
 color = Color(1, 1, 1, 0.078431375)
 
-[node name="Disclaimer" type="Label" parent="Menu/Holder" unique_id=1874627546]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.85
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_bottom = -1.7999878
-text = "NOTE: Pausing disqualifies your pass
-[font_size=12][color=ffffffa0] of which you are right now..."
-label_settings = SubResource("LabelSettings_tjduq")
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="RichTextLabel" type="RichTextLabel" parent="Menu/Holder" unique_id=1028947402]
+auto_translate_mode = 1
 clip_contents = false
 layout_mode = 1
 anchors_preset = -1
@@ -1100,12 +1119,42 @@ anchor_top = 0.85
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = -1.7999878
+tooltip_auto_translate_mode = 1
 focus_mode = 0
 mouse_filter = 2
 bbcode_enabled = true
 text = "NOTE: Pausing disqualifies your pass"
 fit_content = true
 autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DisclaimerContainer" type="VBoxContainer" parent="Menu/Holder" unique_id=1900516890]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 12.0
+offset_bottom = -2.0
+theme_override_constants/separation = 2
+
+[node name="Pt1" type="Label" parent="Menu/Holder/DisclaimerContainer" unique_id=1906662673]
+auto_translate_mode = 1
+layout_mode = 2
+tooltip_auto_translate_mode = 1
+text = "NOTE: Pausing disqualifies your pass"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pt2" type="Label" parent="Menu/Holder/DisclaimerContainer" unique_id=1102457781]
+auto_translate_mode = 1
+layout_mode = 2
+tooltip_auto_translate_mode = 1
+theme_override_colors/font_color = Color(1, 1, 1, 0.627451)
+theme_override_font_sizes/font_size = 12
+text = "of which you are right now..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -1161,12 +1210,16 @@ grow_vertical = 2
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="PlaytestOverlay/VB" unique_id=1440480954]
+auto_translate_mode = 1
 layout_mode = 2
+tooltip_auto_translate_mode = 1
 text = "Playtesting Menu"
 horizontal_alignment = 1
 
 [node name="SpinCheck" type="CheckButton" parent="PlaytestOverlay/VB" unique_id=1229643202]
+auto_translate_mode = 1
 layout_mode = 2
+tooltip_auto_translate_mode = 1
 text = "Spin"
 
 [node name="StartFrom" type="HBoxContainer" parent="PlaytestOverlay/VB" unique_id=1642958239]
@@ -1174,7 +1227,9 @@ layout_mode = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="PlaytestOverlay/VB/StartFrom" unique_id=1012996186]
+auto_translate_mode = 1
 layout_mode = 2
+tooltip_auto_translate_mode = 1
 text = "Start From"
 
 [node name="VSeparator" type="VSeparator" parent="PlaytestOverlay/VB/StartFrom" unique_id=747816767]
@@ -1183,7 +1238,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="LineEdit" type="LineEdit" parent="PlaytestOverlay/VB/StartFrom" unique_id=1472681876]
+auto_translate_mode = 2
 layout_mode = 2
+tooltip_auto_translate_mode = 2
 text = "0:00"
 placeholder_text = "0:00"
 alignment = 1
@@ -1193,7 +1250,9 @@ layout_mode = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="PlaytestOverlay/VB/Speed" unique_id=473992258]
+auto_translate_mode = 1
 layout_mode = 2
+tooltip_auto_translate_mode = 1
 text = "Speed"
 
 [node name="VSeparator" type="VSeparator" parent="PlaytestOverlay/VB/Speed" unique_id=676367974]
@@ -1202,11 +1261,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="LineEdit" type="LineEdit" parent="PlaytestOverlay/VB/Speed" unique_id=1063011881]
+auto_translate_mode = 2
 layout_mode = 2
+tooltip_auto_translate_mode = 2
 text = "1.0"
 placeholder_text = "1.0"
 alignment = 1
 
 [node name="PlayButton" type="Button" parent="PlaytestOverlay/VB" unique_id=1844474893]
+auto_translate_mode = 1
 layout_mode = 2
+tooltip_auto_translate_mode = 1
 text = "Play (Space)"

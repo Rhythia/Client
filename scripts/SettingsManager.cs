@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Godot;
 using Godot.Collections;
+using util;
 
 [GlobalClass]
 public partial class SettingsManager : Node
@@ -20,6 +21,12 @@ public partial class SettingsManager : Node
 
     public SettingsProfile Settings = new();
 
+    public string LangCode
+    {
+        get => Constants.ALIAS_TO_LANGCODE.GetValueOrDefault(Settings.Language) ?? Constants.SUPPORTED_LANGUAGES[0];
+        private set;
+    }
+
     [Signal]
     public delegate void SavedEventHandler();
 
@@ -31,6 +38,7 @@ public partial class SettingsManager : Node
         Instance = this;
 
         Menu = SceneManager.Instance.GetNode<SettingsMenu>("Settings");
+        I18n.SyncLocale();
     }
 
     public static void Save(string profile = null)
@@ -56,7 +64,7 @@ public partial class SettingsManager : Node
         {
             SettingsProfileConverter.Deserialize($"{Constants.USER_FOLDER}/profiles/{profile}.json", Instance.Settings);
 
-            ToastNotification.Notify($"Loaded profile [{profile}]");
+            ToastNotification.Notify(I18n.Tr("Loaded profile [{0}]", profile), autoTraslate: false);
         }
         catch (Exception exception)
         {
@@ -67,7 +75,7 @@ public partial class SettingsManager : Node
         if (!Directory.Exists($"{Constants.USER_FOLDER}/skins/{Instance.Settings.Skin.Value}"))
         {
             Instance.Settings.Skin.Value = new("default");
-            ToastNotification.Notify($"Could not find skin {Instance.Settings.Skin.Value}", 1);
+            ToastNotification.Notify(I18n.Tr("Could not find skin {0}", Instance.Settings.Skin.Value), 1);
         }
 
         static void addUserContentToSettingsList(SettingsItem<string> settingsItem, IEnumerable<string> options)
@@ -282,13 +290,13 @@ public partial class SettingsManager : Node
 
     private static void showUserFolderConfirmationPopup(string destinationPath)
     {
-        var popup = new OptionPopup(
-            "Are you sure?",
-            "This will overwrite the contents of the new folder and double the game in size unless you remove the old files.\n\nPS: you can find the old folder in settings > other > open old user folder"
-        );
+        string popupMessage =
+            $"{I18n.Tr("This will overwrite the contents of the new folder and double the game in size unless you remove the old files.")}\n\n{I18n.Tr("PS: you can find the old folder in {0} > {1} > {2}", I18n.Tr("Settings"), I18n.Tr("Other"), I18n.Tr("Open Previous User Folder"))}";
+
+        var popup = new OptionPopup(I18n.Tr("Are you sure?"), popupMessage, true);
 
         popup.AddOption(
-            "Restart And Copy",
+            I18n.Tr("Restart And Copy"),
             Callable.From(() =>
             {
                 FileOperations.CopyDir(Constants.USER_FOLDER, destinationPath, true);
@@ -299,7 +307,7 @@ public partial class SettingsManager : Node
                 restartGame();
             })
         );
-        popup.AddOption("Cancel", Callable.From(popup.Hide));
+        popup.AddOption(I18n.Tr("Cancel"), Callable.From(popup.Hide));
 
         popup.Show();
     }

@@ -31,9 +31,11 @@ public partial class OptionPopup : Control
     [Export]
     private Button buttonTemplate;
 
+    private bool skipTranslation;
+
     public OptionPopup() { }
 
-    public OptionPopup(string header, string info)
+    public OptionPopup(string header, string info, bool skipTranslation = false)
     {
         util.Misc.CopyReference(this, template.Instantiate<OptionPopup>());
 
@@ -41,12 +43,20 @@ public partial class OptionPopup : Control
         Info = info;
         Name = $"OptionPopup{MyRegex().Replace(Header, "")}";
 
+        this.skipTranslation = skipTranslation;
+
         SceneManager.Root.CallDeferred("add_child", this);
     }
 
     public override void _Ready()
     {
         Node container = GetNode("Holder").GetNode("VBoxContainer");
+
+        if (skipTranslation)
+        {
+            AutoTranslateMode = AutoTranslateModeEnum.Disabled;
+            TooltipAutoTranslateMode = AutoTranslateModeEnum.Disabled;
+        }
 
         headerLabel.Text = Header;
         infoLabel.Text = Info;
