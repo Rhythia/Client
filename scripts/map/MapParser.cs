@@ -240,7 +240,7 @@ public partial class MapParser : Node
         map.LastModifiedMetadata = metadataModified.ToString("O", CultureInfo.InvariantCulture);
         map.LastModifiedNotes = objectsModified.ToString("O", CultureInfo.InvariantCulture);
 
-        map.FolderPath = mapFolderPath;
+        map.FolderPath = MapCache.BackSlashToForwardSlash(mapFolderPath);
 
         MapCache.InsertMap(map);
 
@@ -766,7 +766,8 @@ public partial class MapParser : Node
         if (Directory.Exists(extractedFolderPath))
         {
             Directory.Delete(extractedFolderPath, true);
-            Map existingMap = DatabaseService.Connection.Table<Map>().FirstOrDefault(x => x.FolderPath == extractedFolderPath);
+            string cachedFolderPath = MapCache.BackSlashToForwardSlash(extractedFolderPath);
+            Map existingMap = DatabaseService.Connection.Table<Map>().FirstOrDefault(x => x.FolderPath == cachedFolderPath);
             MapCache.RemoveMap(existingMap);
         }
 
