@@ -10,20 +10,22 @@ public partial class ScorePanel : Panel
     public Button Button;
 
     private Label playerLabel;
-    private Label scoreLabel;
-    private Label accuracyLabel;
+    private Label timerLabel;
+    private RichTextLabel accuracyLabel;
     private Label speedLabel;
     private Label timeLabel;
     private HBoxContainer modifiers;
     private TextureRect modifierTemplate;
+
+    private string Grade;
 
     public override void _Ready()
     {
         Button = GetNode<Button>("Button");
 
         playerLabel = GetNode<Label>("Player");
-        scoreLabel = GetNode<Label>("Score");
-        accuracyLabel = GetNode<Label>("Accuracy");
+        timerLabel = GetNode<Label>("Timer");
+        accuracyLabel = GetNode<RichTextLabel>("Accuracy");
         speedLabel = GetNode<Label>("Speed");
         timeLabel = GetNode<Label>("Time");
         modifiers = GetNode<HBoxContainer>("Modifiers");
@@ -53,20 +55,19 @@ public partial class ScorePanel : Panel
     {
         Score = score;
 
-        playerLabel.Text = score.Player;
-        accuracyLabel.Text = $"{score.Accuracy:F2}%";
-        speedLabel.Text = $"{score.Speed:F2}x";
-        timeLabel.Text = util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time);
+        getGrade(score);
 
-        if (score.Qualifies)
+        playerLabel.Text = score.Player;
+        accuracyLabel.Text = $"{Grade}[color=#a0a0a0] | {util.String.PadMagnitude(score.Value)} | {score.Accuracy:F2}%";
+        speedLabel.Text = $"{score.Speed:F2}x";
+        timeLabel.Text = $"{util.String.FormatUnixTimePretty(Time.GetUnixTimeFromSystem(), score.Time)} | Score Version: {score.Version}";
+
+        timerLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
+
+        if (!Score.Qualifies)
         {
-            scoreLabel.Text = util.String.PadMagnitude(score.Value);
-        }
-        else
-        {
-            scoreLabel.Text = $"{util.String.FormatTime(Math.Max(0, score.Progress) / 1000)} / {util.String.FormatTime(score.MapLength / 1000)}";
-            scoreLabel.LabelSettings = scoreLabel.LabelSettings.Duplicate() as LabelSettings;
-            scoreLabel.LabelSettings.FontColor = Color.Color8(160, 160, 160);
+            timerLabel.LabelSettings = timerLabel.LabelSettings.Duplicate() as LabelSettings;
+            timerLabel.LabelSettings.FontColor = Color.Color8(160, 160, 160);
         }
 
         foreach (KeyValuePair<string, bool> entry in score.Modifiers)
@@ -91,6 +92,35 @@ public partial class ScorePanel : Panel
             var map = MapParser.Decode(replay.MapFilePath);
 
             Game.Play(map, replay.Speed, replay.StartFrom, replay.CameraMode, replay.Modifiers, null, [replay]);
+        }
+    }
+
+    private void getGrade(Leaderboard.Score score)
+    {
+        switch (score.Grade)
+        {
+            case >= 0.95:
+                Grade = "[color=a0a064]S";
+                break;
+            case >= 0.9:
+                Grade = "[color=a06485]A";
+                break;
+            case >= 0.8:
+                Grade = "[color=647da0]B";
+                break;
+            case >= 0.7:
+                Grade = "[color=64a078]C";
+                break;
+            case >= 0.6:
+                Grade = "[color=a06464]D";
+                break;
+            case <= 0.5:
+                Grade = "F";
+                break;
+        }
+        if (score.Accuracy == 100)
+        {
+            Grade = $"{Grade}+";
         }
     }
 }

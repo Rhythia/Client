@@ -261,6 +261,10 @@ public partial class ReplayManager : Node
         att.Sum = 0;
         att.Accuracy = 100;
         att.Score = 0;
+        att.Perfects = 0;
+        att.Greats = 0;
+        att.Okays = 0;
+        att.Bads = 0;
         att.Combo = 0;
         att.ComboMultiplier = 1;
         att.ComboMultiplierProgress = 0;
