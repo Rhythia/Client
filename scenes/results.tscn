@@ -66,6 +66,16 @@ font_size = 42
 font = ExtResource("2_f4qdi")
 font_size = 42
 
+[sub_resource type="LabelSettings" id="LabelSettings_gdxgs"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_00qb5"]
+font_size = 12
+font_color = Color(1, 1, 1, 0.29411766)
+
+[sub_resource type="LabelSettings" id="LabelSettings_00fns"]
+font_size = 8
+font_color = Color(1, 1, 1, 0.29411766)
+
 [sub_resource type="LabelSettings" id="LabelSettings_6anxq"]
 font = ExtResource("3_rsbg1")
 font_size = 11
@@ -304,12 +314,99 @@ offset_bottom = -96.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_b55ol")
 
+[node name="Perfects" type="Label" parent="Holder/Graph" unique_id=1872425890]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = -23.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Perfects: #"
+label_settings = SubResource("LabelSettings_gdxgs")
+horizontal_alignment = 1
+
+[node name="Greats" type="Label" parent="Holder/Graph" unique_id=1220219417]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 76.0
+offset_bottom = 93.0
+grow_horizontal = 2
+text = "Greats: #"
+label_settings = SubResource("LabelSettings_00qb5")
+horizontal_alignment = 1
+
+[node name="Okays" type="Label" parent="Holder/Graph" unique_id=436182218]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 112.0
+offset_bottom = 124.0
+grow_horizontal = 2
+text = "Okays: #"
+label_settings = SubResource("LabelSettings_00fns")
+horizontal_alignment = 1
+
+[node name="Bads" type="Label" parent="Holder/Graph" unique_id=1134517622]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 134.0
+offset_bottom = 146.0
+grow_horizontal = 2
+text = "Bads: #"
+label_settings = SubResource("LabelSettings_00fns")
+horizontal_alignment = 1
+
 [node name="OffsetTop" type="Label" parent="Holder/Graph" unique_id=465789986]
 layout_mode = 1
 anchors_preset = -1
 offset_left = -32.0
+offset_top = -14.0
 grow_horizontal = 0
 text = "0ms"
+label_settings = SubResource("LabelSettings_6anxq")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="JudgementGood" type="Label" parent="Holder/Graph" unique_id=79263222]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.578
+anchor_bottom = 0.578
+offset_left = -32.0
+offset_top = -11.480003
+offset_bottom = 11.519997
+grow_horizontal = 0
+text = "31ms"
+label_settings = SubResource("LabelSettings_6anxq")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="JudgementOkay" type="Label" parent="Holder/Graph" unique_id=73984163]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.76900005
+anchor_bottom = 0.76900005
+offset_left = -32.0
+offset_top = -7.0400085
+offset_bottom = 6.9599915
+grow_horizontal = 0
+text = "41ms"
+label_settings = SubResource("LabelSettings_6anxq")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="JudgementBad" type="Label" parent="Holder/Graph" unique_id=141723295]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.90000004
+anchor_bottom = 0.90000004
+offset_left = -32.0
+offset_top = -7.0
+offset_bottom = 7.0
+grow_horizontal = 0
+text = "51ms"
 label_settings = SubResource("LabelSettings_6anxq")
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -320,6 +417,7 @@ anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = -32.0
+offset_bottom = 14.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "55ms"
@@ -327,14 +425,37 @@ label_settings = SubResource("LabelSettings_6anxq")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="ScoreDropoffLine" type="ColorRect" parent="Holder/Graph" unique_id=411211979]
+[node name="PerfectDropoffLine" type="ColorRect" parent="Holder/Graph" unique_id=411211979]
 material = SubResource("ShaderMaterial_b4pmo")
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.455
+anchor_top = 0.578
 anchor_right = 1.0
-anchor_bottom = 0.455
-offset_bottom = 1.0
+anchor_bottom = 0.578
+offset_top = -0.4799881
+offset_bottom = 0.5200119
+color = Color(1, 1, 1, 0.12549)
+
+[node name="GoodDropoffLine" type="ColorRect" parent="Holder/Graph" unique_id=247370308]
+material = SubResource("ShaderMaterial_b4pmo")
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.772
+anchor_right = 1.0
+anchor_bottom = 0.772
+offset_top = -0.5200043
+offset_bottom = 0.47999573
+color = Color(1, 1, 1, 0.12549)
+
+[node name="OkayDropoffLine" type="ColorRect" parent="Holder/Graph" unique_id=549385781]
+material = SubResource("ShaderMaterial_b4pmo")
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.90900004
+anchor_right = 1.0
+anchor_bottom = 0.90900004
+offset_top = -0.44000244
+offset_bottom = 0.55999756
 color = Color(1, 1, 1, 0.12549)
 
 [node name="TopBar" type="Panel" parent="." unique_id=571217894]
@@ -470,6 +591,7 @@ text = "Watch Replay"
 flat = true
 
 [node name="Transition" type="ColorRect" parent="." unique_id=529428316]
+visible = false
 self_modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0

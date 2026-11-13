@@ -54,10 +54,7 @@
 [ext_resource type="Texture2D" uid="uid://cfl8us0rpkpqs" path="res://textures/ui/github_hovered.png" id="43_sgh51"]
 [ext_resource type="Script" uid="uid://c1235cyjfh4rl" path="res://scripts/ui/LinkPopupButton.cs" id="44_ybca7"]
 [ext_resource type="Script" uid="uid://dqi64p5jl23cv" path="res://scripts/ui/menu/VersionLabel.cs" id="45_mb34c"]
-[ext_resource type="Texture2D" uid="uid://dyms3l4x385j" path="res://textures/ui/feedback.png" id="46_41a2d"]
-[ext_resource type="Texture2D" uid="uid://c0gv3fh2rmlcy" path="res://textures/ui/feedback_pressed.png" id="47_f5cck"]
 [ext_resource type="Texture2D" uid="uid://8du82a5dxjdk" path="res://user/skins/default/ui/jukebox_play.png" id="48_q1l3m"]
-[ext_resource type="Texture2D" uid="uid://cya1kdxwisvmc" path="res://textures/ui/feedback_hovered.png" id="48_s4ogs"]
 [ext_resource type="Texture2D" uid="uid://bpsvcunhigs6c" path="res://user/skins/default/ui/jukebox_skip.png" id="49_7u5pb"]
 
 [sub_resource type="SystemFont" id="SystemFont_lsskb"]
@@ -434,7 +431,7 @@ layout_mode = 2
 
 [node name="Header" type="Label" parent="Menus/Home/News/VBoxContainer" unique_id=1350479761]
 layout_mode = 2
-text = "0.1.2 (early-26apr30)"
+text = "Score Overhaul PTB"
 label_settings = SubResource("LabelSettings_0uejd")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -448,12 +445,11 @@ theme_override_constants/paragraph_separation = 6
 theme_override_fonts/normal_font = ExtResource("7_6h3lr")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_k5xsf")
 bbcode_enabled = true
-text = "[font_size=28][b]FEATURES[/b][font_size=18]
-+ Galaxy space[br]+ Tunnel space[br]+ Cursor Rotation setting[br]+ Cursor Opacity setting[br]+ Space to Pause setting[br]+ Local Offset setting[br]+ More volume settings[br]+ Super Simple HUD setting[br]+ Hold R to exit map keybind[br]+ F1 to open wiki keybind[br]+ Ctrl + M to mute keybind[br]+ Miss sounds[br]+ Menu music (currently empty, replace menu.mp3 to your skin folder)[br]* Changed Fade Out setting to a slider & updated its behaviour to work more like Fade In[br]* Added support for nightly colorset format
-[font_size=28][b]FIXES[/b][font_size=18]
-* Fixed comma decimal separator number formatting[br]* Fixed Start From slider with comma decimal separator[br]* Fixed map info covers resizing after import[br]* Fixed map list not updating on map deletion[br]* Safer cover & skin texture loading[br]* Safer note color parsing[br]* Fixed maps failing to import on systems with <4 threads[br]* Dynamic song resyncing during gameplay[br]* Fixed song progress bar incremental update delay[br]* Fixed double Esc to open game menu after opening settings[br]* Fixed flickering notes in replays[br]* Fixed clicking outside the update popup causing a softlock[br]* Fixed displayed selected profile inaccurate[br]* Fixed number range settings imprecision[br]* Fixed song search bar not focusing on key press after using slider
-[font_size=28][b]MISC[/b][font_size=18]
-* Cap framerate at 30 when unfocused[br]* Allow windowed mode to be resized"
+text = "[font_size=28][b]CHANGES[/b][font_size=18]
+- Normalized Scoring (Perfect FC = 1 million score)[br]- Judgement Overhaul (4 judgements total, previously 2)[br]- Mult. cap 8 > 6[br]- On note miss, lose Mult. / 2 rounded down[br]
+[font_size=28][b]NOTICE[/b][font_size=24]
+!! This branch will wipe your old scores set before this version !![font_size=18] [br]- You may encounter bugs, report them via #bug-reports
+- We would like to hear your feedback in our #ptb-feedback channel"
 shortcut_keys_enabled = false
 
 [node name="Panel" type="Panel" parent="Menus/Home/News/VBoxContainer/RichTextLabel" unique_id=1035549202]
@@ -757,11 +753,9 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_18lcc")
 [node name="HBoxContainer" type="HBoxContainer" parent="Menus/Play/SubTopBar" unique_id=613796792]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.179
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.82100004
-offset_top = 17.976
-offset_bottom = -17.976002
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
@@ -769,7 +763,7 @@ alignment = 2
 [node name="Settings" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=384311335]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-tooltip_text = "Game settings, can be opened up at anytime using CTRL + O"
+tooltip_text = "CTRL + O"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -781,7 +775,6 @@ script = ExtResource("8_yxnar")
 [node name="UserFolder" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=1212420658]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-tooltip_text = "Opens up the game's user folder, allows you to manually import or modify files."
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -793,7 +786,6 @@ script = ExtResource("27_eku7s")
 [node name="Import" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer" unique_id=554381373]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-tooltip_text = "Import maps, you can mass import with this"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
@@ -1909,32 +1901,9 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 
-[node name="Feedback" type="TextureButton" parent="TopBar/LinkButtons" unique_id=169604797]
-layout_mode = 2
-size_flags_vertical = 4
-tooltip_text = "Feedback form"
-focus_mode = 0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("46_41a2d")
-texture_pressed = ExtResource("47_f5cck")
-texture_hover = ExtResource("48_s4ogs")
-
-[node name="Button" type="Button" parent="TopBar/LinkButtons/Feedback" unique_id=1650047982]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-flat = true
-script = ExtResource("44_ybca7")
-Link = "https://forms.gle/eyGTBKJskSmAux8P8"
-
 [node name="GitHub" type="TextureButton" parent="TopBar/LinkButtons" unique_id=1795081095]
 layout_mode = 2
 size_flags_vertical = 4
-tooltip_text = "Our GitHub page"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("41_akqfu")
@@ -1956,7 +1925,6 @@ Link = "https://github.com/Rhythia"
 [node name="Discord" type="TextureButton" parent="TopBar/LinkButtons" unique_id=36147158]
 layout_mode = 2
 size_flags_vertical = 4
-tooltip_text = "Our official Discord"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("20_qw82i")
