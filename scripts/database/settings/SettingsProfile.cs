@@ -133,6 +133,12 @@ public partial class SettingsProfile
     public SettingsItem<bool> CustomSpaceColor { get; private set; }
 
     /// <summary>
+    /// Use void background when video background is visible
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> VideoBgVoidSpace { get; private set; }
+
+    /// <summary>
     /// Toggles note hit effects for the game space
     /// </summary>
     [Order]
@@ -242,14 +248,20 @@ public partial class SettingsProfile
     /// <summary>
     /// Adjusts the video background dim
     /// </summary>
-    //[Order]
-    //public SettingsItem<double> VideoDim { get; private set; }
+    [Order]
+    public SettingsItem<double> VideoDim { get; private set; }
 
     /// <summary>
     /// Adjusts the scale of the video background
     /// </summary>
-    //[Order]
-    //public SettingsItem<double> VideoRenderScale { get; private set; }
+    // [Order]
+    // public SettingsItem<double> VideoRenderScale { get; private set; }
+
+    /// <summary>
+    /// Disables video bg for all maps
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> DisableVideoGlobal { get; private set; }
 
     /// <summary>
     /// Toggles Grid Guides
@@ -777,6 +789,14 @@ public partial class SettingsProfile
             },
         };
 
+        VideoBgVoidSpace = new(false)
+        {
+            Id = "VideoBgVoidSpace",
+            Title = "Use Void Space For Video Backgrounds",
+            Description = "Use the void game space when video background is visible",
+            Section = SettingsSection.Spaces,
+        };
+
         SpaceHitEffects = new(true)
         {
             Id = "SpaceHitEffects",
@@ -995,37 +1015,45 @@ public partial class SettingsProfile
             },
         };
 
-        //VideoDim = new(80)
-        //{
-        //Id = "VideoDim",
-        //Title = "Video BG Dim",
-        //Description = "Adjusts the video background dim",
-        //Section = SettingsSection.Visual,
-        //Slider = new()
-        //{
-        //Step = 1,
-        //MinValue = 0,
-        //MaxValue = 100
-        //}
-        //};
-
         #endregion
 
         #region Video
 
-        //VideoRenderScale = new(100)
-        //{
-        //Id = "VideoRenderScale",
-        //Title = "Video BG Render Scale",
-        //Description = "Adjusts the scale of the video background",
-        //Section = SettingsSection.Visual,
-        //Slider = new()
-        //{
-        //Step = 1,
-        //MinValue = 0,
-        //MaxValue = 100
-        //}
-        //};
+        VideoDim = new(80)
+        {
+            Id = "VideoDim",
+            Title = "Video BG Dim",
+            Description = "Adjusts the video background dim",
+            Section = SettingsSection.Spaces,
+            Slider = new()
+            {
+                Step = 1,
+                MinValue = 0,
+                MaxValue = 100,
+            },
+        };
+
+        // VideoRenderScale = new(100)
+        // {
+        //     Id = "VideoRenderScale",
+        //     Title = "Video BG Render Scale",
+        //     Description = "Adjusts the scale of the video background",
+        //     Section = SettingsSection.Visual,
+        //     Slider = new()
+        //     {
+        //         Step = 1,
+        //         MinValue = 0,
+        //         MaxValue = 100
+        //     }
+        // };
+
+        DisableVideoGlobal = new(false)
+        {
+            Id = "DisableVideoGlobal",
+            Title = "Disable All Video Backgrounds",
+            Description = "Don't show video backgrounds for any map",
+            Section = SettingsSection.Spaces,
+        };
 
         SimpleHUD = new(false)
         {

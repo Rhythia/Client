@@ -65,6 +65,21 @@ jobs:
       with:
         dotnet-version: 10.0.x
         cache: true
+    - name: Read gde_gozen URL
+      id: gozen-link
+      run: |
+        url=$(dotnet msbuild -getProperty:AddonUrl Rhythia.csproj)
+        if [ -z "$url" ]; then
+          echo "AddonUrl is empty or missing in Rhythia.csproj"
+          exit 1
+        fi
+        echo "url=$url" >> "$GITHUB_OUTPUT"
+    - name: Download gde_gozen
+      run: |
+        wget ${{ steps.gozen-link.outputs.url }} -O gde_gozen.zip
+        mkdir addons
+        unzip -o gde_gozen.zip -d addons/
+        rm gde_gozen.zip
     - name: Restore dependencies
       run: dotnet restore --locked-mode
     - name: Restore tools

@@ -30,3 +30,5 @@ mono_crash.*.json
 # Other
 nuget.config
 *.lscache
+addons/gde_gozen
+.tmp

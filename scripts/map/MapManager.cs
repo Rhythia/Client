@@ -55,9 +55,11 @@ public partial class MapManager : Node
     {
         Godot.FileAccess file = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
         byte[] videoBuffer = file.GetBuffer((long)file.GetLength());
+        string ext = Path.GetExtension(path).TrimStart('.');
         file.Close();
 
         map.VideoBuffer = videoBuffer;
+        map.VideoExt = ext;
 
         var oldmap = MapParser.Decode(map.FolderPath);
 
@@ -65,11 +67,13 @@ public partial class MapManager : Node
         map.AudioBuffer = oldmap.AudioBuffer;
         map.CoverBuffer = oldmap.CoverBuffer;
 
-        Directory.Delete(map.FolderPath);
+        Directory.Delete(map.FolderPath, true);
+        MapCache.RemoveMap(map);
 
         MapParser.Encode(map);
-        map.FolderPath = MapCache.GetMd5Checksum(map.FolderPath);
+        map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
+        MapInfo.Instance.InfoContainer.Refresh(true, true);
     }
 
     public static void RemoveVideo(Map map)
@@ -77,6 +81,7 @@ public partial class MapManager : Node
         _ = Godot.FileAccess.Open(map.FolderPath, Godot.FileAccess.ModeFlags.Read);
 
         map.VideoBuffer = null;
+        map.VideoExt = string.Empty;
 
         var oldmap = MapParser.Decode(map.FolderPath);
 
@@ -84,11 +89,13 @@ public partial class MapManager : Node
         map.AudioBuffer = oldmap.AudioBuffer;
         map.CoverBuffer = oldmap.CoverBuffer;
 
-        File.Delete(map.FolderPath);
+        Directory.Delete(map.FolderPath, true);
+        MapCache.RemoveMap(map);
 
         MapParser.Encode(map);
         map.MetadataObjectHash = MapCache.GetMd5Checksum(map.FolderPath);
         Update(map);
+        MapInfo.Instance.InfoContainer.Refresh(true, true);
     }
 
     public static void Delete(Map map, bool quiet = false)
