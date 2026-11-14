@@ -131,6 +131,8 @@ public partial class SkinProfile : RefCounted
 
     public ImageTexture ModVFlipImage { get; set; } = new();
 
+    public ImageTexture ModHardrockImage { get; set; } = new();
+
     public ImageTexture BackgroundTileImage { get; set; } = new();
 
     public Shader BackgroundTileShader { get; set; } = new();

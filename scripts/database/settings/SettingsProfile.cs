@@ -287,6 +287,12 @@ public partial class SettingsProfile
     [Order]
     public SettingsItem<bool> MissPopups { get; private set; }
 
+    /// <summary>
+    /// Expand hud elements when hardrock mod is enabled
+    /// </summary>
+    [Order]
+    public SettingsItem<bool> ExpandHudOnHr { get; private set; }
+
     #endregion
 
     #region Video
@@ -1064,6 +1070,14 @@ public partial class SettingsProfile
             Id = "MissPopups",
             Title = "Miss Popups",
             Description = "Toggles a popup on a miss",
+            Section = SettingsSection.HUD,
+        };
+
+        ExpandHudOnHr = new(true)
+        {
+            Id = "ExpandHudOnHr",
+            Title = "Expand HUD On HR",
+            Description = "Expand HUD elements when hardrock modifier is enabled",
             Section = SettingsSection.HUD,
         };
 

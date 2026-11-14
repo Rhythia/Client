@@ -129,6 +129,7 @@ public partial class SkinManager : Node
         skin.ModEarthquakeImage = loadTexture("modifiers/earthquake.png");
         skin.ModHFlipImage = loadTexture("modifiers/hflip.png");
         skin.ModVFlipImage = loadTexture("modifiers/vflip.png");
+        skin.ModHardrockImage = loadTexture("modifiers/hardrock.png");
 
         // Shaders
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Godot;
 
 public class CameraLock : CameraMode
@@ -19,17 +20,19 @@ public class CameraLock : CameraMode
     {
         var settings = attempt.Settings;
         var delta = new Vector2(1, -1) * (mouseDelta * sensitivity / 120f);
+        float hardrockMult = attempt.Modifiers.Any(mod => mod is HardrockModifier) ? 1.35f : 1f;
+        Vector2 bounds = new Vector2(Constants.BOUNDS.X * hardrockMult, Constants.BOUNDS.Y * hardrockMult);
 
         if (settings.CursorDrift)
         {
             attempt.CursorPosition = attempt.IsReplay
-                ? replayManager.CursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS)
-                : (attempt.CursorPosition + delta).Clamp(-Constants.BOUNDS, Constants.BOUNDS);
+                ? replayManager.CursorPosition.Clamp(-bounds, bounds)
+                : (attempt.CursorPosition + delta).Clamp(-bounds, bounds);
         }
         else
         {
             attempt.RawCursorPosition = attempt.IsReplay ? replayManager.CursorPosition : attempt.RawCursorPosition + delta;
-            attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
+            attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-bounds, bounds);
             attempt.BufferCursorPosition = attempt.IsReplay ? replayManager.CursorPosition : attempt.BufferCursorPosition + delta;
         }
 
