@@ -50,8 +50,8 @@ bg_color = Color(0.27058825, 0.30980393, 0.32941177, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hrfuy"]
 shader = ExtResource("3_s54e2")
-shader_parameter/offset = 16.0
-shader_parameter/strength = 2.6
+shader_parameter/offset = 1.60400007619
+shader_parameter/strength = 4.08400014649
 
 [sub_resource type="Gradient" id="Gradient_vofg3"]
 colors = PackedColorArray(0.13725491, 0.16078432, 0.17254902, 0.6392157, 0.27058825, 0.30980393, 0.32941177, 0.19215687)
