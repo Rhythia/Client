@@ -54,7 +54,7 @@ shader_parameter/offset = 16.0
 shader_parameter/strength = 2.6
 
 [sub_resource type="Gradient" id="Gradient_vofg3"]
-colors = PackedColorArray(0.27058825, 0.30980393, 0.32941177, 1, 0.27058825, 0.30980393, 0.32941177, 0.4627451)
+colors = PackedColorArray(0.13725491, 0.16078432, 0.17254902, 0.6392157, 0.27058825, 0.30980393, 0.32941177, 0.19215687)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ear6i"]
 gradient = SubResource("Gradient_vofg3")
