@@ -260,7 +260,7 @@ layout_mode = 2
 [node name="Search" type="LineEdit" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=1105201271]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Search maps, mappers, or difficulty…"
+placeholder_text = "Search by title, artists, or mappers…"
 clear_button_enabled = true
 
 [node name="Sort" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=2098712667]
