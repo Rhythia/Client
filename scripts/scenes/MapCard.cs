@@ -255,8 +255,8 @@ public partial class MapCard : PanelContainer
         };
 
         JsonElement coverUrl =
-            map.TryGetProperty("covers", out var covers) && covers.ValueKind == JsonValueKind.Object && covers.TryGetProperty("128", out var cover128)
-                ? cover128
+            map.TryGetProperty("covers", out var covers) && covers.ValueKind == JsonValueKind.Object && covers.TryGetProperty("256", out var cover256)
+                ? cover256
                 : default;
 
         _ = loadCover(coverUrl, coverImage, blurCoverImage, Constants.DIFFICULTY_COLORS[difficulty], source);

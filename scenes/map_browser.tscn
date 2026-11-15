@@ -50,11 +50,11 @@ bg_color = Color(0.27058825, 0.30980393, 0.32941177, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hrfuy"]
 shader = ExtResource("3_s54e2")
-shader_parameter/offset = 16.0
-shader_parameter/strength = 2.6
+shader_parameter/offset = 1.60400007619
+shader_parameter/strength = 4.08400014649
 
 [sub_resource type="Gradient" id="Gradient_vofg3"]
-colors = PackedColorArray(0.27058825, 0.30980393, 0.32941177, 1, 0.27058825, 0.30980393, 0.32941177, 0.4627451)
+colors = PackedColorArray(0.13725491, 0.16078432, 0.17254902, 0.6392157, 0.27058825, 0.30980393, 0.32941177, 0.19215687)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ear6i"]
 gradient = SubResource("Gradient_vofg3")
@@ -260,7 +260,7 @@ layout_mode = 2
 [node name="Search" type="LineEdit" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=1105201271]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Search maps, mappers, or difficulty…"
+placeholder_text = "Search by title, artists, or mappers…"
 clear_button_enabled = true
 
 [node name="Sort" type="OptionButton" parent="Holder/Background/Layout/TopBarBackground/Margin/TopBar/SearchBar" unique_id=2098712667]
