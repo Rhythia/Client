@@ -56,6 +56,7 @@ public partial class Rhythia : Node
         Stats.Instance.GamesOpened++;
 
         // Map import
+        Directory.CreateDirectory($"{Constants.USER_FOLDER}/maps");
         var nonConvertedMaps = Directory
             .EnumerateFiles($"{Constants.USER_FOLDER}/maps", $"*.*", SearchOption.AllDirectories)
             .Where(f =>

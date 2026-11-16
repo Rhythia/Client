@@ -28,17 +28,22 @@ public static class MapCache
 
         try
         {
+            Directory.CreateDirectory(MapUtil.MapsFolder);
+
+            EnumerationOptions options = new() { RecurseSubdirectories = true, MaxRecursionDepth = 1 };
+
             // Map files (.phxm, .sspm, etc) go first since they will be encoded to folders after they get parsed in MapParser.cs -fog
             List<string> mapsList =
             [
-                .. Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", SearchOption.AllDirectories),
-                .. Directory.GetDirectories(MapUtil.MapsFolder, "*", SearchOption.AllDirectories),
+                .. Directory.GetFiles(MapUtil.MapsFolder, $"*.{Constants.DEFAULT_MAP_EXT}", options),
+                .. Directory.GetDirectories(MapUtil.MapsFolder, "*", options).Where(isMapFolder),
             ];
 
             string[] toParseMaps = [.. mapsList];
 
             if (fullSync)
             {
+                removeDuplicateMaps();
                 syncFiles(toParseMaps);
                 addNonCachedFiles(toParseMaps);
 
@@ -55,9 +60,30 @@ public static class MapCache
 
             OrderAndSetMaps();
         }
-        catch
+        catch (Exception exception)
         {
+            Logger.Error(exception);
             OrderAndSetMaps();
+        }
+    }
+
+    private static bool isMapFolder(string path) =>
+        File.Exists(Path.Combine(path, "metadata.json")) && File.Exists(Path.Combine(path, "objects.phxmo"));
+
+    private static void removeDuplicateMaps()
+    {
+        foreach (var duplicates in FetchAll().GroupBy(x => x.FolderPath).Where(x => x.Count() > 1))
+        {
+            var kept = duplicates.OrderBy(x => x.Id).First();
+
+            foreach (var duplicate in duplicates.Where(x => x != kept))
+            {
+                kept.Favorite |= duplicate.Favorite;
+                kept.PlayCount += duplicate.PlayCount;
+                RemoveMap(duplicate);
+            }
+
+            UpdateMap(kept);
         }
     }
 
@@ -319,6 +345,12 @@ public static class MapCache
     public static void OrderAndSetMaps()
     {
         var maps = FetchAll();
+
+        foreach (var missing in maps.Where(x => !Directory.Exists(x.FolderPath) && !File.Exists(x.FolderPath)).ToList())
+        {
+            RemoveMap(missing);
+            maps.Remove(missing);
+        }
 
         // only covers on screen are loaded to prevent excessive VRAM usage
 
