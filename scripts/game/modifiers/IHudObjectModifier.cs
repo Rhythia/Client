@@ -6,9 +6,4 @@ public interface IHudObjectModifier : IModifier
     {
         return;
     }
-
-    void ModifyGridGuides(MeshInstance3D gridGuides)
-    {
-        return;
-    }
 }

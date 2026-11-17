@@ -18,15 +18,10 @@ public class HardrockModifier : Modifier, IHudObjectModifier, IMapModifier
         {
             QuadMesh mesh = (QuadMesh)grid.Mesh;
             mesh.Size = new Vector2(mesh.Size.X * 1.35f, mesh.Size.Y * 1.35f);
-        }
-    }
 
-    public void ModifyGridGuides(MeshInstance3D gridGuides)
-    {
-        if (SettingsManager.Instance.Settings.HrVisualAssist)
-        {
-            QuadMesh mesh = (QuadMesh)gridGuides.Mesh;
-            mesh.Size = new Vector2(mesh.Size.X * 1.35f, mesh.Size.Y * 1.35f);
+            MeshInstance3D gridGuides = grid.GetNode<MeshInstance3D>("GridGuides");
+            QuadMesh gridGuidesMesh = (QuadMesh)gridGuides.Mesh;
+            gridGuidesMesh.Size = new Vector2(gridGuidesMesh.Size.X * 1.35f, gridGuidesMesh.Size.Y * 1.35f);
         }
     }
 

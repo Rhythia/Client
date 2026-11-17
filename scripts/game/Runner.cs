@@ -346,7 +346,6 @@ public partial class Runner : Node3D
                 if (mod is IHudObjectModifier meshMod)
                 {
                     meshMod.ModifyGrid(Grid);
-                    meshMod.ModifyGridGuides(GridGuides);
                 }
             }
         }
