@@ -559,6 +559,11 @@ public partial class Runner : Node3D
             ? Attempt.HitsInfo[noteIndex]
             : (float)(((int)judgmentProgress - Attempt.Map.Notes[noteIndex].Millisecond) / Speed);
         float factor = 1 - (float)Math.Round(Math.Max(0, lateness - 27) / 104f, 1);
+
+        factor = factor != 1 ? (float)Math.Round(factor - 0.1f, 1) : factor;
+
+        GD.Print(lateness, factor);
+
         double hitScore = Attempt.UnitHitScore * Attempt.ComboMultiplier * factor;
 
         switch (hitResult)
@@ -724,15 +729,15 @@ public partial class Runner : Node3D
                 Attempt.Perfects++; // pawfect
                 break;
 
-            case 0.9f:
+            case 0.8f:
                 Attempt.Greats++; // gewd
                 break;
 
-            case 0.8f:
+            case 0.7f:
                 Attempt.Okays++; // okay
                 break;
 
-            case 0.7f:
+            case 0.6f:
                 Attempt.Bads++; // bad
                 break;
         }
