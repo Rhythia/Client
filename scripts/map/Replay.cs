@@ -127,6 +127,7 @@ public struct Replay
             foreach (string modName in rawMods)
             {
                 // i hate this
+                // this should be centralized
                 switch (modName)
                 {
                     case "NoFail":
@@ -155,6 +156,9 @@ public struct Replay
                         break;
                     case "HFlip":
                         Modifiers.Add(new HorizontalFlipModifier());
+                        break;
+                    case "Hardrock":
+                        Modifiers.Add(new HardrockModifier());
                         break;
                     case "Spin":
                         CameraMode = new CameraSpin();

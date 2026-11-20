@@ -48,6 +48,9 @@ public class Misc
             case "VFlip":
                 tex = skin.ModVFlipImage;
                 break;
+            case "Hardrock":
+                tex = skin.ModHardrockImage;
+                break;
             default:
                 tex = new PlaceholderTexture2D() { Size = Vector2.One * 32 };
                 break;

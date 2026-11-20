@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 public class CameraSpin : CameraMode
@@ -18,6 +19,8 @@ public class CameraSpin : CameraMode
     )
     {
         var settings = attempt.Settings;
+        float hardrockMult = attempt.Modifiers.Any(mod => mod is HardrockModifier) ? HardrockModifier.BoundsMult : 1f;
+        Vector2 bounds = new Vector2(Constants.BOUNDS.X * hardrockMult, Constants.BOUNDS.Y * hardrockMult);
 
         if (!attempt.IsReplay)
         {
@@ -50,7 +53,7 @@ public class CameraSpin : CameraMode
         // Project Cursor from Camera's "ray cast"
         attempt.RawCursorPosition = cameraVector2 - lookVector2 * Mathf.Abs(camera.Position.Z / lookVector.Z);
         attempt.BufferCursorPosition = attempt.RawCursorPosition;
-        attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-Constants.BOUNDS, Constants.BOUNDS);
+        attempt.CursorPosition = attempt.RawCursorPosition.Clamp(-bounds, bounds);
 
         Vector3 cursorPos = new(attempt.CursorPosition.X, attempt.CursorPosition.Y, 0);
         Vector3 bufferCursorPos = new(attempt.BufferCursorPosition.X, attempt.BufferCursorPosition.Y, 0);
