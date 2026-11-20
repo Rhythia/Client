@@ -56,10 +56,9 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
         }
     }
 
-    private bool doRender(Note note, float time, float approachTime, float speed)
+    private bool doRender(Note note, float time, float approachTime, float speed, bool pushback)
     {
-        return note.Millisecond - time >= (Settings.Pushback ? -Constants.HIT_WINDOW * speed : 0)
-            && note.Millisecond - time <= approachTime * 1000 * speed;
+        return note.Millisecond - time >= (pushback ? -Constants.HIT_WINDOW * speed : 0) && note.Millisecond - time <= approachTime * 1000 * speed;
     }
 
     public void Render(double delta, double time, IList<Note> notes)
@@ -73,7 +72,7 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
         float fadeOut = (float)(double)Settings.FadeOut / 100;
         float noteOpacity = (float)(double)Settings.NoteOpacity;
         float noteOpacityExponent = Math.Max(Mathf.Epsilon, (float)(double)Settings.NoteOpacityExponent);
-        bool pushback = Settings.Pushback;
+        bool pushback = attempt.Modifiers.Any(mod => mod is FlashlightModifier) ? false : Settings.Pushback;
         float hitWindowDepth = pushback ? (float)Constants.HIT_WINDOW * ar / 1000 : 0;
         var transform = new Transform3D(new(noteSize / 2, 0, 0), new(0, noteSize / 2, 0), new(0, 0, noteSize / 2), Vector3.Zero);
 
@@ -91,7 +90,7 @@ public partial class NoteRenderer : Renderer, IRenderer<Note>
         {
             var note = notes[i];
 
-            if (!doRender(note, (float)time, at, (float)attempt.Speed) || note.LastResult == HitResult.Hit)
+            if (!doRender(note, (float)time, at, (float)attempt.Speed, pushback) || note.LastResult == HitResult.Hit)
             {
                 NoteMultiMesh.Multimesh.SetInstanceColor(i, transparent);
                 continue;

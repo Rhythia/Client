@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using Godot;
 
 public partial class Grid : MeshInstance3D, IUIComponent
@@ -11,6 +12,7 @@ public partial class Grid : MeshInstance3D, IUIComponent
     public MultiMeshInstance3D CursorTrail { get; set; }
     public MeshInstance3D GridGuides { get; set; }
     public MeshInstance3D VisibilityAssist { get; set; }
+    public Sprite3D FlashlightSprite { get; set; }
 
     private static readonly PackedScene hit_feedback = GD.Load<PackedScene>("res://prefabs/hit_popup.tscn");
     private static readonly PackedScene miss_feedback = GD.Load<PackedScene>("res://prefabs/miss_icon.tscn");
@@ -66,7 +68,17 @@ public partial class Grid : MeshInstance3D, IUIComponent
 
         (GetActiveMaterial(0) as StandardMaterial3D).AlbedoTexture = SkinManager.Instance.Skin.GridImage;
 
+        FlashlightSprite = GetNode<Sprite3D>("Cursor/Flashlight/FlashlightSprite");
+
         Runner.HitResultChanged += onHitResultChanged;
+    }
+
+    public void Process(double delta, Attempt attempt)
+    {
+        foreach (FlashlightModifier mod in attempt.Modifiers.Where(mod => mod is FlashlightModifier))
+        {
+            FlashlightSprite.PixelSize = (float)Mathf.Lerp(FlashlightSprite.PixelSize, mod.GetFlashlightSize(attempt), 0.0125);
+        }
     }
 
     private void onHitResultChanged(int noteIndex, HitResult result)

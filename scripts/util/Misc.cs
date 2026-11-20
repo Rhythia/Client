@@ -33,6 +33,9 @@ public class Misc
             case "Flicker":
                 tex = skin.ModFlickerImage;
                 break;
+            case "Flashlight":
+                tex = skin.ModFlashlightImage;
+                break;
             case "Chaos":
                 tex = skin.ModChaosImage;
                 break;
@@ -143,12 +146,12 @@ public class Misc
             $"""
 				Couldn't load image from buffer
 				Type: {(
-				isPng ? "PNG"
-				: isJpeg ? "JPG"
-				: isBmp ? "BMP"
-				: isWebp ? "WEBP"
-				: "Unknown"
-			)};
+                isPng ? "PNG"
+                : isJpeg ? "JPG"
+                : isBmp ? "BMP"
+                : isWebp ? "WEBP"
+                : "Unknown"
+            )};
 				Size: {buffer.Length}
 			"""
         );
