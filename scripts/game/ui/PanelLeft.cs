@@ -10,6 +10,8 @@ public partial class PanelLeft : UIComponent
     private Color targetMultiplierColour = new(1, 1, 1, 1);
     private float targetMultiplierProgress = 0;
     private Tween multiplierTween;
+    private ColorRect gradeProgress;
+    private ColorRect gradeBG;
 
     private Label score,
         multiplier;
@@ -34,6 +36,8 @@ public partial class PanelLeft : UIComponent
         multiplier = viewport.GetNode<Label>("Multiplier");
         altCombo = viewport.GetNode<Label>("ComboCount");
         grade = viewport.GetNode<RichTextLabel>("Grade");
+        gradeProgress = viewport.GetNode<ColorRect>("GradeProgress");
+        gradeBG = viewport.GetNode<ColorRect>("GradeBG");
 
         multiplierProgressMaterial = viewport.GetNode<Panel>("MultiplierProgress").Material as ShaderMaterial;
         multiplierProgressMaterial.SetShaderParameter("progress", targetMultiplierProgress);
@@ -72,6 +76,10 @@ public partial class PanelLeft : UIComponent
         altCombo.Text = $"{attempt.Combo}";
 
         targetMultiplierProgress = (float)attempt.ComboMultiplierProgress / attempt.ComboMultiplierIncrement;
+
+        Vector2 progressSize = new Vector2((float)Math.Clamp(attempt.Grade * 120, 0, 120), 10);
+
+        gradeProgress.Size = progressSize;
 
         if (attempt.ComboMultiplier == 6)
         {

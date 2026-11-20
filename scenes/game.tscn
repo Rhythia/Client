@@ -562,6 +562,54 @@ text = "0"
 label_settings = SubResource("LabelSettings_pause_counter_title")
 horizontal_alignment = 1
 
+[node name="GradeBG" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=325955024]
+offset_left = 65.0
+offset_top = 470.0
+offset_right = 184.99998
+offset_bottom = 480.0
+color = Color(0.24115604, 0.24115604, 0.24115604, 1)
+
+[node name="GradeProgress" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport" unique_id=1999479396]
+offset_left = 65.0
+offset_top = 470.0
+offset_right = 65.0
+offset_bottom = 480.0
+
+[node name="D" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport/GradeProgress" unique_id=512780676]
+layout_mode = 0
+offset_left = 72.0
+offset_right = 74.0
+offset_bottom = 10.0
+color = Color(0.5931336, 0.59313357, 0.59313357, 1)
+
+[node name="C" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport/GradeProgress" unique_id=1515003541]
+layout_mode = 0
+offset_left = 84.0
+offset_right = 86.0
+offset_bottom = 10.0
+color = Color(0.5921569, 0.5921569, 0.5921569, 1)
+
+[node name="B" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport/GradeProgress" unique_id=1736722831]
+layout_mode = 0
+offset_left = 96.0
+offset_right = 98.0
+offset_bottom = 10.0
+color = Color(0.5921569, 0.5921569, 0.5921569, 1)
+
+[node name="A" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport/GradeProgress" unique_id=217593602]
+layout_mode = 0
+offset_left = 108.0
+offset_right = 110.0
+offset_bottom = 10.0
+color = Color(0.5921569, 0.5921569, 0.5921569, 1)
+
+[node name="S" type="ColorRect" parent="Runner/HUD/PanelLeft/PanelLeftViewport/GradeProgress" unique_id=411840827]
+layout_mode = 0
+offset_left = 114.0
+offset_right = 116.0
+offset_bottom = 10.0
+color = Color(0.5921569, 0.5921569, 0.5921569, 1)
+
 [node name="PanelRight" type="MeshInstance3D" parent="Runner/HUD" unique_id=1993445313]
 transform = Transform3D(0.984808, 0, -0.173648, 0, 1, 0, 0.173648, 0, 0.984808, 7.5, 0, -9)
 material_override = SubResource("StandardMaterial3D_ro5ir")

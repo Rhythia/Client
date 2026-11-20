@@ -562,8 +562,6 @@ public partial class Runner : Node3D
 
         factor = factor != 1 ? (float)Math.Round(factor - 0.1f, 1) : factor;
 
-        GD.Print(lateness, factor);
-
         double hitScore = Attempt.UnitHitScore * Attempt.ComboMultiplier * factor;
 
         switch (hitResult)
