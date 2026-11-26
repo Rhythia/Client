@@ -170,7 +170,7 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "mainLabel", "extraLabel", "artistLink", "exportButton", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
+[node name="MapInfoContainer" type="Panel" unique_id=150923669 node_paths=PackedStringArray("info", "dim", "coverBackground", "cover", "infoSubholder", "mainLabelParent", "extraLabelParent", "artistLink", "exportButton", "favoriteButton", "videoButton", "videoDialog", "copyButton", "copyDialog", "deleteButton", "actions", "preview", "speedHolder", "speedPresets", "playHolder", "startButton", "leaderboard", "lbScrollContainer", "lbContainer", "lbExpand", "lbHide")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -184,8 +184,9 @@ info = NodePath("Info")
 dim = NodePath("Dim")
 coverBackground = NodePath("Info/Control/Background")
 cover = NodePath("Info/Control/Background/Cover")
-mainLabel = NodePath("Info/Control/infoControl/infoSubholder/Main")
-extraLabel = NodePath("Info/Control/infoControl/infoSubholder/Extra")
+infoSubholder = NodePath("Info/Control/infoControl/infoSubholder")
+mainLabelParent = NodePath("Info/Control/infoControl/infoSubholder/Main")
+extraLabelParent = NodePath("Info/Control/infoControl/infoSubholder/Extra")
 artistLink = NodePath("Info/Control/Background/ArtistLink")
 exportButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Export")
 favoriteButton = NodePath("Info/Control/infoControl/infoSubholder/Buttons/Favorite")
@@ -207,12 +208,14 @@ lbExpand = NodePath("Leaderboard/Expand")
 lbHide = NodePath("LeaderboardHide")
 
 [node name="Info" type="Panel" parent="." unique_id=1638277412]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.4
 offset_bottom = -8.0
 grow_horizontal = 2
+tooltip_auto_translate_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_50xtp")
 
@@ -276,6 +279,7 @@ grow_vertical = 2
 expand_mode = 1
 
 [node name="ArtistLink" type="Button" parent="Info/Control/Background" unique_id=752801089]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -285,6 +289,7 @@ anchor_bottom = 1.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
+tooltip_auto_translate_mode = 1
 mouse_default_cursor_shape = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.78431374)
 theme_override_constants/outline_size = 6
@@ -336,49 +341,72 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 
-[node name="Extra" type="RichTextLabel" parent="Info/Control/infoControl/infoSubholder" unique_id=469525934]
+[node name="Extra" type="VBoxContainer" parent="Info/Control/infoControl/infoSubholder" unique_id=1425627493]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.019000001
+anchor_left = 0.02
 anchor_top = 0.572
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -0.08819294
-offset_top = -0.51600647
+offset_top = -1.0
 offset_right = -8.0
-offset_bottom = -60.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_bottom = -58.0
+grow_horizontal = 0
+grow_vertical = 0
 theme = ExtResource("4_4d08m")
-theme_override_font_sizes/normal_font_size = 18
-bbcode_enabled = true
-text = "[color=ffffff88]{0}
-{1} notes"
-fit_content = true
-autowrap_mode = 2
-horizontal_alignment = 2
-vertical_alignment = 2
+theme_override_constants/separation = 0
+alignment = 2
 
-[node name="Main" type="RichTextLabel" parent="Info/Control/infoControl/infoSubholder" unique_id=394044659]
+[node name="Ln1" type="Label" parent="Info/Control/infoControl/infoSubholder/Extra" unique_id=879761925]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.53333336)
+theme_override_font_sizes/font_size = 18
+text = "{0}"
+horizontal_alignment = 2
+
+[node name="Ln2" type="Label" parent="Info/Control/infoControl/infoSubholder/Extra" unique_id=1432938699]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.53333336)
+theme_override_font_sizes/font_size = 18
+text = "{0} notes"
+horizontal_alignment = 2
+
+[node name="Main" type="VBoxContainer" parent="Info/Control/infoControl/infoSubholder" unique_id=1380004783]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.015000001
+anchor_left = 0.016
 anchor_right = 0.984
 anchor_bottom = 0.57600003
-offset_left = 0.21499968
 offset_top = 6.0
-offset_right = -0.09597778
-offset_bottom = -0.12800598
-mouse_filter = 1
 theme = ExtResource("4_4d08m")
-theme_override_constants/paragraph_separation = 4
-bbcode_enabled = true
-text = "[outline_size=2][font_size=24]{0}
-[color={1}]{2} [font_size=16][color=909096]
-by {3}
-[font_size=12][color=ffffff44]{4}"
+theme_override_constants/separation = 4
+
+[node name="Ln1" type="Label" parent="Info/Control/infoControl/infoSubholder/Main" unique_id=297171576]
+layout_mode = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "{0}"
+
+[node name="Ln2" type="Label" parent="Info/Control/infoControl/infoSubholder/Main" unique_id=1670190709]
+layout_mode = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "{0}"
+
+[node name="Ln3" type="Label" parent="Info/Control/infoControl/infoSubholder/Main" unique_id=1624627554]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5647059, 0.5647059, 0.5882353, 1)
+theme_override_font_sizes/font_size = 16
+text = "by {0}"
+
+[node name="Ln4" type="Label" parent="Info/Control/infoControl/infoSubholder/Main" unique_id=508160796]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.26666668)
+theme_override_font_sizes/font_size = 12
+text = "{0}"
 
 [node name="Buttons" type="HBoxContainer" parent="Info/Control/infoControl/infoSubholder" unique_id=1191092010]
+auto_translate_mode = 1
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 1
 anchors_preset = -1
@@ -392,6 +420,7 @@ offset_right = -0.1539917
 offset_bottom = 0.115997314
 grow_horizontal = 0
 grow_vertical = 0
+tooltip_auto_translate_mode = 1
 alignment = 2
 
 [node name="Export" type="Button" parent="Info/Control/infoControl/infoSubholder/Buttons" unique_id=2033571562]
@@ -467,6 +496,7 @@ icon = ExtResource("8_ssthb")
 icon_alignment = 1
 
 [node name="Actions" type="Panel" parent="." unique_id=1101045169]
+auto_translate_mode = 1
 clip_contents = true
 layout_mode = 1
 anchors_preset = -1
@@ -476,6 +506,7 @@ anchor_bottom = 1.0
 offset_bottom = -108.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 1
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_50xtp")
 
@@ -626,6 +657,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Actions/ScrollContainer/Holder/Modifiers" unique_id=1889477090]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -633,6 +665,7 @@ anchor_bottom = 1.0
 offset_top = 32.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Actions/ScrollContainer/Holder/Modifiers/ScrollContainer" unique_id=550682937]
 layout_mode = 2
@@ -742,6 +775,7 @@ icon = ExtResource("14_hri10")
 Speed = 120.0
 
 [node name="LineEdit" type="LineEdit" parent="Actions/ScrollContainer/Holder/Speed" unique_id=1046150966]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -751,6 +785,7 @@ anchor_bottom = 1.0
 offset_left = -84.0
 grow_horizontal = 0
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_4d08m")
 text = "100"
 placeholder_text = "100"
@@ -810,6 +845,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="LineEdit" type="LineEdit" parent="Actions/ScrollContainer/Holder/Play" unique_id=1722033663]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -819,6 +855,7 @@ anchor_bottom = 1.0
 offset_left = -84.0
 grow_horizontal = 0
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme = ExtResource("4_4d08m")
 text = "0:00"
 placeholder_text = "0:00"
@@ -1026,12 +1063,14 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4d08m")
 
 [node name="Label" type="Label" parent="Leaderboard/Expand/Hover" unique_id=1076286016]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 1
 theme = ExtResource("4_4d08m")
 text = "EXPAND"
 label_settings = SubResource("LabelSettings_w0o2h")

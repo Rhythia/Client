@@ -35,7 +35,7 @@ public partial class MapParser : Node
             return;
 
         if (notify)
-            _ = ToastNotification.Notify($"Importing {files.Length} map(s)");
+            _ = ToastNotification.Notify(I18n.TrN("Importing {0} map", "Importing {0} maps", files.Length, files.Length), autoTraslate: false);
 
         await Task.Run(() =>
         {
@@ -77,7 +77,10 @@ public partial class MapParser : Node
 
         SoundManager.UpdateJukeboxQueue();
         if (notify)
-            _ = ToastNotification.Notify($"Finished importing {files.Length} map(s)");
+            _ = ToastNotification.Notify(
+                I18n.TrN("Finished importing {0} map", "Finished importing {0} maps", files.Length, files.Length),
+                autoTraslate: false
+            );
     }
 
     public static void ExportEncode(Map map)
@@ -292,7 +295,7 @@ public partial class MapParser : Node
         }
         else
         {
-            _ = ToastNotification.Notify($"Invalid map path", 2);
+            _ = ToastNotification.Notify("Invalid map path", 2);
             throw Logger.Error($"Invalid map path ({path})");
         }
     }
@@ -329,7 +332,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            ToastNotification.Notify($"SSMapV1 file corrupted", 2);
+            ToastNotification.Notify("SSMapV1 file corrupted", 2);
             Logger.Error(exception);
             throw;
         }
@@ -368,7 +371,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            _ = ToastNotification.Notify($"SSPM file corrupted", 2);
+            _ = ToastNotification.Notify("SSPM file corrupted", 2);
             Logger.Error(exception);
             throw;
         }
@@ -405,7 +408,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            ToastNotification.Notify($"SSPM file corrupted", 2);
+            ToastNotification.Notify("SSPM file corrupted", 2);
             Logger.Error(exception);
             throw;
         }
@@ -509,7 +512,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            ToastNotification.Notify($"SSPMV1 file corrupted", 2);
+            ToastNotification.Notify("SSPMV1 file corrupted", 2);
             Logger.Error(exception);
             throw;
         }
@@ -663,7 +666,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            ToastNotification.Notify($"SSPMV2 file corrupted", 2);
+            ToastNotification.Notify("SSPMV2 file corrupted", 2);
             Logger.Error(exception);
             throw;
         }
@@ -747,7 +750,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            _ = ToastNotification.Notify($"{Path.GetFileNameWithoutExtension(path)} is not the proper format!", 2);
+            _ = ToastNotification.Notify(I18n.Tr("{0} is not the proper format!", Path.GetFileNameWithoutExtension(path)), 2, autoTraslate: false);
             Logger.Error(exception);
             throw;
         }
@@ -886,7 +889,7 @@ public partial class MapParser : Node
         }
         catch (Exception exception)
         {
-            ToastNotification.Notify($"RHM file corrupted", 2);
+            ToastNotification.Notify("RHM file corrupted", 2);
             Logger.Error(exception);
             throw;
         }

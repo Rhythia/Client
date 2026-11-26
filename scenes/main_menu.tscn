@@ -389,11 +389,13 @@ mouse_filter = 2
 color = Color(0.0235294, 0.0196078, 0.0352941, 1)
 
 [node name="Menus" type="Panel" parent="." unique_id=169021205]
+auto_translate_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 1
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bl404")
 
@@ -408,6 +410,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_tkeab")
 
 [node name="News" type="PanelContainer" parent="Menus/Home" unique_id=1879796237]
+auto_translate_mode = 2
 visible = false
 material = SubResource("ShaderMaterial_dr6yk")
 layout_mode = 1
@@ -422,6 +425,7 @@ offset_right = -64.0
 offset_bottom = -80.0
 grow_horizontal = 0
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mb34c")
 
 [node name="Background" type="Panel" parent="Menus/Home/News" unique_id=2058881163]
@@ -723,6 +727,7 @@ texture = ExtResource("19_f5cck")
 expand_mode = 1
 
 [node name="MapInfo" type="AspectRatioContainer" parent="Menus/Play" unique_id=140630444]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -733,6 +738,7 @@ offset_top = 128.0
 offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 script = ExtResource("22_qw82i")
 
 [node name="Holder" type="Panel" parent="Menus/Play/MapInfo" unique_id=981210358]
@@ -806,7 +812,7 @@ script = ExtResource("28_eku7s")
 oversampling_override = 1.0
 title = "Open File(s)"
 initial_position = 2
-size = Vector2i(571, 211)
+size = Vector2i(571, 214)
 theme = SubResource("Theme_nlclj")
 ok_button_text = "Open"
 file_mode = 1
@@ -947,8 +953,7 @@ theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/icon_max_width = 24
 disabled = true
-text = "Alphabetical
-"
+text = "Alphabetical"
 icon_alignment = 1
 
 [node name="Difficulty" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer/Sort/Panel/MarginContainer/VBoxContainer/SortTypeButtons" unique_id=2003836240]
@@ -958,8 +963,7 @@ mouse_default_cursor_shape = 2
 theme = ExtResource("6_engjn")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/icon_max_width = 24
-text = "Difficulty
-"
+text = "Difficulty"
 icon_alignment = 1
 
 [node name="Mappers" type="Button" parent="Menus/Play/SubTopBar/HBoxContainer/Sort/Panel/MarginContainer/VBoxContainer/SortTypeButtons" unique_id=234550645]
@@ -1127,7 +1131,8 @@ mouse_filter = 2
 texture = ExtResource("18_eku7s")
 expand_mode = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Menus/Extras/SoundSpace" unique_id=661889390]
+[node name="Text" type="HBoxContainer" parent="Menus/Extras/SoundSpace" unique_id=1011781730]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -1136,11 +1141,24 @@ anchor_bottom = 1.0
 offset_top = -24.0
 grow_horizontal = 2
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 mouse_filter = 2
-theme_override_fonts/normal_font = ExtResource("19_c6nra")
-bbcode_enabled = true
-text = "[center][color=ffffff40]Inspired by Sound Space"
-scroll_active = false
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Pt1" type="Label" parent="Menus/Extras/SoundSpace/Text" unique_id=2021453661]
+auto_translate_mode = 1
+self_modulate = Color(1, 1, 1, 0.2509804)
+layout_mode = 2
+tooltip_auto_translate_mode = 1
+text = "Inspired by "
+
+[node name="Pt2" type="Label" parent="Menus/Extras/SoundSpace/Text" unique_id=1128826194]
+auto_translate_mode = 2
+self_modulate = Color(1, 1, 1, 0.2509804)
+layout_mode = 2
+tooltip_auto_translate_mode = 2
+text = "Sound Space"
 
 [node name="Button" type="Button" parent="Menus/Extras/SoundSpace" unique_id=446236980]
 layout_mode = 1
@@ -1226,12 +1244,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/GamePlaytime" unique_id=1510568932]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0h"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1255,12 +1275,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/TotalPlaytime" unique_id=551786069]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0h"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1284,12 +1306,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/GamesOpened" unique_id=1813247152]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1314,12 +1338,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/TotalDistance" unique_id=449823842]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0m"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1343,12 +1369,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/NotesHit" unique_id=1246957216]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1372,12 +1400,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/NotesMissed" unique_id=1919372733]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1401,12 +1431,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/HighestCombo" unique_id=391270461]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1430,12 +1462,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/Attempts" unique_id=741924685]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1459,12 +1493,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/Passes" unique_id=1333658792]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1488,12 +1524,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/FullCombos" unique_id=557559583]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1517,12 +1555,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/HighestScore" unique_id=1306019372]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1546,12 +1586,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/TotalScore" unique_id=15710385]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1575,12 +1617,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/AverageAccuracy" unique_id=899342869]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0%"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1604,12 +1648,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/RageQuits" unique_id=1687432714]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
+tooltip_auto_translate_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_5pcip")
 vertical_alignment = 1
@@ -1633,6 +1679,7 @@ label_settings = SubResource("LabelSettings_fsvfi")
 horizontal_alignment = 2
 
 [node name="Value" type="Label" parent="Menus/Extras/Stats/ScrollContainer/VBoxContainer/FavouriteMap" unique_id=144949190]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -1640,6 +1687,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 6.0
+tooltip_auto_translate_mode = 2
 label_settings = SubResource("LabelSettings_5pcip")
 autowrap_mode = 3
 
@@ -1655,6 +1703,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_eku7s")
 
 [node name="Contributors" type="Panel" parent="Menus/Extras" unique_id=1419690382]
+auto_translate_mode = 2
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 1
 anchors_preset = -1
@@ -1666,6 +1715,7 @@ offset_top = 160.0
 offset_right = 230.0
 offset_bottom = -160.0
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qw82i")
 script = ExtResource("39_b4jiv")
@@ -1680,11 +1730,13 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jvjdd")
 
 [node name="Header" type="Label" parent="Menus/Extras/Contributors" unique_id=1984432132]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_top = 8.0
 grow_horizontal = 2
+tooltip_auto_translate_mode = 1
 text = "CONTRIBUTORS"
 label_settings = SubResource("LabelSettings_5g0q6")
 horizontal_alignment = 1
@@ -1845,6 +1897,7 @@ expand_mode = 2
 stretch_mode = 5
 
 [node name="Version" type="RichTextLabel" parent="TopBar" unique_id=604655034]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
@@ -1854,6 +1907,7 @@ offset_left = 64.0
 offset_top = -16.0
 offset_bottom = 16.0
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme_override_fonts/normal_font = ExtResource("19_c6nra")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
@@ -2020,6 +2074,7 @@ BarMinSize = 1.0
 Align = 1.0
 
 [node name="Title" type="Label" parent="JukeboxPanel" unique_id=849405407]
+auto_translate_mode = 2
 self_modulate = Color(1, 1, 1, 0.74509805)
 layout_mode = 1
 anchors_preset = -1
@@ -2031,6 +2086,7 @@ offset_left = 8.0
 offset_right = -60.0
 grow_horizontal = 0
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 theme = ExtResource("6_engjn")
 label_settings = SubResource("LabelSettings_wksxa")
 horizontal_alignment = 2

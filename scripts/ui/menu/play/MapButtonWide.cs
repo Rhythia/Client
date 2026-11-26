@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using Godot;
+using util;
 
 public partial class MapButtonWide : MapButton
 {
@@ -44,14 +45,12 @@ public partial class MapButtonWide : MapButton
     {
         base.UpdateInfo(map, selected);
 
-        extra.Text = string.Format(
-            CultureInfo.CurrentCulture,
-            "[outline_size=2][outline_color=000000][color=808080]{0} — [color={1}]{2} [color=808080]by [color=b0b0b0]{3}",
-            util.String.FormatTime(map.Length / 1000),
-            Constants.DIFFICULTY_COLORS[map.Difficulty].ToHtml(),
-            util.String.SanitizeBBCode(map.DifficultyName),
-            util.String.SanitizeBBCode(map.PrettyMappers)
-        );
+        string coloredTime = util.String.FormatTime(map.Length / 1000);
+        string coloredDiff =
+            $"[color={Constants.DIFFICULTY_COLORS[map.Difficulty].ToHtml()}]{util.String.SanitizeBBCode(map.DifficultyName)}[/color]";
+        string coloredMappers = $"[color=b0b0b0]{util.String.SanitizeBBCode(map.PrettyMappers)}[/color]";
+
+        extra.Text = $"[outline_size=2][outline_color=000000][color=808080]{I18n.Tr("{0} — {1} by {2}", coloredTime, coloredDiff, coloredMappers)}";
 
         stickoutOffset = selected ? 0.05f : 0;
     }

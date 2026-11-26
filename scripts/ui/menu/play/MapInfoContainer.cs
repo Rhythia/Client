@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Godot;
+using util;
 
 public partial class MapInfoContainer : Panel, ISkinnable
 {
@@ -30,12 +33,15 @@ public partial class MapInfoContainer : Panel, ISkinnable
     private TextureRect cover;
 
     [Export]
-    private RichTextLabel mainLabel;
-    private string mainLabelFormat;
+    private Control infoSubholder;
 
     [Export]
-    private RichTextLabel extraLabel;
-    private string extraLabelFormat;
+    private VBoxContainer mainLabelParent;
+    private List<Label> mainLabelLines = [];
+
+    [Export]
+    private VBoxContainer extraLabelParent;
+    private List<Label> extraLabelLines = [];
 
     [Export]
     private LinkPopupButton artistLink;
@@ -116,8 +122,14 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
     public override void _Ready()
     {
-        mainLabelFormat = mainLabel.Text;
-        extraLabelFormat = extraLabel.Text;
+        mainLabelLines.Add(mainLabelParent.GetNode<Label>("Ln1"));
+        mainLabelLines.Add(mainLabelParent.GetNode<Label>("Ln2"));
+        mainLabelLines.Add(mainLabelParent.GetNode<Label>("Ln3"));
+        mainLabelLines.Add(mainLabelParent.GetNode<Label>("Ln4"));
+
+        extraLabelLines.Add(extraLabelParent.GetNode<Label>("Ln1"));
+        extraLabelLines.Add(extraLabelParent.GetNode<Label>("Ln2"));
+
         artistLinkFormat = artistLink.Text;
         outlineMaterial = info.GetNode<Panel>("Outline").Material as ShaderMaterial;
 
@@ -126,10 +138,10 @@ public partial class MapInfoContainer : Panel, ISkinnable
             string exportPath = $"{Constants.USER_FOLDER}/export/";
             string exportFilePath = Path.Combine(exportPath, $"{Map.Name}.phxm");
 
-            _ = ToastNotification.Notify($"Exporting to {exportFilePath}", 1);
+            _ = ToastNotification.Notify(I18n.Tr("Exporting to {0}", exportFilePath), 1, autoTraslate: false);
             MapParser.ExportEncode(Map);
 
-            _ = ToastNotification.Notify($"Done! Opening export...", 0);
+            _ = ToastNotification.Notify("Done! Opening export...", 0);
 
             OS.ShellShowInFileManager(exportFilePath);
         };
@@ -425,17 +437,16 @@ public partial class MapInfoContainer : Panel, ISkinnable
 
         var difficultyColor = Constants.DIFFICULTY_COLORS[Math.Clamp(map.Difficulty, 0, Constants.DIFFICULTY_COLORS.Length - 1)];
 
-        mainLabel.Text = string.Format(
-            CultureInfo.CurrentCulture,
-            mainLabelFormat,
-            util.String.SanitizeBBCode(map.PrettyTitle),
-            difficultyColor.ToHtml(),
-            util.String.SanitizeBBCode(map.DifficultyName),
-            util.String.SanitizeBBCode(map.PrettyMappers),
-            util.String.SanitizeBBCode(map.Name)
-        );
+        mainLabelLines[0].Text = util.String.SanitizeBBCode(map.PrettyTitle);
 
-        extraLabel.Text = string.Format(CultureInfo.CurrentCulture, extraLabelFormat, util.String.FormatTime(map.Length / 1000), map.Notes.Length);
+        mainLabelLines[1].Text = util.String.SanitizeBBCode(map.DifficultyName);
+        mainLabelLines[1].SelfModulate = difficultyColor;
+
+        mainLabelLines[2].Text = I18n.TrF(CultureInfo.CurrentCulture, mainLabelLines[2].Text, util.String.SanitizeBBCode(map.PrettyMappers));
+        mainLabelLines[3].Text = util.String.SanitizeBBCode(map.Name);
+
+        extraLabelLines[0].Text = util.String.FormatTime(map.Length / 1000);
+        extraLabelLines[1].Text = I18n.TrF(CultureInfo.CurrentCulture, extraLabelLines[1].Text, map.Notes.Length);
 
         coverBackground.SelfModulate = difficultyColor;
         cover.Texture = map.Cover;

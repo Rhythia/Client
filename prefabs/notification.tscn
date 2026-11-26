@@ -16,6 +16,7 @@ font = ExtResource("2_bcotu")
 font_size = 14
 
 [node name="NotificationTemplate" type="PanelContainer" unique_id=1672628379]
+auto_translate_mode = 2
 visible = false
 z_index = 10
 custom_minimum_size = Vector2(270, 25)
@@ -28,6 +29,7 @@ offset_right = 275.0
 offset_bottom = 25.0
 grow_horizontal = 0
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 theme = ExtResource("1_3cmdo")
 theme_override_styles/panel = SubResource("StyleBoxFlat_chelt")
 

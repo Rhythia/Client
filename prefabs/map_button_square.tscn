@@ -53,6 +53,7 @@ shadow_size = 4
 shadow_color = Color(0, 0, 0, 0.5882353)
 
 [node name="MapButtonSquare" type="Control" unique_id=417107232]
+auto_translate_mode = 2
 custom_minimum_size = Vector2(140, 140)
 layout_mode = 3
 anchors_preset = 0
@@ -60,6 +61,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+tooltip_auto_translate_mode = 2
 mouse_filter = 1
 script = ExtResource("1_ywqiq")
 

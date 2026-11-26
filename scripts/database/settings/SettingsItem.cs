@@ -24,6 +24,9 @@ public class SettingsItem<[MustBeVariant] T> : ISettingsItem
 
     public string Placeholder { get; set; } = "";
 
+    public bool LineTranslation { get; set; } = true;
+    public bool ListTranslation { get; set; } = true;
+
     public T DefaultValue { get; private set; } = default;
 
     public List<SettingsButton> Buttons { get; set; } = [];

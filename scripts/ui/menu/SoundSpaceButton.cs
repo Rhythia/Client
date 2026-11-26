@@ -1,13 +1,14 @@
 using System;
 using Godot;
+using util;
 
 public partial class SoundSpaceButton : Button
 {
-    private RichTextLabel label;
+    private Label label;
 
     public override void _Ready()
     {
-        label = GetNode<RichTextLabel>("RichTextLabel");
+        label = GetNode<Label>("Text/Pt2");
 
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
@@ -15,11 +16,11 @@ public partial class SoundSpaceButton : Button
 
     public void OnMouseEntered()
     {
-        label.Text = "[center][color=ffffff40]Inspired by [color=ffffffff]Sound Space";
+        label.SelfModulate = Color.FromHtml("ffffffff");
     }
 
     public void OnMouseExited()
     {
-        label.Text = "[center][color=ffffff40]Inspired by Sound Space";
+        label.SelfModulate = Color.FromHtml("ffffff40");
     }
 }

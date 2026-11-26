@@ -72,6 +72,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="ProgressLabel" type="Label" parent="." unique_id=1976898353]
+auto_translate_mode = 2
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.9
@@ -80,6 +81,7 @@ anchor_bottom = 0.9
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 text = "Initializing maps"
 label_settings = SubResource("LabelSettings_nxo4k")
 horizontal_alignment = 1

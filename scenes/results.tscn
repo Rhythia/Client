@@ -97,6 +97,7 @@ shader_parameter/brightness = 0.5
 bg_color = Color(1, 1, 1, 1)
 
 [node name="SceneResults" type="Node" unique_id=11944572]
+auto_translate_mode = 1
 script = ExtResource("1_llpx6")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1514676561]
@@ -146,6 +147,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1olmk")
 
 [node name="Title" type="Label" parent="Holder" unique_id=1173526425]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -153,12 +155,14 @@ offset_left = 32.0
 offset_top = 96.0
 offset_right = -32.0
 offset_bottom = 160.0
+tooltip_auto_translate_mode = 2
 text = "AAAAAAAAAAAAAAAAA"
 label_settings = SubResource("LabelSettings_13vky")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Difficulty" type="Label" parent="Holder" unique_id=1795897830]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -166,12 +170,14 @@ offset_left = 32.0
 offset_top = 168.0
 offset_right = -7.0
 offset_bottom = 210.0
+tooltip_auto_translate_mode = 2
 text = "very hard"
 label_settings = SubResource("LabelSettings_wwu1g")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Mappers" type="Label" parent="Holder" unique_id=76894303]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -179,12 +185,14 @@ offset_left = 32.0
 offset_top = 212.0
 offset_right = -7.0
 offset_bottom = 240.0
+tooltip_auto_translate_mode = 2
 text = "by abcdef, ghiklmnop, qrstvuwxyz"
 label_settings = SubResource("LabelSettings_sbrx2")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Speed" type="Label" parent="Holder" unique_id=715001883]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.2
@@ -192,6 +200,7 @@ offset_left = 32.0
 offset_top = 248.0
 offset_right = -32.0
 offset_bottom = 296.0
+tooltip_auto_translate_mode = 2
 text = "1.00x"
 label_settings = SubResource("LabelSettings_utq7d")
 vertical_alignment = 1
@@ -237,6 +246,7 @@ offset_right = -32.0
 offset_bottom = 302.0
 
 [node name="Accuracy" type="Label" parent="Holder" unique_id=678663131]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.3
@@ -244,12 +254,14 @@ offset_left = 32.0
 offset_top = 308.0
 offset_right = 21.0
 offset_bottom = 380.0
+tooltip_auto_translate_mode = 2
 text = "100.00%"
 label_settings = SubResource("LabelSettings_e5ove")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Hits" type="Label" parent="Holder" unique_id=984343345]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.3
@@ -258,6 +270,7 @@ offset_left = 333.6
 offset_top = 308.0
 offset_right = -32.0
 offset_bottom = 380.0
+tooltip_auto_translate_mode = 2
 text = "9,999 / 9,999"
 label_settings = SubResource("LabelSettings_18ny7")
 horizontal_alignment = 2
@@ -265,6 +278,7 @@ vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Score" type="Label" parent="Holder" unique_id=1784139753]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.3
@@ -272,12 +286,14 @@ offset_left = 32.0
 offset_top = 388.0
 offset_right = 21.0
 offset_bottom = 436.0
+tooltip_auto_translate_mode = 2
 text = "1,000,000"
 label_settings = SubResource("LabelSettings_7f2j3")
 vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Status" type="Label" parent="Holder" unique_id=1621789555]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.3
@@ -286,6 +302,7 @@ offset_left = 333.6
 offset_top = 388.0
 offset_right = -32.0
 offset_bottom = 436.0
+tooltip_auto_translate_mode = 1
 text = "DISQUALIFIED"
 label_settings = SubResource("LabelSettings_yaaow")
 horizontal_alignment = 2
@@ -305,16 +322,19 @@ color = Color(1, 1, 1, 0)
 script = ExtResource("4_b55ol")
 
 [node name="OffsetTop" type="Label" parent="Holder/Graph" unique_id=465789986]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 offset_left = -32.0
 grow_horizontal = 0
+tooltip_auto_translate_mode = 2
 text = "0ms"
 label_settings = SubResource("LabelSettings_6anxq")
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="OffsetBottom" type="Label" parent="Holder/Graph" unique_id=2053550374]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -322,6 +342,7 @@ anchor_bottom = 1.0
 offset_left = -32.0
 grow_horizontal = 0
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 text = "55ms"
 label_settings = SubResource("LabelSettings_6anxq")
 horizontal_alignment = 2

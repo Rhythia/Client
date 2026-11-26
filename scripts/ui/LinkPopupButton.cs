@@ -1,10 +1,11 @@
 using System.Globalization;
 using Godot;
+using util;
 
 public partial class LinkPopupButton : Button
 {
     public static string InfoTemplate =
-        "[center][color=dddddd]This will open the following link:\n[color=aaaaff][i][u]{0}[/u][/i]\n\n[color=dddddd]Are you sure?";
+        $"[center][color=dddddd]{I18n.Tr("This will open the following link:{0}")}\n\n[color=dddddd]{I18n.Tr("Are you sure?")}";
 
     [Export]
     public string Link;
@@ -15,19 +16,19 @@ public partial class LinkPopupButton : Button
     {
         base._EnterTree();
 
-        popup = new("Open Link", "");
+        popup = new(I18n.Tr("Open Link"), "", true);
 
         UpdateLink(Link);
 
         popup.AddOption(
-            "Open",
+            I18n.Tr("Open"),
             Callable.From(() =>
             {
                 OS.ShellOpen(Link);
             }),
             Link
         );
-        popup.AddOption("Cancel", Callable.From(popup.Hide));
+        popup.AddOption(I18n.Tr("Cancel"), Callable.From(popup.Hide));
     }
 
     public override void _ExitTree()
@@ -52,15 +53,16 @@ public partial class LinkPopupButton : Button
     public void UpdateLink(string link)
     {
         Link = link;
+        string formattedLink = $"\n[color=aaaaff][i][u]{Link}[/u][/i]";
 
         if (popup != null)
         {
-            if (popup.Options.TryGetValue("Open", out Button button))
+            if (popup.Options.TryGetValue(I18n.Tr("Open"), out Button button))
             {
                 button.TooltipText = link;
             }
 
-            popup.UpdateInfo(string.Format(CultureInfo.InvariantCulture, InfoTemplate, link));
+            popup.UpdateInfo(string.Format(CultureInfo.InvariantCulture, InfoTemplate, formattedLink));
         }
     }
 }

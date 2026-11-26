@@ -334,12 +334,14 @@ size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
 [node name="Settings" type="ColorRect" parent="." unique_id=1393582030 node_paths=PackedStringArray("ImportNightlyDialog", "UserFolderDialog")]
+auto_translate_mode = 1
 z_index = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 1
 mouse_filter = 2
 color = Color(0, 0, 0, 0.501961)
 script = ExtResource("2_o6xl0")
@@ -347,6 +349,7 @@ ImportNightlyDialog = NodePath("ImportNightlyDialog")
 UserFolderDialog = NodePath("UserFolderDialog")
 
 [node name="Hide" type="Button" parent="Settings" unique_id=1153372742]
+auto_translate_mode = 2
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -354,6 +357,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 action_mode = 0
 button_mask = 3
 
@@ -429,10 +433,12 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_mgaml")
 
 [node name="Title" type="Label" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1913312402]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.3
 anchor_bottom = 1.0
+tooltip_auto_translate_mode = 1
 mouse_filter = 1
 text = "Setting"
 label_settings = SubResource("LabelSettings_glkuk")
@@ -441,11 +447,13 @@ clip_text = true
 text_overrun_behavior = 3
 
 [node name="Slider" type="HSlider" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=163235443]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.3
 anchor_right = 0.9
 anchor_bottom = 1.0
+tooltip_auto_translate_mode = 2
 focus_mode = 1
 mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
@@ -454,6 +462,7 @@ allow_lesser = true
 scrollable = false
 
 [node name="SliderLineEdit" type="LineEdit" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1564970786]
+auto_translate_mode = 2
 clip_contents = true
 layout_mode = 1
 anchors_preset = -1
@@ -461,6 +470,7 @@ anchor_left = 0.9
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
+tooltip_auto_translate_mode = 2
 theme_override_font_sizes/font_size = 16
 placeholder_text = "0"
 max_length = 5
@@ -495,17 +505,24 @@ mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
 flat = true
 
-[node name="OptionButton" type="OptionButton" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=1019554744]
-clip_contents = true
+[node name="OptionButtonHBoxContainer" type="HBoxContainer" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=542593984]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.8
 anchor_right = 1.0
-anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 4.0
+offset_right = -4.0
 offset_bottom = -4.0
-grow_vertical = 2
+grow_horizontal = 0
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="OptionButton" type="OptionButton" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate/OptionButtonHBoxContainer" unique_id=1019554744]
+visible = false
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
@@ -534,6 +551,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Button"
 
 [node name="PickerHide" type="Button" parent="Settings/Holder/Categories/CategoryTemplate/Container/SettingTemplate" unique_id=787866892]
+auto_translate_mode = 2
 self_modulate = Color(1, 1, 1, 0)
 top_level = true
 layout_mode = 1
@@ -545,6 +563,7 @@ offset_right = 4.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 action_mode = 0
 button_mask = 3
 
@@ -625,6 +644,7 @@ theme = ExtResource("3_tipki")
 theme_override_styles/panel = SubResource("StyleBoxFlat_ya4ey")
 
 [node name="Title" type="Label" parent="Settings/Holder/Header" unique_id=640204085]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.6
@@ -634,6 +654,7 @@ offset_top = 2.0
 offset_right = -8.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 1
 theme = ExtResource("3_tipki")
 text = "SETTINGS"
 label_settings = SubResource("LabelSettings_osuri")
@@ -664,6 +685,7 @@ theme = ExtResource("3_tipki")
 text = "Toggle Skin Preview"
 
 [node name="Profiles" type="OptionButton" parent="Settings/Holder/Header" unique_id=716644348]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.75
@@ -672,6 +694,7 @@ anchor_bottom = 1.0
 offset_top = 8.0
 offset_right = -32.0
 offset_bottom = -8.0
+tooltip_auto_translate_mode = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("3_tipki")
@@ -781,6 +804,7 @@ text = "SKIN PREVIEW"
 horizontal_alignment = 1
 
 [node name="SkinPreview" type="SubViewportContainer" parent="Settings/SkinPreviewPanel" unique_id=2122293191]
+auto_translate_mode = 2
 z_index = 2
 layout_mode = 1
 anchors_preset = 15
@@ -788,6 +812,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 2
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="Settings/SkinPreviewPanel/SkinPreview" unique_id=732895320]
@@ -1170,6 +1195,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_o6xl0")
 
 [node name="Label" type="Label" parent="Volume" unique_id=839034209]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -1177,6 +1203,7 @@ anchor_bottom = 2.0
 offset_top = -14.0
 grow_horizontal = 2
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 text = "100"
 label_settings = SubResource("LabelSettings_tipki")
 horizontal_alignment = 1
@@ -1220,8 +1247,10 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_o6xl0")
+metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="Offset" unique_id=897770917]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_top = -10.667001
@@ -1231,6 +1260,7 @@ offset_top = 0.0020065308
 offset_bottom = -0.0019989014
 grow_horizontal = 2
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 text = "Current Offset is: idfkms"
 label_settings = SubResource("LabelSettings_tipki")
 horizontal_alignment = 1
@@ -1247,6 +1277,7 @@ expand_mode = 1
 script = ExtResource("9_choun")
 
 [node name="FPSCounter" type="Label" parent="." unique_id=946490961]
+auto_translate_mode = 2
 top_level = true
 z_index = 2
 z_as_relative = false
@@ -1256,6 +1287,7 @@ anchor_bottom = 1.0
 offset_left = 6.0
 offset_bottom = -4.0
 grow_vertical = 0
+tooltip_auto_translate_mode = 2
 text = "0 FPS"
 script = ExtResource("10_choun")
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
+using util;
 
 public partial class ToastNotification : Node
 {
@@ -22,7 +23,7 @@ public partial class ToastNotification : Node
         Instance = this;
     }
 
-    public static async Task Notify(string message, int severity = 0, bool multilineWrap = true)
+    public static async Task Notify(string message, int severity = 0, bool multilineWrap = true, bool autoTraslate = true)
     {
         if (SceneManager.Scene == null)
         {
@@ -36,6 +37,8 @@ public partial class ToastNotification : Node
         notification.Name = $"NotificationToast_{toastNextId}";
         toasts.Add(notification.Name);
         toastNextId++;
+
+        string trMessage = autoTraslate ? I18n.Tr(message) : message;
 
         switch (Math.Clamp(severity, 0, 2))
         {
@@ -52,8 +55,8 @@ public partial class ToastNotification : Node
 
         Label label = notification.GetNode<Label>("HBoxContainer/Label");
         label.Text = multilineWrap
-            ? calculateMultilineWrap(maxToastWidth, message, label.GetThemeFont("font"), label.GetThemeFontSize("font_size"))
-            : message;
+            ? calculateMultilineWrap(maxToastWidth, trMessage, label.GetThemeFont("font"), label.GetThemeFontSize("font_size"))
+            : trMessage;
 
         notification.GetNode<ColorRect>("HBoxContainer/Severity").Color = color;
         notification.ResetSize();

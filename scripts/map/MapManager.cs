@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+using util;
 
 public partial class MapManager : Node
 {
@@ -118,7 +119,7 @@ public partial class MapManager : Node
             Callable
                 .From(() =>
                 {
-                    _ = ToastNotification.Notify($"Deleted {map.PrettyTitle}!");
+                    _ = ToastNotification.Notify(I18n.Tr("Deleted {0}!", map.PrettyTitle), autoTraslate: false);
                 })
                 .CallDeferred();
             Callable.From(() => MapDeleted?.Invoke(map)).CallDeferred();

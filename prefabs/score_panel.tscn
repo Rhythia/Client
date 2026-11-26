@@ -52,11 +52,13 @@ shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="ScorePanel" type="Panel" unique_id=1580355860]
-clip_contents = true
+auto_translate_mode = 2
 custom_minimum_size = Vector2(0, 100)
+clip_contents = true
 anchors_preset = 10
 anchor_right = 1.0
 size_flags_horizontal = 3
+tooltip_auto_translate_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bfkib")
 script = ExtResource("1_rwxrw")
@@ -131,12 +133,14 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Speed" type="Label" parent="." unique_id=1309255119]
+auto_translate_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.4
 anchor_bottom = 0.4
 offset_left = 16.0
 offset_top = 4.0
+tooltip_auto_translate_mode = 2
 text = "1.00x"
 label_settings = SubResource("LabelSettings_x7ms3")
 vertical_alignment = 1
@@ -191,12 +195,14 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_svuah")
 
 [node name="Label" type="Label" parent="Button/Hover" unique_id=2061490773]
+auto_translate_mode = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_auto_translate_mode = 1
 theme = ExtResource("5_ngxw4")
 text = "VIEW"
 label_settings = SubResource("LabelSettings_vglct")

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Godot;
+using util;
 
 public partial class SoundManager : Node, ISkinnable
 {
@@ -223,7 +224,7 @@ public partial class SoundManager : Node, ISkinnable
                 }
 
                 Label label = SceneManager.OffsetPanel.GetNode<Label>("Label");
-                label.Text = $"Local Offset: {settings.LocalOffset.Value}ms";
+                label.Text = I18n.Tr("Local Offset: {0}ms", settings.LocalOffset.Value);
 
                 Tween tween = SceneManager.OffsetPanel.CreateTween().SetTrans(Tween.TransitionType.Quad).SetParallel();
                 tween.TweenProperty(SceneManager.OffsetPanel, "modulate", Color.FromHtml("ffffffff"), 0.25);

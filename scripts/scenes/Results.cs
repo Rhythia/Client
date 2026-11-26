@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using util;
 
 public partial class Results : BaseScene
 {
@@ -33,7 +34,7 @@ public partial class Results : BaseScene
 
         holder.GetNode<Label>("Title").Text = (attempt.IsReplay ? "[REPLAY] " : "") + attempt.Map.PrettyTitle;
         holder.GetNode<Label>("Difficulty").Text = attempt.Map.DifficultyName;
-        holder.GetNode<Label>("Mappers").Text = $"by {attempt.Map.PrettyMappers}";
+        holder.GetNode<Label>("Mappers").Text = I18n.Tr("by {0}", attempt.Map.PrettyMappers);
         holder.GetNode<Label>("Accuracy").Text = $"{attempt.Accuracy:F2}%";
         holder.GetNode<Label>("Score").Text = $"{util.String.PadMagnitude(attempt.Score)}";
         holder.GetNode<Label>("Hits").Text = $"{util.String.PadMagnitude(attempt.Hits)} / {util.String.PadMagnitude(attempt.Sum)}";
