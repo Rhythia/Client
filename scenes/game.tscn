@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://dmc5f6ajp8xv1" path="res://user/skins/default/game/progress_background.png" id="8_eu3ux"]
 [ext_resource type="Script" uid="uid://dv0gni2j4t686" path="res://scripts/game/ui/PanelLeft.cs" id="8_qnb83"]
 [ext_resource type="Texture2D" uid="uid://d3s17ehomjscd" path="res://user/skins/default/game/progress.png" id="9_nde5v"]
+[ext_resource type="Texture2D" uid="uid://2qqfj6l0n8c4" path="res://user/skins/default/ui/flashlight.png" id="11_0sl42"]
 [ext_resource type="Texture2D" uid="uid://80bitp5weqrb" path="res://user/skins/default/game/panel_left_background.png" id="11_sdncv"]
 [ext_resource type="FontFile" uid="uid://b6hgjef6s6oly" path="res://fonts/Comfortaa/Comfortaa-Bold.ttf" id="12_axsek"]
 [ext_resource type="Texture2D" uid="uid://ccdaf14yq65jf" path="res://user/skins/default/game/grid_guides.png" id="12_pr1ej"]
@@ -45,6 +46,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05nbr"]
 resource_name = "Material"
+render_priority = 2
 transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("2_q78ea")
@@ -55,6 +57,7 @@ material = SubResource("StandardMaterial3D_05nbr")
 size = Vector2(4, 4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0sl42"]
+render_priority = 2
 transparency = 1
 shading_mode = 0
 disable_ambient_light = true
@@ -69,6 +72,7 @@ material = SubResource("StandardMaterial3D_0sl42")
 size = Vector2(0.263, 0.263)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ssr8x"]
+render_priority = 2
 transparency = 1
 cull_mode = 2
 shading_mode = 0
@@ -86,6 +90,7 @@ mesh = SubResource("QuadMesh_458eo")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h3rex"]
 resource_name = "Material"
+render_priority = 2
 transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("12_pr1ej")
@@ -96,6 +101,7 @@ material = SubResource("StandardMaterial3D_h3rex")
 size = Vector2(4, 4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fedci"]
+render_priority = 2
 transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("36_05nbr")
@@ -108,6 +114,7 @@ viewport_path = NodePath("Runner/HUD/Health/HealthViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4p8vu"]
 resource_local_to_scene = true
+render_priority = 2
 transparency = 1
 shading_mode = 0
 disable_fog = true
@@ -124,6 +131,7 @@ viewport_path = NodePath("Runner/HUD/PanelLeft/PanelLeftViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nody0"]
 resource_local_to_scene = true
+render_priority = 2
 transparency = 1
 shading_mode = 0
 disable_fog = true
@@ -162,6 +170,7 @@ viewport_path = NodePath("Runner/HUD/PanelRight/PanelRightViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ro5ir"]
 resource_local_to_scene = true
+render_priority = 2
 transparency = 1
 shading_mode = 0
 disable_fog = true
@@ -193,6 +202,7 @@ viewport_path = NodePath("Runner/HUD/ProgressBar/ProgressBarViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1h21"]
 resource_local_to_scene = true
+render_priority = 2
 transparency = 1
 shading_mode = 0
 disable_fog = true
@@ -209,6 +219,7 @@ viewport_path = NodePath("Runner/Video/VideoViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rj3ky"]
 resource_local_to_scene = true
+render_priority = 2
 transparency = 1
 no_depth_test = true
 shading_mode = 0
@@ -300,15 +311,12 @@ Runner = NodePath("../Runner")
 ReplayViewer = NodePath("../ReplayViewer")
 CursorManager = NodePath("../CursorManager")
 
-[node name="Runner" type="Node3D" parent="." unique_id=580620214 node_paths=PackedStringArray("HudManager", "Camera", "Renderers", "Grid", "GridGuides", "PanelLeft", "PanelRight", "Cursor")]
+[node name="Runner" type="Node3D" parent="." unique_id=580620214 node_paths=PackedStringArray("HudManager", "Camera", "Renderers", "Grid", "Cursor")]
 script = ExtResource("2_qnb83")
 HudManager = NodePath("HUD")
 Camera = NodePath("Camera3D")
 Renderers = [NodePath("Renderers/Notes")]
 Grid = NodePath("HUD/Grid")
-GridGuides = NodePath("HUD/Grid/GridGuides")
-PanelLeft = NodePath("HUD/PanelLeft")
-PanelRight = NodePath("HUD/PanelRight")
 Cursor = NodePath("HUD/Grid/Cursor")
 
 [node name="HUD" type="Node3D" parent="Runner" unique_id=1234434255 node_paths=PackedStringArray("Runner")]
@@ -323,6 +331,17 @@ script = ExtResource("27_js0lu")
 [node name="Cursor" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=292067677]
 mesh = SubResource("QuadMesh_xij4d")
 skeleton = NodePath("../../../..")
+
+[node name="Flashlight" type="Node3D" parent="Runner/HUD/Grid/Cursor" unique_id=1514079469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015, -0.01, 0)
+visible = false
+
+[node name="FlashlightSprite" type="Sprite3D" parent="Runner/HUD/Grid/Cursor/Flashlight" unique_id=700151672]
+pixel_size = 0.025
+billboard = 1
+no_depth_test = true
+render_priority = 1
+texture = ExtResource("11_0sl42")
 
 [node name="BufferCursor" type="MeshInstance3D" parent="Runner/HUD/Grid" unique_id=703771191]
 visible = false
@@ -660,6 +679,7 @@ script = ExtResource("21_twgab")
 auto_translate_mode = 2
 transform = Transform3D(3.5, 0, 0, 0, 3.38074, -0.905867, 0, 0.905867, 3.38074, 0, 7, -10)
 pixel_size = 0.0025
+render_priority = 2
 modulate = Color(1, 1, 1, 0.74509805)
 outline_modulate = Color(0, 0, 0, 0)
 text = "0:00 / 0:00"
@@ -672,6 +692,7 @@ script = ExtResource("22_02fa5")
 [node name="Label" type="Label3D" parent="Runner/HUD/Title" unique_id=841289409]
 auto_translate_mode = 2
 transform = Transform3D(2, 0, 0, 0, 1.93185, -0.517638, 0, 0.517638, 1.93185, 0, 8.25, -10)
+render_priority = 2
 outline_modulate = Color(0, 0, 0, 0)
 text = "N/A - N/A"
 font = ExtResource("20_pr1ej")
@@ -686,6 +707,8 @@ script = ExtResource("20_suyxu")
 auto_translate_mode = 2
 transform = Transform3D(7, 0, 0, 0, 6.89365, -1.21554, 0, 1.21554, 6.89365, 0, 3.5, -10)
 pixel_size = 0.0025
+render_priority = 2
+outline_render_priority = 2
 modulate = Color(1, 1, 1, 0)
 outline_modulate = Color(1, 1, 1, 0.39215687)
 text = "0"
@@ -701,6 +724,7 @@ script = ExtResource("28_gxtfn")
 auto_translate_mode = 2
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 pixel_size = 0.0025
+render_priority = 2
 modulate = Color(1, 1, 1, 0.39215687)
 outline_modulate = Color(0, 0, 0, 0)
 text = "1.00x"
@@ -713,6 +737,7 @@ script = ExtResource("25_nepv3")
 auto_translate_mode = 1
 transform = Transform3D(7, 0, 0, 0, 6.76148, 1.81173, 0, -1.81173, 6.76148, 0, -5, -10)
 pixel_size = 0.0025
+render_priority = 2
 modulate = Color(1, 1, 1, 0)
 outline_modulate = Color(0, 0, 0, 0)
 text = "Press Space to skip"
@@ -724,6 +749,7 @@ visible = false
 modulate = Color(1, 1, 1, 0.376471)
 double_sided = false
 no_depth_test = true
+render_priority = 2
 texture = ExtResource("34_8ool0")
 
 [node name="Renderers" type="Node3D" parent="Runner" unique_id=561265512]

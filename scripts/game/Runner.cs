@@ -759,7 +759,7 @@ public partial class Runner : Node3D
     }
 
     /// <summary>
-    /// Resets grid size and panels positions
+    /// Resets previous hud items' states
     /// </summary>
     private void resetHudItems()
     {
@@ -767,5 +767,10 @@ public partial class Runner : Node3D
         PanelRight.Translate(new Vector3((float)panelOffset, 0, 0));
         gridMesh.Size = gridOriginalSize;
         gridGuidesMesh.Size = gridOriginalSize;
+
+        foreach (IHudObjectModifier mod in Attempt.Modifiers.Where(mod => mod is IHudObjectModifier))
+        {
+            mod.ResetGrid(Grid);
+        }
     }
 }
