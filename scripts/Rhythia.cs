@@ -63,12 +63,7 @@ public partial class Rhythia : Node
                 && MapParser.IsValidExt(f.GetExtension().ToLower())
             );
 
-        await MapParser.BulkImport([.. nonConvertedMaps], notify: true);
-
-        foreach (string file in nonConvertedMaps)
-        {
-            File.Delete(file);
-        }
+        await MapParser.BulkImport([.. nonConvertedMaps], notify: true, migrateLegacyMaps: true);
 
         // Temporary map testing support
         string[] cmdArgs = OS.GetCmdlineArgs();

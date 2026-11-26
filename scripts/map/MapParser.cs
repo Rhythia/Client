@@ -29,9 +29,9 @@ public partial class MapParser : Node
 
     public static bool IsValidExt(string ext) => ext == "phxm" || ext == "sspm" || ext == "txt" || ext == "rhm";
 
-    public static async Task BulkImport(string[] files, bool notify = false)
+    public static async Task BulkImport(string[] files, bool notify = false, bool migrateLegacyMaps = false)
     {
-        if (files.Length == 0 || files == null)
+        if (files == null || files.Length == 0)
             return;
 
         if (notify)
@@ -43,6 +43,7 @@ public partial class MapParser : Node
             int good = 0;
             int corrupted = 0;
             var maps = new ConcurrentBag<Map>();
+            object destinationLock = new();
 
             Callable.From(() => Instance.EmitSignal(SignalName.MapsImportStarted)).CallDeferred();
             Parallel.ForEach(
@@ -52,14 +53,20 @@ public partial class MapParser : Node
                 {
                     try
                     {
-                        var map = Decode(file, null, false, false);
+                        var map = Decode(file);
 
-                        if (map != null)
+                        if (map == null)
                         {
-                            Encode(map);
-                            maps.Add(map);
+                            System.Threading.Interlocked.Increment(ref corrupted);
+                            return;
                         }
 
+                        if (migrateLegacyMaps)
+                            migrateLegacyMap(map, file, destinationLock);
+                        else
+                            Encode(map);
+
+                        maps.Add(map);
                         System.Threading.Interlocked.Increment(ref good);
                         Callable.From(() => Instance.EmitSignal(SignalName.MapImported, map)).CallDeferred();
                     }
@@ -81,6 +88,49 @@ public partial class MapParser : Node
                 I18n.TrN("Finished importing {0} map", "Finished importing {0} maps", files.Length, files.Length),
                 autoTraslate: false
             );
+    }
+
+    private static void migrateLegacyMap(Map map, string sourcePath, object destinationLock)
+    {
+        string mapsDirectory = MapUtil.MapsFolder;
+        string originalName = map.Name;
+        string destination = Path.Combine(mapsDirectory, originalName);
+
+        lock (destinationLock)
+        {
+            for (int suffix = 2; Directory.Exists(destination) || File.Exists(destination); suffix++)
+            {
+                map.Name = $"{originalName}-{suffix}";
+                destination = Path.Combine(mapsDirectory, map.Name);
+            }
+
+            Directory.CreateDirectory(destination);
+        }
+
+        try
+        {
+            if (Encode(map) < 0)
+                throw new IOException($"Could not cache converted map {sourcePath}");
+        }
+        catch
+        {
+            if (Directory.Exists(destination))
+                Directory.Delete(destination, recursive: true);
+            throw;
+        }
+
+        try
+        {
+            File.Delete(sourcePath);
+        }
+        catch (IOException exception)
+        {
+            Logger.Error(exception);
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            Logger.Error(exception);
+        }
     }
 
     public static void ExportEncode(Map map)
@@ -159,7 +209,7 @@ public partial class MapParser : Node
         File.WriteAllBytes(exportFilePath, ms.ToArray());
     }
 
-    public static void Encode(Map map, bool logBenchmark = false)
+    public static int Encode(Map map, bool logBenchmark = false)
     {
         double start = Time.GetTicksUsec();
 
@@ -245,12 +295,14 @@ public partial class MapParser : Node
 
         map.FolderPath = mapFolderPath;
 
-        MapCache.InsertMap(map);
+        int cacheId = MapCache.InsertMap(map);
 
         if (logBenchmark)
         {
             Logger.Log($"ENCODING {Constants.DEFAULT_MAP_EXT.ToUpper()}: {(Time.GetTicksUsec() - start) / 1000}ms");
         }
+
+        return cacheId;
     }
 
     public static Map Decode(string path, string audio = null, bool logBenchmark = false, bool save = false)
